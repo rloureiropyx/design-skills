@@ -166,6 +166,37 @@ Deliver the HTML file and a short note listing: pattern used, how to swap the gr
 
 ---
 
+## Anti-patterns
+
+Failure modes this skill has to actively resist. Do not let a future revision reintroduce them.
+
+- **Writing code before the script is approved.** "Just build it, I trust you" is the exact
+  pressure the gate exists for. Answer it with a complete draft script and a request for a
+  thumbs-up, not with HTML.
+- **Handing back an empty template.** A blank scene table asks the user to do the directing.
+  Write the first draft yourself, mark invented visuals `[propuesta]`, and let them argue with
+  something concrete.
+- **Presenting invented visuals as decided.** When raw material is thin, proposals are fine —
+  unmarked proposals are not.
+- **Padding the scene count to look thorough.** Six strong scenes beat twelve weak ones. If a
+  scene's graphic does not change state, it is a paragraph; merge it.
+- **Switching to the user's language only for the article.** If they wrote in Spanish, the
+  interview, the script, the pushback, and the delivery note are in Spanish too.
+- **Continuing into implementation after script approval when only a script was requested.**
+  Approval of the script is not approval to build.
+- **Interviewing past the point of usefulness.** Four or five questions in one message, then a
+  draft. A long questionnaire is a way of avoiding the first draft.
+- **Parking the mobile graphic behind the text cards.** `z-index: -1` looks elegant on a
+  desktop preview and hides the graphic completely on a phone, where cards are far taller.
+  The graphic pins above the text and the text scrolls underneath it.
+- **Delivering on visual impression.** A screenshot at one size proves nothing. Drive the
+  viewport matrix, assert programmatically, and report the result — including failures.
+- **Letting the diagram carry meaning the text does not.** If a label renders at six effective
+  pixels on a phone, the graphic is atmosphere. Mark it `aria-hidden` and make sure the scene
+  copy stands alone.
+
+---
+
 ## Reference files
 
 - `references/patterns.md` — the scrollytelling patterns, when to use each, when to mix with static prose. Read in Phase 1 step 4.

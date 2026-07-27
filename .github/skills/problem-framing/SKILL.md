@@ -329,6 +329,43 @@ Pair every status with one explicit action:
 - **`split`**: create a separate framing pass and `FRAMED_PROBLEM.md` for each independent user, tension, or outcome. Do not send the combined initiative to Shape.
 - **`stop`**: record why the problem lacks sufficient evidence, value, ownership, or relevance, and stop dependent Shape, Pitch, and Design work.
 
+## Anti-patterns
+
+Failure modes this skill has to actively resist. Do not let a future revision reintroduce them.
+
+- **Accepting the requested mechanism as the problem.** "Add bulk edit," "add an AI summary,"
+  and "make it clearer" are proposed solutions. Recover the episode underneath before the
+  mechanism earns any standing in the frame.
+- **Promoting demand into cause.** "Two clients escalated" is an observation. "Admins need
+  bulk edit" is an interpretation of it. Recording the second as though it were the first is
+  the most common way a frame goes wrong.
+- **Inventing a measurement nobody took.** If no one has timed the merit cycle, say so and
+  record the consequence of not knowing. Never supply a plausible number to make the frame
+  look complete.
+- **Converting a calendar deadline into a build-time budget.** "This quarter" is a date, not
+  an amount of build time the team has chosen to invest. Leave the time budget open and state
+  what that costs downstream.
+- **Treating effort already spent as evidence.** Eight weeks of work and thirty hi-fi screens
+  are cost history. They say nothing about whether the problem was framed correctly.
+- **Reviewing the execution instead of the frame.** On an in-progress checkpoint, do not
+  critique screens, delivery plans, or implementation quality. Assess whether the problem
+  still justifies and bounds the work, and leave the rest to its own review.
+- **Blurring what is fixed by law or policy with what is a presentation choice.** In regulated
+  surfaces, name which parts cannot change before scoping anything.
+- **Scoping before the affected role is known.** When several roles see different subsets of
+  the same surface, "who is confused" is a prerequisite to any boundary, not a detail.
+- **Dumping the checklist.** The question set is the skill's memory, not its script. Ask the
+  highest-leverage unresolved question, one at a time, and follow the answer.
+- **Asking for facts already on record.** Read the available documents, notes, and repository
+  sources first. Asking the designer for something the brief already states wastes the one
+  resource framing depends on: their willingness to keep answering.
+- **Requesting research that cannot change a decision.** "Let's do more discovery" is not an
+  evidence request. Name the assumption, the decision it informs, and the result that would
+  move the frame — or accept the risk explicitly and move on.
+- **Producing the next phase's artifact while explaining why you will not.** When a request
+  arrives post-pitch asking for acceptance criteria, flows, or wireframes, name the boundary
+  and the correct phase. Do not emit a sample as an illustration.
+
 ## Method sources
 
 This skill combines three sources; preserve their roles when revising it:
