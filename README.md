@@ -20,7 +20,7 @@ It separates observations from interpretations and assumptions, compares alterna
 
 - Skill: [`.github/skills/problem-framing/SKILL.md`](.github/skills/problem-framing/SKILL.md)
 - Tests: [`tests/problem-framing/scenarios.md`](tests/problem-framing/scenarios.md)
-- Explainer: [`docs/problem-framing/scrollytelling.html`](docs/problem-framing/scrollytelling.html) · [script](docs/problem-framing/scrollytelling-script.md)
+- Explainer: [`docs/problem-framing/frame-before-you-design.html`](docs/problem-framing/frame-before-you-design.html) · [script](docs/problem-framing/frame-before-you-design.script.md)
 
 ### Scrollytelling Article
 
@@ -28,7 +28,7 @@ Creates interactive long-form articles whose narrative and diagrams unfold as th
 
 - Skill: [`.github/skills/scrollytelling-article/SKILL.md`](.github/skills/scrollytelling-article/SKILL.md)
 - Tests: [`tests/scrollytelling-article/scenarios.md`](tests/scrollytelling-article/scenarios.md)
-- Explainer: [`docs/scrollytelling-article/scrollytelling-script.md`](docs/scrollytelling-article/scrollytelling-script.md) — script written, article pending approval
+- Explainer: [`docs/scrollytelling-article/scroll-is-not-a-story.script.md`](docs/scrollytelling-article/scroll-is-not-a-story.script.md) — script written, article pending approval
 
 ## Repository layout
 
