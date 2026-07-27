@@ -1,6 +1,17 @@
 ---
 name: problem-framing
-description: Frame a product problem until it is specific, evidence-backed, bounded, and ready for Shape. Use when a designer is starting a project from a feature request, complaint, opportunity, raw idea, research note, or proposed solution; when an in-progress project needs its problem revisited after new evidence, feedback, scope drift, solution lock-in, or loss of clarity; when assumptions or competing frames need interrogation; or when another workflow needs a Framed Problem before shaping a solution direction. Produces a Framed Problem, not a solution, execution review, PRD, or pitch.
+description: >-
+  Frame a product problem until it is specific, evidence-backed, bounded, and
+  ready for Shape. Use when a designer is starting a project from a feature
+  request, complaint, opportunity, raw idea, research note, or proposed
+  solution; when an in-progress project needs its problem revisited after new
+  evidence, feedback, scope drift, solution lock-in, or loss of clarity; when
+  assumptions or competing frames need interrogation; or when another workflow
+  needs a Framed Problem before shaping a solution direction. Produces a Framed
+  Problem, not a solution, execution review, PRD, or pitch. Do NOT use it for a
+  direct implementation request ("add bulk edit to the grid"), a code or PR
+  review, writing acceptance criteria or requirements once a pitch is approved,
+  or generic plan stress-testing unrelated to what problem is being solved.
 ---
 
 # Problem Framing
@@ -11,13 +22,15 @@ Use a **docs-first, one-question-at-a-time** interview. Apply three moves: **Why
 
 Act as the designer's question memory system. Ensure the important questions about the user, observed episode, cause, evidence, outcome, alternatives, boundary, constraints, time budget, and risks are answered or explicitly recorded before solutions are proposed. Do not dump the checklist on the designer; choose the highest-leverage unresolved question, ask it, update the frame, and continue.
 
+Conduct the interview, the recommendations, and the written artifact in the user's language.
+
 ## Preserve the boundary
 
 Produce a `Framed Problem`. Stop before solution concepts, requirements, flows, wireframes, acceptance criteria, implementation tasks, or a pitch. For work in progress, assess whether the current problem still justifies and bounds the work; leave delivery health, implementation quality, and task planning to their own reviews.
 
 Define the **time budget** as the fixed amount of time the team is willing to spend building the solution. It is a time constraint, not an estimate derived from a predefined scope: Shape must adjust the solution to fit the chosen time. Record it when the user or source material supplies one. If it is not yet defined, do not invent it; mark it open and state the project consequence, such as expanding solution work, delaying trade-offs, or making the Pitch impossible to evaluate as a bounded commitment.
 
-The next phase is `shape`. **Shape** means exploring materially different solution hypotheses as rough Excalidraw sketches, evaluating their trade-offs, and picking one bounded direction that is clear enough to continue. Show the mechanism, essential elements, relationships, and key interactions at low fidelity; do not create a hi-fi design or call the sketch a prototype. After Shape picks an approach, a later Pitch captures the framed problem, fixed build-time budget, chosen rough direction, boundaries, risk consequences, and exclusions in a decision-ready artifact. Once the Pitch is accepted, **Design** performs detailed interaction design, validation, and implementation guidance inside that direction, using `FRAMED_PROBLEM.md` and the Pitch as guardrails against drift. Do not shape, pitch, or design the solution during problem framing; prepare the evidence, boundaries, and open question those phases must respond to.
+The next phase is Shape, and this repo does not automate it — `FRAMED_PROBLEM.md` is handed to a person. **Shape** means exploring materially different solution hypotheses as rough sketches, evaluating their trade-offs, and picking one bounded direction that is clear enough to continue. Show the mechanism, essential elements, relationships, and key interactions at low fidelity; do not create a hi-fi design or call the sketch a prototype. After Shape picks an approach, a later Pitch captures the framed problem, fixed build-time budget, chosen rough direction, boundaries, risk consequences, and exclusions in a decision-ready artifact. Once the Pitch is accepted, **Design** performs detailed interaction design, validation, and implementation guidance inside that direction, using `FRAMED_PROBLEM.md` and the Pitch as guardrails against drift. Do not shape, pitch, or design the solution during problem framing; prepare the evidence, boundaries, and open question those phases must respond to.
 
 ## Choose the entry branch
 
@@ -38,15 +51,7 @@ Inspect every relevant document, attachment, note, product surface, research art
 - stated outcomes, constraints, commitments, and time budget;
 - contradictions, missing provenance, and loaded terminology.
 
-For an in-progress project also extract:
-
-- original problem frame and why the work started;
-- current stage, solution direction, and scope;
-- decisions made, their owners, and whether they remain reversible;
-- completed and in-progress work;
-- user feedback, analytics, prototype learning, incidents, and technical discoveries accumulated since kickoff;
-- changes to user, context, outcome, constraints, time budget, or organizational priority;
-- the event or concern that triggered this framing checkpoint.
+For an in-progress project also read `references/in-progress-checkpoint.md` and extract what it lists: the original frame, current stage and solution direction, decisions and their reversibility, work produced, evidence accumulated since kickoff, and the event that triggered this checkpoint.
 
 Build a private ledger using these labels:
 
@@ -60,18 +65,11 @@ Completion criterion: every material claim in the input is classified, facts dis
 
 ### 1A. Diagnose frame drift for work in progress
 
-Compare the original frame, current project, and evidence gathered since kickoff. Identify:
+Skip this step for a new project.
 
-- **Problem drift**: the user, context, tension, consequence, or desired outcome has changed.
-- **Scope drift**: adjacent work entered without sharing the same baseline story and outcome.
-- **Solution lock-in**: the problem statement now exists mainly to justify the chosen mechanism.
-- **Evidence reversal**: observed behavior weakens a critical original assumption.
-- **Constraint drift**: time budget, policy, technical reality, or organizational priority changed.
-- **Learning without incorporation**: the team learned something decision-changing but continued under the old frame.
+Compare the original frame, current project, and evidence gathered since kickoff. Name every material difference using the drift taxonomy in `references/in-progress-checkpoint.md`, and classify prior decisions as `preserve`, `revisit`, or `superseded` with the evidence and consequence for each.
 
-Classify prior decisions as `preserve`, `revisit`, or `superseded`, with the evidence and consequence for each. Distinguish irreversible commitments from reversible choices and sunk cost.
-
-Completion criterion: every material difference between the original and current frame has a cause, evidence, and decision consequence. Skip this step for a new project.
+Completion criterion: every material difference between the original and current frame has a cause, evidence, and decision consequence.
 
 ### 2. Recover the baseline story
 
@@ -144,35 +142,9 @@ Rank assumptions using four questions:
 3. Can additional evidence realistically reduce the uncertainty?
 4. Would the result change the selected frame or its boundary?
 
-Trigger focused evidence work only when all four answers are yes. First use sources already in scope. Then use the designer's research library and metrics tool when available; ask for a targeted input or run the tool directly instead of requesting “more research” in general.
+Trigger focused evidence work only when all four answers are yes. First use sources already in scope. Then use the designer's research library and metrics tool when available; ask for a targeted input or run the tool directly instead of requesting "more research" in general.
 
-For a **metrics input**, specify:
-
-- assumption and decision it informs;
-- behavior or event to measure;
-- population, segment, or cohort;
-- timeframe and comparison baseline;
-- funnel step, frequency, or outcome when relevant;
-- result that would support, weaken, or split the frame.
-
-For a **research-library input**, specify:
-
-- assumption and decision it informs;
-- user or segment;
-- situation, task, or moment to search for;
-- observations, workarounds, objections, or consequences needed;
-- relevant recency or product context;
-- finding that would support, weaken, or split the frame.
-
-Ask the designer one evidence-input question at a time. Recommend the exact query or filter to use. If neither source can answer the uncertainty, produce a focused evidence request containing:
-
-- assumption to test;
-- decision it informs;
-- current evidence and provenance;
-- smallest credible method;
-- signal that supports or weakens the assumption;
-- stopping condition;
-- owner, when known.
+Read `references/evidence-inputs.md` and use its formats: what a metrics input must specify, what a research-library input must specify, and the focused evidence request to fall back on when neither source can answer the uncertainty. Ask one evidence-input question at a time and recommend the exact query or filter.
 
 After new evidence arrives, return to the baseline story and candidate frames. General research that cannot change a decision does not block framing.
 
@@ -237,66 +209,7 @@ Completion criterion: all five answers are yes, or the artifact remains `needs-r
 
 Present the recommended frame and its strongest unresolved challenge. Ask the user to confirm the frame before marking it ready. If the user requested an asynchronous pass, emit a draft and mark assumptions and confirmation as pending.
 
-Write in the user's language. Save the confirmed artifact inside the project as `FRAMED_PROBLEM.md`, using the project's established documentation directory when one exists and the project root otherwise. Update that same file on later framing passes; keep one current source of truth.
-
-Treat `FRAMED_PROBLEM.md` as durable project context and the project's **problem north star**: the shared reference for deciding whether later solution sketches, scope changes, and implementation decisions still address the chosen problem. Future solution exploration, research, design, implementation, and review work must read it before making decisions that depend on the problem, audience, outcome, evidence, or boundary. When new evidence changes the frame, update this document before dependent work continues.
-
-Use the following exact top-level structure so a future `shape` workflow and other project work can consume it:
-
-```markdown
-# Framed Problem: <working title>
-
-## Status
-`ready-for-shape | revisit-shape | continue-current-frame | evidence-needed | needs-reframing | split | stop`
-
-## Source request
-The raw initiative and any proposed solution, kept as source context.
-
-## Project checkpoint
-For in-progress work: current stage, original frame, solution direction, work produced, decisions and reversibility, new evidence, trigger for review, and sunk-cost boundary. Use `Not applicable — new project` otherwise.
-
-## What changed
-For in-progress work: what changed since kickoff, why it matters, and which prior decisions remain valid or need reopening. Use `Not applicable — new project` otherwise.
-
-## Baseline story
-User, goal, context, current limitation, workaround or failure, and consequence.
-
-## Chosen problem frame
-A concise statement of the tension worth solving.
-
-## Users and outcomes
-Primary user, other stakeholders, current behavior, and observable desired outcome.
-
-## Evidence ledger
-Observations with provenance; interpretations kept distinct.
-
-## Assumption ledger
-Assumption, impact if false, confidence, current support, and disposition.
-
-## Alternative frames considered
-Material alternatives, trade-offs, rejection reason, and evidence that could revive each.
-
-## Working question
-The open, actionable question Shape will answer.
-
-## Boundaries
-In scope, out of scope, constraints, commitments, fixed build-time budget if given, explicit exclusions, and any undefined optional boundary with its concrete project consequence and decision deadline.
-
-## Major risks
-Risks that could invalidate or destabilize the frame during solution exploration. State what each risk could cause in Shape, Pitch, or Design rather than naming the risk alone.
-
-## Evidence requests
-Targeted inputs still required from the research library, metrics tool, or another source. Include the exact query or filter, the decision informed, the signal sought, and the stopping condition.
-
-## Shape handoff
-What the future `shape` workflow may treat as settled, what remains flexible, which existing solution decisions are preserved or reopened, and which uncertainties its rough Excalidraw hypothesis sketches must address.
-
-## Context use
-Where this file lives in the project, how it serves as the problem north star, which workflows must reference it, and which evidence or decision would require it to be updated.
-
-## Confirmation
-Who confirmed the frame, when, and any explicit risk accepted.
-```
+Write the confirmed artifact to `FRAMED_PROBLEM.md` inside the project, using the exact structure in `templates/framed-problem.md`. Read that file before writing: it also states where to save the artifact and why the frame becomes the project's problem north star.
 
 ## Readiness rule
 
@@ -328,6 +241,49 @@ Pair every status with one explicit action:
 - **`needs-reframing`**: return to the baseline story or competing frames because the current user, cause, outcome, or boundary is not coherent enough to guide solutions.
 - **`split`**: create a separate framing pass and `FRAMED_PROBLEM.md` for each independent user, tension, or outcome. Do not send the combined initiative to Shape.
 - **`stop`**: record why the problem lacks sufficient evidence, value, ownership, or relevance, and stop dependent Shape, Pitch, and Design work.
+
+## Anti-patterns
+
+Failure modes this skill has to actively resist. Do not let a future revision reintroduce them.
+
+- **Accepting the requested mechanism as the problem.** "Add bulk edit," "add an AI summary,"
+  and "make it clearer" are proposed solutions. Recover the episode underneath before the
+  mechanism earns any standing in the frame.
+- **Promoting demand into cause.** "Two clients escalated" is an observation. "Admins need
+  bulk edit" is an interpretation of it. Recording the second as though it were the first is
+  the most common way a frame goes wrong.
+- **Inventing a measurement nobody took.** If no one has timed the merit cycle, say so and
+  record the consequence of not knowing. Never supply a plausible number to make the frame
+  look complete.
+- **Converting a calendar deadline into a build-time budget.** "This quarter" is a date, not
+  an amount of build time the team has chosen to invest. Leave the time budget open and state
+  what that costs downstream.
+- **Treating effort already spent as evidence.** Eight weeks of work and thirty hi-fi screens
+  are cost history. They say nothing about whether the problem was framed correctly.
+- **Reviewing the execution instead of the frame.** On an in-progress checkpoint, do not
+  critique screens, delivery plans, or implementation quality. Assess whether the problem
+  still justifies and bounds the work, and leave the rest to its own review.
+- **Blurring what is fixed by law or policy with what is a presentation choice.** In regulated
+  surfaces, name which parts cannot change before scoping anything.
+- **Scoping before the affected role is known.** When several roles see different subsets of
+  the same surface, "who is confused" is a prerequisite to any boundary, not a detail.
+- **Dumping the checklist.** The question set is the skill's memory, not its script. Ask the
+  highest-leverage unresolved question, one at a time, and follow the answer.
+- **Asking for facts already on record.** Read the available documents, notes, and repository
+  sources first. Asking the designer for something the brief already states wastes the one
+  resource framing depends on: their willingness to keep answering.
+- **Requesting research that cannot change a decision.** "Let's do more discovery" is not an
+  evidence request. Name the assumption, the decision it informs, and the result that would
+  move the frame — or accept the risk explicitly and move on.
+- **Producing the next phase's artifact while explaining why you will not.** When a request
+  arrives post-pitch asking for acceptance criteria, flows, or wireframes, name the boundary
+  and the correct phase. Do not emit a sample as an illustration.
+
+## Reference files
+
+- `references/in-progress-checkpoint.md` — what to extract for work already underway, the drift taxonomy, and how to dispose of prior decisions. Read at steps 1 and 1A, only for an in-progress project.
+- `references/evidence-inputs.md` — the exact shape of a metrics input, a research-library input, and a focused evidence request. Read at step 5, only once an assumption clears the gate.
+- `templates/framed-problem.md` — the required `FRAMED_PROBLEM.md` structure and where to save it. Read at step 8.
 
 ## Method sources
 

@@ -1,5 +1,5 @@
 ---
-name: scrollytelling-article
+name: scrollytelling
 description: >-
   Create interactive scrollytelling articles — long-form web pages where the
   story unfolds as the reader scrolls, with a sticky graphic that changes state
@@ -9,10 +9,14 @@ description: >-
   writing the narrative script (guion) for one. Two phases — first act as a
   script/art director to co-write the scene-by-scene script, then implement it
   as a standalone HTML file with GSAP. Trigger it even if the
-  user only asks for the script or only for the implementation.
+  user only asks for the script or only for the implementation. Produces a
+  scroll-driven article or its scene script. Do NOT use it for adding a
+  scroll-to-top button or scroll progress bar, for a hover or entrance
+  animation on an existing page, or for a plain blog post, document, or
+  presentation with no scroll-driven visual states.
 ---
 
-# Scrollytelling Article
+# Scrollytelling
 
 Build scroll-driven interactive articles in two phases: **Script** (narrative direction) then **Implementation** (standalone HTML). The phases are sequential and gated.
 
@@ -62,11 +66,13 @@ Before implementation, read `references/patterns.md` and choose the pattern(s) p
 
 ## Phase 2 — Implementation
 
-**Default output: one standalone, self-contained HTML file** (inline CSS + JS, GSAP + ScrollTrigger from CDN). No build step — the file must work opened directly and dropped into a static site.
+**Default output: one standalone, self-contained HTML file** (inline CSS + JS, GSAP from CDN). No build step — the file must work opened directly and dropped into a static site.
+
+Load ScrollTrigger **only** when the approved script contains a scrubbed sequence. Discrete scenes must not use per-step `ScrollTrigger` ranges: they overlap when a card is shorter than its scene block, and callback order silently decides which scene wins. Select the active scene deterministically from scroll position instead — `references/implementation.md` has the tested version.
 
 Escalate to React **only** if the approved script contains stateful widgets the reader manipulates (filters, data explorers, inputs). If so, tell the user before building and confirm.
 
-Read `references/implementation.md` before writing code — it has the tested layout structure, ScrollTrigger setup, and the pitfalls (mobile viewport units, pinning inside containers).
+Read `references/implementation.md` before writing code — it has the tested layout structure, the deterministic scene-state selection, and the pitfalls (mobile viewport units, pinning inside containers).
 
 ### Non-negotiable requirements for the output
 
@@ -148,15 +154,15 @@ Do not deliver on visual impression alone. Drive a headless browser (Playwright)
 
 - [ ] `document.documentElement.scrollWidth` equals the viewport width — no horizontal overflow
 - [ ] scrolling top to bottom activates **every** scene in order; scrolling back up reverses it
-- [ ] at each scene's settled position, its card does not overlap the pinned graphic's box
+- [ ] at each scene, **some** scroll offset exists where the card is fully visible and does not overlap the pinned graphic — see the settled-position section of `references/implementation.md` before writing this check, it is the one that produces false results
 - [ ] the active scene's graphic and its text are on screen at the same time
 - [ ] works with JS disabled (readable top to bottom)
 - [ ] `prefers-reduced-motion` honored — states still change, motion does not
 - [ ] headings hierarchy + landmarks valid; contrast ≥ 4.5:1
 
-Assert these programmatically rather than by reading screenshots. Measure the settled position (scroll the card to rest, then compare rects) — mid-scroll overlap is expected and is not a defect.
+Assert these programmatically rather than by reading screenshots. Mid-scroll overlap is expected and is not a defect.
 
-Report the matrix result to the user. If a size fails, fix it before delivering.
+Report the matrix result to the user, naming the viewport with the least margin. If a size fails, fix it before delivering.
 
 ---
 
@@ -166,8 +172,39 @@ Deliver the HTML file and a short note listing: pattern used, how to swap the gr
 
 ---
 
+## Anti-patterns
+
+Failure modes this skill has to actively resist. Do not let a future revision reintroduce them.
+
+- **Writing code before the script is approved.** "Just build it, I trust you" is the exact
+  pressure the gate exists for. Answer it with a complete draft script and a request for a
+  thumbs-up, not with HTML.
+- **Handing back an empty template.** A blank scene table asks the user to do the directing.
+  Write the first draft yourself, mark invented visuals `[propuesta]`, and let them argue with
+  something concrete.
+- **Presenting invented visuals as decided.** When raw material is thin, proposals are fine —
+  unmarked proposals are not.
+- **Padding the scene count to look thorough.** Six strong scenes beat twelve weak ones. If a
+  scene's graphic does not change state, it is a paragraph; merge it.
+- **Switching to the user's language only for the article.** If they wrote in Spanish, the
+  interview, the script, the pushback, and the delivery note are in Spanish too.
+- **Continuing into implementation after script approval when only a script was requested.**
+  Approval of the script is not approval to build.
+- **Interviewing past the point of usefulness.** Four or five questions in one message, then a
+  draft. A long questionnaire is a way of avoiding the first draft.
+- **Parking the mobile graphic behind the text cards.** `z-index: -1` looks elegant on a
+  desktop preview and hides the graphic completely on a phone, where cards are far taller.
+  The graphic pins above the text and the text scrolls underneath it.
+- **Delivering on visual impression.** A screenshot at one size proves nothing. Drive the
+  viewport matrix, assert programmatically, and report the result — including failures.
+- **Letting the diagram carry meaning the text does not.** If a label renders at six effective
+  pixels on a phone, the graphic is atmosphere. Mark it `aria-hidden` and make sure the scene
+  copy stands alone.
+
+---
+
 ## Reference files
 
 - `references/patterns.md` — the scrollytelling patterns, when to use each, when to mix with static prose. Read in Phase 1 step 4.
-- `references/implementation.md` — HTML/CSS/JS skeleton, GSAP ScrollTrigger recipes, reduced-motion and no-JS handling, mobile pitfalls. Read at the start of Phase 2.
+- `references/implementation.md` — HTML/CSS/JS skeleton, deterministic scene-state selection, reduced-motion and no-JS handling, mobile pitfalls, and the scrubbed-sequence recipe. Read at the start of Phase 2.
 - `templates/script-template.md` — the scene table format. Use in Phase 1 step 2.

@@ -1,0 +1,33 @@
+{
+  "name": "rolo",
+  "metadata": {
+    "description": "Product design skills by Raul Loureiro",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "Raul Loureiro"
+  },
+  "plugins": [
+    {
+      "name": "design-skills",
+      "description": "Product design skills for complex enterprise B2B work. Frame a product problem into an evidence-backed Framed Problem before any solution work, and build accessible scrollytelling explainers from an approved scene script.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Raul Loureiro"
+      },
+      "repository": "https://github.com/rloureiro_paychex/design-skills",
+      "keywords": [
+        "product-design",
+        "ux",
+        "problem-framing",
+        "scrollytelling",
+        "enterprise",
+        "b2b"
+      ],
+      "source": {
+        "source": "github",
+        "repo": "rloureiro_paychex/design-skills"
+      }
+    }
+  ]
+}
