@@ -2,7 +2,7 @@
   "name": "rolo",
   "metadata": {
     "description": "Product design skills by Raul Loureiro",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "owner": {
     "name": "Raul Loureiro"
@@ -11,7 +11,7 @@
     {
       "name": "design-skills",
       "description": "Product design skills for complex enterprise B2B work. Frame a problem into an evidence-backed Framed Problem, shape it into one solution direction with a binary fit check inside a fixed appetite, package that bet as a decision-ready design package, and render the results as scrollytelling explainers or local tldraw canvases.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "Raul Loureiro"
       },

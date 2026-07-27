@@ -1,0 +1,1347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of the scrollytelling skill: why a scroll-driven article is a writing problem rather than an animation problem, and why the scene script is approved before any code is written.">
+  <link rel="icon" href="data:,">
+  <title>Scroll Is Not a Story — How the scrollytelling skill works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .package-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  
+    .hero-diagram .drift { animation: drift 6s ease-in-out infinite alternate; }
+    .hero-diagram .drift-2 { animation: drift 8s ease-in-out infinite alternate-reverse; }
+    .hero-diagram .redraw { stroke-dasharray: 460; animation: redraw 4.5s ease-in-out infinite; }
+    .hero-diagram .pulse { animation: pulse 3s ease-in-out infinite; }
+    @keyframes drift { from { transform: translate(0, 0); } to { transform: translate(14px, -18px); } }
+    @keyframes redraw { 0% { stroke-dashoffset: 460; } 55%, 100% { stroke-dashoffset: 0; } }
+    @keyframes pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-diagram .drift, .hero-diagram .drift-2,
+      .hero-diagram .redraw, .hero-diagram .pulse { animation: none; }
+      .hero-diagram .redraw { stroke-dashoffset: 0; }
+    }
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A product design skill · How scrollytelling works</p>
+        <h1>A page that moves is not a story.</h1>
+        <p class="hero-deck"><strong>Three minutes of scrolling. One sentence of meaning.</strong> Most interactive articles are built animation-first, so the reader arrives at the end impressed and empty-handed. <code>scrollytelling</code> treats the story as the deliverable and the motion as its rendering.</p>
+        <span class="scroll-cue">Scroll — the hero is the anti-pattern</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">An over-animated article header: drifting particles, a self-redrawing chart and a pulsing headline</title>
+        <desc id="hero-desc">Every element is in motion and none of them explains anything. The caption reads: three minutes of scrolling, one sentence of meaning. This illustration is the article's opening argument, made on purpose.</desc>
+        <defs>
+          <linearGradient id="screenGlow" x1="0" x2="1"><stop offset="0" stop-color="#75a9ff" stop-opacity=".85"/><stop offset="1" stop-color="#ae8bf3" stop-opacity=".85"/></linearGradient>
+          <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter>
+        </defs>
+        <g class="drift" opacity=".7"><circle cx="82" cy="130" r="5" fill="#ae8bf3"/><circle cx="540" cy="96" r="7" fill="#75a9ff"/><circle cx="126" cy="428" r="6" fill="#63c99c"/></g>
+        <g class="drift-2" opacity=".6"><circle cx="560" cy="392" r="5" fill="#e7b85c"/><circle cx="46" cy="286" r="6" fill="#ee795e"/><circle cx="500" cy="252" r="4" fill="#ae8bf3"/></g>
+        <g filter="url(#heroShadow)">
+          <rect x="92" y="92" width="436" height="300" rx="24" fill="#f9f8f1"/>
+          <rect x="122" y="122" width="270" height="26" rx="8" fill="#e8e9e2" class="pulse"/>
+          <rect x="122" y="162" width="180" height="14" rx="6" fill="#eceadf"/>
+          <rect x="122" y="196" width="376" height="164" rx="14" fill="#151d18"/>
+          <path class="redraw" d="M150 330 C196 292 214 316 244 268 C276 216 300 288 330 246 C362 200 392 264 424 222 C450 188 462 226 478 210" fill="none" stroke="url(#screenGlow)" stroke-width="6" stroke-linecap="round"/>
+        </g>
+        <rect x="150" y="430" width="320" height="52" rx="12" fill="#222d26" stroke="#4a5a4e" stroke-width="2"/>
+        <text x="310" y="462" fill="#9cac9f" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">3 minutes of scrolling. One sentence of meaning.</text>
+        <text x="310" y="524" fill="#ee795e" font-family="Inter, sans-serif" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="2">MOTION WITHOUT MEANING</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The job</p>
+      <h2 id="intro-title">Scrollytelling is a writing problem wearing an animation costume.</h2>
+      <p>An agent skill is a set of instructions an AI assistant loads when a request matches it. This one is unusual in that it refuses to start where people ask it to start. Almost every request arrives as “build me an interactive article”, and almost every good one begins as a scene script — closer to how a film is boarded than how a blog post is written.</p>
+      <p>The reason is structural. In a scroll-driven piece, the reader’s attention is on a rail. What they see, in what order, and what changes underneath them is the argument. Decide that in code and you are directing with a keyboard, discovering the story while fighting the pinning behaviour.</p>
+      <p class="definition"><strong>The unit is the scene: one concept, one visual state change.</strong> The script is the contract — approved before a line of code — and the piece is finished only when it has been driven across a device matrix, not when it looks good on a laptop.</p>
+    </section>
+
+    <section class="scrolly" aria-label="How the scrollytelling skill works">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">Two phases, one gate</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
+              </marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: TWO PHASES, ONE GATE -->
+            <g class="diagram-state is-active" data-state="1"><text class="svg-kicker" x="64" y="56">The shape of the skill</text><text class="svg-title" x="64" y="92">Two phases. One gate only you can open.</text><rect x="60" y="212" width="240" height="150" rx="16" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="88" y="248" fill="#75a9ff" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">PHASE 1</text><text x="88" y="282" fill="#fffdf7" font-family="Inter, sans-serif" font-size="22" font-weight="750">Script</text><text x="88" y="312" fill="#c8dcff" font-family="Inter, sans-serif" font-size="12" font-weight="650">Scene by scene. Words,</text><text x="88" y="332" fill="#c8dcff" font-family="Inter, sans-serif" font-size="12" font-weight="650">visuals, transitions.</text><rect x="348" y="197" width="20" height="180" rx="6" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><rect x="374" y="197" width="20" height="180" rx="6" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><circle cx="371" cy="287.0" r="13" fill="#302444" stroke="#ae8bf3" stroke-width="2.5"/><path d="M371 267.0 a11 11 0 0 1 0 12" fill="none" stroke="#ae8bf3" stroke-width="3"/><text x="371" y="180" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1.4">APPROVAL</text><rect x="460" y="212" width="240" height="150" rx="16" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="488" y="248" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">PHASE 2</text><text x="488" y="282" fill="#fffdf7" font-family="Inter, sans-serif" font-size="22" font-weight="750">Implementation</text><text x="488" y="312" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="650">One standalone HTML file.</text><text x="488" y="332" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="650">GSAP. No build step.</text><path d="M580 400 C580 448 180 448 180 400" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="7 5"/><path d="M368 424 l24 24 M392 424 l-24 24" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/><text x="380" y="486" fill="#ee795e" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" text-anchor="middle">Code does not get to renegotiate the story.</text><text class="svg-small" x="64" y="556">“Just build it, I trust you” is the exact pressure the gate exists for. The answer is a draft script, not HTML.</text></g>
+            <!-- DIAGRAM 2: NEVER A BLANK PAGE -->
+            <g class="diagram-state" data-state="2"><text class="svg-kicker" x="64" y="56">Phase 1, step 1</text><text class="svg-title" x="64" y="92">Ask four questions. Then write it yourself.</text><rect x="60" y="176" width="250" height="48" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="78" y="205.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="12" font-weight="750">What must land at the end?</text><rect x="60" y="238" width="250" height="48" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="78" y="267.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="12" font-weight="750">Who is reading it?</text><rect x="60" y="300" width="250" height="48" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="78" y="329.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="12" font-weight="750">What raw material exists?</text><rect x="60" y="362" width="250" height="48" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="78" y="391.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="12" font-weight="750">Roughly how long?</text><path class="svg-line" d="M318 300 H366" marker-end="url(#arrow)"/><rect x="382" y="168" width="318" height="252" rx="14" fill="#f4f1e8"/><text x="406" y="200" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FIRST-DRAFT SCENE TABLE</text><rect x="406" y="216" width="270" height="24" rx="5" fill="#dfe3da"/><rect x="406" y="216" width="54" height="24" rx="5" fill="#c6d6c9"/><rect x="406" y="250" width="270" height="24" rx="5" fill="#dfe3da"/><rect x="406" y="250" width="84" height="24" rx="5" fill="#c6d6c9"/><rect x="406" y="284" width="270" height="24" rx="5" fill="#dfe3da"/><rect x="406" y="284" width="114" height="24" rx="5" fill="#c6d6c9"/><rect x="406" y="318" width="270" height="24" rx="5" fill="#dfe3da"/><rect x="406" y="318" width="54" height="24" rx="5" fill="#c6d6c9"/><rect x="406" y="352" width="270" height="24" rx="5" fill="#dfe3da"/><rect x="406" y="352" width="84" height="24" rx="5" fill="#c6d6c9"/><text x="406" y="404" fill="#667068" font-family="Inter, sans-serif" font-size="11" font-weight="700">Written before it is asked for</text><rect x="382" y="440" width="318" height="62" rx="12" fill="#1b2720" stroke="#ee795e" stroke-width="1.6" stroke-dasharray="6 5"/><text x="406" y="468" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">AN EMPTY TEMPLATE</text><text x="406" y="490" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Not this. It asks the reader to direct.</text><text class="svg-small" x="64" y="556">At most four or five questions, in one message, and only what cannot be inferred from what they already sent.</text></g>
+            <!-- DIAGRAM 3: ANATOMY OF A SCENE -->
+            <g class="diagram-state" data-state="3"><text class="svg-kicker" x="64" y="56">The unit</text><text class="svg-title" x="64" y="92">Three columns. The third is the forgotten one.</text><rect x="60" y="176" width="200" height="64" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><rect x="60" y="248" width="200" height="64" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><rect x="60" y="320" width="200" height="64" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="1.6"/><text x="160" y="214" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.4">VISUAL</text><text x="160" y="236" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650" text-anchor="middle">what the graphic shows</text><text x="160" y="286" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.4">TEXTO</text><text x="160" y="308" fill="#c9f1df" font-family="Inter, sans-serif" font-size="10.5" font-weight="650" text-anchor="middle">2–4 short sentences</text><text x="160" y="358" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.4">TRANSICIÓN</text><text x="160" y="380" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="10.5" font-weight="650" text-anchor="middle">what changes on entry</text><path class="svg-line" d="M270 368 H330" marker-end="url(#arrow)"/><rect x="346" y="240" width="354" height="188" rx="16" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="374" y="278" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.2">TRANSITION IS NOT DECORATION</text><text x="374" y="316" fill="#fffdf7" font-family="Inter, sans-serif" font-size="17" font-weight="750">It is the argument moving.</text><text x="374" y="356" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12.5" font-weight="650">If you cannot say what changes when</text><text x="374" y="378" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12.5" font-weight="650">the reader scrolls in, the scene is</text><text x="374" y="400" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12.5" font-weight="650">not finished.</text><text class="svg-small" x="64" y="500">Most first drafts fill VISUAL and TEXTO and leave TRANSICIÓN implied.</text><text class="svg-small" x="64" y="524">That is exactly where a scroll piece turns into a slideshow.</text></g>
+            <!-- DIAGRAM 4: THE MERGE RULE -->
+            <g class="diagram-state" data-state="4"><text class="svg-kicker" x="64" y="56">Beat rule</text><text class="svg-title" x="64" y="92">If the graphic does not change, merge.</text><rect x="60" y="200" width="112" height="112" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.8"/><text x="116" y="262" fill="#e9eee8" font-family="Inter, sans-serif" font-size="20" font-weight="800" text-anchor="middle">01</text><rect x="192" y="200" width="112" height="112" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.8"/><text x="248" y="262" fill="#e9eee8" font-family="Inter, sans-serif" font-size="20" font-weight="800" text-anchor="middle">02</text><rect x="324" y="200" width="112" height="112" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="1.8"/><text x="380" y="262" fill="#e9eee8" font-family="Inter, sans-serif" font-size="20" font-weight="800" text-anchor="middle">03</text><rect x="456" y="200" width="112" height="112" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="1.8"/><text x="512" y="262" fill="#e9eee8" font-family="Inter, sans-serif" font-size="20" font-weight="800" text-anchor="middle">04</text><rect x="588" y="200" width="112" height="112" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.8"/><text x="644" y="262" fill="#e9eee8" font-family="Inter, sans-serif" font-size="20" font-weight="800" text-anchor="middle">05</text><text x="380" y="340" fill="#ee795e" font-family="Inter, sans-serif" font-size="11.5" font-weight="800" text-anchor="middle" letter-spacing="1">SCENES 03 AND 04 SHOW THE SAME DIAGRAM STATE</text><path class="svg-line" d="M336 366 V392"/><path class="svg-line" d="M424 366 V392"/><rect x="126" y="404" width="112" height="88" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/><text x="182" y="456" fill="#c9f1df" font-family="Inter, sans-serif" font-size="18" font-weight="800" text-anchor="middle">01</text><rect x="258" y="404" width="112" height="88" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/><text x="314" y="456" fill="#c9f1df" font-family="Inter, sans-serif" font-size="18" font-weight="800" text-anchor="middle">02</text><rect x="390" y="404" width="112" height="88" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/><text x="446" y="456" fill="#c9f1df" font-family="Inter, sans-serif" font-size="18" font-weight="800" text-anchor="middle">03</text><rect x="522" y="404" width="112" height="88" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/><text x="578" y="456" fill="#c9f1df" font-family="Inter, sans-serif" font-size="18" font-weight="800" text-anchor="middle">04</text><text x="380" y="528" fill="#63c99c" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">Four scenes. Re-numbered.</text><text class="svg-small" x="64" y="576">A scene without a visual state change is a paragraph — it did not earn a scroll beat.</text></g>
+            <!-- DIAGRAM 5: ONE CONCEPT PER SCENE -->
+            <g class="diagram-state" data-state="5"><text class="svg-kicker" x="64" y="56">Beat rule</text><text class="svg-title" x="64" y="92">One concept per scene.</text><rect x="60" y="176" width="300" height="290" rx="18" fill="#1b2720" stroke="#ee795e" stroke-width="1.8"/><text x="88" y="210" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">FIVE THINGS, ONE SENTENCE</text><rect x="92" y="232" width="72" height="56" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="1.5"/><rect x="176" y="232" width="72" height="56" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="1.5"/><rect x="260" y="232" width="72" height="56" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="1.5"/><rect x="92" y="302" width="72" height="56" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="1.5"/><rect x="176" y="302" width="72" height="56" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="1.5"/><path d="M100 400 C150 356 200 428 250 372 C286 336 300 388 330 350" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="5 4"/><text x="88" y="438" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="650">The reader stops reading</text><text x="88" y="458" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="650">and starts inspecting.</text><rect x="400" y="176" width="300" height="290" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="428" y="210" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">ONE THING, ONE SENTENCE</text><rect x="500" y="248" width="104" height="80" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M440 400 H660" fill="none" stroke="#63c99c" stroke-width="2.5"/><text x="428" y="438" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Attention stays on the prose.</text><text x="428" y="458" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">The graphic confirms it.</text><text class="svg-small" x="64" y="520">What appears on screen must accompany exactly what the text is saying at that moment.</text><text class="svg-small" x="64" y="544">Cut the extra elements, or defer them to the scene that actually discusses them.</text></g>
+            <!-- DIAGRAM 6: PICK THE PATTERN -->
+            <g class="diagram-state" data-state="6"><text class="svg-kicker" x="64" y="56">Phase 1, step 4</text><text class="svg-title" x="64" y="92">Pick a pattern per sequence, not per article.</text><rect x="60" y="180" width="310" height="120" rx="16" fill="#18342a" stroke="#63c99c" stroke-width="2.5"/><text x="88" y="214" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">DEFAULT</text><text x="88" y="248" fill="#fffdf7" font-family="Inter, sans-serif" font-size="17" font-weight="750">Sticky graphic + steps</text><text x="88" y="276" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">A diagram evolving in discrete states</text><rect x="390" y="180" width="310" height="120" rx="16" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="408" y="206" fill="#c8dcff" font-family="Inter, sans-serif" font-size="17" font-weight="750">Scrubbed</text><text x="408" y="226" fill="#c8dcff" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">One continuous transformation the reader plays with</text><rect x="60" y="320" width="310" height="120" rx="16" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="78" y="346" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="17" font-weight="750">Simple reveals</text><text x="78" y="366" fill="#dfd0fa" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Prose that surfaces as it is reached</text><rect x="390" y="320" width="310" height="120" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="408" y="346" fill="#f4d89c" font-family="Inter, sans-serif" font-size="17" font-weight="750">Full-viewport swap</text><text x="408" y="366" fill="#f4d89c" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">An opening or closing composition</text><path d="M215 300 V320 M215 320 H545 M545 320 V300" fill="none" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="5 5"/><text class="svg-small" x="64" y="500">If none of them fits, the scene probably belongs in plain prose — which is normal.</text><text class="svg-small" x="64" y="524">Scroll sequences are the highlights of a page, not the whole page.</text></g>
+            <!-- DIAGRAM 7: THE GATE OPENS -->
+            <g class="diagram-state" data-state="7"><text class="svg-kicker" x="64" y="56">The gate opens</text><text class="svg-title" x="64" y="92">The contract closes. Craft stays open.</text><path d="M180 190 l26 -14 v180 l-26 -14 z" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><path d="M220 190 l-26 -14 v180 l26 -14 z" fill="#302444" stroke="#ae8bf3" stroke-width="2" transform="translate(40 0)"/><text x="220" y="172" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1.4">APPROVED</text><rect x="60" y="200" width="120" height="160" rx="12" fill="#f4f1e8"/><text x="120" y="240" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.3">SCRIPT</text><rect x="80" y="256" width="80" height="12" rx="4" fill="#c6d6c9"/><rect x="80" y="278" width="80" height="12" rx="4" fill="#c6d6c9"/><rect x="80" y="300" width="80" height="12" rx="4" fill="#c6d6c9"/><rect x="80" y="322" width="80" height="12" rx="4" fill="#c6d6c9"/><path class="svg-line" d="M300 280 H360" marker-end="url(#arrow)"/><rect x="376" y="176" width="324" height="120" rx="14" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="400" y="212" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">FROZEN</text><text x="400" y="246" fill="#fffdf7" font-family="Inter, sans-serif" font-size="15" font-weight="750">Copy · scene order · structure</text><text x="400" y="274" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Implemented exactly, in order.</text><rect x="376" y="312" width="324" height="120" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="400" y="348" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">STILL THE BUILDER’S</text><text x="400" y="382" fill="#fffdf7" font-family="Inter, sans-serif" font-size="15" font-weight="750">Visual polish · motion · type</text><text x="400" y="410" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Craft was never up for approval.</text><text class="svg-small" x="64" y="494">Approval of the script is not approval to build, either — if only a script was asked for, stop here.</text><text class="svg-small" x="64" y="518">The two directions of that boundary fail in opposite ways, and both fail quietly.</text></g>
+            <!-- DIAGRAM 8: THREE PHONE FAILURES -->
+            <g class="diagram-state" data-state="8"><text class="svg-kicker" x="64" y="56">Phase 2</text><text class="svg-title" x="64" y="92">Three ways it breaks on a phone.</text><rect x="60" y="172" width="200" height="230" rx="14" fill="#1b2720" stroke="#ee795e" stroke-width="1.8"/><text x="84" y="202" fill="#ee795e" font-family="Inter, sans-serif" font-size="10.5" font-weight="800" letter-spacing="1">① BEHIND THE TEXT</text><rect x="96" y="216" width="128" height="150" rx="10" fill="#241a18" stroke="#6d4a41"/><rect x="104" y="226" width="112" height="132" rx="8" fill="#2f2320"/><text x="160" y="300" fill="#c08a7c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle">graphic hidden</text><text x="84" y="388" fill="#8f9a90" font-family="Inter, sans-serif" font-size="10" font-weight="650">Tall cards swallow it whole</text><rect x="280" y="172" width="200" height="230" rx="14" fill="#1b2720" stroke="#ee795e" stroke-width="1.8"/><text x="304" y="202" fill="#ee795e" font-family="Inter, sans-serif" font-size="10.5" font-weight="800" letter-spacing="1">② SHORT AND WIDE</text><rect x="300" y="228" width="160" height="96" rx="8" fill="#241a18" stroke="#6d4a41"/><rect x="300" y="228" width="160" height="62" rx="8" fill="#3a2118"/><text x="380" y="266" fill="#c08a7c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle">pinned band</text><text x="380" y="312" fill="#c08a7c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle">no room left</text><text x="304" y="388" fill="#8f9a90" font-family="Inter, sans-serif" font-size="10" font-weight="650">Needs a pattern, not a smaller band</text><rect x="500" y="172" width="200" height="230" rx="14" fill="#1b2720" stroke="#ee795e" stroke-width="1.8"/><text x="524" y="202" fill="#ee795e" font-family="Inter, sans-serif" font-size="10.5" font-weight="800" letter-spacing="1">③ 0.46× SCALE</text><text x="524" y="258" fill="#c08a7c" font-family="Inter, sans-serif" font-size="14" font-weight="700">14px label</text><path class="svg-line" d="M524 276 H676"/><text x="524" y="300" fill="#c08a7c" font-family="Inter, sans-serif" font-size="6" font-weight="700">renders at 6px</text><text x="524" y="340" fill="#8f9a90" font-family="Inter, sans-serif" font-size="10" font-weight="650">A 760-unit diagram in a</text><text x="524" y="356" fill="#8f9a90" font-family="Inter, sans-serif" font-size="10" font-weight="650">350px column.</text><text x="524" y="388" fill="#8f9a90" font-family="Inter, sans-serif" font-size="10" font-weight="650">Budget type in viewBox units</text><rect x="60" y="424" width="640" height="66" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="380" y="452" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13.5" font-weight="750" text-anchor="middle">The graphic pins ABOVE the text and the text scrolls underneath it</text><text x="380" y="476" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11.5" font-weight="650" text-anchor="middle">Reflowing the grid is not responsive design.</text></g>
+            <!-- DIAGRAM 9: THREE MODES -->
+            <g class="diagram-state" data-state="9"><text class="svg-kicker" x="64" y="56">Phase 2</text><text class="svg-title" x="64" y="92">The same article, three ways.</text><rect x="60" y="176" width="200" height="250" rx="14" fill="#f4f1e8"/><text x="84" y="208" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.2">NO JAVASCRIPT</text><rect x="84" y="226" width="152" height="14" rx="4" fill="#c9c5ba"/><rect x="84" y="252" width="122" height="14" rx="4" fill="#c9c5ba"/><rect x="84" y="278" width="92" height="14" rx="4" fill="#c9c5ba"/><rect x="84" y="304" width="152" height="14" rx="4" fill="#c9c5ba"/><rect x="84" y="330" width="122" height="14" rx="4" fill="#c9c5ba"/><rect x="84" y="356" width="92" height="14" rx="4" fill="#c9c5ba"/><rect x="84" y="382" width="152" height="14" rx="4" fill="#c9c5ba"/><text x="84" y="414" fill="#667068" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">A plain, readable document</text><rect x="280" y="176" width="200" height="250" rx="14" fill="#1b2720" stroke="#63c99c" stroke-width="1.6"/><text x="304" y="208" fill="#63c99c" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.2">REDUCED MOTION</text><rect x="304" y="230" width="152" height="76" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="380" y="274" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">state 3</text><path d="M304 330 H456" stroke="#63c99c" stroke-width="2" stroke-dasharray="4 4"/><text x="304" y="358" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">States still change.</text><text x="304" y="378" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Motion does not.</text><text x="304" y="414" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">Nothing is removed</text><rect x="500" y="176" width="200" height="250" rx="14" fill="#1b2720" stroke="#75a9ff" stroke-width="1.6"/><text x="524" y="208" fill="#75a9ff" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.2">SCREEN READER</text><text x="524" y="236" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">h1  Scroll is not a story</text><text x="540" y="260" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">h2  Two phases, one gate</text><text x="524" y="284" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">p   The skill has exactly…</text><text x="540" y="308" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">h2  Anatomy of a scene</text><text x="540" y="332" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">p   Every scene is defined…</text><text x="524" y="356" fill="#c8dcff" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">img  alt: phase map</text><text x="524" y="414" fill="#8fa6c4" font-family="Inter, sans-serif" font-size="10.5" font-weight="650">Meaning lives in the text</text><rect x="60" y="448" width="640" height="60" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="1.6"/><text x="380" y="484" fill="#f4d89c" font-family="Inter, sans-serif" font-size="14" font-weight="750" text-anchor="middle">No information may exist only in an animation.</text></g>
+            <!-- DIAGRAM 10: VERIFIED, NOT ADMIRED -->
+            <g class="diagram-state" data-state="10"><text class="svg-kicker" x="64" y="56">Delivery</text><text class="svg-title" x="64" y="92">Verified, not admired.</text><rect x="72" y="176" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="168" y="214" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">320 × 568</text><circle cx="240" cy="238" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M236 238 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="288" y="176" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="384" y="214" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">375 × 667</text><circle cx="456" cy="238" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M452 238 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="504" y="176" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="600" y="214" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">375 × 812</text><circle cx="672" cy="238" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M668 238 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="72" y="280" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="168" y="318" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">414 × 896</text><circle cx="240" cy="342" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M236 342 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="288" y="280" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="384" y="318" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">768 × 1024</text><circle cx="456" cy="342" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M452 342 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="504" y="280" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="600" y="318" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">812 × 375</text><circle cx="672" cy="342" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M668 342 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="72" y="384" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="168" y="422" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">667 × 375</text><circle cx="240" cy="446" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M236 446 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="288" y="384" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="384" y="422" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">1024 × 600</text><circle cx="456" cy="446" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M452 446 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="504" y="384" width="192" height="84" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="600" y="422" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750" text-anchor="middle">1280 × 800</text><circle cx="672" cy="446" r="9" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><path d="M668 446 l3 3 l5 -6" fill="none" stroke="#63c99c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="60" y="500" width="640" height="72" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="84" y="530" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">No overflow · every scene reachable up and down · card clear of the graphic at rest</text><text x="84" y="554" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Assert it in a headless browser. A screenshot at one size proves nothing.</text></g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1: TWO PHASES, AND A GATE BETWEEN THEM. — edit scene copy here -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · The shape</span>
+            <h2 id="scene-1-title">Two phases, and a gate between them.</h2>
+            <p>The skill has exactly two phases and they are sequential. Between them sits a gate that only the reader can open. Nothing gets built until the scene script is explicitly approved — and “just build it, I trust you” is the exact pressure the gate exists for.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>Why script it like film?</strong> Because the reader’s attention is on a rail. A blog post can be reordered after the fact; a scroll sequence cannot, without rebuilding the thing that makes it work.</aside>
+
+        <!-- SCENE 2: FOUR QUESTIONS, THEN WRITE THE DRAFT. — edit scene copy here -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · Phase 1</span>
+            <h2 id="scene-2-title">Four questions, then write the draft.</h2>
+            <p>The skill asks at most four or five questions, in a single message, and only what it cannot infer. Then it writes the whole first draft itself. <strong>A concrete draft to argue with beats an empty table</strong> — handing back a template to fill in is the failure mode, not the method.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 3: VISUAL, TEXT, AND THE ONE PEOPLE FORGET. — edit scene copy here -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · The unit</span>
+            <h2 id="scene-3-title">Visual, text, and the one people forget.</h2>
+            <p>Every scene is defined by three things: what the graphic shows, the two to four sentences the reader sees, and what changes visually on the way in. <strong>Transition is not decoration; it is the argument moving.</strong> If you cannot say what changes when the reader scrolls in, the scene is not finished.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 4: NO STATE CHANGE, NO SCENE. — edit scene copy here -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · Beat rule</span>
+            <h2 id="scene-4-title">No state change, no scene.</h2>
+            <p>If the graphic does not change between two adjacent scenes, merge them. <strong>A scene without a visual state change is just a paragraph — it did not earn a scroll beat.</strong> This single rule removes most of the padding from a first draft, and six strong scenes beat twelve weak ones.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5: ONE CONCEPT PER SCENE. — edit scene copy here -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · Beat rule</span>
+            <h2 id="scene-5-title">One concept per scene.</h2>
+            <p>What appears on screen must accompany exactly what the text is saying at that moment. Show five things while discussing one and the reader stops reading and starts inspecting — attention leaves the prose and wanders the diagram. Cut the extras, or defer them to the scene that discusses them.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>The fourth beat rule has no visual of its own: text is subordinate.</strong> If a scene needs more than about four sentences, split the concept or move the detail into a static prose section like this one. Mixing plain prose with scroll sequences is the norm, not a compromise — the scroll blocks are the highlights of a page, not the whole page.</aside>
+
+        <!-- SCENE 6: PICK A PATTERN PER SEQUENCE. — edit scene copy here -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Phase 1</span>
+            <h2 id="scene-6-title">Pick a pattern per sequence.</h2>
+            <p>A diagram evolving in discrete states wants a <strong>sticky graphic with steps</strong> — the default. A single continuous transformation the reader plays with wants a <strong>scrubbed</strong> sequence. If neither fits, the scene probably belongs in plain prose, which is a normal outcome and not a retreat.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 7: THE CONTRACT CLOSES. CRAFT STAYS OPEN. — edit scene copy here -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · Approval</span>
+            <h2 id="scene-7-title">The contract closes. Craft stays open.</h2>
+            <p>Approval is the moment the contract closes. From here the implementation follows the approved scenes exactly, in order, with the approved words. Visual polish is still the builder’s job — craft was never up for approval. The boundary fails in both directions, and both failures are quiet.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>One escalation rule.</strong> The default output is a single standalone HTML file with GSAP from a CDN — no build step, works opened directly. React is used only when the approved script contains stateful widgets the reader manipulates, and the user is told before that decision is taken, not after.</aside>
+
+        <!-- SCENE 8: THREE WAYS IT BREAKS ON A PHONE. — edit scene copy here -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · Phase 2</span>
+            <h2 id="scene-8-title">Three ways it breaks on a phone.</h2>
+            <p>Reflowing the grid is not responsive design. The graphic must pin <strong>above</strong> the text, not behind it, or tall phone cards swallow it entirely. Short viewports need a different pattern, not a smaller band. And a 760-unit diagram in a 350px column runs at 0.46×, so a 14px label lands at six.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 9: READING IT WITHOUT THE SCROLL. — edit scene copy here -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Phase 2</span>
+            <h2 id="scene-9-title">Reading it without the scroll.</h2>
+            <p>Scroll effects are progressive enhancement, never the content. The article must read top to bottom with JavaScript off, honour <code>prefers-reduced-motion</code> by switching states instantly rather than removing them, and carry every meaning in text as well as in the graphic. <strong>No information may exist only in an animation.</strong></p>
+          </div>
+        </section>
+
+        <!-- SCENE 10: VERIFIED, NOT ADMIRED. — edit scene copy here -->
+        <section class="step" data-state="10" aria-labelledby="scene-10-title">
+          <div class="step-card">
+            <span class="scene-number">10 · Delivery</span>
+            <h2 id="scene-10-title">Verified, not admired.</h2>
+            <p>The last rule is the least glamorous: do not deliver on visual impression. Drive the file with a headless browser and assert the behaviour at every size — no overflow, every scene reachable both directions, the card clear of the graphic at rest. A piece is finished when it has been proven, not when it has been admired.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="next-moves-section" aria-labelledby="next-moves-title">
+      <div class="next-moves-inner">
+        <p class="eyebrow">What the script produces</p>
+        <h2 id="next-moves-title">One row of the artifact, in full.</h2>
+        <p class="next-moves-lede">This is what a scene looks like before anything is built. Three columns, filled in — and the third is the one that decides whether the piece reads as a story or a slideshow.</p>
+
+        <div class="next-moves-grid">
+          <article class="next-move-card"><h3>Scene 04 · VISUAL</h3><p><strong>Five scene cards in a strip.</strong> Cards 03 and 04 show an identical diagram state and are marked in coral; they fuse into one and the strip re-numbers itself to four.</p></article>
+          <article class="next-move-card"><h3>Scene 04 · TEXTO</h3><p>“If the graphic does not change state between two scenes, merge them. A scene without a visual state change is just a paragraph — it did not earn a scroll beat.”</p></article>
+          <article class="next-move-card"><h3>Scene 04 · TRANSICIÓN</h3><p><strong>The single scene card multiplies into the strip;</strong> the duplicate pair fuses, and the remaining cards slide left as they re-number. 0.6s, transform and opacity only.</p></article>
+          <article class="next-move-card"><h3>Why the third column decides it</h3><p>Without it, a builder is left choosing what changes on entry. That choice <em>is</em> the argument, and it is not a rendering detail to be delegated.</p></article>
+          <article class="next-move-card"><h3>What is deliberately absent</h3><p>No colours, no type scale, no easing curve beyond the duration budget. Those are craft, and craft is not what the reader is being asked to approve.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="output-section" aria-label="The scrollytelling delivery checklist">
+      <details>
+        <summary>Explore the complete delivery checklist</summary>
+        <div class="output-grid">
+          <div class="output-item">Interview — four or five questions</div><div class="output-item">First-draft scene table</div>
+          <div class="output-item">Merge rule applied</div><div class="output-item">One concept per scene</div>
+          <div class="output-item">Opening states the tension</div><div class="output-item">Closing pays it off</div>
+          <div class="output-item">Pattern chosen per sequence</div><div class="output-item">Script approved — the gate</div>
+          <div class="output-item">Standalone HTML, GSAP from CDN</div><div class="output-item">Deterministic scene selection</div>
+          <div class="output-item">Graphic above the text on mobile</div><div class="output-item">Short-viewport branch</div>
+          <div class="output-item">Readable with JavaScript off</div><div class="output-item">prefers-reduced-motion honoured</div>
+          <div class="output-item">Nine-viewport matrix asserted</div><div class="output-item">Least-margin viewport reported</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">The story was always the deliverable.</h2>
+        <p><strong>Everything in this method exists to stop motion from becoming the point.</strong> The gate stops code from renegotiating the story. The merge rule stops scenes from existing to justify scrolling. The device matrix stops a laptop preview from standing in for a phone. What is left, when all of that holds, is an argument the reader can follow with their thumb — and could still follow with the animation switched off. That last part is not an accessibility concession. It is the test of whether there was ever a story there at all.</p>
+        <div class="final-equation"><span>An approved script</span><span aria-hidden="true">→</span><span>An article that survives its own motion</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">A scene script passing through the approval gate and becoming a verified article</title>
+        <desc id="closing-diagram-desc">The approved scene table passes through the gate into a standalone HTML file, which is then driven across nine viewports before it is considered finished.</desc>
+        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
+        <rect x="44" y="120" width="196" height="248" rx="18" fill="#f4f1e8"/>
+        <text x="70" y="154" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">THE SCENE SCRIPT</text>
+        <g>
+          <rect x="70" y="172" width="144" height="30" rx="7" fill="#e4eafa"/><rect x="70" y="172" width="46" height="30" rx="7" fill="#cbd8f4"/>
+          <rect x="70" y="210" width="144" height="30" rx="7" fill="#dceddf"/><rect x="70" y="210" width="46" height="30" rx="7" fill="#c1e0cc"/>
+          <rect x="70" y="248" width="144" height="30" rx="7" fill="#eee4fb"/><rect x="70" y="248" width="46" height="30" rx="7" fill="#ddcbf6"/>
+          <rect x="70" y="286" width="144" height="30" rx="7" fill="#e4eafa"/><rect x="70" y="286" width="46" height="30" rx="7" fill="#cbd8f4"/>
+          <rect x="70" y="324" width="144" height="30" rx="7" fill="#dceddf"/><rect x="70" y="324" width="46" height="30" rx="7" fill="#c1e0cc"/>
+        </g>
+        <path d="M250 244 H296" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <path d="M312 168 l22 -12 v176 l-22 -12 z" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+        <path d="M396 168 l-22 -12 v176 l22 -12 z" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+        <text x="354" y="382" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.3">APPROVED</text>
+        <path d="M412 244 H458" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <rect x="474" y="120" width="182" height="150" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+        <text x="565" y="182" fill="#c9f1df" font-family="Inter, sans-serif" font-size="14" font-weight="750" text-anchor="middle">One HTML file</text>
+        <text x="565" y="206" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">No build step</text>
+        <text x="565" y="228" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Readable without JS</text>
+        <g>
+          <text x="565" y="300" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">THEN PROVEN</text>
+          <g fill="#18342a" stroke="#63c99c" stroke-width="1.5">
+            <rect x="486" y="314" width="48" height="30" rx="6"/><rect x="542" y="314" width="48" height="30" rx="6"/><rect x="598" y="314" width="48" height="30" rx="6"/>
+            <rect x="486" y="352" width="48" height="30" rx="6"/><rect x="542" y="352" width="48" height="30" rx="6"/><rect x="598" y="352" width="48" height="30" rx="6"/>
+          </g>
+        </g>
+        <text x="350" y="452" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">MOTION WAS ONLY EVER HOW IT WAS TOLD</text>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where the method comes from.</h2>
+        <p class="sources-intro">Three sources, and one deliberate refusal: none of them is a JavaScript tutorial, because the hard part of a scroll piece has never been the JavaScript.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>The Pudding and the NYT</h3>
+            <p>The sticky-graphic and step pattern as practised by newsrooms — and the discipline underneath it: <strong>scroll sequences are the highlights of a page, not the whole page</strong>. Most of a good piece is still prose.</p>
+            <a href="https://pudding.cool/">Read The Pudding</a>
+          </article>
+          <article class="source-card">
+            <h3>GSAP ScrollTrigger</h3>
+            <p>The animation mechanism. Notably, it is <em>not</em> loaded by default here: per-step trigger ranges overlap when a card is shorter than its scene block, so discrete scenes are selected deterministically from scroll position instead.</p>
+            <a href="https://gsap.com/docs/v3/Plugins/ScrollTrigger/">Read the ScrollTrigger docs</a>
+          </article>
+          <article class="source-card">
+            <h3>WCAG 2.2</h3>
+            <p>The floor the output has to clear: readable with JavaScript off, <code>prefers-reduced-motion</code> honoured by changing state without motion, and no information conveyed by animation alone.</p>
+            <a href="https://www.w3.org/TR/WCAG22/">Read WCAG 2.2</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+  <footer>Scroll Is Not a Story · An interactive explanation of the scrollytelling skill</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        '1': 'Two phases, one gate',
+        '2': 'Never a blank page',
+        '3': 'Anatomy of a scene',
+        '4': 'The merge rule',
+        '5': 'One concept per scene',
+        '6': 'Pick the pattern',
+        '7': 'The gate opens',
+        '8': 'Three phone failures',
+        '9': 'Three modes',
+        '10': 'Verified, not admired'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 10`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

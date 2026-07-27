@@ -7,7 +7,7 @@ frame-before-you-design.script.md    the scene-by-scene script
 frame-before-you-design.html         the article — standalone, no build step
 ```
 
-Open the `.html` file directly in a browser. It has no dependencies and no build step.
+Open [`frame-before-you-design.html`](frame-before-you-design.html) directly in a browser. It has no dependencies and no build step.
 
 The script was produced by running `scrollytelling` on `problem-framing`, so the
 two skills document each other: the article explains the framing method, and the fact that

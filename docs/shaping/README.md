@@ -1,6 +1,18 @@
 # Explainer — Shaping
 
-**Status:** written explainer. No scrollytelling article yet.
+**Status:** shipped.
+
+```
+pick-a-shape.script.md    the scene-by-scene script
+pick-a-shape.html         the article — standalone, no build step
+```
+
+Open [`pick-a-shape.html`](pick-a-shape.html) directly in a browser. It has no dependencies
+and no build step. **Verified against the scrollytelling delivery matrix** — nine viewports
+from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance:
+27px at 667×375.
+
+The notes below are the short written version of the same argument.
 
 ## What the skill is for
 

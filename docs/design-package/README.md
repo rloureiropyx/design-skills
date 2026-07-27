@@ -1,6 +1,18 @@
 # Explainer — Design Package
 
-**Status:** written explainer. No scrollytelling article yet.
+**Status:** shipped.
+
+```
+one-read-one-decision.script.md    the scene-by-scene script
+one-read-one-decision.html         the article — standalone, no build step
+```
+
+Open [`one-read-one-decision.html`](one-read-one-decision.html) directly in a browser. It has
+no dependencies and no build step. **Verified against the scrollytelling delivery matrix** —
+nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least
+clearance: 47px at 667×375.
+
+The notes below are the short written version of the same argument.
 
 ## What the skill is for
 

@@ -10,6 +10,8 @@ Every skill has two legs:
 
 A skill is only "done" when both exist.
 
+All five explainers are indexed in one page: [`docs/index.html`](docs/index.html) — open it in a browser.
+
 ## Install
 
 ```sh
@@ -52,7 +54,7 @@ Takes a framed problem and works out **which solution shape to bet on**, inside 
 Numbered requirements with statuses, two or three materially different shapes, and a deliberately **binary fit check** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until a spike resolves them. When a shape does not fit the appetite, the scope moves, not the time. Output: `SHAPING.md`.
 
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
-- Explainer: [`docs/shaping/README.md`](docs/shaping/README.md)
+- Explainer: **shipped** — [`pick-a-shape.html`](docs/shaping/pick-a-shape.html) · [script](docs/shaping/pick-a-shape.script.md)
 
 ### Artifacts — produce the thing someone decides on
 
@@ -63,7 +65,7 @@ Assembles the document a stakeholder or betting table reads once and then decide
 Everything is carried from `FRAMED_PROBLEM.md` and `SHAPING.md`, never re-derived. It refuses to write while the appetite is undefined or an unresolved `⚠️` is still on the selected shape. Output: `DESIGN_PACKAGE.md`.
 
 - Skill: [`skills/artifacts/design-package/SKILL.md`](skills/artifacts/design-package/SKILL.md)
-- Explainer: [`docs/design-package/README.md`](docs/design-package/README.md)
+- Explainer: **shipped** — [`one-read-one-decision.html`](docs/design-package/one-read-one-decision.html) · [script](docs/design-package/one-read-one-decision.script.md)
 
 ### Renderers — materialise a decision
 
@@ -72,7 +74,7 @@ Everything is carried from `FRAMED_PROBLEM.md` and `SHAPING.md`, never re-derive
 Creates interactive long-form articles whose narrative and diagrams unfold as the reader scrolls. It first develops and confirms a scene-by-scene narrative and visual script, then implements the approved story as an accessible, responsive standalone HTML article.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](skills/renderers/scrollytelling/SKILL.md)
-- Explainer: **script only** — [`scroll-is-not-a-story.script.md`](docs/scrollytelling/scroll-is-not-a-story.script.md). The article is not built; the skill's own approval gate applies to its own explainer.
+- Explainer: **shipped** — [`scroll-is-not-a-story.html`](docs/scrollytelling/scroll-is-not-a-story.html) · [script](docs/scrollytelling/scroll-is-not-a-story.script.md). Written script first, approved, then built — the skill's own gate applied to its own explainer.
 
 #### tldraw
 
@@ -81,7 +83,7 @@ Draws a decided artifact — flow, journey map, service blueprint, concept model
 > **Runtime dependency.** This is the only skill here that needs something running outside Copilot: the **tldraw offline desktop app** on the same machine, whose local HTTP API it drives. There is no hosted fallback and no collaborative mode; without the app the skill stops rather than drawing elsewhere.
 
 - Skill: [`skills/renderers/tldraw-skill/SKILL.md`](skills/renderers/tldraw-skill/SKILL.md)
-- Explainer: [`docs/tldraw-skill/README.md`](docs/tldraw-skill/README.md)
+- Explainer: **shipped** — [`draw-what-was-decided.html`](docs/tldraw-skill/draw-what-was-decided.html) · [script](docs/tldraw-skill/draw-what-was-decided.script.md)
 
 ## Repository layout
 
@@ -90,6 +92,7 @@ plugin.json                 the manifest — name, version, and what ships
 skills/process/<skill>/     skills that decide something
 skills/artifacts/<skill>/   skills that produce the thing someone decides on
 skills/renderers/<skill>/   skills that materialise a decision someone else made
+docs/index.html             the library index — a card grid linking every explainer
 docs/<skill>/               explainers: articles, scripts, diagrams — flat, never nested
 templates/                  the starting point for a new skill
 scripts/check-skills.mjs    the structural check

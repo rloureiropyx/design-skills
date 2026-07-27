@@ -1,0 +1,1325 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of the tldraw-skill renderer: why it refuses to decide what to draw, why it stays on your machine, and the drawing mechanics it owns.">
+  <link rel="icon" href="data:,">
+  <title>Draw What Was Decided — How the tldraw renderer works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .package-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A product design skill · How the tldraw renderer works</p>
+        <h1>A tidy picture of an undecided idea.</h1>
+        <p class="hero-deck"><strong>“Draw me a flow” is a perfectly normal sentence with four undecided questions inside it.</strong> <code>tldraw-skill</code> is a renderer: it owns how to draw something well, and deliberately refuses to own what to draw.</p>
+        <span class="scroll-cue">Scroll to see where the line is</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">A neatly drawn diagram whose boxes are all blank</title>
+        <desc id="hero-desc">A canvas of well-aligned, evenly spaced boxes joined by tidy arrows. Every box is empty, because the decisions the diagram should express were never made.</desc>
+        <defs><filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter></defs>
+        <g filter="url(#heroShadow)">
+          <rect x="52" y="82" width="516" height="330" rx="20" fill="#f9f8f1"/>
+          <rect x="52" y="82" width="516" height="40" rx="20" fill="#e8e9e2"/>
+          <rect x="52" y="106" width="516" height="16" fill="#e8e9e2"/>
+          <circle cx="78" cy="102" r="6" fill="#ee795e"/><circle cx="98" cy="102" r="6" fill="#e7b85c"/><circle cx="118" cy="102" r="6" fill="#63c99c"/>
+          <text x="300" y="107" fill="#8d968c" font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">blockers.tldraw</text>
+          <g fill="#eceadf" stroke="#c9c5ba" stroke-width="2">
+            <rect x="86" y="158" width="120" height="66" rx="10"/>
+            <rect x="250" y="158" width="120" height="66" rx="10"/>
+            <rect x="414" y="158" width="120" height="66" rx="10"/>
+            <rect x="86" y="288" width="120" height="66" rx="10"/>
+            <rect x="250" y="288" width="120" height="66" rx="10"/>
+            <rect x="414" y="288" width="120" height="66" rx="10"/>
+          </g>
+          <g stroke="#b6b2a7" stroke-width="3" fill="none">
+            <path d="M206 191 H244"/><path d="M370 191 H408"/>
+            <path d="M206 321 H244"/><path d="M370 321 H408"/>
+            <path d="M146 224 V282"/>
+          </g>
+        </g>
+        <text x="310" y="470" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">PERFECTLY ALIGNED</text>
+        <text x="310" y="500" fill="#8d968c" font-family="Inter, sans-serif" font-size="14" font-weight="650" text-anchor="middle">Entirely undecided</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The job</p>
+      <h2 id="intro-title">Materialise a decided artifact on a canvas you own.</h2>
+      <p>tldraw’s offline desktop app is a local, private, infinite canvas that saves to a real <code>.tldraw</code> file on disk. <code>tldraw-skill</code> drives it through the app’s local HTTP API — creating shapes, binding arrows, laying out columns, linting, screenshotting, and saving.</p>
+      <p>It is a <strong>renderer</strong>, and the distinction is load-bearing. A flow, a journey map, a service blueprint, a wireframe: each has its own discipline that decides intention, audience, structure, and fidelity. This skill picks up after those decisions and does not attempt them, because nothing in the drawing mechanics knows who the diagram is for.</p>
+      <p class="definition"><strong>The output is a file, not a picture in a chat.</strong> A saved <code>.tldraw</code> document the user owns, opens, edits, and undoes like their own work — with the screenshot used only as the agent’s own verification.</p>
+    </section>
+
+    <section class="scrolly" aria-label="How the tldraw renderer works">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">The ambiguous ask</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
+              </marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: THE AMBIGUOUS ASK -->
+            <g class="diagram-state is-active" data-state="1"><text class="svg-kicker" x="64" y="56">The ask</text><text class="svg-title" x="64" y="92">“Draw me a flow.”</text><rect x="60" y="176" width="640" height="120" rx="16" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="380" y="226" fill="#e9eee8" font-family="Inter, sans-serif" font-size="17" font-weight="700" text-anchor="middle">“Draw me a flow for the payroll blockers thing.”</text><text x="380" y="262" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="600" text-anchor="middle">A perfectly normal sentence containing four undecided questions.</text><rect x="60" y="336" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="362" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Which flow?</text><text x="78" y="382" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">User, task, or cross-actor service?</text><rect x="390" y="336" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="408" y="362" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">For whom?</text><text x="408" y="382" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">An engineer, or a compliance reviewer?</text><rect x="60" y="406" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="432" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Which states?</text><text x="78" y="452" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Happy path only, or errors and recovery?</text><rect x="390" y="406" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="408" y="432" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">At what fidelity?</text><text x="408" y="452" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Zoning, lo-fi, or annotated?</text><text class="svg-small" x="64" y="528">Drawing now produces a tidy picture of an undecided idea — the most expensive kind of artifact,</text><text class="svg-small" x="64" y="552">because it looks finished.</text></g>
+            <!-- DIAGRAM 2: THE BOUNDARY -->
+            <g class="diagram-state" data-state="2"><text class="svg-kicker" x="64" y="56">The boundary</text><text class="svg-title" x="64" y="92">Decide over here. Draw over there.</text><rect x="60" y="166" width="300" height="300" rx="18" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="88" y="202" fill="#75a9ff" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">DISCIPLINE SKILL</text><text x="88" y="230" fill="#c8dcff" font-family="Inter, sans-serif" font-size="14" font-weight="700">Decides WHAT and WHY</text><rect x="88" y="250" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="273.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Intention and audience</text><rect x="88" y="292" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="315.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Which artifact type</text><rect x="88" y="334" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="357.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Structure and scope</text><rect x="88" y="376" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="399.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Fidelity rung</text><path class="svg-line" d="M360 316 H400" marker-end="url(#arrow)"/><rect x="400" y="166" width="300" height="300" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="2"/><text x="428" y="202" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">TLDRAW-SKILL</text><text x="428" y="230" fill="#c9f1df" font-family="Inter, sans-serif" font-size="14" font-weight="700">Owns HOW to draw it</text><rect x="428" y="250" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="273.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Shape records and props</text><rect x="428" y="292" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="315.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Layout math</text><rect x="428" y="334" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="357.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Arrows and bindings</text><rect x="428" y="376" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="399.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Lint, screenshot, export</text><text class="svg-small" x="64" y="520">The split is not bureaucracy. A renderer that also decides will quietly decide badly,</text><text class="svg-small" x="64" y="544">because nothing in the drawing mechanics knows who the diagram is for.</text></g>
+            <!-- DIAGRAM 3: STAYS ON THE MACHINE -->
+            <g class="diagram-state" data-state="3"><text class="svg-kicker" x="64" y="56">Why this renderer</text><text class="svg-title" x="64" y="92">It never leaves the machine.</text><rect x="60" y="180" width="300" height="240" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="88" y="216" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">LOCAL</text><path d="M148 262 h84 a10 10 0 0 1 10 10 v46 a10 10 0 0 1 -10 10 h-84 a10 10 0 0 1 -10 -10 v-46 a10 10 0 0 1 10 -10 z" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M162 262 v-16 a28 28 0 0 1 56 0 v16" fill="none" stroke="#63c99c" stroke-width="4"/><circle cx="190" cy="294" r="7" fill="#63c99c"/><text x="210" y="372" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle">~/Documents/flow.tldraw</text><text x="210" y="396" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">A file you own</text><rect x="400" y="180" width="300" height="240" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="7 5"/><text x="428" y="216" fill="#8f9a90" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">NOT THIS</text><rect x="428" y="240" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="446" y="265.0" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="750">A cloud workspace</text><rect x="428" y="292" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="446" y="317.0" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="750">A shared team board</text><rect x="428" y="344" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="446" y="369.0" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="750">A link that needs an account</text><rect x="60" y="452" width="640" height="60" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="380" y="488" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13.5" font-weight="750" text-anchor="middle">Pick tldraw when the work must not leave the machine.</text><text class="svg-small" x="64" y="566">Unreleased roadmaps, salary bands, customer names — the material enterprise design actually runs on.</text></g>
+            <!-- DIAGRAM 4: RUNTIME DEPENDENCY -->
+            <g class="diagram-state" data-state="4"><text class="svg-kicker" x="64" y="56">The dependency</text><text class="svg-title" x="64" y="92">No app running, no drawing.</text><rect x="60" y="176" width="640" height="128" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="88" y="212" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">THIS SKILL NEEDS SOMETHING RUNNING OUTSIDE COPILOT</text><text x="88" y="246" fill="#f4d89c" font-family="Inter, sans-serif" font-size="15" font-weight="700">The tldraw offline desktop app, on this machine,</text><text x="88" y="272" fill="#f4d89c" font-family="Inter, sans-serif" font-size="15" font-weight="700">exposing its local HTTP API. There is no hosted fallback.</text><path class="svg-line" d="M200 320 V356" marker-end="url(#arrow)"/><path class="svg-line" d="M560 320 V356" marker-end="url(#arrow)"/><rect x="60" y="364" width="280" height="92" rx="10" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="200.0" y="415.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><text x="200" y="398" fill="#ee795e" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">APP NOT RUNNING</text><text x="200" y="426" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Say so, and stop.</text><rect x="420" y="364" width="280" height="92" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="560.0" y="415.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><text x="560" y="398" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">APP RUNNING</text><text x="560" y="426" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Resolve tq, then draw.</text><text class="svg-small" x="64" y="512">The tempting failure is to draw somewhere else instead — an ASCII diagram, a Mermaid block, another canvas.</text><text class="svg-small" x="64" y="536">The user asked for a file on their disk. Substituting the deliverable is not a graceful degradation.</text></g>
+            <!-- DIAGRAM 5: ONE EXEC -->
+            <g class="diagram-state" data-state="5"><text class="svg-kicker" x="64" y="56">The economics</text><text class="svg-title" x="64" y="92">One exec. Return counts, not records.</text><rect x="60" y="168" width="640" height="210" rx="12" fill="#101713" stroke="#2f3c34" stroke-width="1.5"/><text x="80" y="198" fill="#6f7b72" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.2">ONE FILE. ONE POST. THE WHOLE DIAGRAM.</text><text x="80" y="222" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">editor.user.updateUserPreferences({ colorScheme: 'light' })</text><text x="80" y="244" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve"></text><text x="80" y="266" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">for (const n of nodes) createNode(n)      // 24 shapes</text><text x="80" y="288" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">for (const e of edges) helpers.createArrowBetweenShapes(...)</text><text x="80" y="310" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve"></text><text x="80" y="332" fill="#dfd0fa" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">await helpers.saveDoc()</text><text x="80" y="354" fill="#f4d89c" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">return { nodes: 24, arrows: 31 }</text><rect x="60" y="396" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="422" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Returning shape records</text><text x="78" y="442" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Live records serialise badly and fill the context</text><rect x="390" y="396" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="408" y="422" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">One call per shape</text><text x="408" y="442" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Slow, and leaves the canvas half-built on failure</text><text class="svg-small" x="64" y="508">You write JavaScript, not per-element JSON, and only what you return comes back.</text><text class="svg-small" x="64" y="532">That single property is what makes a thirty-shape diagram cheap — so build in loops and echo counts.</text></g>
+            <!-- DIAGRAM 6: LAYOUT MATH -->
+            <g class="diagram-state" data-state="6"><text class="svg-kicker" x="64" y="56">Craft</text><text class="svg-title" x="64" y="92">Plan the coordinates before the canvas does.</text><rect x="72" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="138.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="240" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="306.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="408" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="474.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="576" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="642.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="72" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="138.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="240" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="306.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="408" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="474.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="576" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="642.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><text x="138" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Detect</text><text x="306" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Notify</text><text x="474" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Resolve</text><text x="642" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Verify</text><text x="138" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Queue</text><text x="306" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Retry</text><text x="474" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Escalate</text><text x="642" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Close</text><path d="M204 238 H240" class="svg-line" marker-end="url(#arrow)"/><path d="M372 238 H408" class="svg-line" marker-end="url(#arrow)"/><path d="M540 238 H576" class="svg-line" marker-end="url(#arrow)"/><path d="M72 176 H204" stroke="#e7b85c" stroke-width="1.6"/><path d="M240 176 H372" stroke="#e7b85c" stroke-width="1.6"/><text x="156" y="168" fill="#e7b85c" font-family="Inter, sans-serif" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing="1">168 COLUMN PITCH</text><path d="M44 200 V276" stroke="#ae8bf3" stroke-width="1.6"/><path d="M44 312 V388" stroke="#ae8bf3" stroke-width="1.6"/><text x="30" y="300" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="9.5" font-weight="800" text-anchor="middle">112</text><text x="64" y="444" fill="#8f9a90" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">132 node + 36 gutter — enough for a labelled arrow to breathe</text><rect x="60" y="470" width="640" height="70" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="84" y="502" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="750">A sticky note is a fixed 200 × 200 square — its width is not settable</text><text x="84" y="526" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="600">A 480-wide frame around one column of stickies looks half-empty. That is the classic sticky-layout mistake.</text></g>
+            <!-- DIAGRAM 7: BOUND ARROWS -->
+            <g class="diagram-state" data-state="7"><text class="svg-kicker" x="64" y="56">Arrows</text><text class="svg-title" x="64" y="92">Bound, or it is a friendless arrow.</text><rect x="72" y="196" width="150" height="70" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><text x="147.0" y="236.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Detect</text><rect x="310" y="196" width="150" height="70" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><text x="385.0" y="236.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Resolve</text><path d="M222 231 H302" stroke="#63c99c" stroke-width="3" marker-end="url(#arrow)"/><text x="500" y="220" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">BOUND</text><text x="500" y="244" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Move the node, the arrow follows.</text><rect x="72" y="324" width="150" height="70" rx="10" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="147.0" y="364.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Detect</text><rect x="370" y="324" width="150" height="70" rx="10" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="445.0" y="364.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Resolve</text><path d="M222 359 H302" stroke="#ee795e" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#arrow)"/><circle cx="302" cy="359" r="6" fill="none" stroke="#ee795e" stroke-width="2.5"/><text x="560" y="348" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">POINT TERMINALS</text><text x="560" y="372" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="650">Detaches the moment</text><text x="560" y="392" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="650">anyone moves a node.</text><rect x="60" y="428" width="640" height="56" rx="12" fill="#101713" stroke="#2f3c34" stroke-width="1.5"/><text x="80" y="458" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">helpers.createArrowBetweenShapes(fromId, toId, { kind: 'elbow' })</text><text class="svg-small" x="64" y="540">The linter catches this one — but only after the diagram has already been handed over once.</text></g>
+            <!-- DIAGRAM 8: LINT, THEN LOOK -->
+            <g class="diagram-state" data-state="8"><text class="svg-kicker" x="64" y="56">The check</text><text class="svg-title" x="64" y="92">Lint has three rules. Your eyes have the rest.</text><rect x="60" y="172" width="300" height="240" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="88" y="208" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">THE LINTER CATCHES</text><rect x="88" y="226" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="106" y="251.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">growY-on-shape</text><rect x="88" y="278" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="106" y="303.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">overlapping-text</text><rect x="88" y="330" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="106" y="355.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">friendless-arrow</text><rect x="400" y="172" width="300" height="240" rx="18" fill="#1b2720" stroke="#ee795e" stroke-width="1.8"/><text x="428" y="208" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">IT DOES NOT</text><rect x="428" y="226" width="244" height="40" rx="9" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="446" y="251.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">Arrows crossing nodes</text><rect x="428" y="278" width="244" height="40" rx="9" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="446" y="303.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">Ragged, unaligned columns</text><rect x="428" y="330" width="244" height="40" rx="9" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="446" y="355.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">Labels too small to read</text><rect x="60" y="440" width="640" height="72" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/><text x="380" y="474" fill="#f4d89c" font-family="Inter, sans-serif" font-size="15" font-weight="750" text-anchor="middle">A clean lint is not a finished diagram</text><text x="380" y="500" fill="#c9a869" font-family="Inter, sans-serif" font-size="12" font-weight="650" text-anchor="middle">Take the screenshot. Look at it. Every time.</text><text class="svg-small" x="64" y="566">The structural check passes long before the pixels are right.</text></g>
+            <!-- DIAGRAM 9: SAVEDOC -->
+            <g class="diagram-state" data-state="9"><text class="svg-kicker" x="64" y="56">Hand off</text><text class="svg-title" x="64" y="92">Saved, or it never happened.</text><rect x="60" y="172" width="640" height="144" rx="12" fill="#101713" stroke="#2f3c34" stroke-width="1.5"/><text x="80" y="202" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">const fixed = editor.getCurrentPageShapes()</text><text x="80" y="224" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">  .filter(s => s.props?.growY > 0)          // autosize pass</text><text x="80" y="246" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">editor.updateShapes(fixed)</text><text x="80" y="268" fill="#f4d89c" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">return helpers.getLints()                   // expect { lints: [] }</text><text x="80" y="290" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">await helpers.saveDoc()                     // <- the file on disk</text><rect x="60" y="360" width="310" height="128" rx="16" fill="#38241f" stroke="#ee795e" stroke-width="1.8"/><text x="88" y="396" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">WITHOUT saveDoc()</text><text x="88" y="426" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700">The canvas shows the work.</text><text x="88" y="450" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700">The file does not. And the user</text><text x="88" y="474" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700">has been told it is saved.</text><rect x="390" y="360" width="310" height="128" rx="16" fill="#f4f1e8"/><text x="414" y="394" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">HAND-OFF</text><text x="414" y="424" fill="#2c332c" font-family="Inter, sans-serif" font-size="13" font-weight="750">~/Documents/blockers.tldraw</text><text x="414" y="450" fill="#667068" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Doc name · saved · lint clean</text><text x="414" y="472" fill="#667068" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Export to PNG or SVG is a UI action.</text><text class="svg-small" x="64" y="540">The screenshot is for your verification, not the deliverable. The deliverable is the file.</text></g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1: FOUR QUESTIONS INSIDE ONE SENTENCE. — edit scene copy here -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · The tension</span>
+            <h2 id="scene-1-title">Four questions inside one sentence.</h2>
+            <p>“Draw me a flow for the payroll blockers thing.” Which flow — a user flow, a task flow, a cross-actor service flow? Read by an engineer or a compliance reviewer? Happy path, or errors and recovery? At what fidelity? Draw first and you get a tidy picture of an undecided idea, which is the most expensive kind, because it looks finished.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>A renderer is a deliberately narrow skill.</strong> Narrowness is what lets it be good at the mechanics — and what stops it from confidently answering questions it has no basis to answer.</aside>
+
+        <!-- SCENE 2: DECIDE OVER HERE. DRAW OVER THERE. — edit scene copy here -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · The split</span>
+            <h2 id="scene-2-title">Decide over here. Draw over there.</h2>
+            <p>A discipline skill owns intention, audience, artifact type, structure, and fidelity. This one owns shape records, layout math, arrows and bindings, linting, screenshots, and export. When the decisions are missing, the correct move is to ask for them or route to the skill that owns them — not to fill them in while drawing.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 3: IT NEVER LEAVES YOUR DISK. — edit scene copy here -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · Why this renderer</span>
+            <h2 id="scene-3-title">It never leaves your disk.</h2>
+            <p>Not a cloud workspace, not a shared team board, not a link that needs an account. tldraw offline writes a file you own. That is the reason to pick it: unreleased roadmaps, salary bands, customer names, org charts before they are announced — the material enterprise design actually runs on.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 4: NO APP RUNNING, NO DRAWING. — edit scene copy here -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · The catch</span>
+            <h2 id="scene-4-title">No app running, no drawing.</h2>
+            <p>This is the only skill in the library that depends on something running outside Copilot: the tldraw desktop app on this machine, exposing its local API. There is no hosted fallback. If it is not running, the skill says so and stops — quietly substituting an ASCII diagram or another canvas is not a graceful degradation, it is delivering something else.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5: ONE CALL. RETURN COUNTS. — edit scene copy here -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · The economics</span>
+            <h2 id="scene-5-title">One call. Return counts.</h2>
+            <p>You send JavaScript, not per-element JSON, and only what you <code>return</code> comes back. That single property makes a thirty-shape diagram cheap: build the whole thing in loops in one file, post it once, and echo <code>{ nodes: 24, arrows: 31 }</code>. Returning live shape records instead fills the context with noise and buys nothing.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 6: PLAN THE COORDINATES ON PAPER FIRST. — edit scene copy here -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Craft</span>
+            <h2 id="scene-6-title">Plan the coordinates on paper first.</h2>
+            <p>Column pitch, row pitch, node size — decided before the canvas gets a say, because a canvas will happily place things where they fit rather than where they mean something. And some numbers are not yours to choose: a sticky note is a fixed 200 × 200 square, so a frame sized for a wider column will always look half-empty.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 7: BIND THE ARROWS. ALWAYS. — edit scene copy here -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · Craft</span>
+            <h2 id="scene-7-title">Bind the arrows. Always.</h2>
+            <p>An arrow built from two points looks identical to a bound one and detaches the instant anyone moves a node. Since the whole value of a canvas artifact is that the reader rearranges it while thinking, a diagram of friendless arrows falls apart on first contact with its audience.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 8: THREE RULES, THEN YOUR EYES. — edit scene copy here -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · The check</span>
+            <h2 id="scene-8-title">Three rules, then your eyes.</h2>
+            <p>The linter checks exactly three things: unsized shapes, overlapping text, and unbound arrows. It says nothing about arrows crossing nodes, ragged columns, or labels too small to read at the zoom anyone will actually use. A clean lint is a starting condition, not a finish line — take the screenshot and look at it, every time.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>This is the anti-pattern that survives longest,</strong> because a green check is genuinely satisfying and a screenshot is genuinely work.</aside>
+
+        <!-- SCENE 9: SAVED, OR IT NEVER HAPPENED. — edit scene copy here -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Hand off</span>
+            <h2 id="scene-9-title">Saved, or it never happened.</h2>
+            <p>Nothing persists until <code>saveDoc()</code> runs. Skip it and the canvas shows the work while the file on disk stays stale — and the user has been told it is saved. The hand-off is the file path and the document name. The screenshot was for verification; the deliverable is the file, and PNG or SVG export is a UI action the user takes.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="next-moves-section" aria-labelledby="next-moves-title">
+      <div class="next-moves-inner">
+        <p class="eyebrow">Before you draw</p>
+        <h2 id="next-moves-title">What has to be decided somewhere else.</h2>
+        <p class="next-moves-lede">Each of these belongs to a discipline skill. When one is missing, the renderer asks rather than guesses — a guess made at drawing time becomes indistinguishable from a decision once it is on the canvas.</p>
+
+        <div class="next-moves-grid">
+          <article class="next-move-card"><h3>Intention</h3><p><strong>What is this diagram for?</strong> Aligning a team, exposing a fail point, and briefing an engineer produce three different drawings of the same system.</p></article>
+          <article class="next-move-card"><h3>Audience</h3><p><strong>Who reads it, and what do they already know?</strong> Notation an engineer skims is notation a stakeholder stalls on.</p></article>
+          <article class="next-move-card"><h3>Artifact type</h3><p><strong>Which diagram?</strong> A user flow, a service blueprint, a concept model and an ecosystem map answer different questions. Picking one is a decision, not a rendering preference.</p></article>
+          <article class="next-move-card"><h3>Scope and structure</h3><p><strong>Where does it start and stop?</strong> Happy path only, or errors, permissions, and recovery. This decides half the shapes on the canvas.</p></article>
+          <article class="next-move-card"><h3>Fidelity</h3><p><strong>Zoning, lo-fi, or annotated?</strong> For wireframes especially, the rung is chosen before drawing — polish read as finality is how a sketch becomes a spec by accident.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="output-section" aria-label="The tldraw build loop">
+      <details>
+        <summary>Explore the complete build loop</summary>
+        <div class="output-grid">
+          <div class="output-item">Confirm the app is running</div><div class="output-item">Resolve the tq helper</div>
+          <div class="output-item">Target the right document</div><div class="output-item">Force light colour scheme</div>
+          <div class="output-item">Plan coordinates on paper</div><div class="output-item">Build in one exec</div>
+          <div class="output-item">Nodes from a data array</div><div class="output-item">Arrows bound between shapes</div>
+          <div class="output-item">Group atoms and units</div><div class="output-item">Run the autosize pass</div>
+          <div class="output-item">Lint — expect zero</div><div class="output-item">Screenshot and critique</div>
+          <div class="output-item">Fix the visual problems</div><div class="output-item">Save the document</div>
+          <div class="output-item">Report the file path</div><div class="output-item">Export is a UI action</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">A drawing that survives being moved.</h2>
+        <p><strong>The point of a canvas is not the picture; it is that someone can rearrange it while they think.</strong> Bound arrows, grouped units, planned coordinates and a saved file are what make that possible — and each one is invisible in a screenshot, which is exactly why they get skipped. Keeping the decisions upstream and the mechanics here is what lets both be done properly: the discipline skill argues about what the diagram should say, and the renderer makes sure it still says it after the reader drags a box.</p>
+        <div class="final-equation"><span>A decided artifact</span><span aria-hidden="true">→</span><span>A file you own</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">A discipline skill deciding an artifact, the renderer drawing it, and a saved local file</title>
+        <desc id="closing-diagram-desc">Decisions about intention, audience and structure flow into the renderer, which handles layout, bindings and linting, and produces a saved tldraw file on the user's own disk.</desc>
+        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
+        <text x="118" y="106" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">DISCIPLINE DECIDES</text>
+        <g font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle">
+          <rect x="42" y="126" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="153" fill="#c8dcff">Intention</text>
+          <rect x="42" y="182" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="209" fill="#c8dcff">Audience</text>
+          <rect x="42" y="238" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="265" fill="#c8dcff">Artifact type</text>
+          <rect x="42" y="294" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="321" fill="#c8dcff">Fidelity</text>
+        </g>
+        <path d="M202 148 C238 148 240 232 268 232 M202 204 H268 M202 260 C238 260 240 232 268 232 M202 316 C238 316 240 232 268 232" fill="none" stroke="#526058" stroke-width="2"/>
+        <rect x="276" y="132" width="120" height="206" rx="16" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
+        <text x="336" y="216" fill="#fffdf7" font-family="Georgia, serif" font-size="18" text-anchor="middle">Render</text>
+        <text x="336" y="246" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">LAYOUT · BIND</text>
+        <text x="336" y="264" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">LINT · SAVE</text>
+        <path d="M406 232 H460" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <rect x="476" y="140" width="184" height="190" rx="16" fill="#f4f1e8"/>
+        <text x="500" y="176" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">ON YOUR DISK</text>
+        <g fill="#dceddf" stroke="#9dbfa9" stroke-width="1.5">
+          <rect x="500" y="196" width="62" height="38" rx="7"/><rect x="574" y="196" width="62" height="38" rx="7"/>
+          <rect x="500" y="252" width="62" height="38" rx="7"/><rect x="574" y="252" width="62" height="38" rx="7"/>
+        </g>
+        <g stroke="#63c99c" stroke-width="2.5" fill="none">
+          <path d="M562 215 H574"/><path d="M562 271 H574"/><path d="M531 234 V252"/>
+        </g>
+        <text x="568" y="316" fill="#667068" font-family="Inter, sans-serif" font-size="11" font-weight="750" text-anchor="middle">blockers.tldraw</text>
+        <text x="350" y="430" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">MECHANICS HERE. MEANING UPSTREAM.</text>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where this one comes from.</h2>
+        <p class="sources-intro">This skill is vendored from a personal library and adapted to ship. The adaptation is most of the interesting part.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>tldraw offline</h3>
+            <p>The desktop app, its local HTTP API, and the <code>.tldraw</code> file format. Version 1.12.0 is what the mechanics here are written against — including its quirks, like a screenshot <code>bounds</code> option that silently returns a window capture.</p>
+            <a href="https://tldraw.dev/">Read the tldraw docs</a>
+          </article>
+          <article class="source-card">
+            <h3>What vendoring changed</h3>
+            <p>A hardcoded path to the helper script — the kind that stops existing the moment a skill ships — became a search. References to sibling skills this plugin does not include were removed, and the failure modes were rewritten as a real <strong>Anti-patterns</strong> section.</p>
+            <a href="https://github.com/rloureiro_paychex/design-skills">See the repository conventions</a>
+          </article>
+          <article class="source-card">
+            <h3>Renderer, not discipline</h3>
+            <p>The split this article is built around. The library keeps deciding and drawing in separate skills so that neither quietly does the other’s job — the same reason <code>problem-framing</code>, <code>shaping</code> and <code>design-package</code> are three skills and not one.</p>
+            <a href="https://basecamp.com/shapeup">Read the method behind the split</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+  <footer>Draw What Was Decided · An interactive explanation of the tldraw-skill renderer</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        '1': 'The ambiguous ask',
+        '2': 'The boundary',
+        '3': 'Stays on the machine',
+        '4': 'Runtime dependency',
+        '5': 'One exec',
+        '6': 'Layout math',
+        '7': 'Bound arrows',
+        '8': 'Lint, then look',
+        '9': 'saveDoc'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

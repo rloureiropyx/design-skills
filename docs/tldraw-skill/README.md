@@ -1,6 +1,19 @@
 # Explainer — tldraw Skill (renderer)
 
-**Status:** vendored into this plugin from a standalone personal skill, adapted to this repo's rules.
+**Status:** shipped. Vendored into this plugin from a standalone personal skill, adapted to
+this repo's rules.
+
+```
+draw-what-was-decided.script.md    the scene-by-scene script
+draw-what-was-decided.html         the article — standalone, no build step
+```
+
+Open [`draw-what-was-decided.html`](draw-what-was-decided.html) directly in a browser. It has
+no dependencies and no build step. **Verified against the scrollytelling delivery matrix** —
+nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least
+clearance: 27px at 667×375.
+
+The notes below are the short written version of the same argument.
 
 ## What it is
 
