@@ -1,12 +1,12 @@
 # Explainer — Scrollytelling Article
 
-Not written yet.
-
-When it exists, it belongs here as a standalone article plus its editable narrative script, mirroring [`../problem-framing/`](../problem-framing/):
+**Status:** script written, awaiting approval. The article is not built yet.
 
 ```
-scrollytelling.html          the article
-scrollytelling-script.md     the scene-by-scene script it was built from
+scrollytelling-script.md     the scene-by-scene script  ← written
+scrollytelling.html          the article                ← blocked on script approval
 ```
 
-The obvious move is to use the skill on itself.
+The skill's own gate applies to its explainer: no implementation until the script is explicitly approved. See [`scrollytelling-script.md`](scrollytelling-script.md).
+
+The script was produced by running the skill on itself, which doubles as a real test run. Score it against [`../../tests/scrollytelling-article/scenarios.md`](../../tests/scrollytelling-article/scenarios.md) and save the result once the article ships.

@@ -28,7 +28,7 @@ Creates interactive long-form articles whose narrative and diagrams unfold as th
 
 - Skill: [`.github/skills/scrollytelling-article/SKILL.md`](.github/skills/scrollytelling-article/SKILL.md)
 - Tests: [`tests/scrollytelling-article/scenarios.md`](tests/scrollytelling-article/scenarios.md)
-- Explainer: [`docs/scrollytelling-article/`](docs/scrollytelling-article/) — not written yet
+- Explainer: [`docs/scrollytelling-article/scrollytelling-script.md`](docs/scrollytelling-article/scrollytelling-script.md) — script written, article pending approval
 
 ## Repository layout
 
