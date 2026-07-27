@@ -1,16 +1,23 @@
 {
   "name": "design-skills",
-  "description": "Product design skills for complex enterprise B2B work. Frame a product problem into an evidence-backed Framed Problem before any solution work, and build accessible scrollytelling explainers from an approved scene script.",
-  "version": "1.0.0",
+  "description": "Product design skills for complex enterprise B2B work. Frame a problem into an evidence-backed Framed Problem, shape it into one solution direction with a binary fit check inside a fixed appetite, package that bet as a decision-ready design package, and render the results as scrollytelling explainers or local tldraw canvases.",
+  "version": "1.1.0",
   "author": {
     "name": "Raul Loureiro"
   },
   "repository": "https://github.com/rloureiro_paychex/design-skills",
+  "skills": [
+    "skills/process",
+    "skills/artifacts",
+    "skills/renderers"
+  ],
   "keywords": [
     "product-design",
     "ux",
     "problem-framing",
-    "scrollytelling",
+    "shaping",
+    "shape-up",
+    "design-package",
     "enterprise",
     "b2b"
   ]

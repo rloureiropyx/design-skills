@@ -34,7 +34,7 @@
 - After scene 9: an expandable diagram of the complete `Framed Problem` structure received by Shape.
 - After scene 9: a visible seven-card guide explains the action attached to every next-move status: Ready for Shape, Revisit Shape, Continue current frame, Evidence needed, Needs reframing, Split, and Stop.
 - Before the closing: a visible, document-style example consolidates the SMB HCM case into a complete `Framed Problem`, including status, source request, baseline story, chosen frame, user and outcome, evidence, working question, boundaries, major risk, and the Shape handoff.
-- After the closing: a compact, non-linear whole-picture diagram groups `Problem Framing`, `Shape`, `Evaluate and Pick`, and `Pitch` inside a two-by-two **Direction Setting** zone. An approved Pitch flows downward into **Design**, where detailed interaction work, validation, and implementation guidance happen. The grouping explains that the earlier phases prevent drift rather than perform detailed design.
+- After the closing: a compact, non-linear whole-picture diagram groups `Problem Framing`, `Shape`, `Evaluate and Pick`, and `Design Package` inside a two-by-two **Direction Setting** zone. An approved design package flows downward into **Design**, where detailed interaction work, validation, and implementation guidance happen. The grouping explains that the earlier phases prevent drift rather than perform detailed design.
 
 ## Diagram system
 

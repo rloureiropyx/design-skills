@@ -5,11 +5,19 @@ This repository is a **plugin**: a source of truth for product design skills, au
 ```
 plugin.json                        the manifest — name, version, what ships
 .github/plugin/marketplace.json    the catalog consumers register and install from
-skills/<skill>/                    the skill itself: SKILL.md plus optional references/ and templates/
+skills/process/<skill>/            skills that decide something
+skills/artifacts/<skill>/          skills that produce the thing someone decides on
+skills/renderers/<skill>/          skills that materialise a decision made elsewhere
 docs/<skill>/                      the explainer, for someone who will never read the skill file
 ```
 
 Skills live in `skills/` at the root because that is the path `copilot plugin install` reads. They are deliberately **not** in `.github/skills/`, which is where an installed skill lands in a consuming project. Authoring location and consumption location are different things; do not move them back.
+
+The three groups are declared explicitly in `plugin.json`'s `skills` array. Without that array, both the installer and the check assume `skills/` holds skill folders directly and read `process/` as a skill with no `SKILL.md`. If you add a group, add it to the array in the same change.
+
+The grouping is for humans. Copilot routes on `name` and `description` alone and knows nothing about the folder a skill sits in, so never rely on the group to keep two skills apart — that is the non-trigger clause's job.
+
+`docs/` stays flat: `docs/<skill>/`, named after the skill folder and never after the group. The check resolves the explainer by skill name.
 
 Because of that, the skills here do not auto-load while you work in this repo. To exercise one, register the directory once with `copilot skill add ./skills` — it registers rather than copies, so edits apply immediately.
 
@@ -41,7 +49,11 @@ Direct `copilot plugin install owner/repo` is deprecated in favour of `plugin@ma
 
 ## Method conventions shared by the skills
 
-Treat `FRAMED_PROBLEM.md` as the problem-framing skill's primary output and as persistent project context.
+The skills form one chain, and each link is a document: `problem-framing` writes `FRAMED_PROBLEM.md`, `shaping` reads it and writes `SHAPING.md`, `design-package` reads both and writes `DESIGN_PACKAGE.md`. Treat all three as persistent project context.
+
+A downstream skill **carries** what an upstream one decided; it never re-derives it. When a downstream skill finds evidence that contradicts the frame, it sends that back rather than quietly restating the problem in new words.
+
+Use Ryan Singer's current vocabulary: the artifact a betting table decides on is a **design package**, not a pitch. In his usage "pitch" names the raw request that arrives *before* framing. Do not reintroduce the old term.
 
 Do not collapse observations, interpretations, assumptions, commitments, and preferences into a single category. Ask one high-leverage question at a time, inspect available project context before asking for facts, and request research-library or metrics inputs only when they can change the frame or next decision.
 

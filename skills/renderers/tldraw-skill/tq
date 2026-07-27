@@ -1,0 +1,75 @@
+#!/bin/sh
+# tq — talk to the tldraw offline canvas API without handling the port or token.
+#
+#   sh tq <METHOD> <path> [body]
+#
+# body forms:
+#   '{"code":"..."}'   -> sent as application/json
+#   @/tmp/build.js     -> file contents sent as text/plain (raw JS, preferred for /exec)
+#   'return 1+1'       -> sent as text/plain
+#   (omitted)          -> no body
+#
+# Every call re-reads server.json, so it survives the fresh-shell-per-call problem.
+
+set -eu
+
+case "$(uname -s 2>/dev/null || echo unknown)" in
+	Darwin) SERVER_JSON="$HOME/Library/Application Support/tldraw/server.json" ;;
+	MINGW*|MSYS*|CYGWIN*) SERVER_JSON="${APPDATA:-$HOME}/tldraw/server.json" ;;
+	*) SERVER_JSON="${XDG_CONFIG_HOME:-$HOME/.config}/tldraw/server.json" ;;
+esac
+
+if [ ! -f "$SERVER_JSON" ]; then
+	echo "tq: $SERVER_JSON not found — tldraw offline is not running (a clean quit removes it)." >&2
+	exit 3
+fi
+
+read_field() {
+	if command -v jq >/dev/null 2>&1; then
+		jq -r ".$1" "$SERVER_JSON"
+	else
+		sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\{0,1\}\([^,\"}]*\)\"\{0,1\}.*/\1/p" "$SERVER_JSON" | head -1
+	fi
+}
+
+PORT=$(read_field port)
+TOKEN=$(read_field token)
+
+if [ -z "$PORT" ] || [ -z "$TOKEN" ]; then
+	echo "tq: could not read port/token from $SERVER_JSON" >&2
+	exit 3
+fi
+
+METHOD=${1:-GET}
+ENDPOINT=${2:-/}
+BODY=${3:-}
+
+URL="http://127.0.0.1:$PORT$ENDPOINT"
+
+if [ -z "$BODY" ]; then
+	curl -sS -m 60 -X "$METHOD" "$URL" -H "authorization: Bearer $TOKEN"
+	exit $?
+fi
+
+case "$BODY" in
+	@*)
+		FILE=${BODY#@}
+		[ -f "$FILE" ] || { echo "tq: no such file: $FILE" >&2; exit 2; }
+		curl -sS -m 120 -X "$METHOD" "$URL" \
+			-H "authorization: Bearer $TOKEN" \
+			-H 'content-type: text/plain' \
+			--data-binary "@$FILE"
+		;;
+	\{*)
+		curl -sS -m 120 -X "$METHOD" "$URL" \
+			-H "authorization: Bearer $TOKEN" \
+			-H 'content-type: application/json' \
+			--data-binary "$BODY"
+		;;
+	*)
+		curl -sS -m 120 -X "$METHOD" "$URL" \
+			-H "authorization: Bearer $TOKEN" \
+			-H 'content-type: text/plain' \
+			--data-binary "$BODY"
+		;;
+esac

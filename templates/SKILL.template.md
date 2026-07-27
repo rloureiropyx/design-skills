@@ -93,13 +93,30 @@ and again whenever you change a phase, a boundary, or the frontmatter.
 <!--
 ## Where things go
 
-- `.github/skills/<skill>/SKILL.md` — the skill. Loaded as context, so keep it
-  lean. Anything needed at only one step belongs in `references/`, loaded on
-  demand: see `scrollytelling` for the pattern.
-- `.github/skills/<skill>/references/` — material read at a specific step.
-- `.github/skills/<skill>/templates/` — output formats the skill fills in.
-- `docs/<skill>/` — the explainer, for someone who will never read SKILL.md.
+Authored here under one of three groups, by what the skill owns:
 
-Nothing else goes in `.github/skills/`. It is loaded as skill context, so any
-prose that is not an instruction to the agent is noise at best.
+- `skills/process/<skill>/` — it decides something.
+- `skills/artifacts/<skill>/` — it produces the thing someone decides on.
+- `skills/renderers/<skill>/` — it materialises a decision made elsewhere.
+
+Inside the skill folder:
+
+- `SKILL.md` — the skill. Loaded in full on every invocation, so keep it lean.
+  Anything needed at only one step belongs in `references/`, loaded on demand:
+  see `scrollytelling` or `shaping` for the pattern.
+- `references/` — material read at a specific step.
+- `templates/` — output formats the skill fills in.
+
+And outside it:
+
+- `docs/<skill>/` — the explainer, for someone who will never read SKILL.md.
+  Flat, named after the skill folder, never after the group.
+
+The group is invisible to routing; it organises the repo for people. Two skills
+are kept apart by their descriptions' non-trigger clauses, never by their
+folders.
+
+Nothing else goes in `skills/`. It is loaded as skill context, so any prose that
+is not an instruction to the agent is noise at best — and evaluation material
+there would contaminate real runs.
 -->
