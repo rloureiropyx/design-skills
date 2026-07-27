@@ -29,7 +29,7 @@ Do not put evaluation material—scenarios, rubrics, or run transcripts—inside
 
 Keep skills platform-neutral. Do not introduce vendor-specific metadata or references unrelated to GitHub Copilot repository conventions.
 
-Run `node scripts/check-skills.mjs` after changing any skill, manifest, or link. It needs no dependencies.
+Run `node scripts/check-skills.mjs` after changing any skill, manifest, or link. It needs no dependencies. Run it locally and do not wait for CI: this organization has hosted runners disabled, so `.github/workflows/skills.yml` fails before it reaches the check. The red X on a pull request is the runner, not the repo.
 
 ## Releasing
 

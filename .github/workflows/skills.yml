@@ -1,5 +1,13 @@
 name: Skills
 
+# This cannot run yet. The organization has GitHub-hosted runners disabled and
+# no self-hosted runners registered, so every run fails in ~2s with
+# "GitHub Actions hosted runners are disabled for this repository" without
+# reaching the check. It is kept wired up so it starts working the moment an
+# enterprise administrator enables runners. Until then, run the check locally:
+#
+#   node scripts/check-skills.mjs
+
 on:
   push:
     branches: [main]
