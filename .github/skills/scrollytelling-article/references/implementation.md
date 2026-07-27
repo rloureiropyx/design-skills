@@ -1,12 +1,12 @@
 # Implementation reference — standalone HTML + GSAP
 
-One self-contained `.html`. Inline `<style>` and `<script>`. GSAP from CDN:
+One self-contained `.html`. Inline `<style>` and `<script>`. GSAP from CDN — that is the whole dependency list for a discrete-scene article:
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<!-- Add ScrollTrigger ONLY for a scrubbed sequence. Discrete scenes don't need it. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 ```
+
+ScrollTrigger is **not** part of the default build. Add it only if the approved script contains a scrubbed sequence, and see that section below for the tag.
 
 ## Page skeleton (sticky graphic + steps)
 
@@ -122,9 +122,13 @@ Rules:
 - Recompute on `resize` and `orientationchange` — the readable zone changes with the breakpoint.
 - `setState` must be idempotent and interruptible: kill running tweens on the same targets (`gsap.killTweensOf`) or use `overwrite: 'auto'`.
 - Tween durations 0.4–0.8s; animate only `transform` and `opacity`.
-- This needs GSAP only for the tween. Drop the ScrollTrigger `<script>` unless a scrubbed sequence actually uses it.
+- This needs GSAP only for the tween. Do not load ScrollTrigger at all unless a scrubbed sequence actually uses it.
 
 ## Scrubbed sequence (only if the script calls for it)
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+```
 
 ```js
 gsap.timeline({

@@ -66,11 +66,13 @@ Before implementation, read `references/patterns.md` and choose the pattern(s) p
 
 ## Phase 2 — Implementation
 
-**Default output: one standalone, self-contained HTML file** (inline CSS + JS, GSAP + ScrollTrigger from CDN). No build step — the file must work opened directly and dropped into a static site.
+**Default output: one standalone, self-contained HTML file** (inline CSS + JS, GSAP from CDN). No build step — the file must work opened directly and dropped into a static site.
+
+Load ScrollTrigger **only** when the approved script contains a scrubbed sequence. Discrete scenes must not use per-step `ScrollTrigger` ranges: they overlap when a card is shorter than its scene block, and callback order silently decides which scene wins. Select the active scene deterministically from scroll position instead — `references/implementation.md` has the tested version.
 
 Escalate to React **only** if the approved script contains stateful widgets the reader manipulates (filters, data explorers, inputs). If so, tell the user before building and confirm.
 
-Read `references/implementation.md` before writing code — it has the tested layout structure, ScrollTrigger setup, and the pitfalls (mobile viewport units, pinning inside containers).
+Read `references/implementation.md` before writing code — it has the tested layout structure, the deterministic scene-state selection, and the pitfalls (mobile viewport units, pinning inside containers).
 
 ### Non-negotiable requirements for the output
 
@@ -204,5 +206,5 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 ## Reference files
 
 - `references/patterns.md` — the scrollytelling patterns, when to use each, when to mix with static prose. Read in Phase 1 step 4.
-- `references/implementation.md` — HTML/CSS/JS skeleton, GSAP ScrollTrigger recipes, reduced-motion and no-JS handling, mobile pitfalls. Read at the start of Phase 2.
+- `references/implementation.md` — HTML/CSS/JS skeleton, deterministic scene-state selection, reduced-motion and no-JS handling, mobile pitfalls, and the scrubbed-sequence recipe. Read at the start of Phase 2.
 - `templates/script-template.md` — the scene table format. Use in Phase 1 step 2.
