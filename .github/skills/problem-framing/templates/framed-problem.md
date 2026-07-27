@@ -1,6 +1,6 @@
 # FRAMED_PROBLEM.md structure
 
-Read this at step 8, when writing the artifact. Use the exact top-level headings below so a future `shape` workflow and other project work can consume the file without parsing prose.
+Read this at step 8, when writing the artifact. Use the exact top-level headings below so whoever runs Shape next — a person, or a later workflow — can consume the file without parsing prose.
 
 Write in the user's language. Save it inside the project, using the project's established documentation directory when one exists and the project root otherwise. Update this same file on later framing passes — one current source of truth, never a second copy.
 
@@ -50,7 +50,7 @@ Risks that could invalidate or destabilize the frame during solution exploration
 Targeted inputs still required from the research library, metrics tool, or another source. Include the exact query or filter, the decision informed, the signal sought, and the stopping condition.
 
 ## Shape handoff
-What the future `shape` workflow may treat as settled, what remains flexible, which existing solution decisions are preserved or reopened, and which uncertainties its rough Excalidraw hypothesis sketches must address.
+What Shape may treat as settled, what remains flexible, which existing solution decisions are preserved or reopened, and which uncertainties its rough hypothesis sketches must address. Write it for a reader who has not seen this framing conversation and has no tooling beyond a sketching surface.
 
 ## Context use
 Where this file lives in the project, how it serves as the problem north star, which workflows must reference it, and which evidence or decision would require it to be updated.
