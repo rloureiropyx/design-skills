@@ -1,4 +1,4 @@
-# Explainer — Scrollytelling Article
+# Explainer — Scrollytelling
 
 **Status:** script written, awaiting approval. The article is not built yet.
 
