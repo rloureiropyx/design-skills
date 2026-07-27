@@ -1,0 +1,1332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of how the shaping skill turns a framed problem into one chosen solution shape, using numbered requirements and a binary fit check inside a fixed appetite.">
+  <link rel="icon" href="data:,">
+  <title>Pick a Shape — How the shaping skill works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .package-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A product design skill · How shaping works</p>
+        <h1>Two good solutions. One argument that never ends.</h1>
+        <p class="hero-deck"><strong>Agreeing on the problem does not settle the solution.</strong> Two people can hold two defensible answers and have no shared test to choose between them. <code>shaping</code> writes the test down first, then makes the choice binary.</p>
+        <span class="scroll-cue">Scroll to run the fit check</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">Two competing solution shapes weighed against a list of numbered requirements</title>
+        <desc id="hero-desc">Two proposals sit on either side of a checklist. Neither has been measured against it yet, so the argument between them has no way to end.</desc>
+        <defs><filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter></defs>
+        <g filter="url(#heroShadow)">
+          <rect x="46" y="92" width="222" height="212" rx="20" fill="#f9f8f1"/>
+          <text x="72" y="128" fill="#3d5b7a" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">SHAPE A</text>
+          <rect x="72" y="146" width="170" height="34" rx="8" fill="#e4eafa"/>
+          <rect x="72" y="190" width="170" height="34" rx="8" fill="#e4eafa"/>
+          <rect x="72" y="234" width="118" height="34" rx="8" fill="#e4eafa"/>
+          <rect x="352" y="92" width="222" height="212" rx="20" fill="#f9f8f1"/>
+          <text x="378" y="128" fill="#5b4a7d" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">SHAPE B</text>
+          <rect x="378" y="146" width="170" height="34" rx="8" fill="#eee4fb"/>
+          <rect x="378" y="190" width="118" height="34" rx="8" fill="#eee4fb"/>
+          <rect x="378" y="234" width="170" height="34" rx="8" fill="#eee4fb"/>
+        </g>
+        <path d="M268 198 H352" fill="none" stroke="#ee795e" stroke-width="4" stroke-dasharray="8 6"/>
+        <rect x="196" y="352" width="228" height="132" rx="16" fill="#222d26" stroke="#4a5a4e" stroke-width="2"/>
+        <text x="310" y="392" fill="#9cac9f" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.4">REQUIREMENTS</text>
+        <path d="M228 416 H392 M228 438 H364 M228 460 H384" stroke="#5f6b61" stroke-width="3" stroke-linecap="round"/>
+        <path d="M310 304 V344" fill="none" stroke="#4a5a4e" stroke-width="2" stroke-dasharray="6 6"/>
+        <text x="310" y="524" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">UNMEASURED</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The job</p>
+      <h2 id="intro-title">Turn a framed problem into one shape worth betting on.</h2>
+      <p>Framing decides what problem is worth solving. It does not decide what to build. <code>shaping</code> picks up there: it writes down what a solution must do, draws more than one way to do it, and then forces a choice using a test both options were measured against.</p>
+      <p>The method is Ryan Singer’s, adapted for enterprise work. Requirements get numbers so people can argue about <em>R4</em> instead of about tone. Shapes get letters so a conversation can name them. Parts of a shape are mechanisms — things a user can do — not layers of a stack, because layers cannot be cut and mechanisms can.</p>
+      <p class="definition"><strong>The output is a decision with its reasoning attached.</strong> <code>SHAPING.md</code> records the numbered requirements, the shapes considered, the fit check that separated them, the appetite, and the one shape selected — so a month later the team can see not just what was chosen, but what it beat.</p>
+    </section>
+
+    <section class="scrolly" aria-label="The shaping process">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">The argument</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
+              </marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: THE ARGUMENT -->
+            <g class="diagram-state is-active" data-state="1"><text class="svg-kicker" x="64" y="56">The standing argument</text><text class="svg-title" x="64" y="92">Same problem. Two answers.</text><path class="svg-line" d="M226 250 C300 250 306 300 352 300" marker-end="url(#arrow)"/><path class="svg-line" d="M226 430 C300 430 306 380 352 380" marker-end="url(#arrow)"/><rect class="svg-node" x="60" y="208" width="166" height="86" rx="16"/><circle class="svg-blue" cx="88" cy="237" r="7"/><text class="svg-label" x="106" y="242">Designer</text><text class="svg-small" x="88" y="268">“A guided wizard.”</text><rect class="svg-node" x="60" y="388" width="166" height="86" rx="16"/><circle class="svg-coral" cx="88" cy="417" r="7"/><text class="svg-label" x="106" y="422">Engineer</text><text class="svg-small" x="88" y="448">“Just batch the API.”</text><rect x="352" y="270" width="200" height="140" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="7 5"/><text x="452" y="330" fill="#9aa69c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">WHICH ONE IS RIGHT?</text><text x="452" y="356" fill="#7d8a80" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Nobody can say</text><text class="svg-small" x="452" y="470" text-anchor="middle">Two solutions, no shared test. The loudest voice wins.</text><text class="svg-small" x="64" y="560">Both may be defensible. Neither has been measured against anything.</text></g>
+            <!-- DIAGRAM 2: LOAD THE FRAME -->
+            <g class="diagram-state" data-state="2"><text class="svg-kicker" x="64" y="56">Step 1 · Load the frame</text><text class="svg-title" x="64" y="92">Shaping does not re-open the problem.</text><rect x="60" y="180" width="230" height="270" rx="18" fill="#f4f1e8"/><text x="88" y="214" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FRAMED_PROBLEM.MD</text><g font-family="Inter, sans-serif" font-size="13" font-weight="700"><rect x="88" y="236" width="174" height="36" rx="9" fill="#dceddf"/><text x="106" y="260" fill="#244135">User</text><rect x="88" y="282" width="174" height="36" rx="9" fill="#e4eafa"/><text x="106" y="306" fill="#273752">Tension</text><rect x="88" y="328" width="174" height="36" rx="9" fill="#f5e8c8"/><text x="106" y="352" fill="#57441f">Outcome</text><rect x="88" y="374" width="174" height="36" rx="9" fill="#eee4fb"/><text x="106" y="398" fill="#443259">Boundaries</text></g><path class="svg-line" d="M290 315 H352" marker-end="url(#arrow)"/><circle cx="452" cy="315" r="86" fill="#1d2a22" stroke="#63c99c" stroke-width="2"/><circle cx="452" cy="315" r="60" fill="none" stroke="#63c99c" stroke-opacity=".3" stroke-width="14"/><text class="svg-label" x="452" y="310" text-anchor="middle">shaping</text><text class="svg-small" x="452" y="334" text-anchor="middle">explore · choose</text><path class="svg-line-muted" d="M538 315 H620"/><rect x="620" y="270" width="96" height="90" rx="14" fill="#f4f1e8"/><path d="M642 296 H698 M642 316 H688 M642 336 H694" stroke="#5f685f" stroke-width="3" stroke-linecap="round"/><text class="svg-tiny" x="668" y="382" text-anchor="middle">SHAPING.MD</text><text class="svg-small" x="64" y="528">If the frame contradicts what shaping finds, shaping sends it back — it does not quietly rewrite it.</text></g>
+            <!-- DIAGRAM 3: REQUIREMENT LIST -->
+            <g class="diagram-state" data-state="3"><text class="svg-kicker" x="64" y="56">Step 2 · Requirements</text><text class="svg-title" x="64" y="92">Write what a solution must do. Number it.</text><rect x="60" y="168" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="193" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R1</text><text x="116" y="193" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">An admin sees which employees block the payroll run</text><text x="684" y="193" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><rect x="60" y="216" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="241" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R2</text><text x="116" y="241" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Blockers can be resolved without leaving the run</text><text x="684" y="241" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><rect x="60" y="264" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="289" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R3</text><text x="116" y="289" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">The run cannot close while a blocker is unresolved</text><text x="684" y="289" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><rect x="60" y="312" width="640" height="40" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><text x="76" y="337" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800">R4</text><text x="116" y="337" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">A second approver can override with a reason</text><text x="684" y="337" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">STRETCH</text><rect x="60" y="360" width="640" height="40" rx="10" fill="#3c301b" stroke="#e7b85c" stroke-width="1.6"/><text x="76" y="385" fill="#e7b85c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R5</text><text x="116" y="385" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Bulk-resolve across pay groups</text><text x="684" y="385" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OUT — next cycle</text><rect x="60" y="408" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="433" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R6</text><text x="116" y="433" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Works for a 40,000-employee tenant</text><text x="684" y="433" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><text class="svg-small" x="64" y="486">Statuses are the scope dial: OPEN must be met, STRETCH is welcome, OUT is named so it stops being re-argued.</text><text class="svg-small" x="64" y="512">Nine top-level requirements is the ceiling. More means the problem was never sliced.</text><text x="700" y="556" fill="#5f6b61" font-family="Inter, sans-serif" font-size="28" font-weight="800" text-anchor="end">R1–R9</text></g>
+            <!-- DIAGRAM 4: ENTERPRISE LAYER -->
+            <g class="diagram-state" data-state="4"><text class="svg-kicker" x="64" y="56">The enterprise layer</text><text class="svg-title" x="64" y="92">The requirements nobody writes down.</text><rect x="60" y="168" width="320" height="56" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="78" y="194" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Roles and permissions</text><text x="78" y="214" fill="#c9f1df" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Who may see it. Who may act on it.</text><rect x="396" y="168" width="304" height="56" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="414" y="194" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Auditability</text><text x="414" y="214" fill="#c8dcff" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Who did what, and can we prove it</text><rect x="60" y="240" width="320" height="56" rx="12" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="78" y="266" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Integrations</text><text x="78" y="286" fill="#dfd0fa" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">The system of record wins</text><rect x="396" y="240" width="304" height="56" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="414" y="266" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Data volume</text><text x="414" y="286" fill="#f4d89c" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">40,000 rows, not 40</text><rect x="60" y="312" width="320" height="56" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="338" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Operational complexity</text><text x="78" y="358" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Who supports it on day 90</text><rect x="396" y="312" width="304" height="56" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="414" y="338" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Accessibility</text><text x="414" y="358" fill="#c9f1df" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Keyboard, focus, announcement</text><rect x="60" y="404" width="640" height="72" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="7 5"/><text class="svg-label" x="84" y="434">Each one becomes a numbered requirement or an explicit non-requirement.</text><text class="svg-small" x="84" y="458">Silence here is where enterprise projects die in month three, not in week one.</text><text class="svg-small" x="64" y="528">Consumer-scale shaping skips this list. Enterprise work cannot.</text></g>
+            <!-- DIAGRAM 5: CANDIDATE SHAPES -->
+            <g class="diagram-state" data-state="5"><text class="svg-kicker" x="64" y="56">Step 3 · Candidate shapes</text><text class="svg-title" x="64" y="92">Two shapes that differ in kind, not in polish.</text><rect x="60" y="168" width="300" height="290" rx="18" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="88" y="202" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.4">SHAPE A</text><text x="88" y="228" fill="#e9eee8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Blocking checklist in the run</text><rect x="88" y="248" width="244" height="44" rx="12" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="275.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Run screen lists blockers</text><rect x="88" y="302" width="244" height="44" rx="12" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="329.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Inline resolve per row</text><rect x="88" y="356" width="244" height="44" rx="12" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="383.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Close button gated</text><text x="88" y="434" fill="#8fa6c4" font-family="Inter, sans-serif" font-size="11" font-weight="650">Admin never leaves the run</text><rect x="400" y="168" width="300" height="290" rx="18" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="428" y="202" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.4">SHAPE B</text><text x="428" y="228" fill="#e9eee8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Readiness ahead of the run</text><rect x="428" y="248" width="244" height="44" rx="12" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="446" y="275.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Nightly readiness sweep</text><rect x="428" y="302" width="244" height="44" rx="12" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="446" y="329.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Owners notified early</text><rect x="428" y="356" width="244" height="44" rx="12" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="446" y="383.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Run opens already clean</text><text x="428" y="434" fill="#b49cd8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Work moves off the deadline</text><text class="svg-small" x="64" y="508">One shape is not a choice, and three near-identical ones are the same shape wearing three hats.</text><text class="svg-small" x="64" y="534">Materially different means a reader can say what each one gives up.</text></g>
+            <!-- DIAGRAM 6: VERTICAL PARTS -->
+            <g class="diagram-state" data-state="6"><text class="svg-kicker" x="64" y="56">Parts</text><text class="svg-title" x="64" y="92">A part is a mechanism, not a screen.</text><rect x="60" y="160" width="300" height="300" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="88" y="192" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">HORIZONTAL — WRONG</text><rect x="88" y="210" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="235.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">The UI layer</text><rect x="88" y="258" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="283.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">The API layer</text><rect x="88" y="306" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="331.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">The database layer</text><text x="88" y="386" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11" font-weight="650">Nothing works until all three land.</text><text x="88" y="408" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11" font-weight="650">You cannot cut one and still ship.</text><rect x="400" y="160" width="300" height="300" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="428" y="192" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">VERTICAL — RIGHT</text><rect x="428" y="210" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="235.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">Detect a blocker</text><rect x="428" y="258" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="283.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">Resolve one inline</text><rect x="428" y="306" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="331.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">Gate the close</text><text x="428" y="386" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Each part is a thing the admin can do.</text><text x="428" y="408" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Cut one and the rest still works.</text><text class="svg-small" x="64" y="520">Vertical parts are what makes scope adjustable later. Horizontal layers are all-or-nothing.</text></g>
+            <!-- DIAGRAM 7: FLAGGED UNKNOWN -->
+            <g class="diagram-state" data-state="7"><text class="svg-kicker" x="64" y="56">Step 4 · Flag the unknowns</text><text class="svg-title" x="64" y="92">If nobody can describe it, it does not pass.</text><rect x="60" y="180" width="300" height="52" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="78" y="211.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Detect a blocker</text><circle cx="400" cy="206" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M395 206 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="430" y="211" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">We can describe how.</text><rect x="60" y="250" width="300" height="52" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="78" y="281.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Resolve one inline</text><circle cx="400" cy="276" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M395 276 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="430" y="281" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">We can describe how.</text><rect x="60" y="320" width="300" height="52" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="78" y="351.0" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Sync back to the ledger</text><path d="M400 335 L411 354 H389 Z" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-linejoin="round"/><text x="400" y="352" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle">!</text><text x="430" y="351" fill="#e7b85c" font-family="Inter, sans-serif" font-size="12" font-weight="700">Nobody can describe how.</text><rect x="60" y="404" width="640" height="86" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/><text x="84" y="434" fill="#f4d89c" font-family="Inter, sans-serif" font-size="14" font-weight="750">A flagged part is an automatic failure — not a caveat</text><text x="84" y="462" fill="#c9a869" font-family="Inter, sans-serif" font-size="12" font-weight="600">It stays a failure until a spike answers it. Optimism is not a resolution.</text><text class="svg-small" x="64" y="542">The flag is deliberately expensive. That is what stops “we’ll figure it out in build.”</text></g>
+            <!-- DIAGRAM 8: FIT CHECK -->
+            <g class="diagram-state" data-state="8"><text class="svg-kicker" x="64" y="56">Step 5 · The fit check</text><text class="svg-title" x="64" y="92">Binary. No “partially”.</text><text x="300" y="196" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">SHAPE A</text><text x="470" y="196" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">SHAPE B</text><text x="64" y="244" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R1 See the blockers</text><text x="64" y="296" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R2 Resolve in place</text><text x="64" y="348" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R3 Cannot close dirty</text><text x="64" y="400" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R4 Override with reason</text><text x="64" y="452" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R6 40,000 employees</text><circle cx="300" cy="240" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M295 240 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="292" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M295 292 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="344" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M295 344 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="396" r="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><path d="M295 391 l10 10 M305 391 l-10 10" fill="none" stroke="#ee795e" stroke-width="2.4" stroke-linecap="round"/><circle cx="300" cy="448" r="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><path d="M295 443 l10 10 M305 443 l-10 10" fill="none" stroke="#ee795e" stroke-width="2.4" stroke-linecap="round"/><circle cx="470" cy="240" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 240 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="470" cy="292" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 292 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="470" cy="344" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 344 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="470" cy="396" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 396 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M470 437 L481 456 H459 Z" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-linejoin="round"/><text x="470" y="454" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle">!</text><rect x="580" y="216" width="130" height="264" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="645" y="300" fill="#ee795e" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle">A FAILS</text><text x="645" y="322" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">R4, R6</text><text x="645" y="372" fill="#e7b85c" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle">B FAILS</text><text x="645" y="394" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">R6 — flagged</text><text class="svg-small" x="64" y="534">“Partially” is how a shape survives a check it should have failed. The column forces the argument into the open.</text></g>
+            <!-- DIAGRAM 9: FIXED APPETITE -->
+            <g class="diagram-state" data-state="9"><text class="svg-kicker" x="64" y="56">Step 5 · Appetite</text><text class="svg-title" x="64" y="92">The time is fixed. The scope moves.</text><text x="64" y="176" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">SIX WEEKS — NON-NEGOTIABLE</text><rect x="60" y="192" width="552" height="30" rx="8" fill="#63c99c" opacity=".18"/><rect x="60" y="192" width="552" height="30" rx="8" fill="none" stroke="#63c99c" stroke-width="1.6"/><text x="336" y="212" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="2">APPETITE</text><path d="M612 168 V500" class="svg-line" stroke-dasharray="6 6" fill="none"/><text x="64" y="274" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">SHAPE B AS DRAWN</text><rect x="60" y="290" width="640" height="44" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="1.6"/><path d="M612 290 h78 a10 10 0 0 1 10 10 v24 a10 10 0 0 1 -10 10 h-78 z" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="88" y="318" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="650">Sweep · notify · clean run · bulk-resolve</text><text x="656" y="317" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle">OVER</text><text x="64" y="386" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">SHAPE B, SCOPE CUT</text><rect x="60" y="402" width="552" height="44" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="1.6"/><text x="88" y="430" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="650">Sweep · notify · clean run</text><text x="656" y="430" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">R5 cut</text><text x="656" y="452" fill="#6f7b72" font-family="Inter, sans-serif" font-size="10" font-weight="650" text-anchor="middle">and named</text><text class="svg-small" x="64" y="534">Extending the deadline is the move that is not available. Cutting a STRETCH requirement is.</text></g>
+            <!-- DIAGRAM 10: SELECTED SHAPE -->
+            <g class="diagram-state" data-state="10"><text class="svg-kicker" x="64" y="56">Step 7 · Decide</text><text class="svg-title" x="64" y="92">One shape. And the honest status.</text><rect x="60" y="164" width="316" height="300" rx="18" fill="#302444" stroke="#ae8bf3" stroke-width="2.5"/><text x="88" y="198" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.6">SELECTED</text><text x="88" y="228" fill="#fffdf7" font-family="Inter, sans-serif" font-size="16" font-weight="750">Shape B — readiness ahead</text><rect x="88" y="250" width="260" height="40" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="275.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="750">Nightly readiness sweep</text><rect x="88" y="298" width="260" height="40" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="323.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="750">Owners notified early</text><rect x="88" y="346" width="260" height="40" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="371.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="750">Run opens already clean</text><text x="88" y="424" fill="#b49cd8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Appetite: 6 weeks · R5 cut</text><rect x="404" y="164" width="296" height="140" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="430" y="200" fill="#e7b85c" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.2">STATUS: SPIKE-NEEDED</text><text x="430" y="232" fill="#f4d89c" font-family="Inter, sans-serif" font-size="14" font-weight="700">R6 at 40,000 employees</text><text x="430" y="258" fill="#c9a869" font-family="Inter, sans-serif" font-size="11" font-weight="600">Two days. One question:</text><text x="430" y="280" fill="#c9a869" font-family="Inter, sans-serif" font-size="11" font-weight="600">can the sweep finish overnight?</text><rect x="404" y="324" width="296" height="140" rx="16" fill="#f4f1e8"/><text x="430" y="358" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">SHAPING.MD</text><path d="M430 384 H660 M430 404 H628 M430 424 H648" stroke="#8d968c" stroke-width="3" stroke-linecap="round"/><text x="430" y="452" fill="#667068" font-family="Inter, sans-serif" font-size="11" font-weight="700">Goes to the design package</text><text class="svg-small" x="64" y="534">A selected shape with a live spike is a real answer. A selected shape with a hidden unknown is not.</text></g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1: TWO ANSWERS, NO TEST. — edit scene copy here -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · The tension</span>
+            <h2 id="scene-1-title">Two answers, no test.</h2>
+            <p>A designer wants a guided wizard. An engineer wants a batch endpoint. Both are describing a real solution to the same agreed problem, and there is no shared standard either one can be held against. This argument is not resolved by seniority; it is resolved by writing the standard down.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>What is shaping, exactly?</strong> The phase between knowing what problem to solve and knowing what to build. It ends with one solution direction and the reasoning that selected it — not with wireframes.</aside>
+
+        <!-- SCENE 2: START FROM THE FRAME, DON’T REDO IT. — edit scene copy here -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · Entry</span>
+            <h2 id="scene-2-title">Start from the frame, don’t redo it.</h2>
+            <p>Shaping reads <code>FRAMED_PROBLEM.md</code> and carries it forward. It does not re-derive the user, the tension, or the outcome in new words. When shaping finds evidence that genuinely contradicts the frame, it stops and sends that back — quietly rewriting the problem to fit a solution is the failure this boundary exists to prevent.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 3: NUMBER THE REQUIREMENTS. — edit scene copy here -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · Step 1</span>
+            <h2 id="scene-3-title">Number the requirements.</h2>
+            <p>What must a solution do to count? Each answer gets a number and a status: <strong>OPEN</strong> must be met, <strong>STRETCH</strong> is welcome but optional, <strong>OUT</strong> is deliberately excluded and named so it stops resurfacing. Nine top-level requirements is the ceiling — more usually means the problem was never sliced.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 4: THE REQUIREMENTS ENTERPRISE ADDS. — edit scene copy here -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · Step 1, continued</span>
+            <h2 id="scene-4-title">The requirements enterprise adds.</h2>
+            <p>Roles and permissions. Auditability. The integration whose system of record always wins. Forty thousand rows instead of forty. Who supports this on day ninety. Keyboard and screen-reader behaviour. Each becomes a numbered requirement or an explicit non-requirement — because in enterprise work, silence here is what kills a project in month three.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>Why numbers?</strong> Because “it doesn’t feel right” cannot be answered. “It fails R4” can.</aside>
+
+        <!-- SCENE 5: DRAW AT LEAST TWO. — edit scene copy here -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · Step 2</span>
+            <h2 id="scene-5-title">Draw at least two.</h2>
+            <p>One shape is not a choice, it is a proposal wearing a process. The shapes must differ <em>in kind</em>: fix the run at the moment it breaks, or move the work earlier so the run opens clean. A reader should be able to say in one sentence what each shape gives up.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 6: PARTS ARE MECHANISMS, NOT LAYERS. — edit scene copy here -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Step 2, continued</span>
+            <h2 id="scene-6-title">Parts are mechanisms, not layers.</h2>
+            <p>“UI, API, database” is not a set of parts — nothing works until all three land, so nothing can be cut. “Detect a blocker, resolve one inline, gate the close” is: each is something a person can do, and removing one leaves the rest standing. Vertical parts are what makes scope adjustable later.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 7: IF NOBODY CAN DESCRIBE IT, FLAG IT. — edit scene copy here -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · Step 3</span>
+            <h2 id="scene-7-title">If nobody can describe it, flag it.</h2>
+            <p>For every part, one question: can we describe <em>how</em> this works? Not whether it is possible — whether we can say how. A part that fails that test gets a warning flag, and a flagged part counts as an outright failure in the check that follows. It stays one until a spike answers it. Optimism is not a resolution.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 8: EVERY SHAPE, EVERY REQUIREMENT, BINARY. — edit scene copy here -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · Step 4</span>
+            <h2 id="scene-8-title">Every shape, every requirement, binary.</h2>
+            <p>Each shape is scored against each requirement as pass or fail. There is no “partially”, and the absence of that option is the whole point — “partially” is how a weak shape survives a check it should have failed. The matrix does not make the decision; it makes the disagreement visible enough to have.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>When the matrix and your judgement disagree,</strong> the requirement list is usually wrong — something that matters was never written down. Fix the list, then re-run the check. Do not overrule the matrix silently.</aside>
+
+        <!-- SCENE 9: THE TIME IS FIXED. THE SCOPE MOVES. — edit scene copy here -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Step 5</span>
+            <h2 id="scene-9-title">The time is fixed. The scope moves.</h2>
+            <p>Appetite is not an estimate; it is a decision about how much this problem is worth. When the selected shape does not fit, the move available is cutting scope — dropping a STRETCH requirement, removing a part — not extending the deadline. A shape that only fits by moving the date has not been shaped.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 10: ONE SHAPE, AND AN HONEST STATUS. — edit scene copy here -->
+        <section class="step" data-state="10" aria-labelledby="scene-10-title">
+          <div class="step-card">
+            <span class="scene-number">10 · Step 6</span>
+            <h2 id="scene-10-title">One shape, and an honest status.</h2>
+            <p>Shaping ends with a selection and a status: <code>shape-selected</code>, <code>spike-needed</code>, <code>appetite-undefined</code>, <code>no-viable-shape</code>, or <code>reframe</code>. A selected shape with a live spike attached is a real answer. A selected shape with an unknown quietly folded into it is not.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="next-moves-section" aria-labelledby="next-moves-title">
+      <div class="next-moves-inner">
+        <p class="eyebrow">The decision after shaping</p>
+        <h2 id="next-moves-title">Every status has a next move.</h2>
+        <p class="next-moves-lede">Shaping does not automatically send every shape to a design package. The status says what happens next, and two of the five are ways of saying “not yet”.</p>
+
+        <div class="next-moves-grid">
+          <article class="next-move-card"><h3>shape-selected</h3><p><strong>Move forward.</strong> One shape passes every OPEN requirement, fits the appetite, and carries no unresolved flag. Write the design package.</p></article>
+          <article class="next-move-card"><h3>spike-needed</h3><p><strong>Buy an answer first.</strong> A flagged part decides whether the shape is viable. Run a timeboxed spike with a written question, then re-run the fit check.</p></article>
+          <article class="next-move-card"><h3>appetite-undefined</h3><p><strong>Ask for the number.</strong> Without a time budget the fit check has no failure condition and every shape passes. Get the appetite before choosing.</p></article>
+          <article class="next-move-card"><h3>no-viable-shape</h3><p><strong>Cut or reframe.</strong> No shape meets the OPEN requirements inside the appetite. Either the appetite is too small for this problem or the problem is too big for this appetite — say which.</p></article>
+          <article class="next-move-card"><h3>reframe</h3><p><strong>Send it back to framing.</strong> Shaping found evidence that contradicts the frame. Do not rewrite the problem here; return it with what was found.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="output-section" aria-label="Shaping document output structure">
+      <details>
+        <summary>Explore the complete <code>SHAPING.md</code> handoff</summary>
+        <div class="output-grid">
+          <div class="output-item">Status</div><div class="output-item">Frame carried forward</div>
+          <div class="output-item">Appetite</div><div class="output-item">Requirements (R1–R9)</div>
+          <div class="output-item">Requirement statuses</div><div class="output-item">Candidate shapes</div>
+          <div class="output-item">Parts per shape</div><div class="output-item">Flagged unknowns</div>
+          <div class="output-item">Fit check matrix</div><div class="output-item">Failure notes</div>
+          <div class="output-item">Open spikes</div><div class="output-item">Selected shape</div>
+          <div class="output-item">What it gives up</div><div class="output-item">Scope cuts made</div>
+          <div class="output-item">Enterprise constraints</div><div class="output-item">Saved as SHAPING.md</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">Now it can be committed to.</h2>
+        <p><strong>A shape is not a design. It is a bet with its reasoning attached.</strong> The fit check does not tell anyone what the interface looks like, how a row behaves on a narrow screen, or what the empty state says — that is Design’s work, and it is deliberately still open. What shaping settles is the harder thing: which direction, at what cost, giving up what. <code>SHAPING.md</code> hands the design package a decision that can be read, questioned, and approved without re-running the argument.</p>
+        <div class="final-equation"><span>Framed problem</span><span aria-hidden="true">→</span><span>One selected shape</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">Numbered requirements filtering several candidate shapes down to one selection</title>
+        <desc id="closing-diagram-desc">A list of numbered requirements acts as a filter. Several candidate shapes enter it and one passes through, carrying its appetite and an open spike with it.</desc>
+        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
+        <text x="128" y="72" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">CANDIDATE SHAPES</text>
+        <g font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle">
+          <rect x="52" y="96" width="152" height="58" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="128" y="131" fill="#c8dcff">Shape A</text>
+          <rect x="52" y="182" width="152" height="58" rx="9" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="128" y="217" fill="#dfd0fa">Shape B</text>
+          <rect x="52" y="268" width="152" height="58" rx="9" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="128" y="303" fill="#f4d89c">Shape C</text>
+        </g>
+        <path d="M212 125 C248 125 250 238 278 238 M212 211 H278 M212 297 C248 297 250 238 278 238" fill="none" stroke="#526058" stroke-width="2"/>
+        <rect x="286" y="118" width="104" height="240" rx="16" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
+        <text x="338" y="222" fill="#fffdf7" font-family="Georgia, serif" font-size="19" text-anchor="middle">Fit</text>
+        <text x="338" y="248" fill="#fffdf7" font-family="Georgia, serif" font-size="19" text-anchor="middle">check</text>
+        <text x="338" y="278" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">R1 – R9</text>
+        <path d="M400 238 H452" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <rect x="468" y="140" width="188" height="196" rx="16" fill="#302444" stroke="#ae8bf3" stroke-width="2.5"/>
+        <text x="562" y="180" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.4">SELECTED</text>
+        <text x="562" y="212" fill="#fffdf7" font-family="Inter, sans-serif" font-size="15" font-weight="750" text-anchor="middle">Shape B</text>
+        <g font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle" fill="#dfd0fa">
+          <rect x="494" y="230" width="136" height="30" rx="7" fill="#241a35"/><text x="562" y="250">Appetite: 6 weeks</text>
+          <rect x="494" y="268" width="136" height="30" rx="7" fill="#241a35"/><text x="562" y="288">R5 cut, named</text>
+          <rect x="494" y="306" width="136" height="18" rx="6" fill="#3c301b"/><text x="562" y="319" fill="#f4d89c" font-size="10">1 open spike</text>
+        </g>
+        <text x="350" y="440" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">A CHOICE THAT SURVIVES BEING QUESTIONED</text>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where the method comes from.</h2>
+        <p class="sources-intro"><code>shaping</code> is Ryan Singer’s method, adapted rather than copied. The adaptations are the parts enterprise work needs and consumer-scale shaping can skip.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>Shape Up</h3>
+            <p>Basecamp’s product-development method: a <strong>fixed appetite with variable scope</strong>, a rough solution direction settled before a build cycle, and boundaries and exclusions stated up front rather than discovered mid-build.</p>
+            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
+          </article>
+          <article class="source-card">
+            <h3>Ryan Singer’s shaping skills</h3>
+            <p>The R/S notation, requirement statuses, the parts-as-mechanisms rule, the deliberately <strong>binary fit check</strong>, and spikes whose acceptance criterion is “we can describe how” rather than “we think it will work”.</p>
+            <a href="https://github.com/rjs/shaping-skills">View the source skills</a>
+          </article>
+          <article class="source-card">
+            <h3>The enterprise adaptation</h3>
+            <p>Roles, permissions, auditability, integrations, data volume, operational complexity, and accessibility are seeded as requirement classes. They are not part of the original method and are the most common reason an otherwise sound shape fails late.</p>
+            <a href="https://www.ryansinger.co/">Read Singer on framing and shaping</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+  <footer>Pick a Shape · An interactive explanation of the shaping skill</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        '1': 'The argument',
+        '2': 'Load the frame',
+        '3': 'Requirement list',
+        '4': 'Enterprise layer',
+        '5': 'Candidate shapes',
+        '6': 'Vertical parts',
+        '7': 'Flagged unknown',
+        '8': 'Fit check',
+        '9': 'Fixed appetite',
+        '10': 'Selected shape'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 10`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

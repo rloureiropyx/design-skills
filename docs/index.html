@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>design-skills — the library</title>
+  <meta name="description" content="Explainers for every skill in the design-skills plugin: problem framing, shaping, design packages, scrollytelling and tldraw.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 clamp(1.1rem, 4vw, 3rem);
+    }
+
+    /* ---------- hero ---------- */
+
+    .hero {
+      background: var(--diagram);
+      color: var(--white);
+      padding: clamp(3.4rem, 9vw, 6.5rem) 0 clamp(3rem, 7vw, 5rem);
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(117, 169, 255, .16), transparent 46%),
+        radial-gradient(circle at 88% 82%, rgba(99, 201, 156, .14), transparent 48%);
+    }
+
+    .eyebrow {
+      margin: 0 0 1.1rem;
+      font-size: .74rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .hero h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(2.3rem, 6.4vw, 4.1rem);
+      line-height: 1.03;
+      letter-spacing: -.02em;
+      margin: 0 0 1.2rem;
+      max-width: 17ch;
+    }
+
+    .hero-deck {
+      margin: 0;
+      max-width: 62ch;
+      font-size: clamp(1rem, 2.3vw, 1.22rem);
+      color: rgba(255, 253, 247, .78);
+    }
+
+    .hero-deck strong { color: var(--white); }
+
+    .hero-meta {
+      margin: 2.2rem 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-meta li {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      padding: .42rem .85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 253, 247, .22);
+      color: rgba(255, 253, 247, .84);
+    }
+
+    /* ---------- sections ---------- */
+
+    .library { padding: clamp(2.8rem, 7vw, 5rem) 0 1rem; }
+
+    .group { margin-bottom: clamp(2.6rem, 6vw, 4.2rem); }
+
+    .group-head {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: .5rem 1rem;
+      padding-bottom: .9rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 1.6rem;
+    }
+
+    .group-head h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3.6vw, 2rem);
+      letter-spacing: -.01em;
+      margin: 0;
+    }
+
+    .group-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+      max-width: 56ch;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 1.4rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .card {
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(1.3rem, 3vw, 1.8rem);
+      display: flex;
+      flex-direction: column;
+      gap: .85rem;
+      position: relative;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      border-radius: var(--radius) 0 0 var(--radius);
+      background: var(--accent, var(--line));
+    }
+
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-3px);
+      border-color: var(--accent, var(--line));
+      box-shadow: 0 18px 44px rgba(30, 32, 25, .12);
+    }
+
+    .card-tag {
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      line-height: 1.25;
+      letter-spacing: -.01em;
+    }
+
+    .card h3 a {
+      text-decoration: none;
+      background-image: linear-gradient(var(--accent, var(--ink)), var(--accent, var(--ink)));
+      background-size: 100% 2px;
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      padding-bottom: 2px;
+    }
+
+    .card h3 a::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+    }
+
+    .card h3 a:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 4px;
+    }
+
+    .card-name {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .card p.card-deck {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .card-links {
+      margin: .3rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem .9rem;
+      font-size: .82rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-links a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+    .card-links a:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+    .card-note {
+      margin: 0;
+      font-size: .82rem;
+      color: var(--muted);
+      border-top: 1px dashed var(--line);
+      padding-top: .8rem;
+    }
+
+    /* ---------- handoff ---------- */
+
+    .handoff {
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(1.4rem, 4vw, 2.2rem);
+      margin-bottom: clamp(2.6rem, 6vw, 4rem);
+    }
+
+    .handoff h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+      margin: 0 0 .4rem;
+    }
+
+    .handoff p { margin: 0 0 1.1rem; color: var(--muted); font-size: .95rem; max-width: 66ch; }
+
+    .chain {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      align-items: stretch;
+    }
+
+    .chain li {
+      flex: 1 1 190px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent, var(--line));
+      border-radius: 14px;
+      padding: .8rem 1rem;
+    }
+
+    .chain b { display: block; font-size: .95rem; }
+
+    .chain span { display: block; font-size: .8rem; color: var(--muted); }
+
+    .chain code { font-size: .78rem; }
+
+    footer.page-foot {
+      background: var(--diagram);
+      color: rgba(255, 253, 247, .7);
+      padding: 2.6rem 0;
+      font-size: .88rem;
+      margin-top: 2rem;
+    }
+
+    footer.page-foot p { margin: 0 0 .5rem; max-width: 70ch; }
+
+    footer.page-foot a { color: var(--green); }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#library">Skip to the skills</a>
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">GitHub Copilot plugin · design-skills</p>
+      <h1>Skills that decide, before anything gets drawn.</h1>
+      <p class="hero-deck"><strong>Five skills, three roots, one handoff chain.</strong> Process skills decide what is true and what to build. Artifact skills write the thing a group can act on. Renderers only materialise a decision that has already been made — they never make one.</p>
+      <ul class="hero-meta">
+        <li>2 process skills</li>
+        <li>1 artifact skill</li>
+        <li>2 renderers</li>
+        <li>Every explainer verified across 9 viewports</li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="library" class="library">
+    <div class="wrap">
+
+      <section class="handoff" aria-labelledby="handoff-title">
+        <h2 id="handoff-title">The chain</h2>
+        <p>Each skill hands the next one a document, and that document is the only interface between them. No skill re-opens the decision the previous one closed.</p>
+        <ul class="chain">
+          <li style="--accent: var(--blue)"><b>problem-framing</b><span>What problem, and why now</span><code>FRAMED_PROBLEM.md</code></li>
+          <li style="--accent: var(--green)"><b>shaping</b><span>Which solution shape, inside the appetite</span><code>SHAPING.md</code></li>
+          <li style="--accent: var(--amber)"><b>design-package</b><span>The decision-ready artifact</span><code>DESIGN_PACKAGE.md</code></li>
+          <li style="--accent: var(--violet)"><b>renderers</b><span>Make the decision visible</span><code>.html · .tldr</code></li>
+        </ul>
+      </section>
+
+      <section class="group" aria-labelledby="group-process">
+        <div class="group-head">
+          <h2 id="group-process">Process</h2>
+          <p>Skills that change what the team believes. They end in a decision, not a deliverable.</p>
+        </div>
+        <ul class="cards">
+          <li class="card" style="--accent: var(--blue)">
+            <p class="card-tag">Process · 01</p>
+            <h3><a href="problem-framing/frame-before-you-design.html">Frame before you design</a></h3>
+            <p class="card-name">problem-framing</p>
+            <p class="card-deck">A solution can look right and still solve the wrong problem. This skill pressure-tests the frame — evidence, competing frames, boundaries, urgency — before design moves forward.</p>
+            <ul class="card-links">
+              <li><a href="problem-framing/README.md">Explainer</a></li>
+              <li><a href="problem-framing/frame-before-you-design.script.md">Scene script</a></li>
+              <li><a href="../skills/process/problem-framing/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Ends with a commitment to spend shaping time — not a commitment to build.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--green)">
+            <p class="card-tag">Process · 02</p>
+            <h3><a href="shaping/pick-a-shape.html">Pick a shape</a></h3>
+            <p class="card-name">shaping</p>
+            <p class="card-deck">Two people can hold two defensible solutions and have no shared test between them. Shaping writes the test down: numbered requirements, lettered shapes, a binary fit check, and flagged unknowns that cannot be waved through.</p>
+            <ul class="card-links">
+              <li><a href="shaping/README.md">Explainer</a></li>
+              <li><a href="shaping/pick-a-shape.script.md">Scene script</a></li>
+              <li><a href="../skills/process/shaping/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Stops at a selected shape with no unresolved <span aria-hidden="true">⚠️</span> flags.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="group" aria-labelledby="group-artifacts">
+        <div class="group-head">
+          <h2 id="group-artifacts">Artifacts</h2>
+          <p>Skills that write the document a group of people can act on without a meeting.</p>
+        </div>
+        <ul class="cards">
+          <li class="card" style="--accent: var(--amber)">
+            <p class="card-tag">Artifacts · 01</p>
+            <h3><a href="design-package/one-read-one-decision.html">One read, one decision</a></h3>
+            <p class="card-name">design-package</p>
+            <p class="card-deck">The third meeting that never decides anything is a document problem. A design package carries the frame, the shape, the appetite, the rabbit holes and the no-gos in one read — and refuses to be written while an unknown is still flagged.</p>
+            <ul class="card-links">
+              <li><a href="design-package/README.md">Explainer</a></li>
+              <li><a href="design-package/one-read-one-decision.script.md">Scene script</a></li>
+              <li><a href="../skills/artifacts/design-package/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Decidable in one read, or it is not finished.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="group" aria-labelledby="group-renderers">
+        <div class="group-head">
+          <h2 id="group-renderers">Renderers</h2>
+          <p>Skills that materialise something already decided. Give a renderer an undecided idea and it will produce a tidy picture of confusion.</p>
+        </div>
+        <ul class="cards">
+          <li class="card" style="--accent: var(--violet)">
+            <p class="card-tag">Renderers · 01</p>
+            <h3><a href="scrollytelling/scroll-is-not-a-story.html">Scroll is not a story</a></h3>
+            <p class="card-name">scrollytelling</p>
+            <p class="card-deck">Most interactive articles are built animation-first and explain nothing. This skill writes the scene script first, gates it on explicit approval, and only then builds — then proves the result across a device matrix instead of admiring it on a laptop.</p>
+            <ul class="card-links">
+              <li><a href="scrollytelling/README.md">Explainer</a></li>
+              <li><a href="scrollytelling/scroll-is-not-a-story.script.md">Scene script</a></li>
+              <li><a href="../skills/renderers/scrollytelling/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Every article on this page was produced by this skill.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--coral)">
+            <p class="card-tag">Renderers · 02</p>
+            <h3><a href="tldraw-skill/draw-what-was-decided.html">Draw what was decided</a></h3>
+            <p class="card-name">tldraw-skill</p>
+            <p class="card-deck">A canvas renderer for flows, maps and wireframes. It owns coordinates, connectors, contrast and legibility — never the content. Requires a local tldraw app running on your machine.</p>
+            <ul class="card-links">
+              <li><a href="tldraw-skill/README.md">Explainer</a></li>
+              <li><a href="tldraw-skill/draw-what-was-decided.script.md">Scene script</a></li>
+              <li><a href="../skills/renderers/tldraw-skill/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">External runtime dependency — read the explainer before installing.</p>
+          </li>
+        </ul>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="page-foot">
+    <div class="wrap">
+      <p>Install the library with <code>copilot plugin install design-skills@rolo</code>, then keep it current with <code>copilot plugin update design-skills</code>.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../plugin.json">plugin.json</a></p>
+    </div>
+  </footer>
+</body>
+</html>
