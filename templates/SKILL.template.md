@@ -95,7 +95,7 @@ and again whenever you change a phase, a boundary, or the frontmatter.
 
 - `.github/skills/<skill>/SKILL.md` — the skill. Loaded as context, so keep it
   lean. Anything needed at only one step belongs in `references/`, loaded on
-  demand: see `scrollytelling-article` for the pattern.
+  demand: see `scrollytelling` for the pattern.
 - `.github/skills/<skill>/references/` — material read at a specific step.
 - `.github/skills/<skill>/templates/` — output formats the skill fills in.
 - `docs/<skill>/` — the explainer, for someone who will never read SKILL.md.

@@ -1,5 +1,5 @@
 ---
-name: scrollytelling-article
+name: scrollytelling
 description: >-
   Create interactive scrollytelling articles — long-form web pages where the
   story unfolds as the reader scrolls, with a sticky graphic that changes state
@@ -16,7 +16,7 @@ description: >-
   presentation with no scroll-driven visual states.
 ---
 
-# Scrollytelling Article
+# Scrollytelling
 
 Build scroll-driven interactive articles in two phases: **Script** (narrative direction) then **Implementation** (standalone HTML). The phases are sequential and gated.
 

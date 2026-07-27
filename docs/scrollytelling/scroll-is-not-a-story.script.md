@@ -2,7 +2,7 @@
 
 **Opening tension:** Why do most "interactive articles" feel impressive and explain nothing?
 
-**Top identification:** Present `scrollytelling-article` immediately as a product design skill, before the tension.
+**Top identification:** Present `scrollytelling` immediately as a product design skill, before the tension.
 
 **Final payoff:** The reader understands that scrollytelling is a writing problem, not an animation problem. The scene—one concept, one visual state change—is the unit. The script is the contract, approved before a line of code. And the piece is finished only when it has been driven across a device matrix, not when it looks good on a laptop.
 
@@ -14,7 +14,7 @@
 
 | # | VISUAL — diagram state | COPY — 2–4 short sentences | TRANSITION |
 |---|---|---|---|
-| 0 · The impressive nothing | **Over-animated hero.** Particles drift, a chart re-draws itself, a headline parallaxes. Every element is in motion. A small caption reads: "3 minutes of scrolling. One sentence of meaning." | **A page that moves is not a story.** Most interactive articles are built animation-first, so the reader arrives at the end impressed and empty-handed. `scrollytelling-article` treats the story as the deliverable and the motion as its rendering. | — |
+| 0 · The impressive nothing | **Over-animated hero.** Particles drift, a chart re-draws itself, a headline parallaxes. Every element is in motion. A small caption reads: "3 minutes of scrolling. One sentence of meaning." | **A page that moves is not a story.** Most interactive articles are built animation-first, so the reader arrives at the end impressed and empty-handed. `scrollytelling` treats the story as the deliverable and the motion as its rendering. | — |
 | 1 · Two phases, one gate | **Process map.** Two blocks—`Script` and `Implementation`—separated by a closed violet gate. An arrow from Implementation back to Script is crossed out. | The skill has exactly two phases and they are sequential. Between them sits a gate that only the user can open. Nothing gets built until the scene script is explicitly approved. | The hero's motion freezes and collapses into the two-block diagram; the gate snaps shut. |
 | 2 · Never a blank page | **Interview-to-draft flow.** Four question chips—*one thing to understand · who is reading · what raw material exists · how long*—feed a document that fills itself in with a complete scene table. An empty template beside it is greyed out and marked "not this". | The skill asks at most four or five questions, in a single message, and only what it cannot infer. Then it writes the whole first draft itself. **A concrete draft to argue with beats an empty table**—handing the user a template to fill in is the failure mode, not the method. | The gate's left side expands; the questions flow in and the script draft assembles line by line. |
 | 3 · Anatomy of a scene | **Three-column scene card, exploded.** `VISUAL` (what the graphic shows), `TEXTO` (2–4 sentences), `TRANSICIÓN` (what changes on entry). Each column is a different semantic color. | Every scene is defined by three things, and the third is the one people forget. **Transition is not decoration; it is the argument moving.** If you cannot say what changes when the reader scrolls in, the scene is not finished. | The draft script zooms into one row, which unfolds into three labelled columns. |
