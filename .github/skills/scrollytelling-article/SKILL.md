@@ -9,7 +9,11 @@ description: >-
   writing the narrative script (guion) for one. Two phases — first act as a
   script/art director to co-write the scene-by-scene script, then implement it
   as a standalone HTML file with GSAP. Trigger it even if the
-  user only asks for the script or only for the implementation.
+  user only asks for the script or only for the implementation. Produces a
+  scroll-driven article or its scene script. Do NOT use it for adding a
+  scroll-to-top button or scroll progress bar, for a hover or entrance
+  animation on an existing page, or for a plain blog post, document, or
+  presentation with no scroll-driven visual states.
 ---
 
 # Scrollytelling Article

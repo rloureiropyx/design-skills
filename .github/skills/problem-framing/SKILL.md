@@ -1,6 +1,17 @@
 ---
 name: problem-framing
-description: Frame a product problem until it is specific, evidence-backed, bounded, and ready for Shape. Use when a designer is starting a project from a feature request, complaint, opportunity, raw idea, research note, or proposed solution; when an in-progress project needs its problem revisited after new evidence, feedback, scope drift, solution lock-in, or loss of clarity; when assumptions or competing frames need interrogation; or when another workflow needs a Framed Problem before shaping a solution direction. Produces a Framed Problem, not a solution, execution review, PRD, or pitch.
+description: >-
+  Frame a product problem until it is specific, evidence-backed, bounded, and
+  ready for Shape. Use when a designer is starting a project from a feature
+  request, complaint, opportunity, raw idea, research note, or proposed
+  solution; when an in-progress project needs its problem revisited after new
+  evidence, feedback, scope drift, solution lock-in, or loss of clarity; when
+  assumptions or competing frames need interrogation; or when another workflow
+  needs a Framed Problem before shaping a solution direction. Produces a Framed
+  Problem, not a solution, execution review, PRD, or pitch. Do NOT use it for a
+  direct implementation request ("add bulk edit to the grid"), a code or PR
+  review, writing acceptance criteria or requirements once a pitch is approved,
+  or generic plan stress-testing unrelated to what problem is being solved.
 ---
 
 # Problem Framing
