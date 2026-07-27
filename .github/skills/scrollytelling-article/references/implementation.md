@@ -174,3 +174,18 @@ Verify in a headless browser at `320×568, 375×667, 375×812, 414×896, 768×10
 - [ ] Only transform/opacity animated; no layout thrash
 - [ ] Scene copy grouped + commented in markup for easy editing
 - [ ] Headings hierarchy + landmarks valid; contrast ≥ 4.5:1
+
+## How to measure "settled position" without lying to yourself
+
+The overlap check is the one that produces false results, in both directions. Get it wrong and you either chase phantom bugs or ship a broken landscape phone.
+
+**Do not use `scrollIntoView({ block: 'center' })` to define the settled position.** Centering a card in the viewport is not where the reader lands; it is one arbitrary scroll offset out of hundreds, and on short viewports it is frequently the *worst* one. Using it as the definition reports failures on layouts that are fine.
+
+The honest question is existential, not positional: **is there any scroll offset at which this scene is active, its card is fully inside the viewport, and the card's rect does not intersect the graphic's rect?** If yes, the reader can read it. Scan the scene's scroll range and look for one such offset.
+
+Two rules for the scan:
+
+1. **Step small.** When a card nearly fills the viewport — a 369px card in a 375px window — exactly one narrow band of offsets works, and a 24px step walks straight past it. Step 4px or less, or you will report a failure that does not exist.
+2. **Pair the scan with a deterministic assertion**, so you can tell a real failure from a sampling artifact. Compare the card's height against the readable zone (viewport height minus the graphic's band, or the full height in two-column layouts). If the card is taller than its zone, it genuinely cannot be read without overlap, and no scroll offset will save it — that is a CSS bug, and the fix is a smaller type scale or less padding in the height-constrained media query. If the card fits but the scan found nothing, your scan is too coarse.
+
+Report the matrix honestly, including which viewport had the least margin. "Passes at 667×375 with 6px to spare" is useful to whoever edits the copy next; "all green" is not.

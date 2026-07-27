@@ -154,15 +154,15 @@ Do not deliver on visual impression alone. Drive a headless browser (Playwright)
 
 - [ ] `document.documentElement.scrollWidth` equals the viewport width — no horizontal overflow
 - [ ] scrolling top to bottom activates **every** scene in order; scrolling back up reverses it
-- [ ] at each scene's settled position, its card does not overlap the pinned graphic's box
+- [ ] at each scene, **some** scroll offset exists where the card is fully visible and does not overlap the pinned graphic — see the settled-position section of `references/implementation.md` before writing this check, it is the one that produces false results
 - [ ] the active scene's graphic and its text are on screen at the same time
 - [ ] works with JS disabled (readable top to bottom)
 - [ ] `prefers-reduced-motion` honored — states still change, motion does not
 - [ ] headings hierarchy + landmarks valid; contrast ≥ 4.5:1
 
-Assert these programmatically rather than by reading screenshots. Measure the settled position (scroll the card to rest, then compare rects) — mid-scroll overlap is expected and is not a defect.
+Assert these programmatically rather than by reading screenshots. Mid-scroll overlap is expected and is not a defect.
 
-Report the matrix result to the user. If a size fails, fix it before delivering.
+Report the matrix result to the user, naming the viewport with the least margin. If a size fails, fix it before delivering.
 
 ---
 
