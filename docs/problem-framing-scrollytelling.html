@@ -1,0 +1,1648 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of how problem-framing turns fuzzy product initiatives into clear, evidence-backed Framed Problems.">
+  <link rel="icon" href="data:,">
+  <title>Frame Before You Design — How problem-framing works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .pitch-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <article id="main">
+    <!-- SCENE 0: THE TRAP -->
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A product design skill · How problem-framing works</p>
+        <h1>Frame before you design.</h1>
+        <p class="hero-deck"><strong>A solution can look right and still solve the wrong problem.</strong> The further a project advances, the harder that becomes to admit. <code>problem-framing</code> pressure-tests the problem before design moves forward.</p>
+        <span class="scroll-cue">Scroll to pressure-test the frame</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">A polished AI payroll-readiness dashboard resting on a cracked problem foundation</title>
+        <desc id="hero-desc">The illustration shows how an attractive solution can be unstable when the underlying problem is unclear.</desc>
+        <defs>
+          <linearGradient id="screenGlow" x1="0" x2="1">
+            <stop offset="0" stop-color="#75a9ff" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#63c99c" stop-opacity=".8"/>
+          </linearGradient>
+          <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/>
+          </filter>
+        </defs>
+        <g filter="url(#heroShadow)">
+          <rect x="92" y="70" width="436" height="285" rx="24" fill="#f9f8f1"/>
+          <rect x="118" y="98" width="384" height="44" rx="10" fill="#e8e9e2"/>
+          <circle cx="143" cy="120" r="7" fill="#ee795e"/>
+          <circle cx="165" cy="120" r="7" fill="#e7b85c"/>
+          <circle cx="187" cy="120" r="7" fill="#63c99c"/>
+          <text x="128" y="181" fill="#151914" font-family="Inter, sans-serif" font-size="18" font-weight="750">AI payroll-readiness dashboard</text>
+          <rect x="128" y="202" width="132" height="112" rx="12" fill="#151d18"/>
+          <path d="M148 281 C176 250 192 269 214 232 S246 244 250 220" fill="none" stroke="url(#screenGlow)" stroke-width="6" stroke-linecap="round"/>
+          <rect x="279" y="202" width="94" height="48" rx="10" fill="#dfeae3"/>
+          <rect x="389" y="202" width="103" height="48" rx="10" fill="#e7e0f7"/>
+          <rect x="279" y="266" width="213" height="48" rx="10" fill="#ece7db"/>
+        </g>
+        <path d="M85 414 H535 L506 492 H114 Z" fill="#222d26" stroke="#4a5a4e" stroke-width="2"/>
+        <path d="M269 414 L301 446 L282 466 L325 492 M363 414 L342 438 L366 459 L348 492" fill="none" stroke="#ee795e" stroke-width="5" stroke-linecap="round"/>
+        <text x="310" y="530" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">PROBLEM?</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The job</p>
+      <h2 id="intro-title">Turn a fuzzy initiative into a clear, evidence-backed problem.</h2>
+      <p>A product team often starts with a feature request, a complaint, or a solution already attached. <code>problem-framing</code> slows the commitment down just enough to separate what was observed from what was assumed—and to decide what problem is worth solving.</p>
+      <p>The skill helps the designer remember every important question that should be answered before proposing solutions. It asks them one at a time, follows the evidence, and keeps unresolved questions visible.</p>
+      <p class="definition"><strong>The output is a problem north star.</strong> The <code>Framed Problem</code> is a traceable account of the user, tension, outcome, evidence, assumptions, boundaries, and open question. It stays in the project so later sketches, scope choices, and decisions can be checked against the same intent.</p>
+    </section>
+
+    <section class="scrolly" aria-label="The problem-framing process">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">Two entry points</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
+              </marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: TWO ENTRY POINTS -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="64" y="92">Process map</text>
+              <text class="svg-title" x="64" y="128">Two routes. One framing discipline.</text>
+              <path class="svg-line" d="M230 247 C304 247 310 310 354 310" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M230 411 C304 411 310 346 354 346" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M510 328 H620" marker-end="url(#arrow)"/>
+              <rect class="svg-node" x="64" y="204" width="166" height="86" rx="16"/>
+              <circle class="svg-green" cx="92" cy="233" r="7"/>
+              <text class="svg-label" x="110" y="238">New project</text>
+              <text class="svg-small" x="92" y="264">Raw idea · request</text>
+              <rect class="svg-node" x="64" y="368" width="166" height="86" rx="16"/>
+              <circle class="svg-blue" cx="92" cy="397" r="7"/>
+              <text class="svg-label" x="110" y="402">In progress</text>
+              <text class="svg-small" x="92" y="428">Work · evidence · cost</text>
+              <circle cx="430" cy="328" r="88" fill="#1d2a22" stroke="#63c99c" stroke-width="2"/>
+              <circle cx="430" cy="328" r="62" fill="none" stroke="#63c99c" stroke-opacity=".3" stroke-width="14"/>
+              <text class="svg-label" x="430" y="322" text-anchor="middle">problem-framing</text>
+              <text class="svg-small" x="430" y="346" text-anchor="middle">pressure-test</text>
+              <rect x="620" y="280" width="104" height="96" rx="14" fill="#f4f1e8"/>
+              <path d="M642 304 H702 M642 326 H690 M642 348 H698" stroke="#5f685f" stroke-width="3" stroke-linecap="round"/>
+              <text class="svg-tiny" x="672" y="399" text-anchor="middle">FRAMED PROBLEM</text>
+            </g>
+
+            <!-- DIAGRAM 2: EVIDENCE LEDGER -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="64" y="78">Evidence classification</text>
+              <text class="svg-title" x="64" y="114">Read first. Then separate.</text>
+              <g>
+                <rect class="svg-node" x="62" y="158" width="122" height="300" rx="16"/>
+                <text class="svg-small" x="84" y="188">PROJECT RECORD</text>
+                <g fill="#d8ddd7">
+                  <rect x="83" y="216" width="78" height="42" rx="7"/>
+                  <rect x="83" y="273" width="78" height="42" rx="7"/>
+                  <rect x="83" y="330" width="78" height="42" rx="7"/>
+                  <rect x="83" y="387" width="78" height="42" rx="7"/>
+                </g>
+                <text x="122" y="242" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">BRIEF</text>
+                <text x="122" y="299" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">METRICS</text>
+                <text x="122" y="356" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">RESEARCH</text>
+                <text x="122" y="413" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">DECISIONS</text>
+              </g>
+              <path class="svg-line" d="M184 308 H236" marker-end="url(#arrow)"/>
+              <g>
+                <rect x="246" y="158" width="430" height="58" rx="12" fill="#18342a" stroke="#63c99c"/>
+                <circle class="svg-green" cx="272" cy="187" r="7"/><text class="svg-label" x="290" y="192">Observation</text><text class="svg-small" x="434" y="192">Directly seen or sourced</text>
+                <rect x="246" y="226" width="430" height="58" rx="12" fill="#1c2c43" stroke="#75a9ff"/>
+                <circle class="svg-blue" cx="272" cy="255" r="7"/><text class="svg-label" x="290" y="260">Interpretation</text><text class="svg-small" x="434" y="260">Explanation of evidence</text>
+                <rect x="246" y="294" width="430" height="58" rx="12" fill="#3c301b" stroke="#e7b85c"/>
+                <circle class="svg-amber" cx="272" cy="323" r="7"/><text class="svg-label" x="290" y="328">Assumption</text><text class="svg-small" x="434" y="328">Unverified dependency</text>
+                <rect x="246" y="362" width="430" height="58" rx="12" fill="#302444" stroke="#ae8bf3"/>
+                <circle class="svg-violet" cx="272" cy="391" r="7"/><text class="svg-label" x="290" y="396">Commitment</text><text class="svg-small" x="434" y="396">Authorized decision</text>
+                <rect x="246" y="430" width="430" height="58" rx="12" fill="#38241f" stroke="#ee795e"/>
+                <circle class="svg-coral" cx="272" cy="459" r="7"/><text class="svg-label" x="290" y="464">Preference</text><text class="svg-small" x="434" y="464">Value judgment</text>
+              </g>
+              <text class="svg-small" x="246" y="530">Facts discoverable here are not delegated back to the user.</text>
+            </g>
+
+            <!-- DIAGRAM 3: BASELINE STORY -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="64" y="82">Question 1 · What actually happened?</text>
+              <text class="svg-title" x="64" y="118">Turn the request into one real episode.</text>
+              <g transform="translate(48 230)">
+                <path class="svg-line" d="M104 48 H132 M226 48 H254 M348 48 H376 M470 48 H498 M592 48 H620" marker-end="url(#arrow)"/>
+                <g>
+                  <rect class="svg-node" x="0" y="0" width="104" height="96" rx="14"/><circle class="svg-green" cx="52" cy="25" r="9"/><text class="svg-small" x="52" y="53" text-anchor="middle">SMB HR admin</text><text class="svg-tiny" x="52" y="76" text-anchor="middle">WHO</text>
+                  <rect class="svg-node" x="132" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="179" y="43" text-anchor="middle">Finalize</text><text class="svg-small" x="179" y="60" text-anchor="middle">payroll</text><text class="svg-tiny" x="179" y="79" text-anchor="middle">GOAL</text>
+                  <rect class="svg-node" x="254" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="301" y="43" text-anchor="middle">Payroll</text><text class="svg-small" x="301" y="60" text-anchor="middle">review</text><text class="svg-tiny" x="301" y="79" text-anchor="middle">CONTEXT</text>
+                  <rect x="376" y="0" width="94" height="96" rx="14" fill="#3b251f" stroke="#ee795e" stroke-width="2"/><text class="svg-small" x="423" y="43" text-anchor="middle">Changes</text><text class="svg-small" x="423" y="60" text-anchor="middle">missing</text><text x="423" y="79" fill="#ee795e" font-size="9" font-weight="700" text-anchor="middle">FRICTION</text>
+                  <rect class="svg-node" x="498" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="545" y="43" text-anchor="middle">Chases</text><text class="svg-small" x="545" y="60" text-anchor="middle">managers</text><text class="svg-tiny" x="545" y="79" text-anchor="middle">NEXT</text>
+                  <rect class="svg-node" x="620" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="667" y="43" text-anchor="middle">Payroll</text><text class="svg-small" x="667" y="60" text-anchor="middle">delayed</text><text class="svg-tiny" x="667" y="79" text-anchor="middle">IMPACT</text>
+                </g>
+                <path d="M412 99 L426 117 L418 134 L438 151" fill="none" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+              </g>
+              <rect x="142" y="432" width="476" height="84" rx="14" fill="#1c2721" stroke="#3f4c42"/>
+              <text class="svg-small" x="380" y="458" text-anchor="middle">Ask about the most recent person—not “users” in general.</text>
+              <text class="svg-label" x="380" y="489" text-anchor="middle">Where did they stop, and what happened next?</text>
+            </g>
+
+            <!-- DIAGRAM 4: CAUSAL QUESTION -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="64" y="76">Question 2 · Why do we think that is the cause?</text>
+              <text class="svg-title" x="64" y="112">Challenge the explanation—not the observation.</text>
+              <g transform="translate(76 166)">
+                <rect x="40" y="0" width="390" height="88" rx="16" fill="#3a261f" stroke="#ee795e"/>
+                <text class="svg-tiny" x="68" y="28">VISIBLE LAYER</text><text class="svg-label" x="68" y="57">Symptom: payroll approval is delayed</text>
+                <path class="svg-line-muted" d="M235 88 V120"/>
+                <rect x="40" y="120" width="390" height="88" rx="16" fill="#1c2c43" stroke="#75a9ff"/>
+                <text class="svg-tiny" x="68" y="148">INTERPRETATION</text><text class="svg-label" x="68" y="177">“HR needs better visibility”</text>
+                <path d="M235 208 V240" fill="none" stroke="#e7b85c" stroke-width="3" stroke-dasharray="6 6"/>
+                <rect x="40" y="240" width="390" height="88" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
+                <text class="svg-tiny" x="68" y="268">PLAUSIBLE CAUSE</text><text class="svg-label" x="68" y="297">Employee changes arrive late</text>
+                <circle cx="505" cy="202" r="67" fill="none" stroke="#63c99c" stroke-width="13" stroke-opacity=".28"/>
+                <circle cx="505" cy="202" r="51" fill="none" stroke="#63c99c" stroke-width="2"/>
+                <path d="M548 245 L592 289" stroke="#63c99c" stroke-width="12" stroke-linecap="round"/>
+                <rect x="448" y="350" width="206" height="92" rx="14" fill="#f4f1e8"/>
+                <text x="466" y="376" fill="#5b635b" font-size="9" font-weight="800" letter-spacing="1">ASK THE DESIGNER</text>
+                <text x="466" y="400" fill="#171914" font-size="11" font-weight="700">What makes us think</text>
+                <text x="466" y="418" fill="#171914" font-size="11" font-weight="700">a dashboard fixes the delay?</text>
+              </g>
+            </g>
+
+            <!-- DIAGRAM 5: PROJECT REVIEW -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="64" y="74">Question 3 · What changed since kickoff?</text>
+              <text class="svg-title" x="64" y="110">Revisit the brief without discarding the work.</text>
+              <path class="svg-line" d="M96 294 H674" marker-end="url(#arrow)"/>
+              <g>
+                <circle cx="112" cy="294" r="14" fill="#63c99c"/><text class="svg-label" x="112" y="245" text-anchor="middle">Original frame</text><text class="svg-tiny" x="112" y="325" text-anchor="middle">KICKOFF</text>
+                <circle cx="250" cy="294" r="12" fill="#ae8bf3"/><text class="svg-label" x="250" y="245" text-anchor="middle">Design concept</text><text class="svg-tiny" x="250" y="325" text-anchor="middle">AI DASHBOARD</text>
+                <circle cx="388" cy="294" r="12" fill="#75a9ff"/><text class="svg-label" x="388" y="245" text-anchor="middle">Five interviews</text><text class="svg-tiny" x="388" y="325" text-anchor="middle">WORKFLOW</text>
+                <circle cx="526" cy="294" r="14" fill="#ee795e"/><text class="svg-label" x="526" y="245" text-anchor="middle">Blocker found</text><text class="svg-tiny" x="526" y="325" text-anchor="middle">MISSING INPUTS</text>
+                <circle cx="664" cy="294" r="14" fill="#e7b85c"/><text class="svg-label" x="664" y="245" text-anchor="middle">What now?</text><text class="svg-tiny" x="664" y="325" text-anchor="middle">REOPEN</text>
+              </g>
+              <path d="M112 278 C208 122 427 127 526 278" fill="none" stroke="#ee795e" stroke-width="3" stroke-dasharray="8 7"/>
+              <rect x="246" y="124" width="155" height="46" rx="10" fill="#3b251f" stroke="#ee795e"/>
+              <text x="323" y="153" fill="#ee795e" font-size="12" font-weight="750" text-anchor="middle">ORIGINAL CAUSE WEAKENED</text>
+              <path d="M528 310 C557 374 602 385 646 323" fill="none" stroke="#e7b85c" stroke-width="3"/>
+              <text class="svg-small" x="583" y="405" text-anchor="middle">Which decisions should reopen?</text>
+              <g transform="translate(86 424)">
+                <rect class="svg-node" width="588" height="72" rx="14"/>
+                <text class="svg-tiny" x="26" y="28">SUNK-COST BOUNDARY</text>
+                <text class="svg-label" x="26" y="51">Effort spent is cost history—not evidence to continue.</text>
+              </g>
+            </g>
+
+            <!-- DIAGRAM 6: FRAME MATRIX -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="64" y="68">Compare plausible problem statements</text>
+              <text class="svg-title" x="64" y="104">The same behavior can have different causes.</text>
+              <g transform="translate(54 146)">
+                <text class="svg-tiny" x="276" y="0">EVIDENCE</text><text class="svg-tiny" x="374" y="0">LEVERAGE</text><text class="svg-tiny" x="470" y="0">OWNERSHIP</text><text class="svg-tiny" x="568" y="0">OPENNESS</text><text class="svg-tiny" x="651" y="0">BOUNDARY</text>
+                <g transform="translate(0 25)">
+                  <rect class="svg-node" width="650" height="68" rx="12"/>
+                  <text class="svg-label" x="18" y="31">HR lacks visibility</text><text class="svg-small" x="18" y="50">Dashboard assumed</text>
+                  <g fill="#526157"><circle cx="285" cy="34" r="6"/><circle cx="385" cy="34" r="6"/><circle cx="481" cy="34" r="6"/><circle cx="575" cy="34" r="6"/><circle cx="645" cy="34" r="6"/></g>
+                </g>
+                <g transform="translate(0 103)">
+                  <rect width="650" height="68" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+                  <text class="svg-label" x="18" y="31">Missing changes surface late</text><text class="svg-small" x="18" y="50">Payroll readiness</text>
+                  <g fill="#63c99c"><circle cx="285" cy="34" r="8"/><circle cx="385" cy="34" r="8"/><circle cx="481" cy="34" r="8"/><circle cx="575" cy="34" r="8"/><circle cx="645" cy="34" r="8"/></g>
+                </g>
+                <g transform="translate(0 181)">
+                  <rect class="svg-node" width="650" height="68" rx="12"/>
+                  <text class="svg-label" x="18" y="31">Managers submit changes late</text><text class="svg-small" x="18" y="50">Different owner</text>
+                  <g fill="#75a9ff"><circle cx="285" cy="34" r="8"/><circle cx="385" cy="34" r="6"/><circle cx="481" cy="34" r="8"/><circle cx="575" cy="34" r="6"/><circle cx="645" cy="34" r="8"/></g>
+                </g>
+                <g transform="translate(0 259)">
+                  <rect class="svg-node" width="650" height="68" rx="12"/>
+                  <text class="svg-label" x="18" y="31">Inputs lack clear owners</text><text class="svg-small" x="18" y="50">Coordination frame</text>
+                  <g fill="#e7b85c"><circle cx="285" cy="34" r="6"/><circle cx="385" cy="34" r="8"/><circle cx="481" cy="34" r="6"/><circle cx="575" cy="34" r="8"/><circle cx="645" cy="34" r="6"/></g>
+                </g>
+              </g>
+              <text class="svg-small" x="54" y="540">Ask: Which explanation fits what we observed—and what would change the choice?</text>
+            </g>
+
+            <!-- DIAGRAM 7: EVIDENCE GATE -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="64" y="76">What evidence would change the choice?</text>
+              <text class="svg-title" x="64" y="112">Ask the tools a precise question.</text>
+              <g transform="translate(45 203)">
+                <circle cx="42" cy="84" r="24" fill="#e7b85c"/><text x="42" y="89" fill="#171914" font-size="13" font-weight="800" text-anchor="middle">A?</text>
+                <path class="svg-line" d="M68 84 H104" marker-end="url(#arrow)"/>
+                <g transform="translate(112)"><path d="M70 0 L140 84 L70 168 L0 84 Z" fill="#243229" stroke="#526257"/><text class="svg-tiny" x="70" y="66" text-anchor="middle">HIGH IMPACT</text><text class="svg-label" x="70" y="90" text-anchor="middle">If false?</text></g>
+                <path class="svg-line" d="M252 84 H284" marker-end="url(#arrow)"/>
+                <g transform="translate(292)"><path d="M70 0 L140 84 L70 168 L0 84 Z" fill="#243229" stroke="#526257"/><text class="svg-tiny" x="70" y="66" text-anchor="middle">WEAK EVIDENCE</text><text class="svg-label" x="70" y="90" text-anchor="middle">Today?</text></g>
+                <path class="svg-line" d="M432 84 H464" marker-end="url(#arrow)"/>
+                <g transform="translate(472)"><path d="M70 0 L140 84 L70 168 L0 84 Z" fill="#243229" stroke="#526257"/><text class="svg-tiny" x="70" y="66" text-anchor="middle">RESEARCHABLE</text><text class="svg-label" x="70" y="90" text-anchor="middle">Can learn?</text></g>
+              </g>
+              <path class="svg-line" d="M657 287 V368" marker-end="url(#arrow)"/>
+              <rect x="480" y="380" width="244" height="62" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+              <text class="svg-tiny" x="602" y="405" text-anchor="middle">CHANGES A DECISION</text>
+              <text class="svg-label" x="602" y="428" text-anchor="middle">Ask for a targeted input</text>
+              <path class="svg-line" d="M602 442 V463 M602 463 H492 V478 M602 463 H672 V478"/>
+              <rect x="416" y="478" width="152" height="62" rx="13" fill="#1c2c43" stroke="#75a9ff"/>
+              <text class="svg-tiny" x="492" y="502" text-anchor="middle">QUANTITATIVE</text>
+              <text class="svg-label" x="492" y="520" text-anchor="middle">Metrics tool</text><text class="svg-tiny" x="492" y="535" text-anchor="middle">PAYROLL STALLS</text>
+              <rect x="596" y="478" width="152" height="62" rx="13" fill="#302444" stroke="#ae8bf3"/>
+              <text class="svg-tiny" x="672" y="502" text-anchor="middle">QUALITATIVE</text>
+              <text class="svg-label" x="672" y="520" text-anchor="middle">Research library</text><text class="svg-tiny" x="672" y="535" text-anchor="middle">SEARCH “MISSING”</text>
+              <path class="svg-line-muted" d="M226 371 C226 490 340 511 446 511" marker-end="url(#arrow)"/>
+              <text class="svg-small" x="236" y="503">Accepted risk</text>
+            </g>
+
+            <!-- DIAGRAM 8: SCOPE BOUNDARY -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="64" y="68">Which slice belongs in this project?</text>
+              <text class="svg-title" x="64" y="104">Choose one meaningful boundary.</text>
+              <rect x="158" y="151" width="450" height="328" rx="22" fill="#17261f" stroke="#63c99c" stroke-width="2"/>
+              <text x="184" y="181" fill="#63c99c" font-size="10" font-weight="800" letter-spacing="1">IN THE FRAME</text>
+              <g>
+                <rect class="svg-node-light" x="190" y="210" width="164" height="82" rx="13"/><text class="svg-tiny" x="210" y="237">USER</text><text class="svg-label" x="210" y="265">SMB HR admin</text>
+                <rect class="svg-node-light" x="412" y="210" width="164" height="82" rx="13"/><text class="svg-tiny" x="432" y="237">CONTEXT</text><text class="svg-label" x="432" y="265">Before payroll approval</text>
+                <rect class="svg-node-light" x="190" y="322" width="164" height="82" rx="13"/><text class="svg-tiny" x="210" y="349">OUTCOME</text><text class="svg-label" x="210" y="377">Approve on time</text>
+                <rect class="svg-node-light" x="412" y="322" width="164" height="82" rx="13"/><text class="svg-tiny" x="432" y="349">CHOSEN SLICE</text><text class="svg-label" x="432" y="377">Missing-change readiness</text>
+              </g>
+              <rect x="111" y="188" width="96" height="38" rx="9" fill="#302444" stroke="#ae8bf3"/><text x="159" y="212" fill="#d8c8fa" font-size="10" font-weight="750" text-anchor="middle">CONSTRAINTS</text>
+              <rect x="546" y="433" width="126" height="38" rx="9" fill="#3c301b" stroke="#e7b85c"/><text x="609" y="457" fill="#f0ca7b" font-size="10" font-weight="750" text-anchor="middle">TIME BUDGET</text>
+              <rect x="303" y="461" width="158" height="38" rx="9" fill="#3b251f" stroke="#ee795e"/><text x="382" y="485" fill="#f3a18e" font-size="10" font-weight="750" text-anchor="middle">MAJOR RISKS</text>
+              <g opacity=".7">
+                <rect class="svg-node" x="37" y="334" width="104" height="60" rx="12"/><text class="svg-small" x="89" y="359" text-anchor="middle">Adjacent</text><text class="svg-small" x="89" y="377" text-anchor="middle">problem</text>
+                <rect class="svg-node" x="621" y="255" width="104" height="60" rx="12"/><text class="svg-small" x="673" y="280" text-anchor="middle">Different</text><text class="svg-small" x="673" y="298" text-anchor="middle">user</text>
+              </g>
+              <text class="svg-tiny" x="89" y="414" text-anchor="middle">OUT</text><text class="svg-tiny" x="673" y="335" text-anchor="middle">OUT</text>
+            </g>
+
+            <!-- DIAGRAM 9: STATUS TREE -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="64" y="66">Is the problem ready for Shape?</text>
+              <text class="svg-title" x="64" y="102">Confirm the frame, then choose the next move.</text>
+              <rect x="74" y="176" width="190" height="244" rx="16" fill="#f4f1e8"/>
+              <text x="98" y="208" fill="#677067" font-size="9" font-weight="800" letter-spacing="1">FRAMED_PROBLEM.MD</text>
+              <g stroke="#808980" stroke-width="3" stroke-linecap="round"><path d="M98 239 H232"/><path d="M98 270 H215"/><path d="M98 301 H226"/><path d="M98 332 H205"/><path d="M98 363 H224"/></g>
+              <path class="svg-line" d="M264 298 H328" marker-end="url(#arrow)"/>
+              <path class="svg-line-muted" d="M348 298 V143 H420 M348 298 V195 H420 M348 298 V247 H420 M348 298 V299 H420 M348 298 V351 H420 M348 298 V403 H420 M348 298 V455 H420"/>
+              <g>
+                <rect x="420" y="121" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="148">Ready for Shape</text>
+                <rect x="420" y="173" width="236" height="44" rx="10" fill="#1c2c43" stroke="#75a9ff"/><text class="svg-label" x="438" y="200">Revisit Shape</text>
+                <rect x="420" y="225" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="253">Continue current frame</text>
+                <rect x="420" y="277" width="236" height="44" rx="10" fill="#3c301b" stroke="#e7b85c"/><text class="svg-label" x="438" y="305">Evidence needed</text>
+                <rect x="420" y="329" width="236" height="44" rx="10" fill="#302444" stroke="#ae8bf3"/><text class="svg-label" x="438" y="357">Needs reframing</text>
+                <rect x="420" y="381" width="236" height="44" rx="10" fill="#243229" stroke="#68786c"/><text class="svg-label" x="438" y="409">Split</text>
+                <rect x="420" y="433" width="236" height="44" rx="10" fill="#3b251f" stroke="#ee795e"/><text class="svg-label" x="438" y="461">Stop</text>
+              </g>
+              <text class="svg-small" x="74" y="505">Saved in the project · read by Shape and later work.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1: TWO ENTRY POINTS — edit scene copy here -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · Entry</span>
+            <h2 id="scene-1-title">Two entry points.</h2>
+            <p>The skill can enter at the beginning or in the middle of the work. A new project brings a raw idea; an active project brings decisions, design explorations, feedback, and accumulated cost. Both need a problem frame grounded in evidence.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>What is being produced?</strong> Not a requirements document and not a proposed interface. A <code>Framed Problem</code> is the evidence-backed boundary that Shape can rely on.</aside>
+
+        <!-- SCENE 2: READ BEFORE ASKING — edit scene copy here -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · What do we know?</span>
+            <h2 id="scene-2-title">Read before asking.</h2>
+            <p>Before asking the designer anything, the skill reads the available project record. Its first internal question is: <strong>What do we know, and what are we merely explaining or assuming?</strong> Facts found in the documents are not asked again.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 3: BASELINE STORY — edit scene copy here -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · Question 1</span>
+            <h2 id="scene-3-title">What actually happened?</h2>
+            <p>The request says, “Add an AI payroll-readiness dashboard.” The skill asks: <strong>Tell me about the most recent payroll run that was delayed. What was the HR admin trying to complete, what was missing, what did they do next, and what was the consequence?</strong> One concrete episode replaces a feature request.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 4: CAUSAL QUESTION — edit scene copy here -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · Question 2</span>
+            <h2 id="scene-4-title">Why do we think that is the cause?</h2>
+            <p>The skill offers a working hypothesis, then asks: <strong>What makes us think a dashboard would prevent the delay?</strong> In five workflow interviews, HR admins understood the payroll summary, but four still delayed approval while chasing missing employee changes from managers. The causal map changes before the next question is chosen.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5: PROJECT REVIEW — edit scene copy here -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · Question 3</span>
+            <h2 id="scene-5-title">What changed since kickoff?</h2>
+            <p>For work already in progress, the skill asks: <strong>What have we learned since the original brief, and which decisions does that learning reopen?</strong> The AI dashboard concept still counts as work completed, but the time spent creating it is not evidence that visibility was the real problem.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>The question trail:</strong> What happened? Why do we think that is the cause? What changed? Which explanation fits? What evidence would change our choice? Which slice belongs in this project?
+        </aside>
+
+        <!-- SCENE 6: FRAME MATRIX — edit scene copy here -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Compare</span>
+            <h2 id="scene-6-title">Compare the possible problems.</h2>
+            <p>The same payroll delay can support several problem statements, and each one leads to a different design space. The skill explains the alternatives, recommends the one best supported by observations, then asks: <strong>Which explanation fits what we saw—and what evidence would make us choose another?</strong> This prevents the first story from becoming fact by default.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 7: EVIDENCE GATE — edit scene copy here -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · Question 4</span>
+            <h2 id="scene-7-title">What evidence would change the choice?</h2>
+            <p>The skill proposes the exact input: <strong>In metrics, where do SMB payroll runs stall, and which missing-change types appear beforehand? In research, what episodes mention chasing managers, unconfirmed changes, or late payroll approval?</strong> It also states what result would support or weaken the frame.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 8: SCOPE BOUNDARY — edit scene copy here -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · Question 5</span>
+            <h2 id="scene-8-title">Which slice belongs in this project?</h2>
+            <p>The team may not need—or be able—to solve the whole problem. The skill asks: <strong>Which meaningful part can this project influence now, and what must stay outside?</strong> It defines a chosen slice without prescribing how to solve it.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>One boundary, in concrete terms:</strong>
+          <dl class="boundary-example">
+            <dt>User</dt><dd>An SMB HR admin responsible for payroll.</dd>
+            <dt>Context</dt><dd>The 48 hours before payroll approval.</dd>
+            <dt>Desired outcome</dt><dd>The admin resolves missing changes and approves payroll on time.</dd>
+            <dt>Constraint</dt><dd>Managers remain responsible for submitting employee changes.</dd>
+            <dt>Time budget</dt><dd>Two weeks of build time. The solution must change or shrink to fit the time—not the other way around.</dd>
+            <dt>Major risk</dt><dd>The platform may not distinguish a missing change from “no change,” causing false alerts and eroding HR trust.</dd>
+            <dt>Optional boundary</dt><dd>Supported payroll configurations are not yet defined. If this stays open, Shape may spread across every configuration and exceed the two-week build budget.</dd>
+            <dt>Chosen slice</dt><dd>Surface and resolve missing changes before payroll approval—not redesign payroll or every manager workflow.</dd>
+          </dl>
+        </aside>
+
+        <!-- SCENE 9: STATUS TREE — edit scene copy here -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Confirm</span>
+            <h2 id="scene-9-title">Is the problem ready for Shape?</h2>
+            <p><strong>Shape is the next phase:</strong> explore distinct solution hypotheses as rough Excalidraw sketches, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed <code>Framed Problem</code> becomes the project’s problem north star for Shape and all later work.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="next-moves-section" aria-labelledby="next-moves-title">
+      <div class="next-moves-inner">
+        <p class="eyebrow">The decision after framing</p>
+        <h2 id="next-moves-title">Every status has a next move.</h2>
+        <p class="next-moves-lede">Problem Framing does not automatically send every initiative to Shape. Its status tells the designer exactly what should happen next.</p>
+
+        <div class="next-moves-grid">
+          <article class="next-move-card"><h3>Ready for Shape</h3><p><strong>Move forward.</strong> Use the Framed Problem as the north star while exploring rough approaches.</p></article>
+          <article class="next-move-card"><h3>Revisit Shape</h3><p><strong>Re-evaluate the current approach.</strong> The problem frame changed; preserve valid decisions and reopen the ones the new evidence affects.</p></article>
+          <article class="next-move-card"><h3>Continue current frame</h3><p><strong>Keep the project moving.</strong> New evidence still supports the user, tension, outcome, and boundary; continue while monitoring known risks.</p></article>
+          <article class="next-move-card"><h3>Evidence needed</h3><p><strong>Ask a targeted question.</strong> Retrieve the exact metric or research input that can change the frame, then run framing again.</p></article>
+          <article class="next-move-card"><h3>Needs reframing</h3><p><strong>Return to the problem questions.</strong> The user, cause, outcome, or chosen slice is not coherent enough to guide approaches.</p></article>
+          <article class="next-move-card"><h3>Split</h3><p><strong>Create separate Framed Problems.</strong> The initiative contains independent users, tensions, or outcomes that should not share one direction.</p></article>
+          <article class="next-move-card"><h3>Stop</h3><p><strong>Do not continue downstream work.</strong> Record why the problem lacks sufficient evidence, value, ownership, or relevance.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="output-section" aria-label="Framed Problem output structure">
+      <details>
+        <summary>Explore the complete <code>Framed Problem</code> handoff</summary>
+        <div class="output-grid">
+          <div class="output-item">Status</div><div class="output-item">Source request</div>
+          <div class="output-item">Project checkpoint</div><div class="output-item">What changed</div>
+          <div class="output-item">Baseline story</div><div class="output-item">Chosen problem frame</div>
+          <div class="output-item">Users and outcomes</div><div class="output-item">Evidence ledger</div>
+          <div class="output-item">Assumption ledger</div><div class="output-item">Alternative frames</div>
+          <div class="output-item">Working question</div><div class="output-item">Boundaries</div>
+          <div class="output-item">Major risks</div><div class="output-item">Evidence requests</div>
+          <div class="output-item">Shape handoff</div><div class="output-item">Context use</div>
+          <div class="output-item">Confirmation</div><div class="output-item">Saved as FRAMED_PROBLEM.md</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="framed-example-section" aria-labelledby="framed-example-title">
+      <div class="framed-example-inner">
+        <div class="framed-example-intro">
+          <p class="eyebrow">A concrete output</p>
+          <h2 id="framed-example-title">What a Framed Problem looks like.</h2>
+          <p>The questions from the previous scenes consolidate into one concise project document. This is the problem north star—not a solution specification.</p>
+        </div>
+
+        <article class="framed-document" aria-label="Example Framed Problem document">
+          <div class="document-meta"><span>Project north star</span><span>FRAMED_PROBLEM.md</span></div>
+          <h3>SMB HR admins discover missing employee changes too late</h3>
+
+          <dl>
+            <div class="framed-field">
+              <dt>Status</dt>
+              <dd><span class="status-pill">Ready for Shape</span></dd>
+            </div>
+            <div class="framed-field">
+              <dt>Source request</dt>
+              <dd>“Add an AI payroll-readiness dashboard.” The dashboard remains a proposed solution, not part of the problem definition.</dd>
+            </div>
+            <div class="framed-field">
+              <dt>Baseline story</dt>
+              <dd>An SMB HR admin tried to approve payroll, but several employee changes were missing or unconfirmed. They stopped to chase managers in chat and spreadsheets, delaying payroll approval.</dd>
+            </div>
+            <div class="framed-field">
+              <dt>Chosen problem frame</dt>
+              <dd>SMB HR admins discover missing employee changes only during final payroll review, forcing manual follow-up with managers and putting on-time approval at risk.</dd>
+            </div>
+            <div class="framed-field">
+              <dt>User and desired outcome</dt>
+              <dd><strong>User:</strong> SMB HR admins responsible for payroll. <strong>Outcome:</strong> they identify and resolve missing changes early enough to approve payroll on time.</dd>
+            </div>
+            <div class="framed-field">
+              <dt>Evidence</dt>
+              <dd>In five payroll-workflow interviews, HR admins understood the payroll summary; four still delayed approval while chasing missing employee changes from managers.</dd>
+            </div>
+            <div class="framed-field">
+              <dt>Working question</dt>
+              <dd>How might we help SMB HR admins identify and resolve missing employee changes before payroll approval, without taking ownership away from managers?</dd>
+            </div>
+            <div class="framed-field">
+              <dt>Boundaries</dt>
+              <dd>
+                <ul>
+                  <li><strong>In:</strong> readiness of employee-change inputs during the 48 hours before payroll approval.</li>
+                  <li><strong>Out:</strong> redesigning payroll calculation, every manager workflow, or the full HCM platform.</li>
+                  <li><strong>Constraint:</strong> managers remain responsible for submitting employee changes.</li>
+                  <li><strong>Time budget:</strong> two weeks of build time. The chosen solution must fit this fixed investment.</li>
+                  <li><strong>Optional boundary:</strong> supported payroll configurations are not yet defined.</li>
+                  <li><strong>Consequence if deferred:</strong> Shape may expand across every configuration, exceed the two-week budget, and reopen the approach during Design. Resolve before the Pitch.</li>
+                </ul>
+              </dd>
+            </div>
+            <div class="framed-field">
+              <dt>Major risk</dt>
+              <dd>The platform may not reliably distinguish a missing employee change from a legitimate “no change” before payroll review. If that happens, false alerts could erode HR trust and make the chosen direction unusable.</dd>
+            </div>
+            <div class="framed-field">
+              <dt>Shape handoff</dt>
+              <dd>Explore materially different rough Excalidraw sketches. Each must preserve manager ownership, address early identification and resolution, and respond to the working question; none should assume a dashboard is the answer.</dd>
+            </div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <!-- SCENE 10: HANDOFF TO SHAPE -->
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">Now shape the solution direction.</h2>
+        <p><strong>Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.</strong> In Shape, each solution hypothesis becomes a rough Excalidraw sketch showing its mechanism, essential elements, relationships, and key interactions. The team evaluates the alternatives and picks one bounded direction. <code>FRAMED_PROBLEM.md</code> remains the problem north star used to judge every sketch and later decision.</p>
+        <div class="final-equation"><span>Framed problem</span><span aria-hidden="true">→</span><span>Rough solution sketches</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">A framed problem moving into rough solution sketches</title>
+        <desc id="closing-diagram-desc">A document backed by user, tension, outcome, and evidence passes into Shape, where each solution hypothesis becomes a rough Excalidraw sketch before one direction is chosen.</desc>
+        <defs>
+          <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+        </defs>
+        <rect x="44" y="100" width="216" height="274" rx="18" fill="#f4f1e8"/>
+        <text x="70" y="124" fill="#667068" font-family="Inter, sans-serif" font-size="9" font-weight="800" letter-spacing="1.3">PROJECT NORTH STAR</text>
+        <text x="70" y="142" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FRAMED_PROBLEM.MD</text>
+        <g font-family="Inter, sans-serif" font-size="13" font-weight="700">
+          <rect x="70" y="166" width="162" height="38" rx="9" fill="#dceddf"/><text x="88" y="191" fill="#244135">User</text>
+          <rect x="70" y="216" width="162" height="38" rx="9" fill="#e4eafa"/><text x="88" y="241" fill="#273752">Tension</text>
+          <rect x="70" y="266" width="162" height="38" rx="9" fill="#f5e8c8"/><text x="88" y="291" fill="#57441f">Outcome</text>
+          <rect x="70" y="316" width="162" height="38" rx="9" fill="#eee4fb"/><text x="88" y="341" fill="#443259">Evidence</text>
+        </g>
+        <path d="M270 238 H336" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <rect x="352" y="142" width="112" height="194" rx="56" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
+        <text x="408" y="232" fill="#fffdf7" font-family="Georgia, serif" font-size="22" text-anchor="middle">Shape</text>
+        <text x="408" y="255" fill="#9cac9f" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">EXPLORE</text>
+        <path d="M474 238 H525" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <text x="606" y="72" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">ROUGH EXCALIDRAW</text>
+        <g font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+          <rect x="548" y="92" width="116" height="58" rx="8" fill="#1c2c43" stroke="#75a9ff" stroke-width="2" stroke-dasharray="7 3"/><text x="606" y="126" fill="#c8dcff">Sketch A</text>
+          <rect x="548" y="178" width="116" height="58" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2" stroke-dasharray="5 4"/><text x="606" y="212" fill="#c9f1df">Sketch B</text>
+          <rect x="548" y="264" width="116" height="58" rx="7" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-dasharray="8 3"/><text x="606" y="298" fill="#f4d89c">Sketch C</text>
+          <rect x="548" y="350" width="116" height="58" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="2" stroke-dasharray="6 4"/><text x="606" y="384" fill="#dfd0fa">Sketch D</text>
+        </g>
+        <path d="M525 238 C536 150 536 122 548 122 M525 238 C536 207 536 207 548 207 M525 238 C536 293 536 293 548 293 M525 238 C536 378 536 378 548 378" fill="none" stroke="#526058" stroke-width="2"/>
+        <text x="350" y="454" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">A STRONG FRAME OPENS THE SOLUTION SPACE</text>
+      </svg>
+    </section>
+
+    <section class="whole-picture" aria-labelledby="whole-picture-title">
+      <div class="whole-picture-inner">
+        <p class="eyebrow">The whole picture</p>
+        <h2 id="whole-picture-title">Define the direction. Then design.</h2>
+        <p class="whole-picture-lede">Problem Framing, Shape, Evaluate and Pick, and Pitch are direction-setting phases. They help the team choose what to pursue and keep the project from drifting toward the wrong problem or an unbounded solution. Design is where detailed interaction work, validation, and implementation guidance begin.</p>
+
+        <div class="direction-band"><strong>Before Design:</strong> define the problem north star, explore alternatives, evaluate and pick one approach, then secure commitment through the Pitch. Optional constraints may remain open only when their consequence and decision deadline are explicit.</div>
+
+        <div class="direction-zone">
+          <div class="direction-zone-header"><strong>Direction setting</strong><span>These phases prevent drift before detailed design begins.</span></div>
+          <div class="workflow-map" role="list" aria-label="Direction-setting workflow">
+            <article class="workflow-card" role="listitem"><span class="phase">01 · Ask before proposing</span><h3>Problem Framing</h3><p>Interrogate the request, evidence, assumptions, user, outcome, and meaningful problem slice.</p><span class="workflow-output">Output: FRAMED_PROBLEM.md</span></article>
+            <article class="workflow-card" role="listitem"><span class="phase">02 · Explore</span><h3>Shape</h3><p>Draw materially different approaches, expose their trade-offs, and adapt them to the fixed build-time budget.</p><span class="workflow-output">Output: candidate approaches</span></article>
+            <article class="workflow-card" role="listitem"><span class="phase">03 · Evaluate and pick</span><h3>Choose one approach</h3><p>Evaluate alternatives against the north star, evidence, time budget, constraints, and risk consequences; then pick one.</p><span class="workflow-output">Output: bounded direction</span></article>
+            <article class="workflow-card pitch-card" role="listitem"><span class="phase">04 · Propose the bet</span><h3>Pitch</h3><p>Present the problem, time budget, chosen rough solution, boundaries, risk consequences, and exclusions.</p><span class="workflow-output">Output: decision-ready pitch</span></article>
+          </div>
+        </div>
+
+        <div class="design-bridge"><span>Approved Pitch</span><b aria-hidden="true">↓</b></div>
+        <article class="workflow-card design-card">
+          <div><span class="phase">05 · Detail and validate</span><h3>Design</h3></div>
+          <p>Make the detailed interaction and product decisions inside the approved direction. Validate behavior and support implementation without losing the problem north star.</p>
+          <span class="workflow-output">Output: detailed design + learning</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Three ideas informed this skill.</h2>
+        <p class="sources-intro"><code>problem-framing</code> is a synthesis, not a new methodology presented in isolation. Each source contributes a distinct part of its behavior.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>A More Beautiful Question</h3>
+            <p>Warren Berger’s <strong>Why → What if → How</strong> progression supplies the movement from challenging the situation, through alternative explanations, to an evidence-producing next step.</p>
+            <a href="https://amorebeautifulquestion.com/">Visit the book’s official site</a>
+          </article>
+          <article class="source-card">
+            <h3>Shape Up</h3>
+            <p><strong>Shape Up is a product-development method created at Basecamp.</strong> It calls the pre-build phase <em>shaping</em>: define a rough solution direction and a fixed build-time budget, then adapt the solution to that time while making boundaries, risk consequences, and exclusions explicit.</p>
+            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
+          </article>
+          <article class="source-card">
+            <h3>grill-with-docs</h3>
+            <p>Matt Pocock’s interviewing pattern supplies one question at a time, a recommended answer, facts discovered from project context, and shared understanding that remains documented.</p>
+            <a href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md">View the source skill</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <footer>Frame Before You Design · An interactive explanation of the problem-framing skill</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        1: 'Two entry points',
+        2: 'Evidence ledger',
+        3: 'Baseline story',
+        4: 'Causal question',
+        5: 'Project review',
+        6: 'Frame matrix',
+        7: 'Evidence gate',
+        8: 'Scope boundary',
+        9: 'Status tree'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
