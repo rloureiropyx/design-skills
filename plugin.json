@@ -1,7 +1,7 @@
 {
   "name": "design-skills",
-  "description": "Six skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, then write it up as a proposal someone can approve or decline. Renderers turn the result into a scrollytelling explainer or a local tldraw canvas.",
-  "version": "2.0.0",
+  "description": "Seven skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, wireframe the screens when layout turns out to be the real question, then write it up as a proposal someone can approve or decline. Renderers turn the result into a scrollytelling explainer or a local tldraw canvas.",
+  "version": "2.1.0",
   "author": {
     "name": "Raul Loureiro"
   },
@@ -17,6 +17,7 @@
     "problem-framing",
     "shaping",
     "breadboarding",
+    "wireframes",
     "proposal",
     "enterprise",
     "b2b"

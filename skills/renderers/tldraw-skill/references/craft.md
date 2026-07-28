@@ -416,7 +416,7 @@ Parent every element of the screen to that frame (§6) — content that overflow
 
 ### The fidelity ladder — build the rung that was asked for
 
-Wireframing has three rungs: **lo | mid | hi**, chosen by purpose, consumers and project context — and annotation weight is a *separate* axis. Here is what each rung means in tldraw. When the ask is vague, build **L1 + L2 side by side** on one page (frames at `x: 0`, `1560`, `3120`, all `1440 × 900`) and let the comparison force the choice.
+Wireframing has three rungs: **lo | mid | hi**, chosen by purpose, consumers and project context — and annotation weight is a *separate* axis (`wireframes/SKILL.md` owns that call). Here is what each rung means in tldraw. When the ask is vague, build **L1 + L2 side by side** on one page (frames at `x: 0`, `1560`, `3120`, all `1440 × 900`) and let the comparison force the choice.
 
 | | **L1 · Zoning** | **L2 · Lo-fi** | **L3 · Mid-fi** |
 |---|---|---|---|
