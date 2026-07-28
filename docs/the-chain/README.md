@@ -52,6 +52,24 @@ frame rather than quietly fixing it in place. Backflow is a feature of the chain
 failure of it — the failure is a downstream document that silently disagrees with an upstream
 one it claims to be based on.
 
+## The one thing that travels beside the documents
+
+There is a single exception to "nothing else crosses the boundary", and it is deliberate: the
+**project context library** — the repository or directory holding the product's IA maps,
+interaction notes, prior proposals and decision records.
+
+It is not a fourth document in the chain. It is a *source* the chain points at. `problem-framing`
+finds it, reads it for provenance, and records which library and which files it used under
+`## Context use`. `shaping` and `design-package` read the same library through that record.
+
+This does not weaken carry-never-re-derive; it enforces it. Without a named library, each skill
+re-asks the designer what the product does and gets three slightly different answers, which is
+exactly the forked truth the chain exists to prevent. Downstream use is also asymmetric on
+purpose: `shaping` may take constraints from the library, but `design-package` may only use it
+to *verify* what the package already claims. A fact appearing for the first time in the package
+was never framed, never shaped, and never fit-checked.
+
+
 ## The gates are the value
 
 Every skill in the chain can refuse its own input:

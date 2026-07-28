@@ -48,7 +48,11 @@ Use the in-progress branch whenever work has begun, including discovery, solutio
 
 ### 1. Read before asking
 
-Inspect every relevant document, attachment, note, product surface, research artifact, and repository source available in scope. Extract:
+Inspect every relevant document, attachment, note, product surface, research artifact, and repository source available in scope.
+
+Many projects keep their durable product and research context in a **project context library** — a repository or directory separate from the codebase. Read `references/project-context.md` before this step and follow it to find that library, read it for provenance, and record where it lives. Locating it is part of this step, not an optional extra: it is where most of the facts you would otherwise ask the designer for already are.
+
+Extract:
 
 - raw request and any embedded solution;
 - users and stakeholders: requester, primary user, beneficiary, decision-maker, and cost-bearer;
@@ -74,7 +78,7 @@ Apply the traceability test to every claim you are about to record: **who said t
 - Directly implied by what someone said → keep it, mark it implied, and state the reasoning.
 - Neither → drop it. A claim nobody made does not become true by being plausible.
 
-Completion criterion: every material claim in the input is classified, facts discoverable from available sources have been looked up instead of delegated to the user, each Observation carries a source or an attributed quote, and an in-progress project has a traceable record of original frame, current work, intervening evidence, and existing commitments.
+Completion criterion: every material claim in the input is classified, the project context library has been located or its absence recorded, facts discoverable from available sources have been looked up instead of delegated to the user, each Observation carries a source or an attributed quote, and an in-progress project has a traceable record of original frame, current work, intervening evidence, and existing commitments.
 
 ### 1A. Diagnose frame drift for work in progress
 
@@ -323,8 +327,17 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - **Dumping the checklist.** The question set is the skill's memory, not its script. Ask the
   highest-leverage unresolved question, one at a time, and follow the answer.
 - **Asking for facts already on record.** Read the available documents, notes, and repository
-  sources first. Asking the designer for something the brief already states wastes the one
-  resource framing depends on: their willingness to keep answering.
+  sources first — including the project context library, if one exists. Asking the designer for
+  something the brief already states wastes the one resource framing depends on: their
+  willingness to keep answering.
+- **Treating a context library as user evidence.** A product walkthrough note saying an
+  experience "feels like two products" is an internal interpretation of the *product*, written
+  by a colleague. It is not a user saying anything, and a library full of them supports a
+  confident frame with nothing under it. Classify it as Interpretation, attributed, and say
+  plainly when it is the only support the central assumption has.
+- **Reversing a recorded direction silently.** When the context library holds an earlier
+  proposal or frame that this work would undo, name the reversal in the frame. An unstated
+  reversal gets relitigated in a review later, at far greater cost.
 - **Requesting research that cannot change a decision.** "Let's do more discovery" is not an
   evidence request. Name the assumption, the decision it informs, and the result that would
   move the frame — or accept the risk explicitly and move on.
@@ -351,6 +364,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 ## Reference files
 
 - `references/in-progress-checkpoint.md` — what to extract for work already underway, the drift taxonomy, and how to dispose of prior decisions. Read at steps 1 and 1A, only for an in-progress project.
+- `references/project-context.md` — how to find a project context library, how to classify what it holds, and what it can and cannot settle. Read at step 1, before asking the designer anything.
 - `references/evidence-inputs.md` — the exact shape of a metrics input, a research-library input, and a focused evidence request. Read at step 5, only once an assumption clears the gate.
 - `templates/framed-problem.md` — the required `FRAMED_PROBLEM.md` structure and where to save it. Read at step 8.
 
