@@ -10,7 +10,7 @@ Every skill has two legs:
 
 A skill is only "done" when both exist.
 
-All five explainers are indexed in one page: [`docs/index.html`](docs/index.html) — open it in a browser.
+All six explainers are indexed in one page: [`docs/index.html`](docs/index.html) — open it in a browser.
 
 ## Install
 
@@ -33,6 +33,10 @@ Updates are pulled only when `version` changes, so an in-flight commit never sur
 ## Skills
 
 Skills are grouped by what they own. The grouping is for humans — Copilot still routes on `name` and `description` alone.
+
+They also form one chain: `problem-framing` writes `FRAMED_PROBLEM.md`, `shaping` reads it and writes `SHAPING.md`, `design-package` reads both and writes `DESIGN_PACKAGE.md`, and a renderer draws what the package decided. A downstream skill **carries** what an upstream one decided; it never re-derives it. There is one explainer about that chain rather than about any single skill:
+
+- Explainer: **shipped** — [`the-handoff-is-the-interface.html`](docs/the-chain/the-handoff-is-the-interface.html) · [script](docs/the-chain/the-handoff-is-the-interface.script.md) · [notes](docs/the-chain/README.md). Why every link is a document, what each skipped one costs, and why renderers decide nothing.
 
 ### Process — decide something
 
@@ -94,6 +98,7 @@ skills/artifacts/<skill>/   skills that produce the thing someone decides on
 skills/renderers/<skill>/   skills that materialise a decision someone else made
 docs/index.html             the library index — a card grid linking every explainer
 docs/<skill>/               explainers: articles, scripts, diagrams — flat, never nested
+docs/the-chain/             the one explainer about the chain rather than a single skill
 templates/                  the starting point for a new skill
 scripts/check-skills.mjs    the structural check
 ```
@@ -102,7 +107,7 @@ Skills sit in `skills/` at the root because that is where `copilot plugin instal
 
 The three roots are declared explicitly in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
 
-`docs/` stays **flat**: one folder per skill, named after the skill folder, regardless of which root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the taxonomy there would break it for no benefit.
+`docs/` stays **flat**: one folder per skill, named after the skill folder, regardless of which root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the taxonomy there would break it for no benefit. A folder there without a matching skill is a *library-level* explainer — currently only [`docs/the-chain/`](docs/the-chain/README.md), which describes the handoff chain the skills form together. The check tolerates it: it asserts every skill has a folder, not that every folder is a skill.
 
 `SKILL.md` holds decision logic and is loaded in full on every invocation, so anything that is only needed at one step—a document template, a format specification, a taxonomy, a code recipe—lives in `references/` or `templates/` inside the skill folder, with an explicit "read X before step N" pointer. A step's completion criterion never moves out of `SKILL.md`.
 
