@@ -32,6 +32,8 @@ Conduct the conversation and the written artifact in the user's language.
 
 Everything in the package is **carried, never re-derived**. The problem and outcome come from the frame. The shape, requirements, and cuts come from the shaping document. This skill's work is selection, compression, and honesty about what is not settled — not new thinking about the problem or the solution.
 
+The project context library named in the frame's `## Context use` section is a third input, and a read-only one. Use it to check that the package's description of the product still matches the product, and to cite provenance a stakeholder can verify. Never use it to introduce a fact the frame and the shaping document do not already carry.
+
 Stop before detailed interaction design, wireframes, visual design, acceptance criteria, implementation planning, or breaking the work into tickets. Those belong to Design and to delivery, after the bet is made.
 
 ## Refuse to package incomplete work
@@ -122,6 +124,9 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   frame did not do its job. State the problem, the appetite, and the shape, and let the group decide.
 - **Re-deriving the problem.** Rewriting the problem in fresh words during packaging quietly changes it,
   and the version people commit to stops matching the version that was framed and evidenced.
+- **Mining the context library for new facts.** The library is there to verify what the package claims
+  about the product, not to top the package up. A fact that appears for the first time in the package
+  was never framed, never shaped, and never fit-checked — it is unbet work arriving disguised as detail.
 - **Packaging over an unresolved flag.** A `⚠️` that survives into the package becomes a promise the
   team cannot keep. Send it back for a spike, or cut the part and list it as a no-go.
 - **Adding solution detail nobody shaped.** Layouts, copy, component choices, and edge-case behaviour

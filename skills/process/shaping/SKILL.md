@@ -31,6 +31,8 @@ Conduct the conversation and the written artifact in the user's language.
 
 **Input**: `FRAMED_PROBLEM.md`. Read it; never re-derive it. If the problem, user, outcome, or evidence turns out to be wrong, that is a finding to send back to `problem-framing` — not something to fix here.
 
+Read the project context library named in the frame's `## Context use` section before asking the user for any fact about the product. Requirements are constrained by what the product already does, what components already exist, and what has already been decided; most of that is written down there. Where no library is named, look once for one in the working repository, and record what you find in `SHAPING.md` so `design-package` inherits it.
+
 **Output**: `SHAPING.md` — requirements, candidate shapes, the fit check, and one selected shape with no unresolved flags.
 
 Stop there. Do not write the design package, do not produce wireframes or hi-fi screens, do not write acceptance criteria, do not decompose the work into tickets or sprints, and do not map the system's places and affordances in detail. The next skill is `design-package`, which turns the selected shape into the artifact a stakeholder decides on.
@@ -177,6 +179,9 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 
 - **Re-deriving the problem.** The frame was decided already. Re-opening it here is how shaping turns
   into a second framing session that produces no shape at all. Send contradicting evidence back.
+- **Asking the user what the product already does.** Component inventory, existing IA, current
+  states, and prior proposals are in the project context library the frame names. Look before
+  asking. A requirement written without knowing what already exists is usually a shape in disguise.
 - **Tautological requirements.** `R: users can bulk edit` next to a shape whose mechanism is bulk edit
   proves nothing. A requirement names the capability needed; a shape names the mechanism. If the
   requirement can only be satisfied by one shape, it is that shape wearing a disguise.

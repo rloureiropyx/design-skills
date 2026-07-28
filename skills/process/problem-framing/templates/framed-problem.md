@@ -62,7 +62,7 @@ Targeted inputs still required from the research library, metrics tool, or anoth
 What Shape may treat as settled, what remains flexible, which existing solution decisions are preserved or reopened, and which uncertainties its rough hypothesis sketches must address. State explicitly that this frame commits the business to *shaping time*, not to building. Write it for a reader who has not seen this framing conversation and has no tooling beyond a sketching surface.
 
 ## Context use
-Where this file lives in the project, how it serves as the problem north star, which workflows must reference it, and which evidence or decision would require it to be updated.
+Where this file lives in the project, how it serves as the problem north star, which workflows must reference it, and which evidence or decision would require it to be updated. Name the project context library this frame drew on, if one exists, and the specific files used — downstream work reads the same source instead of asking again.
 
 ## Confirmation
 Who confirmed the frame, when, and any explicit risk accepted.
