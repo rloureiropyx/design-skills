@@ -1,16 +1,22 @@
 # Design Skills
 
-A library of the product design skills I use with GitHub Copilot, packaged as an installable plugin.
+The product design skills I use with GitHub Copilot, packaged as an installable plugin.
 
-Every skill has two legs:
+Most of them follow one short recipe:
 
-| Store | Explain |
+**Work out what the problem actually is → try two or three directions and pick one → write it up so people can decide.**
+
+That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. Two more skills draw or publish the result once something has been decided.
+
+The recipe is not new and it is not mine. It is mostly Ryan Singer's, with the bits added that enterprise B2B work needs and a small-team method does not cover: roles, permissions, audit, integrations, data volume, accessibility.
+
+Every skill has two parts:
+
+| The skill | The explainer |
 | --- | --- |
-| The skill lives in `skills/<group>/<skill>/SKILL.md` and ships to anyone who installs the plugin. | An explainer in `docs/<skill>/` makes the method understandable to someone who will never read the skill file. |
+| `skills/<group>/<skill>/SKILL.md` — what ships to anyone who installs the plugin. | `docs/<skill>/` — the same method, written for someone who will never open the skill file. |
 
-A skill is only "done" when both exist.
-
-All six explainers are indexed in one page: [`docs/index.html`](docs/index.html) — open it in a browser.
+Both have to exist. All the explainers are indexed in [`docs/index.html`](docs/index.html) — open it in a browser.
 
 ## Install
 
@@ -22,104 +28,115 @@ copilot plugin install design-skills@rolo
 The repository is private, so this works for anyone with access to it.
 
 ```sh
-copilot skill list                    # confirm all five skills appear under "Plugin skills"
+copilot skill list                    # the skills appear under "Plugin skills"
 copilot plugin update design-skills   # pull a newer version later
 ```
 
-Updates are pulled only when `version` changes, so an in-flight commit never surprises anyone who has it installed.
+Updates arrive only when `version` changes, so an in-flight commit never surprises anyone who has it installed.
 
 > Installing straight from a repo — `copilot plugin install owner/repo` — still works but prints a deprecation warning: *"Only plugin@marketplace installs will be supported in a future release."* That is why this repo carries its own one-plugin catalog at [`.github/plugin/marketplace.json`](.github/plugin/marketplace.json) and the two-step form above is the documented route.
 
-## Skills
+## The skills
 
-Skills are grouped by what they own. The grouping is for humans — Copilot still routes on `name` and `description` alone.
+Grouped by what they own. The grouping is for people — Copilot routes on `name` and `description` alone and does not know which folder a skill sits in.
 
-They also form one chain: `problem-framing` writes `FRAMED_PROBLEM.md`, `shaping` reads it and writes `SHAPING.md`, `design-package` reads both and writes `DESIGN_PACKAGE.md`, and a renderer draws what the package decided. A downstream skill **carries** what an upstream one decided; it never re-derives it. There is one explainer about that chain rather than about any single skill:
+Each one reads what the last one wrote and does not re-decide it. When a later skill finds something that contradicts an earlier document, it says so instead of quietly rewriting it. There is one explainer about how the handoff works, rather than about any single skill:
 
-- Explainer: **shipped** — [`the-handoff-is-the-interface.html`](docs/the-chain/the-handoff-is-the-interface.html) · [script](docs/the-chain/the-handoff-is-the-interface.script.md) · [notes](docs/the-chain/README.md). Why every link is a document, what each skipped one costs, and why renderers decide nothing.
+- [`the-handoff-is-the-interface.html`](docs/the-chain/the-handoff-is-the-interface.html) · [script](docs/the-chain/the-handoff-is-the-interface.script.md) · [notes](docs/the-chain/README.md) — why each step is a document, what skipping one costs, and why renderers decide nothing.
 
 ### Process — decide something
 
 #### Problem Framing
 
-Turns a fuzzy initiative—or a project already in progress—into a clear, evidence-backed **Framed Problem**.
+Turns a fuzzy request — or a project already underway — into a written problem, with the evidence it rests on.
 
-It keeps quoted source material as ground truth and separates it from interpretations and assumptions, compares alternative problem frames, records the options landscape so what was set aside is visible, requests targeted research or metrics only when evidence can change the decision, and defines a problem north star for the rest of the project. Its primary output is `FRAMED_PROBLEM.md`, a persistent project document that Shaping, the design package, and Design keep referencing.
+It keeps what people actually said as quotes, and keeps that separate from interpretations and assumptions. It compares a few different explanations of the same behaviour rather than taking the first one. It records what was set aside, so it can be reconsidered. It asks for research or metrics only when the answer could change the decision. Output: `FRAMED_PROBLEM.md`, which the rest of the project keeps referring back to.
 
-Framing earns a commitment to spend *shaping time*, not a commitment to build.
+There is a **quick mode** for small solo work — five questions, one page — with a written rule for when the small version stops being honest and the full pass is needed.
+
+Framing buys time to explore solutions. It does not buy approval to build.
 
 - Skill: [`skills/process/problem-framing/SKILL.md`](skills/process/problem-framing/SKILL.md)
-- Explainer: **shipped** — [`frame-before-you-design.html`](docs/problem-framing/frame-before-you-design.html) · [script](docs/problem-framing/frame-before-you-design.script.md)
+- Explainer: [`frame-before-you-design.html`](docs/problem-framing/frame-before-you-design.html) · [script](docs/problem-framing/frame-before-you-design.script.md)
 
 #### Shaping
 
-Takes a framed problem and works out **which solution shape to bet on**, inside a fixed appetite.
+Takes a framed problem and works out which solution direction to go with, inside a fixed time budget.
 
-Numbered requirements with statuses, two or three materially different shapes, and a deliberately **binary fit check** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until a spike resolves them. When a shape does not fit the appetite, the scope moves, not the time. Output: `SHAPING.md`.
+Numbered requirements with statuses, two or three materially different directions, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until someone goes and finds out. Directions improve across versions (`A1 → A2 → A3`), each version says what changed and why, and discarded ones stay visible with the reason. When a direction does not fit the time budget, the scope moves, not the time. Output: `DIRECTIONS.md`.
 
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
-- Explainer: **shipped** — [`pick-a-shape.html`](docs/shaping/pick-a-shape.html) · [script](docs/shaping/pick-a-shape.script.md)
+- Explainer: [`pick-a-direction.html`](docs/shaping/pick-a-direction.html) · [script](docs/shaping/pick-a-direction.script.md)
 
-### Artifacts — produce the thing someone decides on
+### Artifacts — produce the thing people react to
 
-#### Design Package
+#### Breadboarding
 
-Assembles the document a stakeholder or betting table reads once and then decides on: problem, appetite, chosen shape, rabbit holes, no-gos, and what is still open.
+Sketches a solution in words instead of pixels: the places a person can be, what they can do or see in each one, and which action takes them where.
 
-Everything is carried from `FRAMED_PROBLEM.md` and `SHAPING.md`, never re-derived. It refuses to write while the appetite is undefined or an unresolved `⚠️` is still on the selected shape. Output: `DESIGN_PACKAGE.md`.
+It is deliberately too coarse to express layout, which is what makes it useful — the mechanism can be argued about before the visual design is. Shaping calls it to make each direction concrete; wireframes come later, if layout turns out to be the real question.
 
-- Skill: [`skills/artifacts/design-package/SKILL.md`](skills/artifacts/design-package/SKILL.md)
-- Explainer: **shipped** — [`one-read-one-decision.html`](docs/design-package/one-read-one-decision.html) · [script](docs/design-package/one-read-one-decision.script.md)
+- Skill: [`skills/artifacts/breadboarding/SKILL.md`](skills/artifacts/breadboarding/SKILL.md)
+- Explainer: [notes](docs/breadboarding/README.md)
+
+#### Proposal
+
+Assembles the document people read once and then decide on: problem, time budget, chosen direction, rabbit holes, what is deliberately out, and what is still uncertain.
+
+Everything is carried from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`, never rewritten. It refuses to write while the time budget is undefined or an unresolved `⚠️` is still on the selected direction. Output: `PROPOSAL.md`.
+
+- Skill: [`skills/artifacts/proposal/SKILL.md`](skills/artifacts/proposal/SKILL.md)
+- Explainer: [`one-read-one-decision.html`](docs/proposal/one-read-one-decision.html) · [script](docs/proposal/one-read-one-decision.script.md)
 
 ### Renderers — materialise a decision
 
 #### Scrollytelling
 
-Creates interactive long-form articles whose narrative and diagrams unfold as the reader scrolls. It first develops and confirms a scene-by-scene narrative and visual script, then implements the approved story as an accessible, responsive standalone HTML article.
+Builds long-form web articles whose diagrams change as the reader scrolls. It settles the goal and tone first, writes a scene-by-scene script, gets that approved, and only then builds the article as a standalone accessible HTML file.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](skills/renderers/scrollytelling/SKILL.md)
-- Explainer: **shipped** — [`scroll-is-not-a-story.html`](docs/scrollytelling/scroll-is-not-a-story.html) · [script](docs/scrollytelling/scroll-is-not-a-story.script.md). Written script first, approved, then built — the skill's own gate applied to its own explainer.
+- Explainer: [`scroll-is-not-a-story.html`](docs/scrollytelling/scroll-is-not-a-story.html) · [script](docs/scrollytelling/scroll-is-not-a-story.script.md). Script written first, approved, then built — the skill's own gate applied to its own explainer.
 
 #### tldraw
 
-Draws a decided artifact — flow, journey map, service blueprint, concept model, sitemap, wireframes — on a local tldraw canvas that saves to a `.tldraw` file.
+Draws a decided artifact — flow, journey map, service blueprint, concept model, sitemap, breadboard, wireframes — on a local tldraw canvas that saves to a `.tldraw` file.
 
-> **Runtime dependency.** This is the only skill here that needs something running outside Copilot: the **tldraw offline desktop app** on the same machine, whose local HTTP API it drives. There is no hosted fallback and no collaborative mode; without the app the skill stops rather than drawing elsewhere.
+> **Runtime dependency.** This is the only skill here that needs something running outside Copilot: the **tldraw offline desktop app** on the same machine, whose local HTTP API it drives. There is no hosted fallback and no collaborative mode; without the app the skill stops rather than drawing somewhere else.
 
 - Skill: [`skills/renderers/tldraw-skill/SKILL.md`](skills/renderers/tldraw-skill/SKILL.md)
-- Explainer: **shipped** — [`draw-what-was-decided.html`](docs/tldraw-skill/draw-what-was-decided.html) · [script](docs/tldraw-skill/draw-what-was-decided.script.md)
+- Explainer: [`draw-what-was-decided.html`](docs/tldraw-skill/draw-what-was-decided.html) · [script](docs/tldraw-skill/draw-what-was-decided.script.md)
 
 ## Repository layout
 
 ```
 plugin.json                 the manifest — name, version, and what ships
 skills/process/<skill>/     skills that decide something
-skills/artifacts/<skill>/   skills that produce the thing someone decides on
+skills/artifacts/<skill>/   skills that produce the thing people react to
 skills/renderers/<skill>/   skills that materialise a decision someone else made
 docs/index.html             the library index — a card grid linking every explainer
-docs/<skill>/               explainers: articles, scripts, diagrams — flat, never nested
-docs/the-chain/             the one explainer about the chain rather than a single skill
+docs/<skill>/               explainers: articles, scripts, notes — flat, never nested
+docs/the-chain/             the one explainer about the handoff rather than a single skill
 templates/                  the starting point for a new skill
 scripts/check-skills.mjs    the structural check
 ```
 
 Skills sit in `skills/` at the root because that is where `copilot plugin install` reads them. That is deliberately **not** `.github/skills/`, which is where an installed skill lands in a *consuming* project. Authoring location and consumption location are different things.
 
-The three roots are declared explicitly in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
+The three roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
 
-`docs/` stays **flat**: one folder per skill, named after the skill folder, regardless of which root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the taxonomy there would break it for no benefit. A folder there without a matching skill is a *library-level* explainer — currently only [`docs/the-chain/`](docs/the-chain/README.md), which describes the handoff chain the skills form together. The check tolerates it: it asserts every skill has a folder, not that every folder is a skill.
+`docs/` stays **flat**: one folder per skill, named after the skill folder, whichever root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the grouping there would break it for no benefit. A folder there without a matching skill is a library-level explainer — currently only [`docs/the-chain/`](docs/the-chain/README.md). The check tolerates it: it asserts every skill has a folder, not that every folder is a skill.
 
-`SKILL.md` holds decision logic and is loaded in full on every invocation, so anything that is only needed at one step—a document template, a format specification, a taxonomy, a code recipe—lives in `references/` or `templates/` inside the skill folder, with an explicit "read X before step N" pointer. A step's completion criterion never moves out of `SKILL.md`.
+`SKILL.md` is loaded in full on every invocation, so anything needed at only one step — a document template, a format specification, a taxonomy, a code recipe — lives in `references/` or `templates/` inside the skill folder, with an explicit "read X before step N" pointer. A step's completion criterion never moves out of `SKILL.md`.
 
 Those sibling files are also why this ships as a plugin rather than as a link to a file: `copilot skill add <url>` fetches a single `SKILL.md` and would silently drop everything the skill points at.
 
 ## Routing
 
-Copilot routes to a skill using the `name` and `description` in its YAML frontmatter. Those two fields are the routing contract and the most carefully written part of any skill.
+Copilot picks a skill using the `name` and `description` in its YAML frontmatter. Those two fields decide whether a skill is ever used, and they are the most carefully written part of any skill here.
 
-Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed automatically, and the `process/artifacts/renderers` grouping is invisible to the router: it organises the repo for people, not prompts for Copilot. Every `description` therefore ends with an explicit non-trigger clause, stating what must *not* route to it, because a skill with no stated boundary claims prompts it should decline.
+Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed, and the `process` / `artifacts` / `renderers` grouping is invisible to the router. So every `description` ends by saying what must *not* route to it. A skill with no stated boundary claims prompts it should decline.
 
-The three problem-and-solution skills are the sharpest case. `problem-framing`, `shaping`, and `design-package` all discuss problems, requirements, and solutions, and each one names the other two in its non-trigger clause. When one of them starts answering a prompt that belongs to another, that is the first place to look.
+`problem-framing`, `shaping`, and `proposal` are the sharpest case: all three talk about problems, requirements, and solutions, and each names the other two in its non-trigger clause. When one starts answering a prompt that belongs to another, that is the first place to look.
 
 ## Working on the skills
 
@@ -129,7 +146,7 @@ The skills here do **not** auto-load while you work in this repo — `skills/` i
 copilot skill add ./skills
 ```
 
-That registers the directory rather than copying it, so your edits apply immediately. It walks the group folders, so all five skills appear under **Custom skills** in `copilot skill list` — remove it with `copilot skill remove ./skills` when you are done, or a deleted worktree leaves a dangling registration behind.
+That registers the directory rather than copying it, so edits apply immediately. It walks the group folders, so every skill appears under **Custom skills** in `copilot skill list`. Remove it with `copilot skill remove ./skills` when you are done, or a deleted worktree leaves a dangling registration behind.
 
 To check the repo:
 
@@ -139,15 +156,15 @@ node scripts/check-skills.mjs
 
 No dependencies; it runs on a clean clone. It asserts the invariants this README claims: `plugin.json` parses with a kebab-case `name` and a semver `version`, its skills paths exist, every skill's frontmatter parses, `name` matches the folder, `description` is within Copilot's 1024-character limit and carries a non-trigger clause, every skill has an `## Anti-patterns` section and a `docs/<skill>/` explainer, every `references/`/`templates/` pointer resolves, no `SKILL.md` is stranded where the manifest would not ship it, and every relative markdown link resolves.
 
-**Run it yourself; CI cannot.** [`.github/workflows/skills.yml`](.github/workflows/skills.yml) is wired to pull requests and pushes to `main`, but this organization has GitHub-hosted runners disabled and no self-hosted runners registered, so the job fails immediately with `GitHub Actions hosted runners are disabled for this repository` and never reaches the check. Until an enterprise administrator enables runners, a red X on a pull request means the runner, not the repo—so run the command locally before you push and read the CI signal as absent rather than failing.
+**Run it yourself; CI cannot.** [`.github/workflows/skills.yml`](.github/workflows/skills.yml) is wired to pull requests and pushes to `main`, but this organization has GitHub-hosted runners disabled and no self-hosted runners, so the job fails immediately with `GitHub Actions hosted runners are disabled for this repository` and never reaches the check. Until an administrator enables runners, a red X on a pull request means the runner, not the repo — run the command locally before you push and read the CI signal as absent rather than failing.
 
-It checks structure, not judgement. Nothing automated can tell you whether a skill holds its boundary, asks one question at a time, or produces an artifact that stands on its own—the authoring guidance for that is in [`templates/SKILL.template.md`](templates/SKILL.template.md), and the record of how each skill fails in practice is its `## Anti-patterns` section.
+It checks structure, not judgement. Nothing automated can tell you whether a skill holds its boundary, asks one question at a time, or produces something that stands on its own. The guidance for that is in [`templates/SKILL.template.md`](templates/SKILL.template.md), and the record of how each skill fails in practice is its `## Anti-patterns` section.
 
-There is deliberately no scenario suite. There was one, and it was never run; an unperformed ritual that advertises rigor is worse than no ritual. The cost is real and worth stating: routing and boundary regressions are now found by using a skill and noticing, not by a test. When a skill starts behaving badly, re-read its `description` and its `## Anti-patterns` first, then fix both.
+There is no scenario suite. There was one and it was never run, which is worse than not having one. The cost is real and worth stating: routing and boundary problems are found by using a skill and noticing, not by a test. When a skill starts behaving badly, re-read its `description` and its `## Anti-patterns` first, then fix both.
 
 ## Adding a skill
 
-1. Copy [`templates/SKILL.template.md`](templates/SKILL.template.md) to `skills/<group>/<skill>/SKILL.md` — `process/` if it decides something, `artifacts/` if it produces the thing someone decides on, `renderers/` if it materialises a decision made elsewhere. Write it, including the `## Anti-patterns` section and the description's non-trigger clause.
+1. Copy [`templates/SKILL.template.md`](templates/SKILL.template.md) to `skills/<group>/<skill>/SKILL.md` — `process/` if it decides something, `artifacts/` if it produces the thing people react to, `renderers/` if it materialises a decision made elsewhere. Write it, including the `## Anti-patterns` section and the description's non-trigger clause.
 2. Start the explainer in `docs/<skill>/` — flat, named after the skill folder, not the group.
 3. Add the skill to the list above.
 4. Add a new group to `plugin.json`'s `skills` array if you created one.

@@ -4,7 +4,7 @@
 
 **Top identification:** Present `problem-framing` immediately as a product design skill before introducing the tension.
 
-**Final payoff:** The reader understands that `problem-framing` does not produce a solution. It turns a fuzzy initiative into a traceable `Framed Problem` and decides whether the work is ready for Shape, needs evidence, must be reframed, can continue, or should stop.
+**Final payoff:** The reader understands that `problem-framing` does not produce a solution. It turns a fuzzy initiative into a traceable `Framed Problem` and decides whether the work is ready for directions, needs evidence, must be reframed, can continue, or should stop.
 
 **Audience:** Product designers and product managers. They understand briefs, research, and product design processes, but do not need prior knowledge of Shape Up or agent skills.
 
@@ -23,18 +23,18 @@
 | 6 · Compare the possible problems | **Frame-comparison matrix grounded in the HCM example.** “HR lacks visibility,” “Missing changes surface late,” “Managers submit changes late,” and “Inputs lack clear owners” are compared across evidence, leverage, ownership, openness, and boundary. | The same payroll delay can support several problem statements, and each one leads to a different design space. The skill explains the alternatives, recommends the one best supported by observations, then asks: **Which explanation fits what we saw—and what evidence would make us choose another?** This is how the team avoids treating its first story as fact. | Four concrete versions of the payroll-readiness problem appear side by side; the evidence-backed choice is highlighted. |
 | 7 · What evidence would change the choice? | **Decision-gate diagram.** Assumption tokens move through four checks, then branch into “Metrics tool” and “Research library.” Example query cards show payroll stalls and a search for missing-change episodes. | The skill asks for evidence only when it can change the selected problem. It proposes the exact input: **In metrics, where do SMB payroll runs stall, and which missing-change types appear beforehand? In research, what episodes mention chasing managers, unconfirmed changes, or late payroll approval?** It also states what result would support or weaken the frame. | The chosen frame exposes one critical uncertainty; the tool-specific questions appear beneath it. |
 | 8 · Which slice belongs in this project? | **Scope-boundary diagram.** Inside: SMB HR admins, the 48 hours before payroll approval, missing-change readiness, on-time approval. Outside: payroll calculation, every manager workflow, and the whole HCM platform. | The team may not need—or be able—to solve the whole problem. The skill asks: **Which meaningful part can this project influence now, and what must stay outside?** It defines a chosen slice without prescribing how to solve it. A static bridge explains the HCM example, defines the time budget as two weeks of fixed build time, and shows that an optional undefined boundary must include the concrete consequence of leaving it open. | The evidence gate expands into a boundary box; example elements move inside or outside. |
-| 9 · Is the problem ready for Shape? | **Status tree.** The boundary box becomes `FRAMED_PROBLEM.md` and branches to seven possible statuses. A “Problem north star” label remains attached to the document. | **Shape is the next phase:** explore distinct solution hypotheses as rough Excalidraw sketches, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed `Framed Problem` becomes the problem north star for Shape and later work. | The bounded example becomes a persistent project document; the next-step branches unfold. |
-| 10 · Shape the solution direction | **Handoff diagram.** `FRAMED_PROBLEM.md` moves through a `Shape` gate while remaining connected to the project. Each possible mechanism appears as a rough Excalidraw sketch. | **Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.** In Shape, each hypothesis becomes a rough sketch showing its mechanism, essential elements, relationships, and key interactions. The team evaluates the alternatives and picks one bounded direction while the problem north star judges every decision. | The Shape gate opens; the full system resolves into one final relationship: “Framed problem → Rough solution sketches.” |
+| 9 · Is the problem ready for directions? | **Status tree.** The boundary box becomes `FRAMED_PROBLEM.md` and branches to seven possible statuses. A “Problem reference” label remains attached to the document. | **Direction is the next phase:** explore distinct solution hypotheses as breadboards, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed `Framed Problem` becomes the reference point for shaping and later work. | The bounded example becomes a persistent project document; the next-step branches unfold. |
+| 10 · Direction the solution direction | **Handoff diagram.** `FRAMED_PROBLEM.md` moves through a `Direction` gate while remaining connected to the project. Each possible mechanism appears as a breadboard. | **Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.** In Direction, each hypothesis becomes a rough sketch showing its mechanism, essential elements, relationships, and key interactions. The team evaluates the alternatives and picks one bounded direction while the framed problem judges every decision. | The Direction gate opens; the full system resolves into one final relationship: “Framed problem → Rough solution sketches.” |
 
 ## Static prose bridges
 
 - Between scenes 1 and 2: a short explanation of an agent skill and the meaning of `Framed Problem`.
-- The introduction establishes the skill as the designer's memory for critical pre-solution questions and the output as the project's problem north star.
+- The introduction establishes the skill as the designer's memory for critical pre-solution questions and the output as the project's framed problem.
 - The same SMB HCM payroll-readiness example runs through scenes 3–9 so every question changes one visible part of the problem.
-- After scene 9: an expandable diagram of the complete `Framed Problem` structure received by Shape.
-- After scene 9: a visible seven-card guide explains the action attached to every next-move status: Ready for Shape, Revisit Shape, Continue current frame, Evidence needed, Needs reframing, Split, and Stop.
-- Before the closing: a visible, document-style example consolidates the SMB HCM case into a complete `Framed Problem`, including status, source request, baseline story, chosen frame, user and outcome, evidence, working question, boundaries, major risk, and the Shape handoff.
-- After the closing: a compact, non-linear whole-picture diagram groups `Problem Framing`, `Shape`, `Evaluate and Pick`, and `Design Package` inside a two-by-two **Direction Setting** zone. An approved design package flows downward into **Design**, where detailed interaction work, validation, and implementation guidance happen. The grouping explains that the earlier phases prevent drift rather than perform detailed design.
+- After scene 9: an expandable diagram of the complete `Framed Problem` structure received by Direction.
+- After scene 9: a visible seven-card guide explains the action attached to every next-move status: Ready for directions, Revisit directions, Continue current frame, Evidence needed, Needs reframing, Split, and Stop.
+- Before the closing: a visible, document-style example consolidates the SMB HCM case into a complete `Framed Problem`, including status, source request, baseline story, chosen frame, user and outcome, evidence, working question, boundaries, major risk, and the Direction handoff.
+- After the closing: a compact, non-linear whole-picture diagram groups `Problem Framing`, `Direction`, `Evaluate and Pick`, and `Proposal` inside a two-by-two **Direction Setting** zone. An approved proposal flows downward into **Design**, where detailed interaction work, validation, and implementation guidance happen. The grouping explains that the earlier phases prevent drift rather than perform detailed design.
 
 ## Diagram system
 
@@ -47,7 +47,7 @@ The article will use native SVG diagrams rather than decorative imagery. Every d
 5. **Problem comparison:** concrete alternative explanations compared across decision criteria.
 6. **Evidence gate:** four tests controlling whether to request a targeted input from the metrics tool or research library.
 7. **Scope boundary:** included problem slice, exclusions, constraints, time budget, and major risks.
-8. **Status tree and handoff:** seven possible outcomes leading—or deliberately not leading—to Shape.
+8. **Status tree and handoff:** seven possible outcomes leading—or deliberately not leading—to Direction.
 
 ## Art direction
 
@@ -62,7 +62,7 @@ The article will use native SVG diagrams rather than decorative imagery. Every d
 
 - Every scene introduces one concept and changes the diagram state.
 - The opening states the risk of solving the wrong problem.
-- The closing connects the `Framed Problem` to Shape without prescribing a solution.
+- The closing connects the `Framed Problem` to Direction without prescribing a solution.
 - The narrative covers both new and in-progress projects.
 - Every scene stays below four sentences.
 - All reader-facing copy, labels, controls, and diagram annotations will be in English.

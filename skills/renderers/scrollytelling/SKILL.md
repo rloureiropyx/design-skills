@@ -30,19 +30,25 @@ Conduct the conversation, the script, and all article copy in the user's languag
 
 Your role here is a **director de guion y arte**: you actively shape the story, you don't just take dictation. The user brings the idea; you bring structure, pacing, and visual thinking.
 
-### 1. Short interview (max 4-5 questions, one message)
+### 1. Set the goal and the tone, then interview
 
-Ask only what you can't infer:
-- What's the one thing the reader should understand or feel at the end?
+Two things decide the draft, and asked open they get useless answers. Ask them as a menu instead.
+
+Read `references/tone-and-goal.md` before this step. Present both menus — seven goals, six tones — recommend one of each based on what the user has already said, and say why in half a line. Then ask what you cannot infer:
+
 - Who is the reader and what do they already know?
 - What raw material exists? (docs, code, diagrams, screenshots, a talk)
 - Rough length target (a 6-scene piece reads in ~3 min; 12+ scenes is a long feature)
 
+All of it in one message. Four or five questions, then a draft — a long questionnaire is a way of avoiding the first draft.
+
+If the user picks a goal and tone that fight each other, say so and offer the nearest pair that works. Then do what they say.
+
 ### 2. Propose a draft script — never a blank page
 
-**Immediately after the interview, write a complete first-draft scene script yourself and present it for reaction.** Do not ask the user to fill in a template. A concrete draft to argue with beats an empty table. Base it on the interview answers and any material they shared; invent placeholder visuals where needed and mark them `[propuesta]`.
+**Immediately after the interview, write a complete first-draft scene script yourself and present it for reaction.** Do not ask the user to fill in a template. A concrete draft to argue with beats an empty table. Base it on the goal, the tone, the interview answers, and any material they shared; invent placeholder visuals where needed and mark them `[propuesta]`.
 
-Use the scene table in `templates/script-template.md`. Every scene has three columns:
+Use the scene table in `templates/script-template.md`. The goal and tone go at the top of it, because that is what the beats are judged against. Every scene has three columns:
 - **VISUAL** — what the sticky graphic shows in this scene (its *state*)
 - **TEXTO** — the prose the reader sees (2-4 short sentences max)
 - **TRANSICIÓN** — what changes visually when scrolling from the previous scene into this one
@@ -55,6 +61,7 @@ These rules define a valid scene. Apply them to your own draft and to every user
 2. **Merge rule:** if the graphic does not change state between scene N and N+1, merge them. A scene without a visual state change is just a paragraph — it doesn't earn a scroll beat.
 3. **Text is subordinate.** If a scene needs more than ~4 sentences, either split the concept or move the detail to a non-animated prose section between scrollytelling blocks (mixing static prose and scroll sequences is normal and good — see `references/patterns.md`).
 4. **The opening scene states the tension** (what question does this article answer?) and **the closing scene pays it off**. If the draft lacks either, say so and fix it.
+5. **The opening scene matches the goal.** An argument opens on a claim, a story opens on a moment, an orientation opens on a map. A draft that feels off is usually a goal mismatch in scene 1, not a writing problem.
 
 Iterate the table with the user. Push back on weak beats; suggest stronger visual metaphors. When the user approves the script, restate the final scene table and confirm: this is what gets built.
 
@@ -192,6 +199,11 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   Approval of the script is not approval to build.
 - **Interviewing past the point of usefulness.** Four or five questions in one message, then a
   draft. A long questionnaire is a way of avoiding the first draft.
+- **Drafting before the goal and tone are set.** "Informative and engaging" is what an open
+  question gets you, and it produces a draft with no spine. Present the menus, recommend one of
+  each, get a pick, then write.
+- **Averaging the tone menu.** "A bit of all of them" is not a tone. Pick one, draft it, and
+  offer to re-voice the scene text — tone is cheap to change after the structure is agreed.
 - **Parking the mobile graphic behind the text cards.** `z-index: -1` looks elegant on a
   desktop preview and hides the graphic completely on a phone, where cards are far taller.
   The graphic pins above the text and the text scrolls underneath it.
@@ -205,6 +217,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 
 ## Reference files
 
+- `references/tone-and-goal.md` — the goal and tone menus, what each choice changes, and the combinations that do not work. Read in Phase 1 step 1, before the interview.
 - `references/patterns.md` — the scrollytelling patterns, when to use each, when to mix with static prose. Read in Phase 1 step 4.
 - `references/implementation.md` — HTML/CSS/JS skeleton, deterministic scene-state selection, reduced-motion and no-JS handling, mobile pitfalls, and the scrubbed-sequence recipe. Read at the start of Phase 2.
 - `templates/script-template.md` — the scene table format. Use in Phase 1 step 2.

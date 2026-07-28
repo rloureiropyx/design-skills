@@ -42,4 +42,4 @@ When the library is the only support for the central assumption, say that in the
 
 ## Record where it lives
 
-Name the library and the specific files used in the frame's `## Context use` section, so `shaping` and `design-package` read the same source rather than re-deriving it or asking again.
+Name the library and the specific files used in the frame's `## Context use` section, so `shaping` and `proposal` read the same source rather than re-deriving it or asking again.

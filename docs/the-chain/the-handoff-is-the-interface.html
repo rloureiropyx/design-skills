@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An interactive explanation of how the five design-skills work as one chain: each handoff is a document, every skill can refuse its input, contradicting evidence travels back to the frame, and renderers materialise decisions they never make.">
+  <meta name="description" content="An interactive explanation of how the design-skills work as one chain: each handoff is a document, every skill can refuse its input, contradicting evidence travels back to the frame, and renderers materialise decisions they never make.">
   <link rel="icon" href="data:,">
   <title>The Handoff Is the Interface — How the design-skills chain works</title>
   <style>
@@ -350,7 +350,7 @@
     }
 
     .output-item.is-shaping { border-left-color: var(--green); }
-    .output-item.is-package { border-left-color: var(--amber); }
+    .output-item.is-proposal { border-left-color: var(--amber); }
 
     .carried-section {
       padding: 0 1.5rem 10rem;
@@ -703,15 +703,15 @@
     <!-- HERO -->
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">A product design library · How the five skills work as one</p>
+        <p class="eyebrow">A product design library · How the skills work as one</p>
         <h1>The handoff is the interface.</h1>
-        <p class="hero-deck"><strong>Five skills that look independent in an index and are not.</strong> They form a chain, and the only thing that crosses from one link to the next is a document. That constraint is the method — everything else follows from it.</p>
+        <p class="hero-deck"><strong>Six skills that look independent in an index and are not.</strong> They run one short recipe, and the only thing that passes from one step to the next is a document.</p>
         <span class="scroll-cue">Scroll to follow the chain</span>
       </div>
 
       <svg class="hero-diagram" viewBox="0 0 620 540" role="img" aria-labelledby="hero-title hero-desc">
-        <title id="hero-title">Five scattered skill cards on one side, the same five arranged as a chain on the other</title>
-        <desc id="hero-desc">Presented as a list, the five skills look like five separate tools. Arranged as a chain, each one hands the next a named document: FRAMED_PROBLEM.md, SHAPING.md and DESIGN_PACKAGE.md.</desc>
+        <title id="hero-title">Skill cards scattered on one side, arranged as a chain on the other</title>
+        <desc id="hero-desc">Presented as a list, the skills look like separate tools. Arranged as a chain, each one hands the next a named document: FRAMED_PROBLEM.md, DIRECTIONS.md and PROPOSAL.md.</desc>
         <defs>
           <marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#75a9ff"/></marker>
         </defs>
@@ -732,11 +732,11 @@
           <path d="M438 154 V196" fill="none" stroke="#75a9ff" stroke-width="3" marker-end="url(#heroArrow)"/>
           <rect x="292" y="204" width="292" height="62" rx="13" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
           <text x="316" y="242" fill="#c9f1df" font-size="15" font-weight="700">shaping</text>
-          <text x="600" y="288" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">SHAPING.MD</text>
+          <text x="600" y="288" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">DIRECTIONS.MD</text>
           <path d="M438 266 V308" fill="none" stroke="#63c99c" stroke-width="3" marker-end="url(#heroArrow)"/>
           <rect x="292" y="316" width="292" height="62" rx="13" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
-          <text x="316" y="354" fill="#f4d89c" font-size="15" font-weight="700">design-package</text>
-          <text x="600" y="400" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">DESIGN_PACKAGE.MD</text>
+          <text x="316" y="354" fill="#f4d89c" font-size="15" font-weight="700">proposal</text>
+          <text x="600" y="400" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">PROPOSAL.MD</text>
           <path d="M438 378 V420" fill="none" stroke="#e7b85c" stroke-width="3" marker-end="url(#heroArrow)"/>
           <rect x="292" y="428" width="292" height="62" rx="13" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
           <text x="316" y="466" fill="#dfd0fa" font-size="15" font-weight="700">renderers</text>
@@ -746,10 +746,10 @@
 
     <section class="intro" aria-labelledby="intro-title">
       <p class="eyebrow">The part an index cannot show</p>
-      <h2 id="intro-title">Five explainers, and none of them explains the system.</h2>
-      <p>Each skill in this library has its own article. Read all five and you still will not have the thing that matters most: they are not five tools you pick between. They are one chain, and a chain is defined by its joints, not by its links.</p>
+      <h2 id="intro-title">Six explainers, and none of them explains the recipe.</h2>
+      <p>Each skill here has its own write-up. Read them all and you still will not have the part that matters: they are not tools you pick between. They run in order, and what makes that work is what passes between them.</p>
       <p>This piece is about the joints. What crosses between two skills, what each one is allowed to change, what happens when a link is skipped, and where evidence goes when it contradicts a decision that was already made.</p>
-      <p class="definition"><strong>The rule the whole library rests on.</strong> A downstream skill <em>carries</em> what an upstream one decided. It never re-derives it. When it finds evidence that the earlier decision was wrong, it sends that back — it does not quietly restate the problem in new words and keep going.</p>
+      <p class="definition"><strong>The one rule.</strong> A later skill <em>carries</em> what an earlier one decided. It never re-derives it. When it finds evidence that the earlier decision was wrong, it sends that back rather than quietly restating the problem in new words and carrying on.</p>
     </section>
 
     <section class="scrolly" aria-label="How the design-skills chain works">
@@ -830,7 +830,7 @@
                 <rect x="60" y="272" width="640" height="112" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
                 <text x="88" y="306" fill="#e7b85c" font-size="12" font-weight="800" letter-spacing="1.3">ARTIFACTS</text>
                 <text x="88" y="334" fill="#f4d89c" font-size="13.5" font-weight="700">May assemble decisions into something a group can act on.</text>
-                <text x="88" y="360" fill="#c9a869" font-size="11.5" font-weight="650">design-package — assembly only. Anything invented here means a step was skipped.</text>
+                <text x="88" y="360" fill="#c9a869" font-size="11.5" font-weight="650">breadboarding · proposal — assembled, never invented. Anything new here means a step was skipped.</text>
 
                 <rect x="60" y="398" width="640" height="112" rx="16" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
                 <text x="88" y="432" fill="#ae8bf3" font-size="12" font-weight="800" letter-spacing="1.3">RENDERERS</text>
@@ -857,14 +857,13 @@
                 <text x="361" y="234" fill="#c9f1df" font-size="13" font-weight="700" text-anchor="middle">shaping</text>
 
                 <path class="svg-line" d="M436 228 H504" marker-end="url(#arrow)"/>
-                <text x="470" y="210" fill="#63c99c" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing=".6">SHAPING.MD</text>
+                <text x="470" y="210" fill="#63c99c" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing=".6">DIRECTIONS.MD</text>
 
                 <rect x="512" y="176" width="150" height="104" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
-                <text x="587" y="222" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">design-</text>
-                <text x="587" y="242" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">package</text>
+                <text x="587" y="234" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">proposal</text>
 
                 <path class="svg-line" d="M587 280 V336" marker-end="url(#arrow)"/>
-                <text x="600" y="314" fill="#e7b85c" font-size="9.5" font-weight="800" letter-spacing=".6">DESIGN_PACKAGE.MD</text>
+                <text x="600" y="314" fill="#e7b85c" font-size="9.5" font-weight="800" letter-spacing=".6">PROPOSAL.MD</text>
 
                 <rect x="512" y="344" width="150" height="94" rx="14" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
                 <text x="587" y="396" fill="#dfd0fa" font-size="13" font-weight="700" text-anchor="middle">renderers</text>
@@ -908,15 +907,15 @@
               <g font-family="Inter, sans-serif">
                 <rect x="60" y="152" width="640" height="82" rx="13" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.8"/>
                 <text x="84" y="184" fill="#c8dcff" font-size="13" font-weight="750">problem-framing stops at a framed problem</text>
-                <text x="84" y="210" fill="#75a9ff" font-size="11.5" font-weight="650">It buys time to shape. It never buys permission to build.</text>
+                <text x="84" y="210" fill="#75a9ff" font-size="11.5" font-weight="650">It buys time to direction. It never buys permission to build.</text>
 
                 <rect x="60" y="250" width="640" height="82" rx="13" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/>
-                <text x="84" y="282" fill="#c9f1df" font-size="13" font-weight="750">shaping will not select a shape with a flag on it</text>
+                <text x="84" y="282" fill="#c9f1df" font-size="13" font-weight="750">shaping will not select a direction with a flag on it</text>
                 <text x="84" y="308" fill="#63c99c" font-size="11.5" font-weight="650">An unresolved unknown counts as a failure until a spike answers it.</text>
 
                 <rect x="60" y="348" width="640" height="82" rx="13" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/>
-                <text x="84" y="380" fill="#f4d89c" font-size="13" font-weight="750">design-package will not write over a missing input</text>
-                <text x="84" y="406" fill="#e7b85c" font-size="11.5" font-weight="650">No frame, no shape, no appetite, or an open flag — any one of them stops it.</text>
+                <text x="84" y="380" fill="#f4d89c" font-size="13" font-weight="750">proposal will not write over a missing input</text>
+                <text x="84" y="406" fill="#e7b85c" font-size="11.5" font-weight="650">No frame, no direction, no time budget, or an open flag — any one of them stops it.</text>
 
                 <rect x="60" y="452" width="640" height="72" rx="13" fill="#38241f" stroke="#ee795e" stroke-width="1.8" stroke-dasharray="7 5"/>
                 <text x="380" y="484" fill="#ee795e" font-size="13.5" font-weight="800" text-anchor="middle" letter-spacing=".8">A SKILL THAT CANNOT REFUSE IS A FORMATTING TOOL</text>
@@ -933,20 +932,20 @@
                 <rect x="60" y="152" width="640" height="104" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
                 <rect x="80" y="176" width="150" height="56" rx="10" fill="#151b18" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 4"/>
                 <text x="155" y="210" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no frame</text>
-                <text x="256" y="192" fill="#ee795e" font-size="12.5" font-weight="750">A shape that fits requirements</text>
+                <text x="256" y="192" fill="#ee795e" font-size="12.5" font-weight="750">A direction that fits requirements</text>
                 <text x="256" y="212" fill="#ee795e" font-size="12.5" font-weight="750">nobody agreed to.</text>
                 <text x="256" y="234" fill="#8f9a90" font-size="10.5" font-weight="600">Discovered in review, after the build estimate.</text>
 
                 <rect x="60" y="272" width="640" height="104" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
                 <rect x="80" y="296" width="150" height="56" rx="10" fill="#151b18" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 4"/>
                 <text x="155" y="330" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no shaping</text>
-                <text x="256" y="312" fill="#ee795e" font-size="12.5" font-weight="750">The appetite gets invented in</text>
+                <text x="256" y="312" fill="#ee795e" font-size="12.5" font-weight="750">The time budget gets invented in</text>
                 <text x="256" y="332" fill="#ee795e" font-size="12.5" font-weight="750">the meeting.</text>
                 <text x="256" y="354" fill="#8f9a90" font-size="10.5" font-weight="600">By whoever sounds most confident about it.</text>
 
                 <rect x="60" y="392" width="640" height="104" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
                 <rect x="80" y="416" width="150" height="56" rx="10" fill="#151b18" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 4"/>
-                <text x="155" y="450" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no package</text>
+                <text x="155" y="450" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no proposal</text>
                 <text x="256" y="432" fill="#ee795e" font-size="12.5" font-weight="750">The decision belongs to</text>
                 <text x="256" y="452" fill="#ee795e" font-size="12.5" font-weight="750">whoever spoke last.</text>
                 <text x="256" y="474" fill="#8f9a90" font-size="10.5" font-weight="600">And nobody can reconstruct why, a quarter later.</text>
@@ -1043,13 +1042,12 @@
                 <path class="svg-line" d="M444 262 H538" marker-end="url(#arrow)"/>
 
                 <rect x="546" y="216" width="148" height="92" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
-                <text x="620" y="256" fill="#f4d89c" font-size="12" font-weight="700" text-anchor="middle">design-</text>
-                <text x="620" y="275" fill="#f4d89c" font-size="12" font-weight="700" text-anchor="middle">package</text>
+                <text x="620" y="266" fill="#f4d89c" font-size="12" font-weight="700" text-anchor="middle">proposal</text>
 
                 <path d="M194 340 H288" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="6 5"/>
                 <path d="M232 322 V358 M250 322 V358" stroke="#ee795e" stroke-width="3"/>
-                <text x="300" y="332" fill="#ee795e" font-size="12" font-weight="750">No SHAPING.md?</text>
-                <text x="300" y="352" fill="#f7c9bd" font-size="12" font-weight="750">design-package stops and asks for it.</text>
+                <text x="300" y="332" fill="#ee795e" font-size="12" font-weight="750">No DIRECTIONS.md?</text>
+                <text x="300" y="352" fill="#f7c9bd" font-size="12" font-weight="750">proposal stops and asks for it.</text>
 
                 <rect x="46" y="404" width="648" height="112" rx="16" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/>
                 <text x="370" y="446" fill="#63c99c" font-size="14.5" font-weight="800" text-anchor="middle" letter-spacing="1">THE HANDOFF IS THE INTERFACE</text>
@@ -1086,7 +1084,7 @@
           <div class="step-card">
             <span class="scene-number">03 · The chain</span>
             <h2 id="scene-3-title">The arrows are the method.</h2>
-            <p>The skills are not the interesting part of this picture. The arrows are. The only thing that crosses from one skill to the next is a document, and that document is the entire interface — no shared memory, no “as we discussed”, no context that lives only in a thread.</p>
+            <p>The skills are not the interesting part of this picture. The arrows are. The only thing that passes from one skill to the next is a document — no shared memory, no “as we discussed”, no context that lives only in a thread.</p>
           </div>
         </section>
 
@@ -1106,7 +1104,7 @@
           <div class="step-card">
             <span class="scene-number">05 · The gates</span>
             <h2 id="scene-5-title">Every skill can refuse its input.</h2>
-            <p>Framing buys time to shape, not permission to build. Shaping will not select a shape while an unknown is still flagged. The package will not be written over a missing appetite — and a skill that cannot refuse its input is a formatting tool, not a method.</p>
+            <p>Framing buys time to direction, not permission to build. Shaping will not select a direction while an unknown is still flagged. The proposal will not be written over a missing time budget — and a skill that cannot refuse its input is a formatting tool, not a method.</p>
           </div>
         </section>
 
@@ -1115,7 +1113,7 @@
           <div class="step-card">
             <span class="scene-number">06 · Skip a link</span>
             <h2 id="scene-6-title">The cost is never paid where it was skipped.</h2>
-            <p>Skip the frame and you get a shape that fits requirements nobody agreed to. Skip shaping and the appetite gets invented in the meeting, by whoever is most confident. Skip the package and the decision belongs to whoever spoke last.</p>
+            <p>Skip the frame and you get a direction that fits requirements nobody agreed to. Skip shaping and the time budget gets invented in the meeting, by whoever is most confident. Skip the proposal and the decision belongs to whoever spoke last.</p>
           </div>
         </section>
 
@@ -1144,7 +1142,7 @@
           <div class="step-card">
             <span class="scene-number">09 · The payoff</span>
             <h2 id="scene-9-title">Enter anywhere. Skip nothing.</h2>
-            <p>You can enter this chain anywhere. Start at shaping when the problem is genuinely settled; start at the package when the shape was chosen last quarter. What you cannot do is skip a document, because the next skill asks for it and stops. The handoff is the interface — that is the whole method.</p>
+            <p>You can enter this chain anywhere. Start at shaping when the problem is genuinely settled; start at the proposal when the direction was chosen last quarter. What you cannot do is skip a document, because the next skill asks for it and stops. The handoff is the interface — that is the whole method.</p>
           </div>
         </section>
       </div>
@@ -1160,18 +1158,18 @@
           <div class="output-item">Assumptions, marked as assumptions</div>
           <div class="output-item">Frames considered and set aside</div>
           <div class="output-item">Boundaries — what is out, and why now</div>
-          <div class="output-item is-shaping"><code>SHAPING.md</code> — the problem, carried verbatim</div>
+          <div class="output-item is-shaping"><code>DIRECTIONS.md</code> — the problem, carried verbatim</div>
           <div class="output-item is-shaping">Numbered requirements with statuses</div>
-          <div class="output-item is-shaping">Candidate shapes, materially different</div>
+          <div class="output-item is-shaping">Candidate directions, materially different</div>
           <div class="output-item is-shaping">A binary fit check — never “partially”</div>
           <div class="output-item is-shaping">Unknowns flagged, and the spike that closes each</div>
-          <div class="output-item is-shaping">The selected shape and the appetite it fits</div>
-          <div class="output-item is-package"><code>DESIGN_PACKAGE.md</code> — problem and appetite up front</div>
-          <div class="output-item is-package">The shape as parts, not pixels</div>
-          <div class="output-item is-package">Rabbit holes, each with its patch</div>
-          <div class="output-item is-package">No-gos, each with a reason</div>
-          <div class="output-item is-package">What is still open, stated plainly</div>
-          <div class="output-item is-package">Sources — pointing back at the two documents above</div>
+          <div class="output-item is-shaping">The selected direction and the time budget it fits</div>
+          <div class="output-item is-proposal"><code>PROPOSAL.md</code> — problem and time budget up front</div>
+          <div class="output-item is-proposal">The direction as parts, not pixels</div>
+          <div class="output-item is-proposal">Rabbit holes, each with its patch</div>
+          <div class="output-item is-proposal">Not this time, each with a reason</div>
+          <div class="output-item is-proposal">What is still open, stated plainly</div>
+          <div class="output-item is-proposal">Sources — pointing back at the two documents above</div>
         </div>
       </details>
     </section>
@@ -1181,7 +1179,7 @@
         <div class="carried-intro">
           <p class="eyebrow">What carrying looks like</p>
           <h2 id="carried-title">The same sentence, three times, unchanged.</h2>
-          <p>This is the entire discipline in one example. One line is written once, in the frame, with its evidence. It then appears in the shaping document and in the design package as a quotation with a source — not as an improved version of itself.</p>
+          <p>This is the entire discipline in one example. One line is written once, in the frame, with its evidence. It then appears in the shaping document and in the proposal as a quotation with a source — not as an improved version of itself.</p>
           <p>It looks almost pedantic on the page. It is the difference between a project with one problem and a project with three.</p>
         </div>
 
@@ -1197,7 +1195,7 @@
           </div>
 
           <div class="carried-doc">
-            <div class="carried-doc-head"><span>SHAPING.md</span><span>shaping</span></div>
+            <div class="carried-doc-head"><span>DIRECTIONS.md</span><span>shaping</span></div>
             <dl class="carried-field">
               <dt>Problem</dt>
               <dd class="carried-quote">Payroll admins find blocking errors during the run, when there is no time left to resolve them without delaying pay.<span class="carried-source">Carried from FRAMED_PROBLEM.md — not restated</span></dd>
@@ -1207,17 +1205,17 @@
           </div>
 
           <div class="carried-doc">
-            <div class="carried-doc-head"><span>DESIGN_PACKAGE.md</span><span>design-package</span></div>
+            <div class="carried-doc-head"><span>PROPOSAL.md</span><span>proposal</span></div>
             <dl class="carried-field">
               <dt>The problem, in one line</dt>
-              <dd class="carried-quote">Payroll admins find blocking errors during the run, when there is no time left to resolve them without delaying pay.<span class="carried-source">Carried from FRAMED_PROBLEM.md via SHAPING.md</span></dd>
-              <dt>Appetite</dt>
+              <dd class="carried-quote">Payroll admins find blocking errors during the run, when there is no time left to resolve them without delaying pay.<span class="carried-source">Carried from FRAMED_PROBLEM.md via DIRECTIONS.md</span></dd>
+              <dt>Time budget</dt>
               <dd>Six weeks. The scope moves; the time does not.</dd>
             </dl>
           </div>
         </div>
 
-        <p class="carried-note"><strong>What a fork would look like.</strong> “Admins waste time on payroll errors” is a reasonable rewrite of that sentence. It is also a different problem: it drops <em>when</em> the errors are found, which is the only reason the timing-based shape was selected over the better error list. The paraphrase reads more cleanly and quietly deletes the requirement.</p>
+        <p class="carried-note"><strong>What a fork would look like.</strong> “Admins waste time on payroll errors” is a reasonable rewrite of that sentence. It is also a different problem: it drops <em>when</em> the errors are found, which is the only reason the timing-based direction was selected over the better error list. The paraphrase reads more cleanly and quietly deletes the requirement.</p>
       </div>
     </section>
 
@@ -1225,14 +1223,14 @@
       <div class="closing-copy">
         <p class="eyebrow">The payoff</p>
         <h2 id="closing-title">One chain, and no rework.</h2>
-        <p><strong>Nothing in this library is decided twice.</strong> That is not a productivity claim — it is what makes a decision traceable six weeks later, defensible in a review nobody in the original room attends, and safe to reopen deliberately rather than by accident. The documents are the project’s memory. The skills are just what writes them.</p>
-        <p>Start where the uncertainty actually is. Arrive carrying <code>FRAMED_PROBLEM.md</code>, <code>SHAPING.md</code> or <code>DESIGN_PACKAGE.md</code> — or write the one you are missing before you go on.</p>
+        <p><strong>Nothing here is decided twice.</strong> Not a productivity claim — it is what makes a decision traceable six weeks later, defensible in a review nobody from the original room attends, and safe to reopen on purpose rather than by accident. The documents are the project’s memory; the skills are what writes them.</p>
+        <p>Start where the uncertainty actually is. Arrive carrying <code>FRAMED_PROBLEM.md</code>, <code>DIRECTIONS.md</code> or <code>PROPOSAL.md</code> — or write the one you are missing before you go on.</p>
         <div class="final-equation"><span>A decision</span><span aria-hidden="true">→</span><span>A document</span><span aria-hidden="true">→</span><span>The next decision</span></div>
       </div>
 
       <svg class="closing-diagram" viewBox="0 0 700 480" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
         <title id="closing-diagram-title">The full chain with its documents on the arrows and a return path to the frame</title>
-        <desc id="closing-diagram-desc">Problem framing hands FRAMED_PROBLEM.md to shaping, shaping hands SHAPING.md to the design package, and the package hands DESIGN_PACKAGE.md to the renderers. A separate return arrow runs from the later stages back to problem framing, labelled reopen the frame.</desc>
+        <desc id="closing-diagram-desc">Problem framing hands FRAMED_PROBLEM.md to shaping, shaping hands DIRECTIONS.md to the proposal, and the proposal hands PROPOSAL.md to the renderers. A separate return arrow runs from the later stages back to problem framing, labelled reopen the frame.</desc>
         <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#75a9ff"/></marker>
         <marker id="closingArrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
         <g font-family="Inter, sans-serif">
@@ -1245,14 +1243,13 @@
           <rect x="244" y="180" width="140" height="96" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
           <text x="314" y="234" fill="#c9f1df" font-size="13" font-weight="700" text-anchor="middle">shaping</text>
           <path d="M384 228 H440" fill="none" stroke="#63c99c" stroke-width="3.5" marker-end="url(#closingArrowGreen)"/>
-          <text x="412" y="206" fill="#7d8880" font-size="8.5" font-weight="800" text-anchor="middle" letter-spacing=".5">SHAPING</text>
+          <text x="412" y="206" fill="#7d8880" font-size="8.5" font-weight="800" text-anchor="middle" letter-spacing=".5">DIRECTIONS</text>
 
           <rect x="448" y="180" width="140" height="96" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
-          <text x="518" y="220" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">design-</text>
-          <text x="518" y="240" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">package</text>
+          <text x="518" y="234" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">proposal</text>
 
           <path d="M518 276 V330" fill="none" stroke="#e7b85c" stroke-width="3.5" marker-end="url(#closingArrow)"/>
-          <text x="534" y="308" fill="#7d8880" font-size="8.5" font-weight="800" letter-spacing=".5">DESIGN_PACKAGE</text>
+          <text x="534" y="308" fill="#7d8880" font-size="8.5" font-weight="800" letter-spacing=".5">PROPOSAL</text>
           <rect x="448" y="338" width="140" height="86" rx="14" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
           <text x="518" y="386" fill="#dfd0fa" font-size="13" font-weight="700" text-anchor="middle">renderers</text>
 
@@ -1266,16 +1263,16 @@
       <div class="sources-inner">
         <p class="eyebrow">Method provenance</p>
         <h2 id="sources-title">Where the chain comes from.</h2>
-        <p class="sources-intro">The sequence is Ryan Singer’s. The refusals, the backflow rule, and the renderer boundary are what this library added on top of it.</p>
+        <p class="sources-intro">The sequence is Ryan Singer’s. The refusals, the rule about sending evidence back, and the renderer boundary are the additions.</p>
         <div class="source-grid">
           <article class="source-card">
             <h3>Shape Up</h3>
-            <p>Appetite, shaping before building, and the betting table this chain ends at. The fixed-time, variable-scope rule is the reason a refusal is possible at all.</p>
+            <p>A fixed time budget with variable scope, and working the solution out before building it. That rule is why a refusal is possible at all.</p>
             <a href="https://basecamp.com/shapeup">Read Shape Up</a>
           </article>
           <article class="source-card">
             <h3>Singer on framing</h3>
-            <p>The discipline of <strong>carrying the frame forward</strong> rather than re-deriving it, and the vocabulary this library uses — a design package, not a pitch.</p>
+            <p>The discipline of <strong>carrying the frame forward</strong> rather than re-deriving it, and the vocabulary this library uses — a proposal, not a pitch.</p>
             <a href="https://www.ryansinger.co/framing/">Read Singer on framing</a>
           </article>
           <article class="source-card">
@@ -1289,7 +1286,7 @@
     </article>
   </main>
 
-  <footer>The Handoff Is the Interface · How the five design-skills work as one chain · <a href="../index.html">Back to the library</a></footer>
+  <footer>The Handoff Is the Interface · How the design-skills work as one chain · <a href="../index.html">Back to the library</a></footer>
 
   <noscript>
     <style>

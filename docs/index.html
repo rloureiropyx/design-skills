@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>design-skills — the library</title>
-  <meta name="description" content="Explainers for every skill in the design-skills plugin — problem framing, shaping, design packages, scrollytelling and tldraw — plus one on how the chain works as a whole.">
+  <meta name="description" content="Explainers for the six skills in the design-skills plugin — problem framing, shaping, breadboarding, proposal, scrollytelling and tldraw — plus one on how they hand off to each other.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
@@ -22,6 +22,7 @@
       --amber: #e7b85c;
       --violet: #ae8bf3;
       --coral: #ee795e;
+      --teal: #4fb3bf;
       --white: #fffdf7;
       --max: 1240px;
       --radius: 22px;
@@ -366,13 +367,13 @@
   <header class="hero">
     <div class="wrap">
       <p class="eyebrow">GitHub Copilot plugin · design-skills</p>
-      <h1>Skills that decide, before anything gets drawn.</h1>
-      <p class="hero-deck"><strong>Five skills, three roots, one handoff chain.</strong> Process skills decide what is true and what to build. Artifact skills write the thing a group can act on. Renderers only materialise a decision that has already been made — they never make one.</p>
+      <h1>Work out the problem before you design the solution.</h1>
+      <p class="hero-deck"><strong>Six skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. Two more skills draw or publish the result once something has been decided.</p>
       <ul class="hero-meta">
         <li>2 process skills</li>
-        <li>1 artifact skill</li>
+        <li>2 artifact skills</li>
         <li>2 renderers</li>
-        <li>6 explainers, each verified across 9 viewports</li>
+        <li>6 articles, each checked across 9 viewports</li>
       </ul>
     </div>
   </header>
@@ -382,50 +383,50 @@
 
       <section class="handoff" aria-labelledby="handoff-title">
         <h2 id="handoff-title">The chain</h2>
-        <p>Each skill hands the next one a document, and that document is the only interface between them. No skill re-opens the decision the previous one closed.</p>
+        <p>Each skill hands the next one a document, and that document is the only thing that passes between them. A later skill carries what an earlier one decided rather than restating it.</p>
         <ul class="chain">
           <li style="--accent: var(--blue)"><b>problem-framing</b><span>What problem, and why now</span><code>FRAMED_PROBLEM.md</code></li>
-          <li style="--accent: var(--green)"><b>shaping</b><span>Which solution shape, inside the appetite</span><code>SHAPING.md</code></li>
-          <li style="--accent: var(--amber)"><b>design-package</b><span>The decision-ready artifact</span><code>DESIGN_PACKAGE.md</code></li>
+          <li style="--accent: var(--green)"><b>shaping</b><span>Which direction, inside the time budget</span><code>DIRECTIONS.md</code></li>
+          <li style="--accent: var(--amber)"><b>proposal</b><span>The document people decide on</span><code>PROPOSAL.md</code></li>
           <li style="--accent: var(--violet)"><b>renderers</b><span>Make the decision visible</span><code>.html · .tldr</code></li>
         </ul>
         <div class="chain-feature">
           <p class="chain-feature-tag">Start here</p>
           <p><a href="the-chain/the-handoff-is-the-interface.html">The handoff is the interface</a></p>
-          <p class="chain-feature-deck">Why every link in this chain is a document, and what each skipped one actually costs. <a href="the-chain/README.md">Explainer</a> · <a href="the-chain/the-handoff-is-the-interface.script.md">Scene script</a></p>
+          <p class="chain-feature-deck">Why every step is a document, and what skipping one costs. <a href="the-chain/README.md">Explainer</a> · <a href="the-chain/the-handoff-is-the-interface.script.md">Scene script</a></p>
         </div>
       </section>
 
       <section class="group" aria-labelledby="group-process">
         <div class="group-head">
           <h2 id="group-process">Process</h2>
-          <p>Skills that change what the team believes. They end in a decision, not a deliverable.</p>
+          <p>Skills that end in a decision rather than a deliverable.</p>
         </div>
         <ul class="cards">
           <li class="card" style="--accent: var(--blue)">
             <p class="card-tag">Process · 01</p>
             <h3><a href="problem-framing/frame-before-you-design.html">Frame before you design</a></h3>
             <p class="card-name">problem-framing</p>
-            <p class="card-deck">A solution can look right and still solve the wrong problem. This skill pressure-tests the frame — evidence, competing frames, boundaries, urgency — before design moves forward.</p>
+            <p class="card-deck">Turns a request into a written problem with the evidence it rests on: quotes kept apart from interpretations, more than one explanation considered, and what was set aside written down. Has a quick mode — five questions, one page — for small solo work.</p>
             <ul class="card-links">
               <li><a href="problem-framing/README.md">Explainer</a></li>
               <li><a href="problem-framing/frame-before-you-design.script.md">Scene script</a></li>
               <li><a href="../skills/process/problem-framing/SKILL.md">SKILL.md</a></li>
             </ul>
-            <p class="card-note">Ends with a commitment to spend shaping time — not a commitment to build.</p>
+            <p class="card-note">Buys time to explore solutions. Does not buy permission to build.</p>
           </li>
 
           <li class="card" style="--accent: var(--green)">
             <p class="card-tag">Process · 02</p>
-            <h3><a href="shaping/pick-a-shape.html">Pick a shape</a></h3>
+            <h3><a href="shaping/pick-a-direction.html">Pick a direction</a></h3>
             <p class="card-name">shaping</p>
-            <p class="card-deck">Two people can hold two defensible solutions and have no shared test between them. Shaping writes the test down: numbered requirements, lettered shapes, a binary fit check, and flagged unknowns that cannot be waved through.</p>
+            <p class="card-deck">Two people can hold two defensible solutions with no shared test between them. This writes the test down: numbered requirements, two or three lettered directions, a fit check with only two possible answers, and unknowns flagged so they cannot be waved through. Directions improve across versions, and discarded ones stay visible with the reason.</p>
             <ul class="card-links">
               <li><a href="shaping/README.md">Explainer</a></li>
-              <li><a href="shaping/pick-a-shape.script.md">Scene script</a></li>
+              <li><a href="shaping/pick-a-direction.script.md">Scene script</a></li>
               <li><a href="../skills/process/shaping/SKILL.md">SKILL.md</a></li>
             </ul>
-            <p class="card-note">Stops at a selected shape with no unresolved <span aria-hidden="true">⚠️</span> flags.</p>
+            <p class="card-note">Stops at one selected direction with no unresolved <span aria-hidden="true">⚠️</span> flags.</p>
           </li>
         </ul>
       </section>
@@ -433,18 +434,30 @@
       <section class="group" aria-labelledby="group-artifacts">
         <div class="group-head">
           <h2 id="group-artifacts">Artifacts</h2>
-          <p>Skills that write the document a group of people can act on without a meeting.</p>
+          <p>Skills that produce the thing people react to.</p>
         </div>
         <ul class="cards">
-          <li class="card" style="--accent: var(--amber)">
+          <li class="card" style="--accent: var(--teal)">
             <p class="card-tag">Artifacts · 01</p>
-            <h3><a href="design-package/one-read-one-decision.html">One read, one decision</a></h3>
-            <p class="card-name">design-package</p>
-            <p class="card-deck">The third meeting that never decides anything is a document problem. A design package carries the frame, the shape, the appetite, the rabbit holes and the no-gos in one read — and refuses to be written while an unknown is still flagged.</p>
+            <h3><a href="breadboarding/README.md">Breadboarding</a></h3>
+            <p class="card-name">breadboarding</p>
+            <p class="card-deck">Sketches a solution in words instead of pixels: the places a person can be, what they can do or see in each one, and which action takes them where. Too coarse to express layout, which is what lets people argue about the mechanism first. Shaping uses it to make each direction concrete.</p>
             <ul class="card-links">
-              <li><a href="design-package/README.md">Explainer</a></li>
-              <li><a href="design-package/one-read-one-decision.script.md">Scene script</a></li>
-              <li><a href="../skills/artifacts/design-package/SKILL.md">SKILL.md</a></li>
+              <li><a href="breadboarding/README.md">Explainer</a></li>
+              <li><a href="../skills/artifacts/breadboarding/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">No article yet — the explainer is the write-up.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--amber)">
+            <p class="card-tag">Artifacts · 02</p>
+            <h3><a href="proposal/one-read-one-decision.html">One read, one decision</a></h3>
+            <p class="card-name">proposal</p>
+            <p class="card-deck">The document people read once and then decide on: the problem, the time budget, the chosen direction, the rabbit holes, what is deliberately out, and what is still uncertain. Everything carried from the two documents before it, and it refuses to be written while an unknown is still flagged.</p>
+            <ul class="card-links">
+              <li><a href="proposal/README.md">Explainer</a></li>
+              <li><a href="proposal/one-read-one-decision.script.md">Scene script</a></li>
+              <li><a href="../skills/artifacts/proposal/SKILL.md">SKILL.md</a></li>
             </ul>
             <p class="card-note">Decidable in one read, or it is not finished.</p>
           </li>
@@ -454,14 +467,14 @@
       <section class="group" aria-labelledby="group-renderers">
         <div class="group-head">
           <h2 id="group-renderers">Renderers</h2>
-          <p>Skills that materialise something already decided. Give a renderer an undecided idea and it will produce a tidy picture of confusion.</p>
+          <p>Skills that materialise a decision made elsewhere. Give one an undecided idea and it will produce a tidy picture of confusion.</p>
         </div>
         <ul class="cards">
           <li class="card" style="--accent: var(--violet)">
             <p class="card-tag">Renderers · 01</p>
             <h3><a href="scrollytelling/scroll-is-not-a-story.html">Scroll is not a story</a></h3>
             <p class="card-name">scrollytelling</p>
-            <p class="card-deck">Most interactive articles are built animation-first and explain nothing. This skill writes the scene script first, gates it on explicit approval, and only then builds — then proves the result across a device matrix instead of admiring it on a laptop.</p>
+            <p class="card-deck">Long-form web articles whose diagrams change as you scroll. Goal and tone get chosen from a short menu first, then a scene-by-scene script, then approval, then the build — and the result is checked across a device matrix rather than admired on a laptop.</p>
             <ul class="card-links">
               <li><a href="scrollytelling/README.md">Explainer</a></li>
               <li><a href="scrollytelling/scroll-is-not-a-story.script.md">Scene script</a></li>
@@ -474,13 +487,13 @@
             <p class="card-tag">Renderers · 02</p>
             <h3><a href="tldraw-skill/draw-what-was-decided.html">Draw what was decided</a></h3>
             <p class="card-name">tldraw-skill</p>
-            <p class="card-deck">A canvas renderer for flows, maps and wireframes. It owns coordinates, connectors, contrast and legibility — never the content. Requires a local tldraw app running on your machine.</p>
+            <p class="card-deck">Draws flows, journey maps, service blueprints, concept models, sitemaps, breadboards and wireframes on a local canvas. It owns coordinates, connectors, contrast and legibility — never the content. Needs the tldraw offline app running on the same machine.</p>
             <ul class="card-links">
               <li><a href="tldraw-skill/README.md">Explainer</a></li>
               <li><a href="tldraw-skill/draw-what-was-decided.script.md">Scene script</a></li>
               <li><a href="../skills/renderers/tldraw-skill/SKILL.md">SKILL.md</a></li>
             </ul>
-            <p class="card-note">External runtime dependency — read the explainer before installing.</p>
+            <p class="card-note">External runtime dependency — read the notes before installing.</p>
           </li>
         </ul>
       </section>
