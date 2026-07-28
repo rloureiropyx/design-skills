@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>design-skills — the library</title>
-  <meta name="description" content="Explainers for every skill in the design-skills plugin: problem framing, shaping, design packages, scrollytelling and tldraw.">
+  <meta name="description" content="Explainers for every skill in the design-skills plugin — problem framing, shaping, design packages, scrollytelling and tldraw — plus one on how the chain works as a whole.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
@@ -308,6 +308,41 @@
 
     .chain code { font-size: .78rem; }
 
+    .chain-feature {
+      margin-top: 1.1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: .35rem .9rem;
+      padding: .95rem 1.1rem;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--coral, #ee795e);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .chain-feature p { margin: 0; }
+
+    .chain-feature .chain-feature-tag {
+      font-size: .7rem;
+      font-weight: 750;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .chain-feature a {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .chain-feature .chain-feature-deck {
+      flex: 1 1 24ch;
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
     footer.page-foot {
       background: var(--diagram);
       color: rgba(255, 253, 247, .7);
@@ -337,7 +372,7 @@
         <li>2 process skills</li>
         <li>1 artifact skill</li>
         <li>2 renderers</li>
-        <li>Every explainer verified across 9 viewports</li>
+        <li>6 explainers, each verified across 9 viewports</li>
       </ul>
     </div>
   </header>
@@ -354,6 +389,11 @@
           <li style="--accent: var(--amber)"><b>design-package</b><span>The decision-ready artifact</span><code>DESIGN_PACKAGE.md</code></li>
           <li style="--accent: var(--violet)"><b>renderers</b><span>Make the decision visible</span><code>.html · .tldr</code></li>
         </ul>
+        <div class="chain-feature">
+          <p class="chain-feature-tag">Start here</p>
+          <p><a href="the-chain/the-handoff-is-the-interface.html">The handoff is the interface</a></p>
+          <p class="chain-feature-deck">Why every link in this chain is a document, and what each skipped one actually costs. <a href="the-chain/README.md">Explainer</a> · <a href="the-chain/the-handoff-is-the-interface.script.md">Scene script</a></p>
+        </div>
       </section>
 
       <section class="group" aria-labelledby="group-process">

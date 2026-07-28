@@ -1,0 +1,1434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of how the five design-skills work as one chain: each handoff is a document, every skill can refuse its input, contradicting evidence travels back to the frame, and renderers materialise decisions they never make.">
+  <link rel="icon" href="data:,">
+  <title>The Handoff Is the Interface — How the design-skills chain works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--blue);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 74% 40%, rgba(117, 169, 255, .13), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.4rem, 7.4vw, 8rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .hero-deck strong { color: var(--white); }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--blue);
+      border-bottom: 2px solid var(--blue);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--blue);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    .carried-field code,
+    details code,
+    .bridge-card code,
+    .closing code,
+    footer code { 
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .closing code { background: rgba(255, 255, 255, .12); }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--blue); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--blue);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--blue);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .output-item.is-shaping { border-left-color: var(--green); }
+    .output-item.is-package { border-left-color: var(--amber); }
+
+    .carried-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .carried-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .carried-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .carried-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .carried-intro p { color: #4c5149; }
+
+    .carried-stack { display: grid; gap: 1rem; }
+
+    .carried-doc {
+      padding: clamp(1.2rem, 3vw, 2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .carried-doc-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 1.1rem;
+      padding-bottom: .8rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .carried-doc:nth-of-type(1) { border-top: 4px solid var(--blue); }
+    .carried-doc:nth-of-type(2) { border-top: 4px solid var(--green); }
+    .carried-doc:nth-of-type(3) { border-top: 4px solid var(--amber); }
+
+    .carried-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .carried-field dd { margin: 0 0 .9rem; color: #292d27; }
+    .carried-field dd:last-child { margin-bottom: 0; }
+
+    .carried-quote {
+      padding: .85rem 1rem;
+      border-left: 3px solid var(--line);
+      background: var(--paper);
+      font-size: .95rem;
+    }
+
+    .carried-source {
+      display: block;
+      margin-top: .5rem;
+      color: #4e5a52;
+      font-size: .74rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .carried-note {
+      margin: 1.6rem 0 0;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .7);
+      color: #4a4f47;
+      font-size: .92rem;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .final-equation {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .8rem;
+      margin-top: 2.2rem;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper-2);
+    }
+
+    .sources-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .sources h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #2f4f7a;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    footer a { color: var(--green); }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      /* Once the graphic is pinned into a band it fills that band edge to edge, so an
+         overlaid caption lands on top of the diagram's own title. The scene number in
+         the card ("05 · The gates") already carries the same cue. */
+      .graphic-meta { display: none; }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .carried-inner { grid-template-columns: 1fr; }
+      .carried-intro { position: static; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3rem, 15vw, 4.6rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+      .carried-doc-head { display: block; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A product design library · How the five skills work as one</p>
+        <h1>The handoff is the interface.</h1>
+        <p class="hero-deck"><strong>Five skills that look independent in an index and are not.</strong> They form a chain, and the only thing that crosses from one link to the next is a document. That constraint is the method — everything else follows from it.</p>
+        <span class="scroll-cue">Scroll to follow the chain</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 540" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">Five scattered skill cards on one side, the same five arranged as a chain on the other</title>
+        <desc id="hero-desc">Presented as a list, the five skills look like five separate tools. Arranged as a chain, each one hands the next a named document: FRAMED_PROBLEM.md, SHAPING.md and DESIGN_PACKAGE.md.</desc>
+        <defs>
+          <marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#75a9ff"/></marker>
+        </defs>
+        <text x="104" y="70" fill="#8d968c" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.2">AS A LIST</text>
+        <g opacity=".9">
+          <rect x="40" y="92" width="132" height="60" rx="12" fill="#e8e9e2" transform="rotate(-6 106 122)"/>
+          <rect x="48" y="176" width="124" height="60" rx="12" fill="#e8e9e2" transform="rotate(4 110 206)"/>
+          <rect x="34" y="260" width="140" height="60" rx="12" fill="#e8e9e2" transform="rotate(-3 104 290)"/>
+          <rect x="52" y="344" width="120" height="60" rx="12" fill="#e8e9e2" transform="rotate(6 112 374)"/>
+          <rect x="40" y="428" width="132" height="60" rx="12" fill="#e8e9e2" transform="rotate(-5 106 458)"/>
+        </g>
+        <path d="M200 290 H262" fill="none" stroke="#75a9ff" stroke-width="4" marker-end="url(#heroArrow)"/>
+        <text x="452" y="70" fill="#8d968c" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.2">AS A CHAIN</text>
+        <g font-family="Inter, sans-serif">
+          <rect x="292" y="92" width="292" height="62" rx="13" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+          <text x="316" y="130" fill="#c8dcff" font-size="15" font-weight="700">problem-framing</text>
+          <text x="600" y="176" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">FRAMED_PROBLEM.MD</text>
+          <path d="M438 154 V196" fill="none" stroke="#75a9ff" stroke-width="3" marker-end="url(#heroArrow)"/>
+          <rect x="292" y="204" width="292" height="62" rx="13" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+          <text x="316" y="242" fill="#c9f1df" font-size="15" font-weight="700">shaping</text>
+          <text x="600" y="288" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">SHAPING.MD</text>
+          <path d="M438 266 V308" fill="none" stroke="#63c99c" stroke-width="3" marker-end="url(#heroArrow)"/>
+          <rect x="292" y="316" width="292" height="62" rx="13" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
+          <text x="316" y="354" fill="#f4d89c" font-size="15" font-weight="700">design-package</text>
+          <text x="600" y="400" fill="#7d8880" font-size="10" font-weight="800" text-anchor="end" letter-spacing="1">DESIGN_PACKAGE.MD</text>
+          <path d="M438 378 V420" fill="none" stroke="#e7b85c" stroke-width="3" marker-end="url(#heroArrow)"/>
+          <rect x="292" y="428" width="292" height="62" rx="13" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="316" y="466" fill="#dfd0fa" font-size="15" font-weight="700">renderers</text>
+        </g>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The part an index cannot show</p>
+      <h2 id="intro-title">Five explainers, and none of them explains the system.</h2>
+      <p>Each skill in this library has its own article. Read all five and you still will not have the thing that matters most: they are not five tools you pick between. They are one chain, and a chain is defined by its joints, not by its links.</p>
+      <p>This piece is about the joints. What crosses between two skills, what each one is allowed to change, what happens when a link is skipped, and where evidence goes when it contradicts a decision that was already made.</p>
+      <p class="definition"><strong>The rule the whole library rests on.</strong> A downstream skill <em>carries</em> what an upstream one decided. It never re-derives it. When it finds evidence that the earlier decision was wrong, it sends that back — it does not quietly restate the problem in new words and keep going.</p>
+    </section>
+
+    <section class="scrolly" aria-label="How the design-skills chain works">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">Three problems</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
+              </marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/>
+              </marker>
+              <marker id="arrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/>
+              </marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: THREE PROBLEMS -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="64" y="56">The tension</text>
+              <text class="svg-title" x="64" y="92">One project. Three problems.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="60" y="150" width="200" height="240" rx="14" fill="#f4f1e8"/>
+                <text x="82" y="182" fill="#667068" font-size="10" font-weight="800" letter-spacing="1.3">THE BRIEF</text>
+                <path d="M82 202 H238" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M82 220 H214" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <rect x="76" y="240" width="168" height="76" rx="8" fill="#f8ded6" stroke="#ee795e" stroke-width="1.6"/>
+                <text x="90" y="264" fill="#5c2f24" font-size="11.5" font-weight="750">“Admins waste time</text>
+                <text x="90" y="282" fill="#5c2f24" font-size="11.5" font-weight="750">fixing payroll errors</text>
+                <text x="90" y="300" fill="#5c2f24" font-size="11.5" font-weight="750">during the run.”</text>
+                <path d="M82 340 H238" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M82 358 H198" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+
+                <rect x="280" y="150" width="200" height="240" rx="14" fill="#f4f1e8"/>
+                <text x="302" y="182" fill="#667068" font-size="10" font-weight="800" letter-spacing="1.3">THE SPEC</text>
+                <path d="M302 202 H458" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M302 220 H434" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <rect x="296" y="240" width="168" height="76" rx="8" fill="#f8ded6" stroke="#ee795e" stroke-width="1.6"/>
+                <text x="310" y="264" fill="#5c2f24" font-size="11.5" font-weight="750">“The error list is</text>
+                <text x="310" y="282" fill="#5c2f24" font-size="11.5" font-weight="750">hard to scan and</text>
+                <text x="310" y="300" fill="#5c2f24" font-size="11.5" font-weight="750">cannot be filtered.”</text>
+                <path d="M302 340 H458" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M302 358 H418" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+
+                <rect x="500" y="150" width="200" height="240" rx="14" fill="#f4f1e8"/>
+                <text x="522" y="182" fill="#667068" font-size="10" font-weight="800" letter-spacing="1.3">THE DECK</text>
+                <path d="M522 202 H678" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M522 220 H654" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <rect x="516" y="240" width="168" height="76" rx="8" fill="#f8ded6" stroke="#ee795e" stroke-width="1.6"/>
+                <text x="530" y="264" fill="#5c2f24" font-size="11.5" font-weight="750">“We are behind</text>
+                <text x="530" y="282" fill="#5c2f24" font-size="11.5" font-weight="750">competitors on</text>
+                <text x="530" y="300" fill="#5c2f24" font-size="11.5" font-weight="750">payroll automation.”</text>
+                <path d="M522 340 H678" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M522 358 H638" stroke="#c3c8bd" stroke-width="3" stroke-linecap="round"/>
+              </g>
+              <rect x="60" y="424" width="640" height="66" rx="14" fill="#38241f" stroke="#ee795e" stroke-width="1.8" stroke-dasharray="7 5"/>
+              <text x="380" y="456" fill="#ee795e" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" letter-spacing="1">SAME PROJECT · THREE PROBLEM STATEMENTS</text>
+              <text x="380" y="478" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Nobody wrote the wrong thing. Three people each restated it.</text>
+              <text class="svg-small" x="64" y="552">Whichever one is on screen in the meeting is the one the project is solving today.</text>
+            </g>
+
+            <!-- DIAGRAM 2: THREE ROOTS -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="64" y="56">Three roots</text>
+              <text class="svg-title" x="64" y="92">Each root has one permission.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="60" y="146" width="640" height="112" rx="16" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+                <text x="88" y="180" fill="#75a9ff" font-size="12" font-weight="800" letter-spacing="1.3">PROCESS</text>
+                <text x="88" y="208" fill="#c8dcff" font-size="13.5" font-weight="700">May change what the team believes is true.</text>
+                <text x="88" y="234" fill="#8fa8ce" font-size="11.5" font-weight="650">problem-framing · shaping — they end in a decision, not a deliverable.</text>
+
+                <rect x="60" y="272" width="640" height="112" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
+                <text x="88" y="306" fill="#e7b85c" font-size="12" font-weight="800" letter-spacing="1.3">ARTIFACTS</text>
+                <text x="88" y="334" fill="#f4d89c" font-size="13.5" font-weight="700">May assemble decisions into something a group can act on.</text>
+                <text x="88" y="360" fill="#c9a869" font-size="11.5" font-weight="650">design-package — assembly only. Anything invented here means a step was skipped.</text>
+
+                <rect x="60" y="398" width="640" height="112" rx="16" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+                <text x="88" y="432" fill="#ae8bf3" font-size="12" font-weight="800" letter-spacing="1.3">RENDERERS</text>
+                <text x="88" y="460" fill="#dfd0fa" font-size="13.5" font-weight="700">May make a decision visible. May never make one.</text>
+                <text x="88" y="486" fill="#b49cd8" font-size="11.5" font-weight="650">scrollytelling · tldraw — they own the drawing, never the content.</text>
+              </g>
+              <text class="svg-small" x="64" y="560">The permissions are not a taxonomy. A renderer allowed to decide is how a diagram becomes an argument.</text>
+            </g>
+
+            <!-- DIAGRAM 3: THE CHAIN -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="64" y="56">The chain</text>
+              <text class="svg-title" x="64" y="92">The arrows are the method.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="60" y="176" width="150" height="104" rx="14" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+                <text x="135" y="222" fill="#c8dcff" font-size="13" font-weight="700" text-anchor="middle">problem-</text>
+                <text x="135" y="242" fill="#c8dcff" font-size="13" font-weight="700" text-anchor="middle">framing</text>
+
+                <path class="svg-line" d="M210 228 H278" marker-end="url(#arrow)"/>
+                <text x="244" y="204" fill="#75a9ff" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing=".6">FRAMED_</text>
+                <text x="244" y="216" fill="#75a9ff" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing=".6">PROBLEM.MD</text>
+
+                <rect x="286" y="176" width="150" height="104" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+                <text x="361" y="234" fill="#c9f1df" font-size="13" font-weight="700" text-anchor="middle">shaping</text>
+
+                <path class="svg-line" d="M436 228 H504" marker-end="url(#arrow)"/>
+                <text x="470" y="210" fill="#63c99c" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing=".6">SHAPING.MD</text>
+
+                <rect x="512" y="176" width="150" height="104" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
+                <text x="587" y="222" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">design-</text>
+                <text x="587" y="242" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">package</text>
+
+                <path class="svg-line" d="M587 280 V336" marker-end="url(#arrow)"/>
+                <text x="600" y="314" fill="#e7b85c" font-size="9.5" font-weight="800" letter-spacing=".6">DESIGN_PACKAGE.MD</text>
+
+                <rect x="512" y="344" width="150" height="94" rx="14" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+                <text x="587" y="396" fill="#dfd0fa" font-size="13" font-weight="700" text-anchor="middle">renderers</text>
+              </g>
+              <rect x="60" y="470" width="640" height="66" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/>
+              <text x="380" y="502" fill="#63c99c" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" letter-spacing="1">THE DOCUMENT IS THE ENTIRE INTERFACE</text>
+              <text x="380" y="524" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">No shared memory. No “as we discussed”. No context living only in a thread.</text>
+              <text class="svg-small" x="64" y="580">The boxes are the cheap part of this picture.</text>
+            </g>
+
+            <!-- DIAGRAM 4: CARRY VS RE-DERIVE -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="64" y="56">Carry, never re-derive</text>
+              <text class="svg-title" x="64" y="92">A paraphrase forks the problem.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="52" y="256" width="164" height="120" rx="14" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+                <text x="134" y="300" fill="#75a9ff" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing="1">FRAMED_PROBLEM.MD</text>
+                <text x="134" y="330" fill="#c8dcff" font-size="12.5" font-weight="700" text-anchor="middle">One problem,</text>
+                <text x="134" y="348" fill="#c8dcff" font-size="12.5" font-weight="700" text-anchor="middle">one sentence</text>
+
+                <path d="M216 300 C270 300 274 216 320 216" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+                <path d="M216 336 C270 336 274 430 320 430" fill="none" stroke="#ee795e" stroke-width="2.5" marker-end="url(#arrowCoral)"/>
+
+                <rect x="328" y="160" width="372" height="112" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+                <text x="352" y="192" fill="#63c99c" font-size="11" font-weight="800" letter-spacing="1.2">CARRY</text>
+                <text x="352" y="220" fill="#c9f1df" font-size="13" font-weight="700">Quoted verbatim, with the source named.</text>
+                <text x="352" y="246" fill="#8fbfa8" font-size="11.5" font-weight="650">One version of the problem exists. Every requirement traces to it.</text>
+
+                <rect x="328" y="374" width="372" height="112" rx="14" fill="#38241f" stroke="#ee795e" stroke-width="2"/>
+                <text x="352" y="406" fill="#ee795e" font-size="11" font-weight="800" letter-spacing="1.2">RE-DERIVE</text>
+                <text x="352" y="434" fill="#f7c9bd" font-size="13" font-weight="700">Rewritten “more clearly” in this document.</text>
+                <text x="352" y="460" fill="#c08a7c" font-size="11.5" font-weight="650">Two versions now exist. Both defensible. Only one gets cited.</text>
+              </g>
+              <text class="svg-small" x="64" y="560">Nobody notices the fork, because the paraphrase is usually better writing than the original.</text>
+            </g>
+
+            <!-- DIAGRAM 5: THE GATES -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="64" y="56">The gates</text>
+              <text class="svg-title" x="64" y="92">Every skill can refuse its input.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="60" y="152" width="640" height="82" rx="13" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.8"/>
+                <text x="84" y="184" fill="#c8dcff" font-size="13" font-weight="750">problem-framing stops at a framed problem</text>
+                <text x="84" y="210" fill="#75a9ff" font-size="11.5" font-weight="650">It buys time to shape. It never buys permission to build.</text>
+
+                <rect x="60" y="250" width="640" height="82" rx="13" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/>
+                <text x="84" y="282" fill="#c9f1df" font-size="13" font-weight="750">shaping will not select a shape with a flag on it</text>
+                <text x="84" y="308" fill="#63c99c" font-size="11.5" font-weight="650">An unresolved unknown counts as a failure until a spike answers it.</text>
+
+                <rect x="60" y="348" width="640" height="82" rx="13" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/>
+                <text x="84" y="380" fill="#f4d89c" font-size="13" font-weight="750">design-package will not write over a missing input</text>
+                <text x="84" y="406" fill="#e7b85c" font-size="11.5" font-weight="650">No frame, no shape, no appetite, or an open flag — any one of them stops it.</text>
+
+                <rect x="60" y="452" width="640" height="72" rx="13" fill="#38241f" stroke="#ee795e" stroke-width="1.8" stroke-dasharray="7 5"/>
+                <text x="380" y="484" fill="#ee795e" font-size="13.5" font-weight="800" text-anchor="middle" letter-spacing=".8">A SKILL THAT CANNOT REFUSE IS A FORMATTING TOOL</text>
+                <text x="380" y="506" fill="#9aa69c" font-size="11" font-weight="600" text-anchor="middle">It will produce something confident out of nothing at all.</text>
+              </g>
+              <text class="svg-small" x="64" y="574">The refusal is not friction. It is the only place a missing input becomes visible.</text>
+            </g>
+
+            <!-- DIAGRAM 6: SKIP A LINK -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="64" y="56">Skip a link</text>
+              <text class="svg-title" x="64" y="92">The cost is never paid where it was skipped.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="60" y="152" width="640" height="104" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
+                <rect x="80" y="176" width="150" height="56" rx="10" fill="#151b18" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 4"/>
+                <text x="155" y="210" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no frame</text>
+                <text x="256" y="192" fill="#ee795e" font-size="12.5" font-weight="750">A shape that fits requirements</text>
+                <text x="256" y="212" fill="#ee795e" font-size="12.5" font-weight="750">nobody agreed to.</text>
+                <text x="256" y="234" fill="#8f9a90" font-size="10.5" font-weight="600">Discovered in review, after the build estimate.</text>
+
+                <rect x="60" y="272" width="640" height="104" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
+                <rect x="80" y="296" width="150" height="56" rx="10" fill="#151b18" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 4"/>
+                <text x="155" y="330" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no shaping</text>
+                <text x="256" y="312" fill="#ee795e" font-size="12.5" font-weight="750">The appetite gets invented in</text>
+                <text x="256" y="332" fill="#ee795e" font-size="12.5" font-weight="750">the meeting.</text>
+                <text x="256" y="354" fill="#8f9a90" font-size="10.5" font-weight="600">By whoever sounds most confident about it.</text>
+
+                <rect x="60" y="392" width="640" height="104" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
+                <rect x="80" y="416" width="150" height="56" rx="10" fill="#151b18" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 4"/>
+                <text x="155" y="450" fill="#6b756d" font-size="11.5" font-weight="750" text-anchor="middle">no package</text>
+                <text x="256" y="432" fill="#ee795e" font-size="12.5" font-weight="750">The decision belongs to</text>
+                <text x="256" y="452" fill="#ee795e" font-size="12.5" font-weight="750">whoever spoke last.</text>
+                <text x="256" y="474" fill="#8f9a90" font-size="10.5" font-weight="600">And nobody can reconstruct why, a quarter later.</text>
+              </g>
+              <text class="svg-small" x="64" y="546">Skipping a link always looks like speed at the moment you do it.</text>
+            </g>
+
+            <!-- DIAGRAM 7: BACKFLOW -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="64" y="56">Backflow</text>
+              <text class="svg-title" x="64" y="92">Contradicting evidence goes back.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="70" y="200" width="170" height="92" rx="14" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+                <text x="155" y="242" fill="#c8dcff" font-size="12.5" font-weight="700" text-anchor="middle">problem-</text>
+                <text x="155" y="262" fill="#c8dcff" font-size="12.5" font-weight="700" text-anchor="middle">framing</text>
+
+                <path class="svg-line" d="M240 246 H300" marker-end="url(#arrow)"/>
+
+                <rect x="308" y="200" width="170" height="92" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+                <text x="393" y="252" fill="#c9f1df" font-size="12.5" font-weight="700" text-anchor="middle">shaping</text>
+
+                <path d="M393 200 C393 132 155 132 155 200" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+                <text x="274" y="148" fill="#63c99c" font-size="12" font-weight="800" text-anchor="middle" letter-spacing=".8">REOPEN THE FRAME</text>
+
+                <rect x="308" y="340" width="392" height="60" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="1.8"/>
+                <text x="332" y="366" fill="#f7c9bd" font-size="12.5" font-weight="750">Patch the problem here instead</text>
+                <text x="332" y="388" fill="#ee795e" font-size="11" font-weight="650">Two documents now disagree, and neither of them says so.</text>
+                <path d="M320 352 L688 388" stroke="#ee795e" stroke-width="2.5"/>
+                <path d="M688 352 L320 388" stroke="#ee795e" stroke-width="2.5"/>
+
+                <path d="M393 292 V340" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arrowCoral)"/>
+
+                <rect x="70" y="440" width="630" height="72" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/>
+                <text x="94" y="470" fill="#e9eee8" font-size="12.5" font-weight="750">Downstream work is where a frame gets tested.</text>
+                <text x="94" y="494" fill="#9aa69c" font-size="11.5" font-weight="620">So downstream is where it breaks — and the break belongs upstream.</text>
+              </g>
+              <text class="svg-small" x="64" y="562">Finding the frame wrong is not the failure. Fixing it locally is.</text>
+            </g>
+
+            <!-- DIAGRAM 8: RENDERERS LAST -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="64" y="56">Renderers last</text>
+              <text class="svg-title" x="64" y="92">A tidy picture of confusion.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="56" y="180" width="180" height="200" rx="14" fill="#38241f" stroke="#ee795e" stroke-width="1.8" stroke-dasharray="6 5"/>
+                <text x="146" y="212" fill="#ee795e" font-size="10.5" font-weight="800" text-anchor="middle" letter-spacing="1.2">UNDECIDED</text>
+                <path d="M84 240 C120 228 140 268 176 250" fill="none" stroke="#c08a7c" stroke-width="2.5"/>
+                <path d="M84 274 C126 296 132 254 200 282" fill="none" stroke="#c08a7c" stroke-width="2.5"/>
+                <path d="M92 312 C130 292 150 336 194 314" fill="none" stroke="#c08a7c" stroke-width="2.5"/>
+                <text x="146" y="356" fill="#c08a7c" font-size="11" font-weight="650" text-anchor="middle">three half-ideas</text>
+
+                <path class="svg-line" d="M236 280 H296" marker-end="url(#arrow)"/>
+
+                <rect x="300" y="228" width="140" height="104" rx="52" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+                <text x="370" y="276" fill="#dfd0fa" font-size="12.5" font-weight="700" text-anchor="middle">renderer</text>
+                <text x="370" y="298" fill="#b49cd8" font-size="10.5" font-weight="650" text-anchor="middle">layout · contrast</text>
+
+                <path class="svg-line" d="M440 280 H500" marker-end="url(#arrow)"/>
+
+                <rect x="504" y="180" width="200" height="200" rx="14" fill="#1b2720" stroke="#ae8bf3" stroke-width="1.8"/>
+                <rect x="528" y="212" width="152" height="34" rx="8" fill="#302444"/>
+                <rect x="528" y="256" width="152" height="34" rx="8" fill="#302444"/>
+                <rect x="528" y="300" width="152" height="34" rx="8" fill="#302444"/>
+                <path d="M604 246 V256 M604 290 V300" stroke="#ae8bf3" stroke-width="2"/>
+                <text x="604" y="360" fill="#ee795e" font-size="11.5" font-weight="800" text-anchor="middle" letter-spacing="1">LOOKS DECIDED</text>
+              </g>
+              <rect x="56" y="424" width="648" height="72" rx="14" fill="#38241f" stroke="#ee795e" stroke-width="1.8"/>
+              <text x="380" y="456" fill="#ee795e" font-family="Inter, sans-serif" font-size="13.5" font-weight="800" text-anchor="middle" letter-spacing=".8">A CLEAN DIAGRAM GETS BELIEVED</text>
+              <text x="380" y="478" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Which is worse than the confusion was, because now it is evidence.</text>
+              <text class="svg-small" x="64" y="546">The renderer did its job perfectly. That is the problem.</text>
+            </g>
+
+            <!-- DIAGRAM 9: ENTRY POINTS -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="64" y="56">The payoff</text>
+              <text class="svg-title" x="64" y="92">Enter anywhere. Skip nothing.</text>
+              <g font-family="Inter, sans-serif">
+                <path d="M120 150 V208" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+                <text x="120" y="140" fill="#63c99c" font-size="10.5" font-weight="800" text-anchor="middle" letter-spacing=".8">START HERE</text>
+                <path d="M370 150 V208" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+                <text x="370" y="140" fill="#63c99c" font-size="10.5" font-weight="800" text-anchor="middle" letter-spacing=".8">OR HERE</text>
+                <path d="M620 150 V208" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+                <text x="620" y="140" fill="#63c99c" font-size="10.5" font-weight="800" text-anchor="middle" letter-spacing=".8">OR HERE</text>
+
+                <rect x="46" y="216" width="148" height="92" rx="14" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+                <text x="120" y="256" fill="#c8dcff" font-size="12" font-weight="700" text-anchor="middle">problem-</text>
+                <text x="120" y="275" fill="#c8dcff" font-size="12" font-weight="700" text-anchor="middle">framing</text>
+
+                <path class="svg-line" d="M194 262 H288" marker-end="url(#arrow)"/>
+
+                <rect x="296" y="216" width="148" height="92" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+                <text x="370" y="268" fill="#c9f1df" font-size="12" font-weight="700" text-anchor="middle">shaping</text>
+
+                <path class="svg-line" d="M444 262 H538" marker-end="url(#arrow)"/>
+
+                <rect x="546" y="216" width="148" height="92" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
+                <text x="620" y="256" fill="#f4d89c" font-size="12" font-weight="700" text-anchor="middle">design-</text>
+                <text x="620" y="275" fill="#f4d89c" font-size="12" font-weight="700" text-anchor="middle">package</text>
+
+                <path d="M194 340 H288" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="6 5"/>
+                <path d="M232 322 V358 M250 322 V358" stroke="#ee795e" stroke-width="3"/>
+                <text x="300" y="332" fill="#ee795e" font-size="12" font-weight="750">No SHAPING.md?</text>
+                <text x="300" y="352" fill="#f7c9bd" font-size="12" font-weight="750">design-package stops and asks for it.</text>
+
+                <rect x="46" y="404" width="648" height="112" rx="16" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/>
+                <text x="370" y="446" fill="#63c99c" font-size="14.5" font-weight="800" text-anchor="middle" letter-spacing="1">THE HANDOFF IS THE INTERFACE</text>
+                <text x="370" y="474" fill="#c9f1df" font-size="12" font-weight="650" text-anchor="middle">Start where the real uncertainty is — but arrive carrying the document</text>
+                <text x="370" y="494" fill="#c9f1df" font-size="12" font-weight="650" text-anchor="middle">the next skill needs, or write it before you go on.</text>
+              </g>
+              <text class="svg-small" x="64" y="566">Entering in the middle is a judgement call. Skipping a document is not.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1: ONE PROJECT. THREE PROBLEMS. — edit scene copy here -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · The tension</span>
+            <h2 id="scene-1-title">One project. Three problems.</h2>
+            <p>A brief, a spec, and a deck, all about the same project. Each one states the problem in its own words, and no two are identical. Nobody wrote the wrong thing — three competent people each restated the problem, and now the project has three of them.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 2: EACH ROOT HAS ONE PERMISSION. — edit scene copy here -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · Three roots</span>
+            <h2 id="scene-2-title">Each root has one permission.</h2>
+            <p>Process skills change what the team believes. Artifact skills assemble the thing a group can act on. Renderers make a decision visible. The permissions are not a taxonomy — a renderer that is allowed to decide is how a diagram becomes an argument nobody agreed to.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 3: THE ARROWS ARE THE METHOD. — edit scene copy here -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · The chain</span>
+            <h2 id="scene-3-title">The arrows are the method.</h2>
+            <p>The skills are not the interesting part of this picture. The arrows are. The only thing that crosses from one skill to the next is a document, and that document is the entire interface — no shared memory, no “as we discussed”, no context that lives only in a thread.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>Why a document, and not a conversation?</strong> Because a conversation has no version, no citation, and no reader six weeks later. In enterprise work the person who approves the spend was not in the room where it was decided, the person who inherits the project joins in month three, and the auditor arrives after everyone has moved on. A document survives all three. A shared understanding survives none of them.</aside>
+
+        <!-- SCENE 4: A PARAPHRASE FORKS THE PROBLEM. — edit scene copy here -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · Carry, never re-derive</span>
+            <h2 id="scene-4-title">A paraphrase forks the problem.</h2>
+            <p>A downstream skill carries what the previous one decided. It quotes the line and cites where it came from. The moment it paraphrases instead, the problem has forked: two versions now exist, both defensible, and only one of them gets cited in the room.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5: EVERY SKILL CAN REFUSE ITS INPUT. — edit scene copy here -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · The gates</span>
+            <h2 id="scene-5-title">Every skill can refuse its input.</h2>
+            <p>Framing buys time to shape, not permission to build. Shaping will not select a shape while an unknown is still flagged. The package will not be written over a missing appetite — and a skill that cannot refuse its input is a formatting tool, not a method.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 6: THE COST IS NEVER PAID WHERE IT WAS SKIPPED. — edit scene copy here -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Skip a link</span>
+            <h2 id="scene-6-title">The cost is never paid where it was skipped.</h2>
+            <p>Skip the frame and you get a shape that fits requirements nobody agreed to. Skip shaping and the appetite gets invented in the meeting, by whoever is most confident. Skip the package and the decision belongs to whoever spoke last.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card"><strong>Joining a project already in progress.</strong> The chain does not assume a clean start, and most real work is not one. An in-progress project already has these documents — implicitly, in someone’s head, in a thread, in a slide. Writing them down is not bureaucracy applied late; it is the step that surfaces the disagreement everyone has been routing around.</aside>
+
+        <!-- SCENE 7: CONTRADICTING EVIDENCE GOES BACK. — edit scene copy here -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · Backflow</span>
+            <h2 id="scene-7-title">Contradicting evidence goes back.</h2>
+            <p>Downstream work is where a frame gets tested, so downstream is where it breaks. Evidence that contradicts the frame goes <em>back</em> to the frame and reopens it. Fixing it locally — a new sentence in the shaping doc — is the exact failure the chain exists to catch, because now the two documents disagree and neither one says so.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 8: A TIDY PICTURE OF CONFUSION. — edit scene copy here -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · Renderers last</span>
+            <h2 id="scene-8-title">A tidy picture of confusion.</h2>
+            <p>A renderer owns coordinates, contrast and legibility. It does not own the content. Hand one an undecided idea and it returns a clean diagram of that confusion — and a clean diagram gets believed, which is worse than the confusion was.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 9: ENTER ANYWHERE. SKIP NOTHING. — edit scene copy here -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · The payoff</span>
+            <h2 id="scene-9-title">Enter anywhere. Skip nothing.</h2>
+            <p>You can enter this chain anywhere. Start at shaping when the problem is genuinely settled; start at the package when the shape was chosen last quarter. What you cannot do is skip a document, because the next skill asks for it and stops. The handoff is the interface — that is the whole method.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="output-section" aria-label="What each handoff document must carry">
+      <details>
+        <summary>Explore what each document has to carry before the next skill will take it</summary>
+        <div class="output-grid">
+          <div class="output-item"><code>FRAMED_PROBLEM.md</code> — the problem in one line</div>
+          <div class="output-item">Who it affects, and how it was observed</div>
+          <div class="output-item">Evidence, quoted and attributed</div>
+          <div class="output-item">Assumptions, marked as assumptions</div>
+          <div class="output-item">Frames considered and set aside</div>
+          <div class="output-item">Boundaries — what is out, and why now</div>
+          <div class="output-item is-shaping"><code>SHAPING.md</code> — the problem, carried verbatim</div>
+          <div class="output-item is-shaping">Numbered requirements with statuses</div>
+          <div class="output-item is-shaping">Candidate shapes, materially different</div>
+          <div class="output-item is-shaping">A binary fit check — never “partially”</div>
+          <div class="output-item is-shaping">Unknowns flagged, and the spike that closes each</div>
+          <div class="output-item is-shaping">The selected shape and the appetite it fits</div>
+          <div class="output-item is-package"><code>DESIGN_PACKAGE.md</code> — problem and appetite up front</div>
+          <div class="output-item is-package">The shape as parts, not pixels</div>
+          <div class="output-item is-package">Rabbit holes, each with its patch</div>
+          <div class="output-item is-package">No-gos, each with a reason</div>
+          <div class="output-item is-package">What is still open, stated plainly</div>
+          <div class="output-item is-package">Sources — pointing back at the two documents above</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="carried-section" aria-labelledby="carried-title">
+      <div class="carried-inner">
+        <div class="carried-intro">
+          <p class="eyebrow">What carrying looks like</p>
+          <h2 id="carried-title">The same sentence, three times, unchanged.</h2>
+          <p>This is the entire discipline in one example. One line is written once, in the frame, with its evidence. It then appears in the shaping document and in the design package as a quotation with a source — not as an improved version of itself.</p>
+          <p>It looks almost pedantic on the page. It is the difference between a project with one problem and a project with three.</p>
+        </div>
+
+        <div class="carried-stack">
+          <div class="carried-doc">
+            <div class="carried-doc-head"><span>FRAMED_PROBLEM.md</span><span>problem-framing</span></div>
+            <dl class="carried-field">
+              <dt>The problem</dt>
+              <dd class="carried-quote">Payroll admins find blocking errors during the run, when there is no time left to resolve them without delaying pay.</dd>
+              <dt>Evidence</dt>
+              <dd>Observed in 12 of 14 admin interviews; 31% of runs in Q3 required at least one manual hold.</dd>
+            </dl>
+          </div>
+
+          <div class="carried-doc">
+            <div class="carried-doc-head"><span>SHAPING.md</span><span>shaping</span></div>
+            <dl class="carried-field">
+              <dt>Problem</dt>
+              <dd class="carried-quote">Payroll admins find blocking errors during the run, when there is no time left to resolve them without delaying pay.<span class="carried-source">Carried from FRAMED_PROBLEM.md — not restated</span></dd>
+              <dt>Requirement 3</dt>
+              <dd>Blocking errors must surface before the run window opens. <em>Traces to the problem above.</em></dd>
+            </dl>
+          </div>
+
+          <div class="carried-doc">
+            <div class="carried-doc-head"><span>DESIGN_PACKAGE.md</span><span>design-package</span></div>
+            <dl class="carried-field">
+              <dt>The problem, in one line</dt>
+              <dd class="carried-quote">Payroll admins find blocking errors during the run, when there is no time left to resolve them without delaying pay.<span class="carried-source">Carried from FRAMED_PROBLEM.md via SHAPING.md</span></dd>
+              <dt>Appetite</dt>
+              <dd>Six weeks. The scope moves; the time does not.</dd>
+            </dl>
+          </div>
+        </div>
+
+        <p class="carried-note"><strong>What a fork would look like.</strong> “Admins waste time on payroll errors” is a reasonable rewrite of that sentence. It is also a different problem: it drops <em>when</em> the errors are found, which is the only reason the timing-based shape was selected over the better error list. The paraphrase reads more cleanly and quietly deletes the requirement.</p>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">One chain, and no rework.</h2>
+        <p><strong>Nothing in this library is decided twice.</strong> That is not a productivity claim — it is what makes a decision traceable six weeks later, defensible in a review nobody in the original room attends, and safe to reopen deliberately rather than by accident. The documents are the project’s memory. The skills are just what writes them.</p>
+        <p>Start where the uncertainty actually is. Arrive carrying <code>FRAMED_PROBLEM.md</code>, <code>SHAPING.md</code> or <code>DESIGN_PACKAGE.md</code> — or write the one you are missing before you go on.</p>
+        <div class="final-equation"><span>A decision</span><span aria-hidden="true">→</span><span>A document</span><span aria-hidden="true">→</span><span>The next decision</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 480" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">The full chain with its documents on the arrows and a return path to the frame</title>
+        <desc id="closing-diagram-desc">Problem framing hands FRAMED_PROBLEM.md to shaping, shaping hands SHAPING.md to the design package, and the package hands DESIGN_PACKAGE.md to the renderers. A separate return arrow runs from the later stages back to problem framing, labelled reopen the frame.</desc>
+        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#75a9ff"/></marker>
+        <marker id="closingArrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
+        <g font-family="Inter, sans-serif">
+          <rect x="40" y="180" width="140" height="96" rx="14" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/>
+          <text x="110" y="220" fill="#c8dcff" font-size="13" font-weight="700" text-anchor="middle">problem-</text>
+          <text x="110" y="240" fill="#c8dcff" font-size="13" font-weight="700" text-anchor="middle">framing</text>
+          <path d="M180 228 H236" fill="none" stroke="#75a9ff" stroke-width="3.5" marker-end="url(#closingArrow)"/>
+          <text x="208" y="206" fill="#7d8880" font-size="8.5" font-weight="800" text-anchor="middle" letter-spacing=".5">FRAMED_PROBLEM</text>
+
+          <rect x="244" y="180" width="140" height="96" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+          <text x="314" y="234" fill="#c9f1df" font-size="13" font-weight="700" text-anchor="middle">shaping</text>
+          <path d="M384 228 H440" fill="none" stroke="#63c99c" stroke-width="3.5" marker-end="url(#closingArrowGreen)"/>
+          <text x="412" y="206" fill="#7d8880" font-size="8.5" font-weight="800" text-anchor="middle" letter-spacing=".5">SHAPING</text>
+
+          <rect x="448" y="180" width="140" height="96" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
+          <text x="518" y="220" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">design-</text>
+          <text x="518" y="240" fill="#f4d89c" font-size="13" font-weight="700" text-anchor="middle">package</text>
+
+          <path d="M518 276 V330" fill="none" stroke="#e7b85c" stroke-width="3.5" marker-end="url(#closingArrow)"/>
+          <text x="534" y="308" fill="#7d8880" font-size="8.5" font-weight="800" letter-spacing=".5">DESIGN_PACKAGE</text>
+          <rect x="448" y="338" width="140" height="86" rx="14" fill="#302444" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="518" y="386" fill="#dfd0fa" font-size="13" font-weight="700" text-anchor="middle">renderers</text>
+
+          <path d="M448 148 C300 92 180 92 110 148 L110 180" fill="none" stroke="#63c99c" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#closingArrowGreen)"/>
+          <text x="300" y="82" fill="#63c99c" font-size="11.5" font-weight="800" text-anchor="middle" letter-spacing=".9">CONTRADICTING EVIDENCE REOPENS THE FRAME</text>
+        </g>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where the chain comes from.</h2>
+        <p class="sources-intro">The sequence is Ryan Singer’s. The refusals, the backflow rule, and the renderer boundary are what this library added on top of it.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>Shape Up</h3>
+            <p>Appetite, shaping before building, and the betting table this chain ends at. The fixed-time, variable-scope rule is the reason a refusal is possible at all.</p>
+            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
+          </article>
+          <article class="source-card">
+            <h3>Singer on framing</h3>
+            <p>The discipline of <strong>carrying the frame forward</strong> rather than re-deriving it, and the vocabulary this library uses — a design package, not a pitch.</p>
+            <a href="https://www.ryansinger.co/framing/">Read Singer on framing</a>
+          </article>
+          <article class="source-card">
+            <h3>The additions</h3>
+            <p>Refusal gates on every skill, evidence flowing <strong>back</strong> to the frame instead of being patched locally, and renderers barred from deciding anything.</p>
+            <a href="https://github.com/rjs/shaping-skills">View the source skills</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+  <footer>The Handoff Is the Interface · How the five design-skills work as one chain · <a href="../index.html">Back to the library</a></footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        '1': 'Three problems',
+        '2': 'Three roots',
+        '3': 'The chain',
+        '4': 'Carry or fork',
+        '5': 'The gates',
+        '6': 'Skip a link',
+        '7': 'Backflow',
+        '8': 'Renderers last',
+        '9': 'Enter anywhere'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
