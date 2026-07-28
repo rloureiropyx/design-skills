@@ -79,6 +79,17 @@ It is deliberately too coarse to express layout, which is what makes it useful �
 - Skill: [`skills/artifacts/breadboarding/SKILL.md`](skills/artifacts/breadboarding/SKILL.md)
 - Explainer: [notes](docs/breadboarding/README.md)
 
+#### Wireframes
+
+Decides what a screen must do, what goes on it, and how priority reads — then hands that to a renderer to draw.
+
+Scale, fidelity, annotation weight and abstraction are set as four independent axes rather than one ladder, so asking for "more detail" adds content, states and rules before it adds polish. Colour is functional only: red means error, blue means link, and reviewer marks go outside the screen boundary so the two reds never collide. One realistic scenario per screen, never a composite showing every state at once. Page contents and exits are carried from the breadboard rather than invented again.
+
+Most projects never need this step. It is for when layout is the real question.
+
+- Skill: [`skills/artifacts/wireframes/SKILL.md`](skills/artifacts/wireframes/SKILL.md)
+- Explainer: [notes](docs/wireframes/README.md)
+
 #### Proposal
 
 Assembles the document people read once and then decide on: problem, time budget, chosen direction, rabbit holes, what is deliberately out, and what is still uncertain.
@@ -99,7 +110,7 @@ Builds long-form web articles whose diagrams change as the reader scrolls. It se
 
 #### tldraw
 
-Draws a decided artifact — flow, journey map, service blueprint, concept model, sitemap, breadboard, wireframes — on a local tldraw canvas that saves to a `.tldraw` file.
+Draws a decided artifact — flow, journey map, service blueprint, concept model, sitemap, breadboard, wireframe — on a local tldraw canvas that saves to a `.tldraw` file. `wireframes` is the skill in this plugin that hands it work.
 
 > **Runtime dependency.** This is the only skill here that needs something running outside Copilot: the **tldraw offline desktop app** on the same machine, whose local HTTP API it drives. There is no hosted fallback and no collaborative mode; without the app the skill stops rather than drawing somewhere else.
 
