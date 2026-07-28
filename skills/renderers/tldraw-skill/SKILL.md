@@ -1,20 +1,20 @@
 ---
 name: tldraw-skill
 description: >-
-  Render a design artifact on a tldraw offline canvas — the local, private
-  canvas that saves to a .tldraw file on disk. A RENDERER: it draws what a
+  Render a design artifact on a tldraw offline canvas — local and private, saved
+  to a .tldraw file on disk. A RENDERER: it draws what a
   discipline skill already decided. Use whenever the user wants a diagram or
   artifact "in tldraw", on a tldraw canvas, in the tldraw desktop app, or
   references a .tldraw or .tldr file; when materializing a flow, journey map,
   service blueprint, concept model, ecosystem map, sitemap, breadboard or
   wireframe that must stay local and private; or when an orchestrating skill
-  picks tldraw as the renderer. Owns tldraw mechanics — canvas API, shape
+  picks it. Owns tldraw mechanics — canvas API, shape
   records, layout math, arrows and bindings, frames, linting, export. Do NOT use
   it to decide WHAT to draw or pick a diagram type; bring it a decided artifact —
-  a breadboard's places are `breadboarding`'s call. Do NOT use
-  it for cloud or collaborative canvases, for a scroll-driven interactive
-  article (that is `scrollytelling`), for building app UI, or for durable
-  behavior — clickable prototypes, animation, custom shapes.
+  a breadboard's places are `breadboarding`'s call, a diagram's type and scope
+  are `diagrams`'. Do NOT use it for cloud or collaborative canvases, for a
+  scroll-driven article (that is `scrollytelling`), for building app UI, or for
+  durable behavior — clickable prototypes, animation, custom shapes.
 ---
 
 # tldraw Skill (renderer)
@@ -82,6 +82,7 @@ If `tq` cannot be found, fall back to raw curl — see `references/canvas-api.md
 
 | Artifact | tldraw mechanism |
 |---|---|
+| **diagrams** (Gantt, swim lane, quadrant, Venn, continuum, sign, block, schematic, hierarchy) | Covert's shapes-and-lines vocabulary maps onto primitives directly: container/zone → `frame`, bracket → thin `line`, axis → two crossed `line`s with `text` poles, lane → full-width `frame`, overlap → two translucent `ellipse`s, key → a `frame` in the corner. Which one to draw is `diagrams`' call; this row is only how |
 | **flows** (user/task/service) | `geo` nodes (`rectangle` step, `diamond` decision, `ellipse` start/end) + bound arrows, `kind:'elbow'` for orthogonal routing |
 | **journey-maps / experience-maps** | `frame` per phase column, `note` (sticky) rows inside, emotion curve as small `ellipse` nodes joined by `arc` arrows |
 | **service-blueprints** | one `frame` per lane; lines of interaction/visibility as full-width `dashed` rectangles of ~2px height; fail points as `red` `star` |

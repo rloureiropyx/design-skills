@@ -90,6 +90,17 @@ Most projects never need this step. It is for when layout is the real question.
 - Skill: [`skills/artifacts/wireframes/SKILL.md`](skills/artifacts/wireframes/SKILL.md)
 - Explainer: [notes](docs/wireframes/README.md)
 
+#### Diagrams
+
+Decides what a diagram should show and why — intention, audience, scope, scale — before anything is drawn, then hands the vocabulary to a renderer.
+
+The type is chosen from what the reader is stuck on (time, arrangement, or context), not from the word they happened to use, because people say "flowchart" for anything with a box in it. Twelve recipes, treated as a grammar rather than templates. Detail is added in importance order with a stopping rule, so a diagram ships at Layer 1 rather than carrying everything anyone knows. The key is allowed to hold the visual vocabulary, the sources and the intention, and nothing else — the moment it starts decoding a colour, the diagram is underlabelled.
+
+It has no fixed slot in the chain. It reads `FRAMED_PROBLEM.md` and the rest when they exist and carries the audience and scope from them, and it is equally useful for critiquing a diagram that already exists.
+
+- Skill: [`skills/artifacts/diagrams/SKILL.md`](skills/artifacts/diagrams/SKILL.md)
+- Explainer: [notes](docs/diagrams/README.md)
+
 #### Proposal
 
 Assembles the document people read once and then decide on: problem, time budget, chosen direction, rabbit holes, what is deliberately out, and what is still uncertain.
@@ -110,7 +121,7 @@ Builds long-form web articles whose diagrams change as the reader scrolls. It se
 
 #### tldraw
 
-Draws a decided artifact — flow, journey map, service blueprint, concept model, sitemap, breadboard, wireframe — on a local tldraw canvas that saves to a `.tldraw` file. `wireframes` is the skill in this plugin that hands it work.
+Draws a decided artifact — flow, journey map, service blueprint, concept model, sitemap, breadboard, wireframe — on a local tldraw canvas that saves to a `.tldraw` file. `wireframes` and `diagrams` are the skills in this plugin that hand it work.
 
 > **Runtime dependency.** This is the only skill here that needs something running outside Copilot: the **tldraw offline desktop app** on the same machine, whose local HTTP API it drives. There is no hosted fallback and no collaborative mode; without the app the skill stops rather than drawing somewhere else.
 
@@ -148,6 +159,8 @@ Copilot picks a skill using the `name` and `description` in its YAML frontmatter
 Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed, and the `process` / `artifacts` / `renderers` grouping is invisible to the router. So every `description` ends by saying what must *not* route to it. A skill with no stated boundary claims prompts it should decline.
 
 `problem-framing`, `shaping`, and `proposal` are the sharpest case: all three talk about problems, requirements, and solutions, and each names the other two in its non-trigger clause. When one starts answering a prompt that belongs to another, that is the first place to look.
+
+`breadboarding`, `wireframes`, and `diagrams` are the second sharpest, because all three answer "draw me the thing." A breadboard is places and affordances in words, a wireframe is one screen, a diagram is a relationship between things — and each says so in the other two's terms.
 
 ## Working on the skills
 

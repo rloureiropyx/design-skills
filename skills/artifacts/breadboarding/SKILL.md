@@ -8,12 +8,13 @@ description: >-
   breadboard, a "breadboarding" pass, or a low-fidelity structural sketch; when
   a feature description is too vague to tell what a person actually does; or
   when comparing two ideas that sound different but may be the same mechanism.
-  Writes a breadboard as text — places, affordances, and connection lines — that
-  a wireframe, a proposal, or a canvas drawing can be built from. Do NOT use it
+  Writes a breadboard as text that a wireframe, a proposal, or a canvas drawing
+  can be built from. Do NOT use it
   to choose between directions, write requirements, or run a fit check — that is
   `shaping`. Do NOT use it to decide what problem is worth solving — that is
   `problem-framing`. Do NOT use it for wireframes, hi-fi screens, visual design,
-  component specs, layout, copywriting, or a user journey map.
+  component specs, layout or copywriting, nor to draw a process, structure or
+  journey as a diagram — that is `diagrams`.
 ---
 
 # Breadboarding
