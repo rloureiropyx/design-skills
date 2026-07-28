@@ -2,7 +2,7 @@
   "name": "rolo",
   "metadata": {
     "description": "Product design skills by Raul Loureiro",
-    "version": "1.3.0"
+    "version": "2.0.0"
   },
   "owner": {
     "name": "Raul Loureiro"
@@ -10,8 +10,8 @@
   "plugins": [
     {
       "name": "design-skills",
-      "description": "Product design skills for complex enterprise B2B work. Frame a problem into an evidence-backed Framed Problem, shape it into one solution direction with a binary fit check inside a fixed appetite, package that bet as a decision-ready design package, and render the results as scrollytelling explainers or local tldraw canvases.",
-      "version": "1.3.0",
+      "description": "Six skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, then write it up as a proposal someone can approve or decline. Renderers turn the result into a scrollytelling explainer or a local tldraw canvas.",
+      "version": "2.0.0",
       "author": {
         "name": "Raul Loureiro"
       },
@@ -21,8 +21,8 @@
         "ux",
         "problem-framing",
         "shaping",
-        "shape-up",
-        "design-package",
+        "breadboarding",
+        "proposal",
         "enterprise",
         "b2b"
       ],

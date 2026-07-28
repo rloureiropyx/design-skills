@@ -1,67 +1,61 @@
-# Explainer — Shaping
-
-**Status:** shipped.
+# Notes — Shaping
 
 ```
 pick-a-shape.script.md    the scene-by-scene script
 pick-a-shape.html         the article — standalone, no build step
 ```
 
-Open [`pick-a-shape.html`](pick-a-shape.html) directly in a browser. It has no dependencies
-and no build step. **Verified against the scrollytelling delivery matrix** — nine viewports
-from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance:
-27px at 667×375.
+Open [`pick-a-shape.html`](pick-a-shape.html) in a browser. No dependencies, no build step. The notes below are the short written version.
 
-The notes below are the short written version of the same argument.
+## What it does
 
-## What the skill is for
+Takes a framed problem and works out which solution direction to go with, inside a fixed amount of time.
 
-You have a framed problem. Now someone has to decide *what to build* — and the two usual failure modes are equally expensive. Either the team argues about solutions until the loudest preference wins, or someone hands down a solution and the requirements get reverse-engineered afterwards to justify it.
+Write down what a solution has to be true of. Sketch two or three genuinely different ways of doing it. Check each one against the list, in the open, with two possible answers. Improve the promising ones until one of them fits. Output: `DIRECTIONS.md`.
 
-Shaping replaces the argument with a table.
+## Who it is not for
 
-## The one idea
+- The problem is not settled yet. Go to `problem-framing` — shaping a solution to an unagreed problem is the expensive version of this mistake.
+- You have already picked a direction and need it written up. That is `proposal`.
+- You need layouts, copy, component choices, and edge cases. Shaping stops before those on purpose; they are decisions the people building it should keep.
 
-Write down what the solution has to be true of. Sketch two or three genuinely different ways of doing it. Check each one against the list, in public, with two possible answers.
+## A note on the name
 
-That is the whole method. Everything else is discipline around it.
+The skill is called `shaping` for routing reasons — renaming it would risk breaking how Copilot finds it. Nothing you read says "shape". A candidate solution is a **direction**, and the amount of time is a **time budget**.
 
-## Why binary
+## The parts worth keeping
 
-The fit check allows `✅` and `❌`. No "partially", no "mostly", no "yes, with some work".
+**The fit check is binary.** `✅` or `❌`. No "partially", no "mostly", no "yes, with some work".
 
-A three-value scale looks more honest and does the opposite: every option scores respectably, nothing is ever ruled out, and the group ends up choosing on preference while feeling rigorous. Two values force the disagreement into the open, where it can only be resolved one way — by naming the requirement nobody had written down.
+A three-value scale looks more honest and does the opposite: every option scores respectably, nothing gets ruled out, and the group chooses on preference while feeling rigorous. Two values force the disagreement out where it can only be settled one way — by naming the requirement nobody had written down. When a direction passes everything and still feels wrong, the matrix is missing a row. Say what is uncomfortable, add it, re-run.
 
-That is the most useful thing the fit check produces. When a shape passes everything and still feels wrong, the discomfort is real and the matrix is incomplete. Say what is uncomfortable, turn it into a requirement, re-run.
+**A `⚠️` is an absence, not a risk.** It means the team can say *what* a part does but not *how* it works. Risks can be priced and accepted; an absence cannot. So a flagged part counts as `❌` — you cannot claim a requirement is met by something nobody can describe. It gets resolved with a spike, and a spike's acceptance criteria are always *"we can describe how…"*, never *"we can decide if…"*. A spike buys understanding; the decision happens afterwards, back in the table.
 
-## Why a flag is not a risk
+**Directions have versions.** `A1 → A2 → A3`. A new letter means a different mechanism; a new number means the same mechanism improved. Each version records what changed and why. Discarded versions stay in the document, struck through, with the reason.
 
-A part marked `⚠️` means the team can describe *what* it does but not *how* it works. That is not a risk — risks can be accepted and priced. It is an absence.
+This is for the conversation you actually have — you sketch a direction, someone points at the part that will not work, you change it. Without versions, either the change is silently overwritten and nobody can tell what was tried, or the earlier version is quietly reintroduced two weeks later by someone who was not there.
 
-So a flagged part is automatically `❌`. You cannot claim a requirement is satisfied by something nobody can describe. It is a blunt rule and it exists because the alternative — a confident shape with a hole in it — is exactly what a shaping phase is supposed to prevent.
+**Scope moves, time does not.** The time budget comes from the framed problem: what the business chose to spend, not an estimate of the work. When a direction does not fit, the direction changes — move a requirement to nice-to-have, swap in a cheaper component, cut a part. Every cut is written down with what it costs, because six weeks later "we decided not to" and "we forgot" look the same.
 
-Absences get resolved by a spike, and a spike's acceptance criteria are always phrased *"we can describe how…"*, never *"we can decide if…"*. A spike buys understanding. The decision comes afterwards, back in the table.
+A direction that "just needs another week" is a direction that failed and has not been told.
 
-## Why scope is the thing that moves
-
-The appetite comes from the framed problem: the amount of time the business has chosen to spend. It is a constraint on the solution, not an estimate of it.
-
-So when a shape does not fit, the shape changes. Move a requirement to `Nice-to-have`. Swap in a cheaper alternative for one component. Cut a part. Every cut is written down with what it costs, because six weeks later "we decided not to" and "we forgot" look identical.
-
-A shape that "just needs another week" is a shape that failed and has not been told.
-
-## What we added to Singer's method
+## Enterprise requirements
 
 The method is Ryan Singer's, from [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) and *Shape Up*. It assumes a small autonomous team that owns its whole stack.
 
-Enterprise B2B work does not get that. So step 2 walks a fixed list before any shape is drawn: roles and permissions, workflow ownership, compliance and auditability, integrations, data volume, operational complexity, and accessibility. Each one either produces a requirement or is marked not applicable with a reason — never skipped silently.
+Enterprise B2B work does not get that, so step 2 walks a fixed list before any direction is drawn: roles and permissions, workflow ownership, compliance and auditability, integrations, data volume, operational complexity, accessibility. Each one produces a requirement or is marked not applicable with a reason. None is skipped silently.
 
-These are the requirements that arrive late and invalidate a shape *after* someone has committed to it. Accessibility discovered during Design is a scope change; accessibility written as an `R` is a constraint the shape had to satisfy from the start.
+These are the requirements that show up late and invalidate a direction after someone has committed to it. Accessibility found during design is a scope change; accessibility written as a requirement is a constraint the direction had to satisfy from the start.
 
 ## Where it stops
 
-Input: `FRAMED_PROBLEM.md`. Output: `SHAPING.md` — requirements, shapes, the fit check, one selection, and the cuts.
+Input: `FRAMED_PROBLEM.md`. Output: `DIRECTIONS.md` — requirements, directions and their versions, the fit check, one selection, the cuts.
 
-It does not re-open the problem: contradicting evidence goes back to `problem-framing`. It does not write the proposal: that is `design-package`. And it does not do detailed design — layouts, copy, component choices and edge cases are decisions the builders need to keep.
+Contradicting evidence goes back to `problem-framing` rather than getting fixed here. The write-up for other people is `proposal`.
 
 - Skill: [`skills/process/shaping/SKILL.md`](../../skills/process/shaping/SKILL.md)
+- Breadboards: [`breadboarding`](../breadboarding/README.md) — step 3 uses it to make each direction concrete before the fit check.
+
+---
+
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 27px at 667×375.

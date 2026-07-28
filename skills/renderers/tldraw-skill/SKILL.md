@@ -1,19 +1,19 @@
 ---
 name: tldraw-skill
 description: >-
-  Render a design artifact on a tldraw offline canvas — the local, private,
-  infinite canvas that saves to a .tldraw file on disk. This is a RENDERER
-  (mechanics): it draws what a discipline skill has already decided. Use
-  whenever the user wants a diagram or artifact "in tldraw", on a tldraw
-  canvas, in the tldraw desktop/offline app, or references a .tldraw or .tldr
-  file; when materializing a flow, journey map, service blueprint, concept
-  model, ecosystem map, sitemap or wireframe that must stay local and private;
-  or when an orchestrating skill picks tldraw as the renderer. Owns tldraw
-  drawing mechanics — canvas API, shape records, layout math, arrows and
-  bindings, frames, linting, screenshots, export. Do NOT use it to decide WHAT
-  to draw or pick a diagram type; bring it a decided artifact. Do NOT use it
-  for cloud or collaborative canvases, for a scroll-driven interactive article
-  (that is `scrollytelling`), for building app UI, or for adding durable
+  Render a design artifact on a tldraw offline canvas — the local, private
+  canvas that saves to a .tldraw file on disk. A RENDERER: it draws what a
+  discipline skill already decided. Use whenever the user wants a diagram or
+  artifact "in tldraw", on a tldraw canvas, in the tldraw desktop app, or
+  references a .tldraw or .tldr file; when materializing a flow, journey map,
+  service blueprint, concept model, ecosystem map, sitemap, breadboard or
+  wireframe that must stay local and private; or when an orchestrating skill
+  picks tldraw as the renderer. Owns tldraw mechanics — canvas API, shape
+  records, layout math, arrows and bindings, frames, linting, export. Do NOT use
+  it to decide WHAT to draw or pick a diagram type; bring it a decided artifact —
+  a breadboard's places are `breadboarding`'s call. Do NOT use
+  it for cloud or collaborative canvases, for a scroll-driven interactive
+  article (that is `scrollytelling`), for building app UI, or for durable
   behavior — clickable prototypes, animation, custom shapes.
 ---
 

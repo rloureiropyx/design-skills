@@ -1,48 +1,63 @@
 ---
 name: problem-framing
 description: >-
-  Frame a product problem until it is specific, evidence-backed, bounded, and
-  ready for Shape. Use when a designer is starting a project from a feature
+  Work out what problem is actually being solved, until it is specific,
+  evidence-backed, and bounded. Use when a designer is starting from a feature
   request, complaint, opportunity, raw idea, research note, or proposed
   solution; when an in-progress project needs its problem revisited after new
-  evidence, feedback, scope drift, solution lock-in, or loss of clarity; when
-  assumptions or competing frames need interrogation; or when another workflow
-  needs a Framed Problem before shaping a solution direction. Produces a Framed
-  Problem, not a solution, execution review, PRD, or design package. Do NOT use
-  it for a direct implementation request ("add bulk edit to the grid"), a code
-  or PR review, writing acceptance criteria or requirements once a design
-  package is approved, or generic plan stress-testing unrelated to what problem
-  is being solved. Do NOT use it to compare solution shapes or run a fit check
-  (that is `shaping`), or to write the artifact a betting table reads (that is
-  `design-package`).
+  evidence, feedback, scope drift, or solution lock-in; when assumptions or
+  competing frames need interrogation; when someone working solo needs a small
+  problem framed quickly; or when another workflow needs a Framed Problem before
+  exploring solutions. Produces a Framed Problem, not a solution, PRD, or
+  proposal. Do NOT use it for a direct implementation request ("add bulk edit to
+  the grid"), a code or PR review, writing acceptance criteria once a proposal
+  is approved, or generic plan stress-testing unrelated to what problem is being
+  solved. Do NOT use it to compare solution directions or run a fit check (that
+  is `shaping`), or to write the document people sign off on (that is
+  `proposal`).
 ---
 
 # Problem Framing
 
-Interrogate an initiative before or during delivery until the team can choose what problem to solve without smuggling in a solution. Treat the frame as a working model that evidence may reopen.
+Work out what problem is actually being solved, before or during delivery, until the team can choose what to work on without smuggling in a solution. Treat the frame as a working model that evidence may reopen.
 
-Use a **docs-first, one-question-at-a-time** interview. Apply three moves: **Why** exposes the real tension, **What if** challenges the frame, and **How** turns critical uncertainty into evidence work. Apply pre-solution boundary discipline here; leave Shape and packaging to later skills.
+Use a **docs-first, one-question-at-a-time** interview. Three moves: **Why** exposes the real tension, **What if** challenges the frame, and **How** turns a critical uncertainty into evidence work. Stay on the problem side; exploring and packaging solutions belongs to later skills.
 
-Act as the designer's question memory system. Ensure the important questions about the user, observed episode, cause, evidence, outcome, alternatives, boundary, constraints, time budget, and risks are answered or explicitly recorded before solutions are proposed. Do not dump the checklist on the designer; choose the highest-leverage unresolved question, ask it, update the frame, and continue.
+Act as the designer's question memory. Make sure the important questions — about the user, the observed episode, the cause, the evidence, the outcome, the alternatives, the boundary, the constraints, the time budget, and the risks — are answered or explicitly recorded before solutions are proposed. Do not dump the checklist on the designer; pick the highest-leverage unresolved question, ask it, update the frame, and continue.
 
 Conduct the interview, the recommendations, and the written artifact in the user's language.
 
 ## Preserve the boundary
 
-Produce a `Framed Problem`. Stop before solution concepts, requirements, flows, wireframes, acceptance criteria, implementation tasks, or a design package. For work in progress, assess whether the current problem still justifies and bounds the work; leave delivery health, implementation quality, and task planning to their own reviews.
+Produce a `Framed Problem`. Stop before solution concepts, requirements, flows, breadboards, wireframes, acceptance criteria, implementation tasks, or a proposal. For work in progress, assess whether the current problem still justifies and bounds the work; leave delivery health, implementation quality, and task planning to their own reviews.
 
-Define the **time budget** as the fixed amount of time the team is willing to spend building the solution. It is a time constraint, not an estimate derived from a predefined scope: Shape must adjust the solution to fit the chosen time. Record it when the user or source material supplies one. If it is not yet defined, do not invent it; mark it open and state the project consequence, such as expanding solution work, delaying trade-offs, or making the design package impossible to evaluate as a bounded commitment.
+Define the **time budget** as the fixed amount of time the team is willing to spend building the solution. It is a constraint, not an estimate derived from a scope: the solution gets adapted to fit the time. Record it when the user or source material supplies one. If it is not yet defined, do not invent it; mark it open and state the project consequence — expanding solution work, delayed trade-offs, or a proposal nobody can evaluate as a bounded commitment.
 
-The next phase is Shape, and the `shaping` skill runs it — hand it `FRAMED_PROBLEM.md`. **Shape** means exploring materially different solution hypotheses as rough sketches, checking each against the requirements the frame implies, and picking one bounded direction with no unresolved unknowns. After Shape picks an approach, the `design-package` skill captures the framed problem, appetite, chosen shape, rabbit holes, and no-gos in a decision-ready artifact. Once the design package is accepted, **Design** performs detailed interaction design, validation, and implementation guidance inside that direction, using `FRAMED_PROBLEM.md` and the design package as guardrails against drift. Do not shape, package, or design the solution during problem framing; prepare the evidence, boundaries, and open question those phases must respond to.
+What comes next: `shaping` takes `FRAMED_PROBLEM.md` and explores two or three materially different solution directions, checks each against the requirements the frame implies, and picks one with no unresolved unknowns. Then `proposal` turns the selected direction, the time budget, the rabbit holes, and the exclusions into the document people sign off on. After that, **Design** does the detailed interaction work inside that direction, using `FRAMED_PROBLEM.md` and the proposal as guardrails against drift. Do none of that here; prepare the evidence, boundaries, and open questions those steps have to respond to.
 
-Framing does not earn a commitment to build. It earns a commitment to **spend shaping time**: the business agreeing that if this can be shaped into something doable inside the stated appetite, the result would be worth having. Say so when handing off, so nobody reads a framed problem as an approved project.
+Framing does not earn a commitment to build. It earns a commitment to **spend time exploring solutions**: agreement that if this can be solved inside the stated time budget, the result would be worth having. Say so when handing off, so nobody reads a framed problem as an approved project.
 
 ## Choose the entry branch
 
 - **New project**: recover a baseline story from the raw initiative, then run the full framing loop.
 - **In-progress project**: first reconstruct a frame checkpoint from the original brief, decisions, work produced, feedback, and evidence gathered since work began. Then run the same loop against the updated record.
+- **Quick frame**: a small piece of work, usually solo, that still needs the problem stated correctly before anyone starts sketching. Run the short loop in `references/quick-frame.md` instead of the full one.
 
 Use the in-progress branch whenever work has begun, including discovery, solution exploration, design, prototyping, or implementation. Preserve valid prior decisions, but treat effort already spent as cost history rather than evidence that the frame is correct.
+
+### When quick is the honest answer
+
+Take the quick branch when **all** of these hold:
+
+- one person, or a pair, will do the work;
+- the time budget is days, not weeks;
+- one user and one moment — no competing populations to reconcile;
+- nothing regulated, no permission model change, no system of record involved;
+- being wrong is cheap and reversible.
+
+Say which branch you are taking and why, in one line, before starting. The full loop on a two-day fix is its own failure mode: it costs more than the work and teaches people that framing is bureaucracy.
+
+Read `references/quick-frame.md` before running it. It carries the short loop, the one-page output, and — the part that matters — the four conditions that end the quick pass and send the work back to the full loop.
 
 ## Run the framing loop
 
@@ -215,10 +230,10 @@ Some constraints and exclusions are optional at this stage. Never fabricate them
 
 1. what is unknown or undecided;
 2. why it may be acceptable to defer;
-3. what could concretely happen in Shape, the design package, or Design if it remains undefined;
+3. what could concretely happen while exploring directions, writing the proposal, or designing, if it remains undefined;
 4. the latest decision point by which it must be resolved.
 
-Write consequences as project behavior, not generic risk labels. Prefer “without a supported-payroll boundary, Shape may spread across every payroll configuration and exceed the two-week build budget” over “scope risk.”
+Write consequences as project behavior, not generic risk labels. Prefer “without a supported-payroll boundary, solution exploration may spread across every payroll configuration and exceed the two-week build budget” over “scope risk.”
 
 Use a compact example when explaining the boundary. For the onboarding case:
 
@@ -226,7 +241,7 @@ Use a compact example when explaining the boundary. For the onboarding case:
 - **Context**: before account setup, when required approvals and information must already be available.
 - **Desired outcome**: the admin arrives prepared and can complete setup without contacting support.
 - **Constraint**: Finance owns the approval and the product cannot bypass it.
-- **Time budget**: two weeks of build time, only if the team has explicitly chosen that investment; Shape must reduce or change the solution to fit it.
+- **Time budget**: two weeks of build time, only if the team has explicitly chosen that investment; the solution gets reduced or changed to fit it.
 - **Major risk**: the product may not be able to identify Finance-dependent accounts early enough.
 - **Chosen slice**: help these admins prepare before setup—not redesign onboarding for every user or solve the entire approval process.
 
@@ -269,7 +284,7 @@ Write the confirmed artifact to `FRAMED_PROBLEM.md` inside the project, using th
 
 ## Readiness rule
 
-Mark `ready-for-shape` for a new project, or `revisit-shape` for an in-progress project whose frame changed, only when all are true:
+Mark `ready-for-directions` for a new project, or `revisit-directions` for an in-progress project whose frame changed, only when all are true:
 
 - a concrete baseline story exists;
 - the chosen frame names a user, tension, consequence, and desired outcome;
@@ -291,13 +306,13 @@ Otherwise choose the most informative non-ready status. Recommend `stop` when ev
 
 Pair every status with one explicit action:
 
-- **`ready-for-shape`**: hand `FRAMED_PROBLEM.md` to the `shaping` skill. State plainly that this buys shaping time, not a build commitment. Preserve the working question, fixed build-time budget, boundaries, and unresolved uncertainties while exploring approaches.
-- **`revisit-shape`**: return the current approach to Shape because the frame changed. State which solution decisions remain valid and which must be evaluated again.
+- **`ready-for-directions`**: hand `FRAMED_PROBLEM.md` to the `shaping` skill. State plainly that this buys time to explore solutions, not a build commitment. Preserve the working question, fixed build-time budget, boundaries, and unresolved uncertainties while exploring approaches.
+- **`revisit-directions`**: return the current approach to `shaping` because the frame changed. State which solution decisions remain valid and which must be evaluated again.
 - **`continue-current-frame`**: continue the active project under the existing problem north star. Cite the new evidence that supports continuing and keep monitoring the stated risks.
 - **`evidence-needed`**: request the exact metric, research-library input, or smallest credible study that can change the frame. Return to problem framing after the evidence arrives.
 - **`needs-reframing`**: return to the baseline story or competing frames because the current user, cause, outcome, or boundary is not coherent enough to guide solutions.
-- **`split`**: create a separate framing pass and `FRAMED_PROBLEM.md` for each independent user, tension, or outcome. Do not send the combined initiative to Shape.
-- **`stop`**: record why the problem lacks sufficient evidence, value, ownership, or relevance, and stop dependent Shape, design package, and Design work.
+- **`split`**: create a separate framing pass and `FRAMED_PROBLEM.md` for each independent user, tension, or outcome. Do not send the combined initiative on to `shaping`.
+- **`stop`**: record why the problem lacks sufficient evidence, value, ownership, or relevance, and stop dependent solution, proposal, and Design work.
 
 ## Anti-patterns
 
@@ -342,7 +357,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   evidence request. Name the assumption, the decision it informs, and the result that would
   move the frame — or accept the risk explicitly and move on.
 - **Producing the next phase's artifact while explaining why you will not.** When a request
-  arrives post-design-package asking for acceptance criteria, flows, or wireframes, name the
+  arrives after a proposal is approved, asking for acceptance criteria, flows, or wireframes, name the
   boundary and the correct phase. Do not emit a sample as an illustration.
 - **Presenting an inference as something someone said.** Connecting three remarks into a
   conclusion is interpretation. It can go in the frame, labelled as interpretation, with the
@@ -360,20 +375,32 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   that makes it worth trusting.
 - **Ruling an option out forever.** "We are not doing that" ends reconsideration. "Not now,
   because X" survives contact with new evidence, which is the whole point of keeping the table.
+- **Running the full loop on a two-day fix.** A framing pass that costs more than the work it
+  frames does not get run twice. Take the quick branch when its five conditions hold, and say
+  which branch you took and why.
+- **Staying quick past the point it is honest.** A second user population, a competing
+  explanation that survives questioning, anything regulated, or a time budget past a week ends
+  the quick pass. Name the condition and switch, rather than continuing with a lighter method
+  than the decision deserves.
+- **Writing a quick frame without its banner.** Six months later a one-page frame is
+  indistinguishable from a full one, and gets cited as though the alternatives had been
+  compared and the evidence gate had run.
 
 ## Reference files
 
 - `references/in-progress-checkpoint.md` — what to extract for work already underway, the drift taxonomy, and how to dispose of prior decisions. Read at steps 1 and 1A, only for an in-progress project.
 - `references/project-context.md` — how to find a project context library, how to classify what it holds, and what it can and cannot settle. Read at step 1, before asking the designer anything.
-- `references/evidence-inputs.md` — the exact shape of a metrics input, a research-library input, and a focused evidence request. Read at step 5, only once an assumption clears the gate.
+- `references/evidence-inputs.md` — the exact form of a metrics input, a research-library input, and a focused evidence request. Read at step 5, only once an assumption clears the gate.
+- `references/quick-frame.md` — the short loop for small, solo work, and the four conditions that end it. Read before running the quick branch.
 - `templates/framed-problem.md` — the required `FRAMED_PROBLEM.md` structure and where to save it. Read at step 8.
+- `templates/quick-frame.md` — the one-page structure a quick frame writes instead. Read at the end of the quick branch.
 
 ## Method sources
 
 This skill combines four sources; preserve their roles when revising it:
 
 - Warren Berger, [*A More Beautiful Question*](https://amorebeautifulquestion.com/): use `Why → What if → How` to move from questioning the situation, through competing possibilities, to an evidence-producing next step.
-- Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup): a product-development method created at Basecamp. It calls the pre-build phase **shaping**: define a rough direction and fixed build-time budget, adapt the solution to the available time, and make boundaries, risk consequences, and exclusions explicit without specifying every detail.
+- Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup): a product-development method created at Basecamp. Its pre-build phase defines a rough direction and a fixed build-time budget, adapts the solution to the available time, and makes boundaries, risk consequences, and exclusions explicit without specifying every detail.
 - Ryan Singer, [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) — specifically `framing-doc` — and his later writing on [framing](https://www.ryansinger.co/framing/), [what research is for](https://www.ryansinger.co/research-gives-us-the-problem-not-the-answer/), [deciding between options](https://www.ryansinger.co/discovery-how-to-decide/) and [business imperatives](https://www.ryansinger.co/matching-problems-to-business-imperatives/): quoted source material as ground truth, the *who said this and where* traceability test, the options landscape with signal strength, `Less about / More about`, business-urgency matching, and framing as a commitment to spend shaping time rather than to build.
 - Matt Pocock, [`grill-with-docs`](https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md) and [`grilling`](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md): ask one question at a time, recommend an answer, inspect available project context before asking for facts, and preserve the resulting shared understanding in the project.
 

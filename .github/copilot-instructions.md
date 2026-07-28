@@ -49,13 +49,29 @@ Direct `copilot plugin install owner/repo` is deprecated in favour of `plugin@ma
 
 ## Method conventions shared by the skills
 
-The skills form one chain, and each link is a document: `problem-framing` writes `FRAMED_PROBLEM.md`, `shaping` reads it and writes `SHAPING.md`, `design-package` reads both and writes `DESIGN_PACKAGE.md`. Treat all three as persistent project context.
+The skills form one chain, and each link is a document: `problem-framing` writes `FRAMED_PROBLEM.md`, `shaping` reads it and writes `DIRECTIONS.md`, `proposal` reads both and writes `PROPOSAL.md`. Treat all three as persistent project context.
 
 A downstream skill **carries** what an upstream one decided; it never re-derives it. When a downstream skill finds evidence that contradicts the frame, it sends that back rather than quietly restating the problem in new words.
 
-Use Ryan Singer's current vocabulary: the artifact a betting table decides on is a **design package**, not a pitch. In his usage "pitch" names the raw request that arrives *before* framing. Do not reintroduce the old term.
+Keep the vocabulary generic. The library is not a branded methodology, and the words a reader sees should be ones they already use:
+
+- The document people decide on is a **proposal**, not a pitch and not a design package. "Pitch" names the raw request that arrives *before* framing — do not reintroduce it for the output.
+- A candidate solution is a **direction**, not a shape. Directions improve across **versions** (`A1 → A2 → A3`); a new letter means a different mechanism, a new number means the same one improved.
+- The fixed amount of build time is a **time budget**, not an appetite.
+- The `shaping` skill keeps its name for routing reasons, but nothing a reader sees should say "shape".
 
 Do not collapse observations, interpretations, assumptions, commitments, and preferences into a single category. Ask one high-leverage question at a time, inspect available project context before asking for facts, and request research-library or metrics inputs only when they can change the frame or next decision.
+
+## Writing tone
+
+The explainers and the README are not marketing. Apply these when writing or revising any prose here:
+
+- Lead with what the thing does, in one sentence, in words someone would use out loud.
+- No superlatives, no "the entire value of", no "non-negotiable", no "this is what separates X from Y".
+- Say what a skill costs and where it does not help. Every explainer should say who it is *not* for.
+- Keep the concrete rules — the binary fit check, one question at a time, carry-don't-re-derive. Cut the sentences that argue for them at length.
+- Credit the sources plainly and do not oversell the additions.
+
 
 ## Adding a skill
 

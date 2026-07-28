@@ -1,6 +1,6 @@
 # FRAMED_PROBLEM.md structure
 
-Read this at step 8, when writing the artifact. Use the exact top-level headings below so whoever runs Shape next — a person, or a later workflow — can consume the file without parsing prose.
+Read this at step 8, when writing the artifact. Use the exact top-level headings below so whoever explores solutions next — a person, or a later workflow — can read the file without parsing prose.
 
 Write in the user's language. Save it inside the project, using the project's established documentation directory when one exists and the project root otherwise. Update this same file on later framing passes — one current source of truth, never a second copy.
 
@@ -8,7 +8,7 @@ Write in the user's language. Save it inside the project, using the project's es
 # Framed Problem: <working title>
 
 ## Status
-`ready-for-shape | revisit-shape | continue-current-frame | evidence-needed | needs-reframing | split | stop`
+`ready-for-directions | revisit-directions | continue-current-frame | evidence-needed | needs-reframing | split | stop`
 
 ## Source request
 The raw initiative and any proposed solution, kept as source context.
@@ -44,7 +44,7 @@ Material alternatives, trade-offs, rejection reason, and evidence that could rev
 Every option, request, or idea that surfaced, as a table of `Option | What it addresses | Who benefits | Signal strength`, followed by the case for the one chosen now. Each option not chosen carries a *why not now*, never a *why not ever*.
 
 ## Working question
-The open, actionable question Shape will answer.
+The open, actionable question the solution has to answer. Several answers should be possible.
 
 ## Boundaries
 In scope, out of scope, constraints, commitments, fixed build-time budget if given, explicit exclusions, and any undefined optional boundary with its concrete project consequence and decision deadline.
@@ -53,13 +53,13 @@ In scope, out of scope, constraints, commitments, fixed build-time budget if giv
 Optional. Two symmetric lists constraining the *kind* of solution the evidence supports. Include it only when there is an obvious-but-wrong direction a correct reading of the problem could still lead to. Never names a mechanism. Omit the section entirely when no such misunderstanding exists.
 
 ## Major risks
-Risks that could invalidate or destabilize the frame during solution exploration. State what each risk could cause in Shape, the design package, or Design rather than naming the risk alone.
+Risks that could invalidate or destabilize the frame during solution exploration. State what each risk could cause while exploring directions, writing the proposal, or designing, rather than naming the risk alone.
 
 ## Evidence requests
 Targeted inputs still required from the research library, metrics tool, or another source. Include the exact query or filter, the decision informed, the signal sought, and the stopping condition.
 
-## Shape handoff
-What Shape may treat as settled, what remains flexible, which existing solution decisions are preserved or reopened, and which uncertainties its rough hypothesis sketches must address. State explicitly that this frame commits the business to *shaping time*, not to building. Write it for a reader who has not seen this framing conversation and has no tooling beyond a sketching surface.
+## Handoff
+What the next step may treat as settled, what remains flexible, which existing solution decisions are preserved or reopened, and which uncertainties the candidate directions must address. State explicitly that this frame commits the business to *time spent exploring solutions*, not to building. Write it for a reader who has not seen this framing conversation and has no tooling beyond a sketching surface.
 
 ## Context use
 Where this file lives in the project, how it serves as the problem north star, which workflows must reference it, and which evidence or decision would require it to be updated. Name the project context library this frame drew on, if one exists, and the specific files used — downstream work reads the same source instead of asking again.

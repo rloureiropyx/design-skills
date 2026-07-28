@@ -605,7 +605,7 @@
       font-weight: 800;
     }
 
-    .package-card { border-top: 4px solid var(--green); }
+    .proposal-card { border-top: 4px solid var(--green); }
 
     .design-bridge {
       display: grid;
@@ -956,7 +956,7 @@
       <h2 id="intro-title">Turn a fuzzy initiative into a clear, evidence-backed problem.</h2>
       <p>A product team often starts with a feature request, a complaint, or a solution already attached. <code>problem-framing</code> slows the commitment down just enough to separate what was observed from what was assumed—and to decide what problem is worth solving.</p>
       <p>The skill helps the designer remember every important question that should be answered before proposing solutions. It asks them one at a time, follows the evidence, and keeps unresolved questions visible.</p>
-      <p class="definition"><strong>The output is a problem north star.</strong> The <code>Framed Problem</code> is a traceable account of the user, tension, outcome, evidence, assumptions, boundaries, and open question. It stays in the project so later sketches, scope choices, and decisions can be checked against the same intent.</p>
+      <p class="definition"><strong>The output is a written problem.</strong> The <code>Framed Problem</code> is a traceable account of the user, tension, outcome, evidence, assumptions, boundaries, and open question. It stays in the project so later sketches, scope choices, and decisions can be checked against the same intent.</p>
     </section>
 
     <section class="scrolly" aria-label="The problem-framing process">
@@ -1182,7 +1182,7 @@
 
             <!-- DIAGRAM 9: STATUS TREE -->
             <g class="diagram-state" data-state="9">
-              <text class="svg-kicker" x="64" y="66">Is the problem ready for Shape?</text>
+              <text class="svg-kicker" x="64" y="66">Is the problem ready for directions?</text>
               <text class="svg-title" x="64" y="102">Confirm the frame, then choose the next move.</text>
               <rect x="74" y="176" width="190" height="244" rx="16" fill="#f4f1e8"/>
               <text x="98" y="208" fill="#677067" font-size="9" font-weight="800" letter-spacing="1">FRAMED_PROBLEM.MD</text>
@@ -1190,15 +1190,15 @@
               <path class="svg-line" d="M264 298 H328" marker-end="url(#arrow)"/>
               <path class="svg-line-muted" d="M348 298 V143 H420 M348 298 V195 H420 M348 298 V247 H420 M348 298 V299 H420 M348 298 V351 H420 M348 298 V403 H420 M348 298 V455 H420"/>
               <g>
-                <rect x="420" y="121" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="148">Ready for Shape</text>
-                <rect x="420" y="173" width="236" height="44" rx="10" fill="#1c2c43" stroke="#75a9ff"/><text class="svg-label" x="438" y="200">Revisit Shape</text>
+                <rect x="420" y="121" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="148">Ready for directions</text>
+                <rect x="420" y="173" width="236" height="44" rx="10" fill="#1c2c43" stroke="#75a9ff"/><text class="svg-label" x="438" y="200">Revisit directions</text>
                 <rect x="420" y="225" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="253">Continue current frame</text>
                 <rect x="420" y="277" width="236" height="44" rx="10" fill="#3c301b" stroke="#e7b85c"/><text class="svg-label" x="438" y="305">Evidence needed</text>
                 <rect x="420" y="329" width="236" height="44" rx="10" fill="#302444" stroke="#ae8bf3"/><text class="svg-label" x="438" y="357">Needs reframing</text>
                 <rect x="420" y="381" width="236" height="44" rx="10" fill="#243229" stroke="#68786c"/><text class="svg-label" x="438" y="409">Split</text>
                 <rect x="420" y="433" width="236" height="44" rx="10" fill="#3b251f" stroke="#ee795e"/><text class="svg-label" x="438" y="461">Stop</text>
               </g>
-              <text class="svg-small" x="74" y="505">Saved in the project · read by Shape and later work.</text>
+              <text class="svg-small" x="74" y="505">Saved in the project · read by shaping and everything after.</text>
             </g>
           </svg>
         </div>
@@ -1214,7 +1214,9 @@
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>What is being produced?</strong> Not a requirements document and not a proposed interface. A <code>Framed Problem</code> is the evidence-backed boundary that Shape can rely on.</aside>
+        <aside class="bridge-card"><strong>What is being produced?</strong> Not a requirements document and not a proposed interface. A <code>Framed Problem</code> is the evidence-backed boundary that shaping can rely on.</aside>
+
+        <aside class="bridge-card"><strong>Not every problem needs the full pass.</strong> For solo work and small problems there is a <em>quick frame</em>: five questions, one page, same output file. It is a real frame, not a draft. What follows is the full version — and the skill has a written rule for when the short one stops being honest: more than one team affected, evidence people disagree about, or an assumption that would waste the whole budget if it were wrong.</aside>
 
         <!-- SCENE 2: READ BEFORE ASKING — edit scene copy here -->
         <section class="step" data-state="2" aria-labelledby="scene-2-title">
@@ -1292,7 +1294,7 @@
             <dt>Constraint</dt><dd>Managers remain responsible for submitting employee changes.</dd>
             <dt>Time budget</dt><dd>Two weeks of build time. The solution must change or shrink to fit the time—not the other way around.</dd>
             <dt>Major risk</dt><dd>The platform may not distinguish a missing change from “no change,” causing false alerts and eroding HR trust.</dd>
-            <dt>Optional boundary</dt><dd>Supported payroll configurations are not yet defined. If this stays open, Shape may spread across every configuration and exceed the two-week build budget.</dd>
+            <dt>Optional boundary</dt><dd>Supported payroll configurations are not yet defined. If this stays open, Direction may spread across every configuration and exceed the two-week build budget.</dd>
             <dt>Chosen slice</dt><dd>Surface and resolve missing changes before payroll approval—not redesign payroll or every manager workflow.</dd>
           </dl>
         </aside>
@@ -1301,8 +1303,8 @@
         <section class="step" data-state="9" aria-labelledby="scene-9-title">
           <div class="step-card">
             <span class="scene-number">09 · Confirm</span>
-            <h2 id="scene-9-title">Is the problem ready for Shape?</h2>
-            <p><strong>Shape is the next phase:</strong> explore distinct solution hypotheses as rough Excalidraw sketches, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed <code>Framed Problem</code> becomes the project’s problem north star for Shape and all later work.</p>
+            <h2 id="scene-9-title">Is the problem ready for directions?</h2>
+            <p><strong>Direction is the next phase:</strong> explore distinct solution hypotheses as breadboards, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed <code>Framed Problem</code> becomes the project’s problem reference point for shaping and everything after.</p>
           </div>
         </section>
       </div>
@@ -1312,11 +1314,11 @@
       <div class="next-moves-inner">
         <p class="eyebrow">The decision after framing</p>
         <h2 id="next-moves-title">Every status has a next move.</h2>
-        <p class="next-moves-lede">Problem Framing does not automatically send every initiative to Shape. Its status tells the designer exactly what should happen next.</p>
+        <p class="next-moves-lede">Problem Framing does not automatically send every initiative to Direction. Its status tells the designer exactly what should happen next.</p>
 
         <div class="next-moves-grid">
-          <article class="next-move-card"><h3>Ready for Shape</h3><p><strong>Move forward.</strong> Use the Framed Problem as the north star while exploring rough approaches.</p></article>
-          <article class="next-move-card"><h3>Revisit Shape</h3><p><strong>Re-evaluate the current approach.</strong> The problem frame changed; preserve valid decisions and reopen the ones the new evidence affects.</p></article>
+          <article class="next-move-card"><h3>Ready for directions</h3><p><strong>Move forward.</strong> Use the Framed Problem as the reference while exploring approaches.</p></article>
+          <article class="next-move-card"><h3>Revisit directions</h3><p><strong>Re-evaluate the current approach.</strong> The problem frame changed; preserve valid decisions and reopen the ones the new evidence affects.</p></article>
           <article class="next-move-card"><h3>Continue current frame</h3><p><strong>Keep the project moving.</strong> New evidence still supports the user, tension, outcome, and boundary; continue while monitoring known risks.</p></article>
           <article class="next-move-card"><h3>Evidence needed</h3><p><strong>Ask a targeted question.</strong> Retrieve the exact metric or research input that can change the frame, then run framing again.</p></article>
           <article class="next-move-card"><h3>Needs reframing</h3><p><strong>Return to the problem questions.</strong> The user, cause, outcome, or chosen slice is not coherent enough to guide approaches.</p></article>
@@ -1337,7 +1339,7 @@
           <div class="output-item">Assumption ledger</div><div class="output-item">Alternative frames</div>
           <div class="output-item">Working question</div><div class="output-item">Boundaries</div>
           <div class="output-item">Major risks</div><div class="output-item">Evidence requests</div>
-          <div class="output-item">Shape handoff</div><div class="output-item">Context use</div>
+          <div class="output-item">Handoff</div><div class="output-item">Context use</div>
           <div class="output-item">Confirmation</div><div class="output-item">Saved as FRAMED_PROBLEM.md</div>
         </div>
       </details>
@@ -1348,17 +1350,17 @@
         <div class="framed-example-intro">
           <p class="eyebrow">A concrete output</p>
           <h2 id="framed-example-title">What a Framed Problem looks like.</h2>
-          <p>The questions from the previous scenes consolidate into one concise project document. This is the problem north star—not a solution specification.</p>
+          <p>The questions from the previous scenes consolidate into one concise project document. It states the problem, not the solution.</p>
         </div>
 
         <article class="framed-document" aria-label="Example Framed Problem document">
-          <div class="document-meta"><span>Project north star</span><span>FRAMED_PROBLEM.md</span></div>
+          <div class="document-meta"><span>Project reference</span><span>FRAMED_PROBLEM.md</span></div>
           <h3>SMB HR admins discover missing employee changes too late</h3>
 
           <dl>
             <div class="framed-field">
               <dt>Status</dt>
-              <dd><span class="status-pill">Ready for Shape</span></dd>
+              <dd><span class="status-pill">Ready for directions</span></dd>
             </div>
             <div class="framed-field">
               <dt>Source request</dt>
@@ -1393,7 +1395,7 @@
                   <li><strong>Constraint:</strong> managers remain responsible for submitting employee changes.</li>
                   <li><strong>Time budget:</strong> two weeks of build time. The chosen solution must fit this fixed investment.</li>
                   <li><strong>Optional boundary:</strong> supported payroll configurations are not yet defined.</li>
-                  <li><strong>Consequence if deferred:</strong> Shape may expand across every configuration, exceed the two-week budget, and reopen the approach during Design. Resolve before the design package.</li>
+                  <li><strong>Consequence if deferred:</strong> Direction may expand across every configuration, exceed the two-week budget, and reopen the approach during Design. Resolve before the proposal.</li>
                 </ul>
               </dd>
             </div>
@@ -1402,26 +1404,26 @@
               <dd>The platform may not reliably distinguish a missing employee change from a legitimate “no change” before payroll review. If that happens, false alerts could erode HR trust and make the chosen direction unusable.</dd>
             </div>
             <div class="framed-field">
-              <dt>Shape handoff</dt>
-              <dd>Explore materially different rough Excalidraw sketches. Each must preserve manager ownership, address early identification and resolution, and respond to the working question; none should assume a dashboard is the answer.</dd>
+              <dt>Handoff</dt>
+              <dd>Explore materially different directions, each breadboarded. Each must preserve manager ownership, address early identification and resolution, and respond to the working question; none should assume a dashboard is the answer.</dd>
             </div>
           </dl>
         </article>
       </div>
     </section>
 
-    <!-- SCENE 10: HANDOFF TO SHAPE -->
+    <!-- SCENE 10: HANDOFF TO DIRECTION -->
     <section class="closing" aria-labelledby="closing-title">
       <div class="closing-copy">
         <p class="eyebrow">The payoff</p>
-        <h2 id="closing-title">Now shape the solution direction.</h2>
-        <p><strong>Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.</strong> In Shape, each solution hypothesis becomes a rough Excalidraw sketch showing its mechanism, essential elements, relationships, and key interactions. The team evaluates the alternatives and picks one bounded direction. <code>FRAMED_PROBLEM.md</code> remains the problem north star used to judge every sketch and later decision.</p>
+        <h2 id="closing-title">Now direction the solution direction.</h2>
+        <p><strong>Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.</strong> In Direction, each solution hypothesis becomes a breadboard: the places a person can be, what they can do or see there, and where each action takes them. The team evaluates the alternatives and picks one bounded direction. <code>FRAMED_PROBLEM.md</code> remains the reference every sketch and later decision is judged against.</p>
         <div class="final-equation"><span>Framed problem</span><span aria-hidden="true">→</span><span>Rough solution sketches</span></div>
       </div>
 
       <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
         <title id="closing-diagram-title">A framed problem moving into rough solution sketches</title>
-        <desc id="closing-diagram-desc">A document backed by user, tension, outcome, and evidence passes into Shape, where each solution hypothesis becomes a rough Excalidraw sketch before one direction is chosen.</desc>
+        <desc id="closing-diagram-desc">A document backed by user, tension, outcome, and evidence passes into Direction, where each solution hypothesis becomes a breadboard before one direction is chosen.</desc>
         <defs>
           <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
         </defs>
@@ -1436,7 +1438,7 @@
         </g>
         <path d="M270 238 H336" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
         <rect x="352" y="142" width="112" height="194" rx="56" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
-        <text x="408" y="232" fill="#fffdf7" font-family="Georgia, serif" font-size="22" text-anchor="middle">Shape</text>
+        <text x="408" y="232" fill="#fffdf7" font-family="Georgia, serif" font-size="22" text-anchor="middle">Direction</text>
         <text x="408" y="255" fill="#9cac9f" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">EXPLORE</text>
         <path d="M474 238 H525" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
         <text x="606" y="72" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">ROUGH EXCALIDRAW</text>
@@ -1455,24 +1457,24 @@
       <div class="whole-picture-inner">
         <p class="eyebrow">The whole picture</p>
         <h2 id="whole-picture-title">Define the direction. Then design.</h2>
-        <p class="whole-picture-lede">Problem Framing, Shape, Evaluate and Pick, and Design Package are direction-setting phases. They help the team choose what to pursue and keep the project from drifting toward the wrong problem or an unbounded solution. Design is where detailed interaction work, validation, and implementation guidance begin.</p>
+        <p class="whole-picture-lede">Problem Framing, Direction, Evaluate and Pick, and Proposal are direction-setting phases. They help the team choose what to pursue and keep the project from drifting toward the wrong problem or an unbounded solution. Design is where detailed interaction work, validation, and implementation guidance begin.</p>
 
-        <div class="direction-band"><strong>Before Design:</strong> define the problem north star, explore alternatives, evaluate and pick one approach, then secure commitment through the design package. Optional constraints may remain open only when their consequence and decision deadline are explicit.</div>
+        <div class="direction-band"><strong>Before Design:</strong> write the problem down, explore alternatives, evaluate and pick one approach, then secure commitment through the proposal. Optional constraints may remain open only when their consequence and decision deadline are explicit.</div>
 
         <div class="direction-zone">
           <div class="direction-zone-header"><strong>Direction setting</strong><span>These phases prevent drift before detailed design begins.</span></div>
           <div class="workflow-map" role="list" aria-label="Direction-setting workflow">
             <article class="workflow-card" role="listitem"><span class="phase">01 · Ask before proposing</span><h3>Problem Framing</h3><p>Interrogate the request, evidence, assumptions, user, outcome, and meaningful problem slice.</p><span class="workflow-output">Output: FRAMED_PROBLEM.md</span></article>
-            <article class="workflow-card" role="listitem"><span class="phase">02 · Explore</span><h3>Shape</h3><p>Draw materially different approaches, expose their trade-offs, and adapt them to the fixed build-time budget.</p><span class="workflow-output">Output: candidate approaches</span></article>
-            <article class="workflow-card" role="listitem"><span class="phase">03 · Evaluate and pick</span><h3>Choose one approach</h3><p>Evaluate alternatives against the north star, evidence, time budget, constraints, and risk consequences; then pick one.</p><span class="workflow-output">Output: bounded direction</span></article>
-            <article class="workflow-card package-card" role="listitem"><span class="phase">04 · Propose the bet</span><h3>Design Package</h3><p>Present the problem, appetite, chosen shape, rabbit holes, and no-gos.</p><span class="workflow-output">Output: decision-ready design package</span></article>
+            <article class="workflow-card" role="listitem"><span class="phase">02 · Explore</span><h3>Direction</h3><p>Draw materially different approaches, expose their trade-offs, and adapt them to the fixed build-time budget.</p><span class="workflow-output">Output: candidate approaches</span></article>
+            <article class="workflow-card" role="listitem"><span class="phase">03 · Evaluate and pick</span><h3>Choose one approach</h3><p>Evaluate alternatives against the frame, the evidence, the time budget, the constraints, and what each risk costs; then pick one.</p><span class="workflow-output">Output: bounded direction</span></article>
+            <article class="workflow-card proposal-card" role="listitem"><span class="phase">04 · Propose the decision</span><h3>Proposal</h3><p>Present the problem, time budget, chosen direction, rabbit holes, and exclusions.</p><span class="workflow-output">Output: decision-ready proposal</span></article>
           </div>
         </div>
 
-        <div class="design-bridge"><span>Approved design package</span><b aria-hidden="true">↓</b></div>
+        <div class="design-bridge"><span>Approved proposal</span><b aria-hidden="true">↓</b></div>
         <article class="workflow-card design-card">
           <div><span class="phase">05 · Detail and validate</span><h3>Design</h3></div>
-          <p>Make the detailed interaction and product decisions inside the approved direction. Validate behavior and support implementation without losing the problem north star.</p>
+          <p>Make the detailed interaction and product decisions inside the approved direction. Validate behaviour and support implementation without losing the frame.</p>
           <span class="workflow-output">Output: detailed design + learning</span>
         </article>
       </div>
