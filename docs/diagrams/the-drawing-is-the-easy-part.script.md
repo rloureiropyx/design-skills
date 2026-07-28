@@ -78,4 +78,20 @@ The article closes with method provenance:
 
 ## Delivery matrix
 
-To be filled after implementation: nine viewports from 320×568 to 1280×800, recording the least clearance and the scene it occurs in.
+Verified in headless Chromium against the built file. Every viewport: zero horizontal overflow, and all nine scenes activate scrolling down and scrolling back up.
+
+"Clearance" is the vertical gap between the pinned graphic and the active card at the best settled offset for that scene — measured by scanning each scene's scroll range in 4px steps, not by `scrollIntoView`. `n/a` means the layout is side by side, so the card and the graphic never overlap horizontally and the measure does not apply.
+
+| Viewport | Layout | Tallest card | Least clearance | Worst scene |
+| --- | --- | --- | --- | --- |
+| 320 × 568 | stacked, pinned | 296px | **56px** | 1 |
+| 390 × 844 | stacked, pinned | 335px | 154px | 1 |
+| 768 × 1024 | stacked, pinned | 280px | 402px | 1 |
+| 844 × 390 | two column | 287px | n/a | — |
+| 667 × 375 | two column | 356px | n/a | — |
+| 1024 × 768 | two column | 485px | n/a | — |
+| 1100 × 700 | two column | 498px | n/a | — |
+| 1280 × 800 | two column | 467px | n/a | — |
+| 1440 × 900 | two column | 485px | n/a | — |
+
+320 × 568 is the binding constraint. Three scene paragraphs (5, 7, 8) were cut by roughly two lines each to get there; before the cut the tallest card was 337px and scene 8 had no offset where the card cleared the graphic. If a future edit lengthens a scene paragraph, re-measure this column first.

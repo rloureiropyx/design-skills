@@ -99,7 +99,7 @@ The type is chosen from what the reader is stuck on (time, arrangement, or conte
 It has no fixed slot in the chain. It reads `FRAMED_PROBLEM.md` and the rest when they exist and carries the audience and scope from them, and it is equally useful for critiquing a diagram that already exists.
 
 - Skill: [`skills/artifacts/diagrams/SKILL.md`](skills/artifacts/diagrams/SKILL.md)
-- Explainer: [notes](docs/diagrams/README.md)
+- Explainer: [The drawing is the easy part](docs/diagrams/the-drawing-is-the-easy-part.html) · [notes](docs/diagrams/README.md)
 
 #### Proposal
 

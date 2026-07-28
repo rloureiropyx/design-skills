@@ -1,6 +1,6 @@
 # Notes — Diagrams
 
-No article yet. These notes are the explainer.
+Article: [The drawing is the easy part](the-drawing-is-the-easy-part.html) · [scene script](the-drawing-is-the-easy-part.script.md)
 
 ## What it does
 
