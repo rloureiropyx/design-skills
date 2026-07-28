@@ -1,11 +1,11 @@
 # Notes — Shaping
 
 ```
-pick-a-shape.script.md    the scene-by-scene script
-pick-a-shape.html         the article — standalone, no build step
+pick-a-direction.script.md    the scene-by-scene script
+pick-a-direction.html         the article — standalone, no build step
 ```
 
-Open [`pick-a-shape.html`](pick-a-shape.html) in a browser. No dependencies, no build step. The notes below are the short written version.
+Open [`pick-a-direction.html`](pick-a-direction.html) in a browser. No dependencies, no build step. The notes below are the short written version.
 
 ## What it does
 

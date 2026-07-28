@@ -66,7 +66,7 @@ Takes a framed problem and works out which solution direction to go with, inside
 Numbered requirements with statuses, two or three materially different directions, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until someone goes and finds out. Directions improve across versions (`A1 → A2 → A3`), each version says what changed and why, and discarded ones stay visible with the reason. When a direction does not fit the time budget, the scope moves, not the time. Output: `DIRECTIONS.md`.
 
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
-- Explainer: [`pick-a-shape.html`](docs/shaping/pick-a-shape.html) · [script](docs/shaping/pick-a-shape.script.md)
+- Explainer: [`pick-a-direction.html`](docs/shaping/pick-a-direction.html) · [script](docs/shaping/pick-a-direction.script.md)
 
 ### Artifacts — produce the thing people react to
 
