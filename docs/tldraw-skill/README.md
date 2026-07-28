@@ -39,6 +39,12 @@ The linter has three rules: overflowing text, overlapping text, unbound arrows. 
 
 So the loop ends with a screenshot and a look, not with a green result.
 
+## Notes go next to what they describe
+
+Annotations are stickies in the margin, and each one sits on the side its target is already on. Both ends carry the same number, which means the arrow between them is optional — and it gets dropped whenever it would cross the drawing. An arrow reaching across a wireframe to reach a note ends up louder than the wireframe.
+
+The numbers behind it — gutter widths, marker size, when a connector is short enough to draw — are measured, and they are in `references/craft.md` §10.2.
+
 ## What changed when it was vendored
 
 It came from a standalone personal skill. Four adjustments to fit this repo:

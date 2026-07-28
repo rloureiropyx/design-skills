@@ -116,7 +116,7 @@ editor.createShape({
 |---|---|---|
 | `geo` | `geo, w, h, richText, color, fill, dash, size, font, align, verticalAlign, growY` | The workhorse node. |
 | `text` | `richText, size, font, color, textAlign, autoSize, w, scale` | Titles, captions, free labels. Auto-sizes to content unless `autoSize:false`. |
-| `note` | `richText, color, size, font, align, verticalAlign, growY` | Sticky. Fixed square footprint — keep text short. |
+| `note` | `richText, color, size, font, align, verticalAlign, growY` | Sticky. Width fixed at 200; height grows with the text. Keep it short. |
 | `arrow` | `start, end, bend, arrowheadStart, arrowheadEnd, kind, richText, labelPosition` | Create via `helpers.createArrowBetweenShapes`, not by hand. |
 | `frame` | `w, h, name` | A named region. **The name renders in a header outside the body** — the correct way to label a zone. Children move with it. |
 | `line`, `draw`, `highlight`, `image`, `embed`, `bookmark` | — | Rarely needed for artifacts. |
@@ -213,7 +213,8 @@ sh tq POST /api/search '{"code":"return api.recipes[\"clickable-card-or-button-u
 - **`editor.selectAll()` is a NO-OP unless the select tool is active.** If any earlier step ran `editor.setCurrentTool('hand')` (a common "deselect before screenshot" move), `selectAll()` silently selects nothing and the usual `selectAll(); deleteShapes(getSelectedShapeIds())` wipe does nothing — so a "rebuild" *stacks on top of* the previous build instead of replacing it. **Always clear unconditionally:** `editor.deleteShapes(editor.getCurrentPageShapes().map(s => s.id))`. Verified 2026-07-27.
 - **Deleting a frame DOES cascade to its children** (verified) — so the wipe above is enough; you don't need to enumerate descendants.
 - **`editor.groupShapes(ids, { groupId })`** — options-object form. Members must already be siblings, so create all shapes flat under the frame first and group bottom-up. Nesting works: the inner group's `parentId` becomes the outer group, and the **outermost group stays frame-parented**, preserving clipping and move-with-frame. Set `meta` in a separate `updateShape` call. See `craft.md` §11.
-- **`note` shapes are a fixed 200 × 200** — `w`/`h` are not settable props. Lay out around that number.
+- **`note` shapes are 200 wide and 200 tall at minimum** — `w` is not settable, and `h` grows with the text via `growY`. Measured capacity in the 200 × 200 square: ~130 chars at `size:'s'`, ~70 at `'m'`. Lay out around those numbers, and stack columns off measured bounds rather than a nominal pitch.
+- **`props.growY` is not recalculated after you apply it.** A shape resized from `h:48` to `h:56` still reports `growY: 8`, so re-running the autosize pass grows it to 64, then 72, and the `growY > 0` filter never empties. Run the pass once per shape; scope any later pass to newly created ids. Measured v1.12.0, 2026-07-28.
 - **Complex live records serialize to `null`.** Return ids, counts and booleans — verify with a follow-up `api.getShapes` read if you must.
 - **Undo:** agent edits land in the user's history; they can `Cmd+Z` them like their own.
 - **Security posture:** the token sits in a user-readable file and `/exec` is arbitrary JS in the renderer. Fine locally; worth saying out loud if the user asks about risk.
