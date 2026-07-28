@@ -40,7 +40,7 @@ Content shapes layout, so the sample content is a design decision rather than fi
 
 Grayscale by default; functional colour only. Red means error or validation. Blue means text link, and nothing else — a button is a button because of its shape, not because it is blue. Because in-screen red already means an error state, reviewer conflict marks go **outside** the screen boundary, where the two reds cannot collide.
 
-Annotations live outside the boundary too, numbered, each with a pointer to what it describes. That keeps the screen itself readable.
+Annotations live outside the boundary too, in the margin nearest the thing they describe, numbered at both ends. A note about something on the left of the screen goes to the left of the screen — one column down one side would send half the pointers across the UI, where they end up louder than the drawing. The number carries the link, so a pointer that would cross something is simply left out.
 
 ## One scenario per screen
 

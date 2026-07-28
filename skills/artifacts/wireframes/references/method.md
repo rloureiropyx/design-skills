@@ -101,7 +101,7 @@ Always include a small context view so reviewers can understand the component wi
 
 ## Annotation structure
 
-Annotations live **outside** the boundary, each with a pointer to its target. Give each a stable marker. Start with a screen overview, then annotate regions or controls. Keep these categories distinguishable:
+Annotations live **outside** the boundary, in the margin nearest their target, each with a stable marker at both ends — on the element and opening the note. A pointer is drawn only when it crosses nothing; the marker is what carries the link. Start with a screen overview, then annotate regions or controls. Keep these categories distinguishable:
 
 - behavior and transition;
 - content/data rule;

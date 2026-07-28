@@ -18,7 +18,7 @@ The canvas API will happily draw something ugly. This file is the difference bet
 | Title baseline | `nodeTopY − 220` | `text` size `xl` |
 | Subtitle | `nodeTopY − 150` | `text` size `s`, `grey` |
 | Frame padding | `48` inside on all sides | Frame name renders *above* the body |
-| Sticky (`note`) | **fixed 200 × 200** | Not resizable from props — plan around it: column pitch `296`, row pitch `240` |
+| Sticky (`note`) | **200 wide, 200 tall minimum** | Width is fixed and not settable; height *grows* with the text via `growY`. Column pitch `296`, row pitch `240` — but stack off measured bounds, not the nominal 200 |
 | Legend / footnote | `size:'s'`, `grey`, below the last row + 120 | |
 
 ```js
@@ -78,6 +78,10 @@ return { resized: overflow.length }
 The linter will **not** save you here: `growY-on-shape` only fires when the overflowing shape *also overlaps another geo*. An isolated box with clipped text is lint-clean and visibly broken.
 
 If resizing would break the grid (a row of boxes must stay equal height), do the opposite: shorten the copy, or step the label down a size — don't let one box grow taller than its row.
+
+**Run the pass once per shape, and never twice.** `growY` is **not** recalculated after you apply it: a shape resized from `h:48` to `h:56` still reports `growY: 8`, so a second pass over the same shape grows it to 64, a third to 72, and the filter never empties. Measured 2026-07-28. If a build needs the pass at two moments — once to settle a screen before laying out an annotation layer against it (§10.2), once for the stickies you added afterwards — scope the second pass to the new shape ids, never to `getCurrentPageShapes()`.
+
+**A pass that runs after you have measured invalidates the measurement.** Anything positioned by collision test, edge alignment or stacking must be computed against **post-`growY` bounds**. Settle the geometry first, then place against it.
 
 ---
 
@@ -203,7 +207,9 @@ Rule of thumb: **content inside a screen/phase/lane → parent it** (you want it
 
 The frame's `name` renders as small grey text just above its top-left corner — **do not also add a title `text` shape inside**, you'll have two headings.
 
-**Sizing a frame around stickies.** A `note` is a fixed **200 × 200** square; `w`/`h` are not settable. So a one-column phase frame is `200 + 2×48 = 296` wide, a two-column one is `200×2 + 48×3 = 544`. A 480-wide frame holding a single 200px sticky column looks half-empty — that is the most common sticky-layout mistake. Row pitch `240` (200 + 40).
+**Sizing a frame around stickies.** A `note` is **200 wide** — that width is not settable — and **200 tall as a floor**, growing with its text. So a one-column phase frame is `200 + 2×48 = 296` wide, a two-column one is `200×2 + 48×3 = 544`. A 480-wide frame holding a single 200px sticky column looks half-empty — that is the most common sticky-layout mistake. Nominal row pitch `240` (200 + 40), but stack off **measured** bounds when the text may overflow.
+
+**Sticky text capacity, measured** (`font:'sans'`, 2026-07-28): `size:'s'` holds **~130 characters** in the 200 × 200 square; `size:'m'` holds **~70**. Past that the note grows taller, which is fine on its own but silently breaks any column stacked at a fixed 240 pitch.
 
 Note colors render at **full saturation**, much louder than a `geo` with `fill:'solid'`. Three sticky hues on a board is plenty; a fourth starts to shout.
 
@@ -217,7 +223,7 @@ Note colors render at **full saturation**, much louder than a `geo` with `fill:'
 2. **A label on a big background rectangle.** Use a `frame`, or a free-standing `text` at the zone's top-left.
 3. **Trusting `{lints: []}`.** Three heuristics. They do not check alignment, spacing, crossings, contrast or copy length.
 4. **Leaving `dash:'draw'` / `font:'draw'`.** Sketchy by default. Set them.
-5. **Long text in a `note`.** Stickies are a fixed 200×200 square; past ~60 chars the text overflows. Use a `geo` if it needs a paragraph.
+5. **Long text in a `note`.** A sticky is 200 wide and grows downward. Past ~130 chars at `size:'s'` (~70 at `'m'`) it stops being a note. Use a `geo` if it needs a paragraph.
 5b. **Sizing a sticky column like a text column.** A 480-wide frame around one 200px sticky reads as half-empty. See §6.
 6. **Drip-feeding shapes across many exec calls.** Slow, and a failure mid-way leaves a half-built canvas. Build in one file, post once.
 7. **Returning shape records.** Live editor records serialize to `null` and cost tokens. Return ids and counts.
@@ -225,6 +231,9 @@ Note colors render at **full saturation**, much louder than a `geo` with `fill:'
 9. **Writing into `getDocs()[0]` by reflex.** That is "most recently focused", not "the one the user meant". Confirm by name.
 10. **Emoji as icons.** Renders inconsistently across platforms. Use a `geo` glyph (`star`, `check-box`, `x-box`, `heart`) or a colored dot.
 11. **More than ~40 shapes on one screen.** Split into frames, or pages (`editor.createPage`), and give each a title.
+12. **One annotation column for the whole artifact.** Notes stacked down the right-hand side means half of them are pointing across the UI. Assign each note to the gutter on its target's side — §10.2.
+13. **An arrow where a number would do.** If the pointer has to cross the thing it is pointing at, it is now the loudest object in the drawing. Number it and drop the arrow.
+14. **Running the `growY` pass twice.** `growY` is not recalculated after you apply it, so the second pass grows every shape again. Once per shape, scoped — §2.
 
 ---
 
@@ -347,6 +356,13 @@ Run `helpers.getLints()`, then take **one** screenshot and check it against this
 16. You told the user the document name and file path.
 17. The screenshot you judged it by was taken **without** `opts.bounds` (that option silently returns a window capture — see `canvas-api.md` §8).
 
+**Annotations** (if the artifact has any — §10.2)
+18. Every sticky sits in the gutter on the **same side** as the element it describes.
+19. No connector crosses the screen, another element, or another connector; none reaches into a different frame.
+20. Every annotation has a numbered badge on its target and the same number opening its sticky.
+21. No sticky extends past its own screen's vertical band.
+22. Connectors are hairline grey at reduced opacity — you notice the stickies before you notice the arrows.
+
 If the screenshot shows a defect the lints missed, fix it **and** consider whether it belongs in this file as a new rule.
 
 ---
@@ -398,17 +414,19 @@ Parent every element of the screen to that frame (§6) — content that overflow
 
 | Element | Recipe |
 |---|---|
-| Field | `geo` rectangle `h:48`, full column width; label as `text` size `s` **above** it, 8px gap |
-| Button | `geo` rectangle `160 × 48`; primary `fill:'semi'` + accent, secondary `fill:'none'` |
+| Field | `geo` rectangle `h:56`, full column width; label as `text` size `s` **above** it, 8px gap |
+| Button | `geo` rectangle `160 × 56`; primary `fill:'semi'` + accent, secondary `fill:'none'` |
 | Card | `geo` rectangle, 24px inner padding, label `align:'start' verticalAlign:'start'` |
 | Image / media | `geo` with `geo:'x-box'` — the crossed box is the universal placeholder |
 | Avatar | `geo:'ellipse'`, 40 × 40 |
-| Table | one `geo` per row (`h:44`), not a grid of cells; header row `fill:'semi'` |
+| Table | one `geo` per row (`h:56`), not a grid of cells; header row `fill:'semi'` |
 | Text block | `text` shape size `s`, **real content nouns**, never lorem ipsum |
+
+**56, not 48.** A labelled `geo` at `size:'s'` needs `h ≥ 56` (§2) — the line box, not the font, sets the floor. Draw a control at 48 and every one of them arrives with `growY: 8`, which then either clips or silently resizes your whole layout out from under a collision test.
 
 **Copy is part of the wireframe.** "Employee name", "Run payroll", "3 exceptions need review" — placeholder Latin hides the fact that the layout doesn't fit the real strings.
 
-**Annotations live outside the frame.** Numbered `text` callouts in a column to the right of the screen, each linked with `createArrowBetweenShapes` to the element it describes. Keep them page-parented (§6) or the frame clips them. Every arrow needs both bindings or `friendless-arrow` fires.
+**Annotations live outside the frame, on the side of the thing they describe.** They are a layer of their own with its own geometry — sticky, badge, and a connector you usually don't draw. Full recipe: **§10.2**. Keep them page-parented (§6) or the frame clips them.
 
 **States, not just the happy path.** A wireframe that only shows the loaded, populated, permitted case is half a spec. Duplicate the screen frame and show empty, loading, error, and no-permission where they change the layout. Name the frames `Screen — empty`, `Screen — error`.
 
@@ -416,7 +434,7 @@ Parent every element of the screen to that frame (§6) — content that overflow
 
 ### The fidelity ladder — build the rung that was asked for
 
-Wireframing has three rungs: **lo | mid | hi**, chosen by purpose, consumers and project context — and annotation weight is a *separate* axis (`wireframes/SKILL.md` owns that call). Here is what each rung means in tldraw. When the ask is vague, build **L1 + L2 side by side** on one page (frames at `x: 0`, `1560`, `3120`, all `1440 × 900`) and let the comparison force the choice.
+Wireframing has three rungs: **lo | mid | hi**, chosen by purpose, consumers and project context — and annotation weight is a *separate* axis (`wireframes/SKILL.md` owns that call). Here is what each rung means in tldraw. When the ask is vague, build **L1 + L2 side by side** on one page (frames all `1440 × 900`, pitch `1560` — `x: 0`, `1560`, `3120`) and let the comparison force the choice. **Annotated screens need a wider pitch** — see §10.2.
 
 | | **L1 · Zoning** | **L2 · Lo-fi** | **L3 · Mid-fi** |
 |---|---|---|---|
@@ -435,6 +453,79 @@ Wireframing has three rungs: **lo | mid | hi**, chosen by purpose, consumers and
 - Never mix the two for the same purpose in one screen.
 
 **Going *down* a rung is a real request.** "Less fidelity" almost never means "make it uglier" — it means *remove content commitments* so the conversation returns to structure and priority. Strip data first, then copy, then components. Keep the structure.
+
+---
+
+## 10.2 The annotation layer — stickies in the near gutter, numbers instead of arrows
+
+An annotated wireframe is **two layers**: the screen (inside the frame) and the annotation layer (outside it). The annotation layer's job is to be readable *and* to leave the screen readable. One long arrow reaching across a UI to a note destroys the second half of that, and a column of nine notes down the right-hand side guarantees long arrows.
+
+Written for wireframes, where it bites hardest, but it applies to **any framed artifact** you annotate — a journey map phase, a blueprint lane, a breadboard.
+
+**Three rules do the work.**
+
+1. **A note goes on the side its target is already on.** Split the frame at its midline. A target whose centre is left of the midline gets a sticky in the **left** gutter; right of it, the **right** gutter. Never assign by convenience, reading order, or "there was room over there".
+2. **The number is the reference. The connector is optional.** Every annotation gets a numbered badge on the target *and* the same number as the first token of the sticky. Because the number already carries the link, a connector that would cross the UI can simply be dropped.
+3. **A connector that crosses anything is a defect, not a style.** It is hairline grey at 40% opacity, and it exists to shorten a glance — not to prove a relationship.
+
+### Geometry
+
+| Token | Value |
+|---|---|
+| Sticky column width | `200` (fixed, §1) |
+| Gutter — frame edge to sticky | `120` |
+| Sticky x, left | `frameX − 120 − 200` |
+| Sticky x, right | `frameX + frameW + 120` |
+| Vertical stack gap | `40` **below the note's measured bottom**, never a fixed 240 pitch |
+| Badge | `geo:'ellipse'` `56 × 56`, `fill:'solid'`, `color:'yellow'`, `size:'s'` |
+| Screen pitch, annotated | `2240` (1440 frame + two 320 gutter-plus-sticky bands + 160 between neighbouring columns) |
+
+**56 is the floor for the badge**, not a preference: a labelled `geo` needs `h ≥ 56` at `size:'s'` (§2), so a 32px or 40px numbered circle arrives with `growY` and renders as an egg.
+
+**A sticky must stay inside its own screen's vertical band.** The moment a column runs past `frameY + frameH`, its notes start pointing at the screen below and the connectors cross frames. At 900px tall a side holds **three** stickies. If a screen needs more than six annotations, that is the artifact telling you it has become a spec: merge them, cut them, or split the screen.
+
+### Badge placement — first slot with 8px clearance
+
+Test candidates against every *other* shape in the screen (never against the target itself — a badge sitting on its own element is the point) and inflate the test rect by an 8px margin, because the linter treats touching as overlapping:
+
+1. Outside the target's gutter-side edge, vertically centred.
+2. Above the target's gutter-side corner.
+3. Below that same corner.
+4. Straddling the target's gutter-side edge — the terminating fallback. Give it `meta: { lintIgnore: ['overlapping-text'] }`, since it deliberately sits on its own target's label.
+
+Reaching slot 4 is a signal worth reading: the control is too small or too crowded to carry a badge, and the honest fix is usually to annotate **the row or the component it belongs to** rather than the control.
+
+### Draw the connector only when it is short and level
+
+```js
+const inset   = side === 'left' ? (b.x - FX) : (FX + FW - (b.x + b.w))
+const dy      = Math.abs(noteCentreY - badgeCentreY)
+const connect = inset <= 0.25 * FW && dy <= 160
+```
+
+A target more than a quarter of the frame in from its near edge, or a sticky pushed more than 160px off its target's row, gets **no connector** — the number does the work. When you do draw one:
+
+```js
+helpers.createArrowBetweenShapes(noteId, badgeId, { arrowheadEnd: 'dot', arrowheadStart: 'none' })
+// then, on the arrow: opacity 0.4, props { color: 'grey', size: 's', dash: 'solid' }
+```
+
+Bind it to the **badge**, not to the element. The badge is the annotation layer's own anchor, it is always on the near side, and binding there keeps the arrow out of the UI.
+
+### Order of operations
+
+The whole thing collapses if you compute annotation geometry against bounds that are about to change:
+
+1. Build the screen layer at correct sizes (`h:56` for labelled controls).
+2. **Run the `growY` pass over the screen layer, once** (§2).
+3. Read `getShapePageBounds` for every annotation target. Assign sides. Place stickies, badges, connectors.
+4. Run a second `growY` pass **scoped to the sticky ids only** — never over the whole page, or step 2's shapes grow a second time.
+
+### Layers, colour and grouping
+
+- **Stickies and connectors are page-parented; badges are frame-parented.** A frame clips its children, so a sticky in the gutter must stay on the page — while a badge sits on the screen and should travel and clip with it. That also fixes the movable unit: `sticky + connector` group together, the badge belongs to the screen (§11).
+- The annotation layer sits **outside the wireframe's colour budget**. Yellow stickies and yellow badges do not spend the screen's one accent, and they are not in-screen red. Say so in the legend if the screen also uses yellow.
+- Three sticky hues maximum if you are encoding annotation categories (behaviour / content rule / open question) — and label the category, since colour cannot be the only carrier.
 
 ---
 

@@ -134,13 +134,18 @@ Content shapes layout, so use content that tests the layout:
 
 Show **one realistic scenario per screen boundary.** Do not try to depict every state at once — that "every-case scenario" collapses into an unreadable composite that describes no real moment. Meaningful states (empty, error, loading) are **separate screen variants** or a linked flow, created when the decision needs them.
 
-## Annotations — outside the boundary, with a pointer
+## Annotations — outside the boundary, on the side of what they describe
 
 Annotations carry the behavior the picture can't: content sources and variability, controls and resulting state, permissions and business rules, empty/loading/validation/error/success/cancellation/recovery, responsive behavior, and links to flow/requirement/evidence IDs.
 
-- Place annotations **outside the screen boundary**, each connected to its target with a pointer. This keeps the screen itself readable and reserves in-screen red for error states.
-- Number them; keep overview, behavior rules, and content rules distinguishable.
+- Place annotations **outside the screen boundary**, in the margin **on the same side as their target**. A note about something on the left of the screen goes to the left of the screen. One column down one side forces half the pointers to travel across the UI, and a pointer crossing the drawing is louder than the drawing.
+- **Number both ends.** A marker on the element and the same number opening the note. The number is what carries the link, which is why a pointer that would cross the UI can simply be left out.
+- **A pointer is optional and quiet.** Draw it only when it crosses nothing; keep it visually lighter than the wireframe's own lines. Never let it cross another element, another pointer, or a different screen.
+- Keep overview, behavior rules, and content rules distinguishable.
+- **A screen that needs more than a handful of notes is turning into a spec.** Merge them, cut them, or split the screen — do not stack a taller column.
 - Prefer plain language. The artifact and its walkthrough are one communication system.
+
+(Gutter widths, marker size, and the stacking math live in the renderer: `tldraw-skill/references/craft.md` §10.2.)
 
 ## Group cohesive components
 
@@ -166,7 +171,7 @@ Every **cohesive or repeated component** is one movable unit: each metric/KPI ca
 - Color is functional only (grayscale + meaning-bearing hues); no aesthetic/brand color; in-screen red = error only.
 - One scenario per boundary; meaningful states are separate variants, linked, or explicitly out of scope.
 - Real or boundary content used wherever content length/meaning changes the decision.
-- Annotations sit outside the boundary, numbered, each with a pointer.
+- Annotations sit outside the boundary, numbered, each on the side of the element it describes; no pointer crosses the screen or another pointer.
 - Cohesive/repeated components move as a unit; the boundary is independent.
 - Fidelity and annotation weight match what was requested and were chosen on purpose.
 - Scenario, fidelity, abstraction, and intended feedback are explicit.
@@ -194,6 +199,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - Lorem ipsum where sample content would test the layout; fake 20-row data tables (3 rows + a "…" row).
 - Detail added as drawing when it belongs in an annotation.
 - Reviewer conflict marks *inside* the screen boundary (they collide with error-state red — put them outside).
+- **All annotations in one column down one side.** Half of them then point across the UI, and the pointers become the loudest thing in the artifact. Annotate from the near side and let the numbers carry the link.
 - Regenerating the whole artifact to make a small change (make targeted edits).
 - Presenting a wireframe you haven't visually verified (or, if you couldn't, without saying so).
 - **Wireframing before the direction is decided.** A wireframe elaborates a choice; it is not a way to make one. If nobody has picked a direction, that is `shaping`'s job, and drawing first buys a layout argument instead of a solution.

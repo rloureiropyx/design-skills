@@ -55,7 +55,8 @@ If `tq` cannot be found, fall back to raw curl — see `references/canvas-api.md
 - **Read narrow.** `api.getShapes(docId)` returns raw records for the whole page. Map it down in the snippet (`.map(s => ({id, type, x, y}))`) instead of dumping it into your context.
 - **Nothing persists until `await helpers.saveDoc()`** — the last mutating step of the snippet. Without it the canvas shows the edit but the file on disk is stale and the doc is marked unsaved.
 - **Arrows must be bound.** Always `helpers.createArrowBetweenShapes(fromId, toId, opts)`. A hand-built arrow with point terminals is a "friendless arrow": it fails the linter and detaches when the user moves a node.
-- **Autosize is not optional.** After creating labelled shapes, run the `growY` pass (below). The linter will *not* catch overflowing text on an isolated shape.
+- **Autosize is not optional — and runs exactly once per shape.** After creating labelled shapes, run the `growY` pass (below). The linter will *not* catch overflowing text on an isolated shape. `growY` is not recalculated after you apply it, so a second pass over the same shapes grows them again; scope any later pass to the ids you just added.
+- **Annotations go in the gutter on their target's side.** A note about something on the left of a screen belongs to the left of that screen. The link is a number on both ends; the arrow is optional and gets dropped whenever it would cross the UI. See `craft.md` §10.2.
 - **Group as you build.** Loose shapes make an artifact unusable — the reviewer drags a card and gets one rectangle. Wrap atoms (icon+label) and units (a card, the sidebar, the top bar) in groups with `meta:{component}`, **exactly two levels deep**, never the whole frame. See `craft.md` §11.
 - **Wipe unconditionally when rebuilding.** `editor.deleteShapes(editor.getCurrentPageShapes().map(s => s.id))`. `selectAll()` is a no-op unless the select tool is active, so the usual select-all-and-delete silently stacks the new build on top of the old one.
 - **Screenshot once, at the end.** `api.getScreenshot(docId, {size:'small'})`. Use `size:'large'` to read small text and `mode:'window'` to see app UI — but **never pass `opts.bounds`**: in v1.12.0 it silently returns a window capture instead of the region. To zoom on one area, `editor.select(ids); editor.zoomToSelection()` first.
@@ -89,6 +90,7 @@ If `tq` cannot be found, fall back to raw curl — see `references/canvas-api.md
 | **ecosystem-maps** | `geo` actor nodes positioned by meaning + labelled arrows for value exchange (`arrowheadStart:'arrow'` for two-way) |
 | **sitemaps** | `geo` rectangles in tiers + elbow arrows; `frame` per section |
 | **wireframes** | Lo-fi mode — **keep** the sketchy `draw` defaults, greyscale + one accent, one `frame` per screen at a real viewport size, elements `parentId`-ed to it. Pick the rung (zoning / lo-fi / mid-fi) before drawing. Full recipe: `references/craft.md` §10 |
+| **annotations on any artifact** | `note` sticky in the gutter **on the target's own side**, a numbered `56 × 56` badge on the target, and a hairline connector only when it crosses nothing. Recipe: `references/craft.md` §10.2 |
 | **zones / grouping** | `frame` (its name renders in the header — no overlapping-label trap) or `helpers.boxShapes(ids, {text, color})` |
 
 ## Verify & hand off
@@ -112,6 +114,9 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - **Declaring done on a clean lint.** The linter has three rules. Ragged columns, arrows crossing
   nodes, unreadable label sizes and overflowing text all pass it. Look at the screenshot, every time.
 - **Hand-built arrows.** Point terminals detach the moment the user moves a node. Always bind.
+- **Annotation arrows that cross the artifact.** A single note column down one side means half the pointers
+  reach across the UI, and a full-weight arrow over a wireframe is louder than the wireframe. Put the note
+  on its target's side, number both ends, and drop any pointer that would cross something.
 - **Rebuilding on top of the old build.** `selectAll()` is a no-op unless the select tool is active.
   Delete unconditionally, or the second version stacks invisibly on the first.
 - **Forgetting `saveDoc()`.** The canvas shows the edit, the file on disk does not, and the user is
@@ -123,6 +128,6 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 
 ## Source boundary
 
-Built from the live tldraw offline canvas API (`GET /` readme + `api.recipes` + `api.members`, v1.12.0), the app bundle's linter implementation, and typography measured directly in the running editor on 2026-07-27. Screened, not canonical — re-check `GET /readme` when the app updates.
+Built from the live tldraw offline canvas API (`GET /` readme + `api.recipes` + `api.members`, v1.12.0), the app bundle's linter implementation, and typography measured directly in the running editor on 2026-07-27. Sticky text capacity, badge minimum size, labelled-control height and `growY` re-application behaviour were measured on 2026-07-28. Screened, not canonical — re-check `GET /readme` when the app updates.
 
 This skill is vendored into this plugin from a standalone personal skill. Its peers in the original library — a cloud canvas renderer and a browser-based one — are not part of this plugin, so a request for a shared or collaborative canvas has no renderer here: say so rather than substituting one.
