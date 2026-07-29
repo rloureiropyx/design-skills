@@ -29,7 +29,7 @@
 ## Static prose bridges
 
 - **Before scene 1:** what a proposal is in this library — the document a group can act on without another meeting, and the last artifact written before Design starts. It names `proposal` as a skill and states that it reads `FRAMED_PROBLEM.md` and `DIRECTIONS.md` and writes `PROPOSAL.md`.
-- **After scene 2 — why "proposal" and not "pitch":** Shape Up called this a pitch in 2019; Ryan Singer has since moved the word so that "pitch" names the raw request that arrives before framing. "Pitch" invites persuasion and a buyer. "Proposal" is the word people already use for a document that asks for a decision, and it names the reader's job rather than the writer's.
+- **After scene 2 — why "proposal" and not "pitch":** Shape Up called this a pitch in 2019; Ryan Singer has since moved off the word, and the raw ask that arrives before framing is the request. "Pitch" invites persuasion and a buyer. "Proposal" is the word people already use for a document that asks for a decision, and it names the reader's job rather than the writer's. In this library `pitch` is a separate skill doing the opposite job — communicating a decision after it has been made, to people who were not in the room.
 - **After scene 6:** how the proposal survives enterprise review — the roles it touches, what becomes auditable, the systems of record it depends on, and who outside the team has to agree before it ships. Any of these arriving after the decision is how a bounded project quietly becomes a bigger one.
 - **After scene 7:** a worked rabbit-hole-and-patch pair shown in full, so the reader sees the shape the method produces on the page rather than only in the diagram.
 
@@ -70,7 +70,7 @@ Native inline SVG, editorial systems-diagram language, no decorative imagery. On
 The article closes with method provenance, real links only:
 
 - [Shape Up](https://basecamp.com/shapeup) — the structure this document descends from: problem, appetite, solution, rabbit holes, no-gos, and the idea that time is fixed and scope moves.
-- [Framing](https://www.ryansinger.co/framing/) — Ryan Singer's later use of "pitch" for the raw request before framing, which is why the output here is called a proposal.
+- [Framing](https://www.ryansinger.co/framing/) — Ryan Singer's later vocabulary, where the raw ask before framing is the request, which is why the output here is called a proposal.
 - [rjs/shaping-skills](https://github.com/rjs/shaping-skills) — carrying the frame forward instead of re-deriving it, and the test that every sentence trace to something someone said or decided.
 - [no-ai-slop](https://github.com/petergyang/no-ai-slop) — the pattern list behind the traceability pass, re-cut for a document that has to be traceable rather than persuasive.
 

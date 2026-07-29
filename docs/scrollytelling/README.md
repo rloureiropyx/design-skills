@@ -9,58 +9,60 @@ how-a-scrollytelling-article-gets-made.html         the article — standalone, 
 
 Builds a long-form web article whose diagram changes as the reader scrolls, as one standalone HTML file with no build step and no dependencies.
 
-The order is fixed: settle the goal and the tone, write a scene-by-scene script, get the script approved, then build. Nothing gets built from an unapproved script.
+The order is fixed: read the pitch, map its beats onto scenes, get the scene table approved, then build. Nothing gets built from an unapproved table.
 
 ## Who it is not for
 
 - A slide deck, a landing page, a dashboard, or a normal article. Scrolling has to be doing work for the piece, otherwise it is decoration with an accessibility cost.
 - A document where the reader needs to jump around or search. Scrollytelling is linear by construction.
-- Content that has not been decided yet. The renderer will happily produce a polished article about a confused idea.
+- Deciding what the piece says. That is [`pitch`](../pitch/) — audience, goal, tone, beats. This skill renders that decision.
 
-## Goal and tone come first
+## What moved out, and why
 
-Before the interview, the skill offers a menu: seven goals (explain a method, argue a position, report findings, teach a technique, tell what happened, compare options, orient a newcomer) and six tones (plain, practical, analytical, direct, reflective, instructional). You pick one of each, or say your own.
+Phase 1 used to do two unrelated jobs. It settled the goal and tone, interviewed, drafted the
+narrative, loaded the voice profile and ran the prose pass — and then, separately, worked out how that
+narrative became a scroll. Only the second half is about scroll.
 
-This was added because the alternative is worse: without a stated goal, a script drifts into whatever the writer found most interesting, and the tone lands somewhere between a whitepaper and a blog post. Both are visible only after the article is built, which is the most expensive moment to notice.
+So the first half became [`pitch`](../pitch/), and this skill kept the mapping. The goal and tone
+menus, the voice profile, and the slop pass all live there now, one layer up, where a deck can use
+them too.
 
-The script header records both, and every scene is checked against them.
+Nobody has to run two skills to get one article. Asked for a scrollytelling piece in a project with no
+`PITCH.md`, this skill runs `pitch` inline — one exchange, one draft, one approval — and offers to save
+the file afterwards in a single line. Two gates only when you asked for two.
 
-## Voice, and the prose pass
+## A beat is not a scene
 
-Two things hook into Phase 1, and neither touches Phase 2.
+The mapping is now this phase's actual work, and it is not one-to-one in either direction.
 
-**The voice profile** loads after the goal and tone are set — `WRITING_STYLE.md` from the project. If
-there is none, the skill asks before drafting rather than quietly proceeding: full setup, a two-minute
-version built from the intent questions and a voice note, or skip. A scrollytelling piece is published
-under your name, and a first draft written with no profile is a draft you rewrite by hand.
+**Two beats become one scene** when the graphic does not change state between them. A scene without a
+visual state change is a paragraph that made you scroll for it. This is the merge rule, and it is the
+oldest rule in the skill.
 
-Tone and profile answer different questions: the tone decides the register, the profile decides what
-that register sounds like in this person's hands. `T1 Plain and direct` is a category; the profile is
-why your plain and direct does not read like anyone else's. When they genuinely conflict, the skill
-names it and picks one rather than averaging.
+**One beat becomes two scenes** when its SHOW field describes something that builds. One state per
+scene, in the order the reader needs them.
 
-**The prose pass** runs over the TEXTO column of the draft script — the prose a reader sees — before
-the script is presented for approval. Colon reveals, "it's not X, it's Y", faux-insight setups,
-stacked fragments, and the closing metaphor that substitutes for a payoff. A scene is 2–4 sentences,
-which is the length at which a draft reaches for a dramatic reveal instead of a sentence. The scroll
-is already the drama.
+Every beat is accounted for in the table — rendered, merged, or dropped with a stated reason. A beat
+that silently stops appearing turns an approved narrative into a different one nobody signed off.
 
-The pass removes patterns, not voice. Restraint in a dry piece and a stated side in an opinionated one
-are tone choices, not slop, and anything listed in the profile's overrides section is this writer's
-voice and is left alone. VISUAL and TRANSICIÓN are direction notes and are skipped, and so is any
-scene text you wrote yourself: the pass edits what the skill drafted, not what you contributed.
+The scene text compresses the approved claim rather than rewriting it. If a claim genuinely does not
+survive the scroll medium, that goes back to `pitch`; it is not a licence to rephrase. The slop pass
+already ran there, before approval, so it does not run again here — only a genuinely new sentence
+written while compressing gets one.
 
-That placement is the point. It runs on the table rather than the built HTML, because a wording change
-after the article exists means editing markup and re-running the viewport matrix — and because Phase 2
-implements the approved copy verbatim, so a later pass would change text you already signed off. The
-copy gets cleaned while it can still be argued with, and what changed is reported alongside the draft.
+## Visual style, with a default
 
-The patterns live in the [`slop-check`](../slop-check/) utility, in English and Spanish, so
-`scrollytelling`, `proposal`, and anything added later edit against one list and one set of profile
-overrides. The skill keeps a short addendum of its own for what a script is stricter about — where
-each pattern lands hardest in a 2–4 sentence beat, and a lower em-dash tolerance than ordinary prose.
-One pass, not two. The list is condensed from Peter Yang's
-[`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT).
+The article resolves [`VISUAL_STYLE.md`](../visual-style/) into CSS custom properties at the top of the
+file and uses the token roles — `--surface`, `--ink`, `--accent-*` — rather than hex values, so the
+piece can be re-themed without touching the markup.
+
+If the project has no profile, the skill asks in one line, names the three presets, and proceeds on
+**Paper** if you skip. Paper is the style these explainers are written in.
+
+The accessibility contract out-ranks every token. All five Paper accents fail 4.5:1 as text on the warm
+surface — which is exactly why the house style puts diagrams on a dark panel — so where a token cannot
+satisfy a floor, the renderer substitutes the profile's stated accessible variant and says it did in
+one line.
 
 ## Its own gate, applied to itself
 
@@ -68,7 +70,8 @@ The script for this article was written first and approved before a line of the 
 
 ## Where it stops
 
-It renders a decision someone else made. It does not decide what to say.
+It renders a decision someone else made. It does not decide what to say — [`pitch`](../pitch/) does —
+and it does not decide what it looks like — [`visual-style`](../visual-style/) does.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](../../skills/renderers/scrollytelling/SKILL.md)
 

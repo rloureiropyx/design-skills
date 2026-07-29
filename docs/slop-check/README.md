@@ -82,10 +82,10 @@ ignorable.
 
 ## Where it runs in this library
 
-- **`scrollytelling`** — Phase 1 only, over the TEXTO column of the scene script, *before* the script
-  goes for approval. Not after implementation: Phase 2 builds the approved copy verbatim, so editing
-  the built HTML would change text already signed off. Clean the copy while it can still be argued
-  with.
+- **`pitch`** — over the claims and evidence, *before* the beats go for approval. It runs there rather
+  than in a renderer because `scrollytelling` and `slides` both implement approved copy verbatim:
+  editing built HTML or rendered slides would change text already signed off. Clean the copy while it
+  can still be argued with, and clean it once for both renderers.
 - **`proposal`** — step 7, before the file is saved. A proposal is the document most damaged by
   puffery, and importance puffery, fake-strong verbs and unnamed attribution are what "selling" looks
   like sentence by sentence.

@@ -50,7 +50,7 @@ to run setup unless the user asks.
 
 ## When a calling skill has its own addendum
 
-`scrollytelling` and `proposal` each keep a prose addendum in their own reference folder. Those files
+`pitch` and `proposal` each keep a prose addendum in their own reference folder. Those files
 do not restate the patterns — they say where the patterns land hardest in that format and what the
 format is stricter about, and each ends in a checklist. When one of those skills invokes this pass,
 read its addendum too, apply the stricter of the two rules, and close on its checklist.

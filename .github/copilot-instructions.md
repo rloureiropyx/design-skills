@@ -66,7 +66,8 @@ The two utilities have a fixed precedence between them: a pattern listed in the 
 
 Keep the vocabulary generic. The library is not a branded methodology, and the words a reader sees should be ones they already use:
 
-- The document people decide on is a **proposal**, not a pitch and not a design package. "Pitch" names the raw request that arrives *before* framing — do not reintroduce it for the output.
+- The document people decide on is a **proposal**, not a design package. The raw ask that arrives *before* framing is **the request** — never call it a pitch, and never call the proposal one either.
+- A **pitch** is the content for communicating a decision that has already been made, to people who were not in the room. `proposal` is one reader and one decision, written to be declined; `pitch` is many readers and a narrative, written to be understood and remembered. The two compete harder in the flat namespace than any other pair here, so each `description` names the other.
 - A candidate solution is a **direction**, not a shape. Directions improve across **versions** (`A1 → A2 → A3`); a new letter means a different mechanism, a new number means the same one improved.
 - The fixed amount of build time is a **time budget**, not an appetite.
 - The `shaping` skill keeps its name for routing reasons, but nothing a reader sees should say "shape".

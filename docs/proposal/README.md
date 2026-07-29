@@ -21,9 +21,11 @@ Everything in it comes from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`. If a senten
 
 ## Why "proposal"
 
-*Shape Up* called this a pitch in 2019. Singer has since moved the word: a **pitch** is now the raw request that arrives *before* framing, and the output of shaping is a package.
+*Shape Up* called this a pitch in 2019. Singer has since moved off the word; the raw ask that arrives *before* framing is the request, and what comes out of shaping is a package.
 
 Neither term travels well outside that method. "Pitch" invites selling, which is the failure mode this document is most prone to — if the case has to be sold, the framing was weak. "Package" means nothing to most readers. **Proposal** is the word people already use for a document that asks for a decision.
+
+The word is not idle in this library. `pitch` is a separate skill here, and it does the opposite job: a proposal goes to one reader who can decline it, and a pitch goes to everyone who was not in the room, after the decision. If you are writing to persuade, you are past this document.
 
 ## The parts worth keeping
 
