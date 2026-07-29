@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>design-skills — the library</title>
-  <meta name="description" content="Explainers for the ten skills in the design-skills plugin — problem framing, shaping, breadboarding, wireframes, diagrams, proposal, scrollytelling, tldraw, writing style and slop check — plus one on how they hand off to each other.">
+  <meta name="description" content="Explainers for the thirteen skills in the design-skills plugin — problem framing, shaping, breadboarding, wireframes, diagrams, proposal, pitch, scrollytelling, slides, tldraw, writing style, visual style and slop check — plus one on how they hand off to each other.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
@@ -370,7 +370,7 @@
     <div class="wrap">
       <p class="eyebrow">GitHub Copilot plugin · design-skills</p>
       <h1>Work out the problem before you design the solution.</h1>
-      <p class="hero-deck"><strong>Ten skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. The rest draw, diagram or publish the result once something has been decided — in your voice rather than a model's.</p>
+      <p class="hero-deck"><strong>Thirteen skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. One more works out how to explain it afterwards, and the rest draw, diagram or publish the result — in your voice rather than a model's, and looking like one coherent thing.</p>
       <ul class="hero-meta">
         <li>2 process skills</li>
         <li>4 artifact skills</li>
@@ -489,6 +489,18 @@
             </ul>
             <p class="card-note">Decidable in one read, or it is not finished.</p>
           </li>
+
+          <li class="card" style="--accent: var(--blue)">
+            <p class="card-tag">Artifacts · 05</p>
+            <h3><a href="pitch/README.md">Pitch</a></h3>
+            <p class="card-name">pitch</p>
+            <p class="card-deck">What you are going to say when you explain a decision to people who were not in the room, and in what order. Audience, goal, tone, a spine, and beats — each one a claim written as a complete sentence, the evidence behind it, what must be visible for it to land, and what breaks if it is cut. It renders nothing, so the same narrative can become an article, a deck, or both.</p>
+            <ul class="card-links">
+              <li><a href="pitch/README.md">Explainer</a></li>
+              <li><a href="../skills/artifacts/pitch/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">A claim is a sentence. &ldquo;Results&rdquo; is a heading.</p>
+          </li>
         </ul>
       </section>
 
@@ -502,7 +514,7 @@
             <p class="card-tag">Renderers · 01</p>
             <h3><a href="scrollytelling/scroll-is-not-a-story.html">Scroll is not a story</a></h3>
             <p class="card-name">scrollytelling</p>
-            <p class="card-deck">Long-form web articles whose diagrams change as you scroll. Goal and tone get chosen from a short menu first, then a scene-by-scene script, then approval, then the build — and the result is checked across a device matrix rather than admired on a laptop.</p>
+            <p class="card-deck">Long-form web articles whose diagrams change as you scroll. It reads the pitch and maps its beats onto scenes — merging two when the graphic does not change between them — then approval, then the build, and the result is checked across a device matrix rather than admired on a laptop.</p>
             <ul class="card-links">
               <li><a href="scrollytelling/README.md">Explainer</a></li>
               <li><a href="scrollytelling/scroll-is-not-a-story.script.md">Scene script</a></li>
@@ -511,8 +523,20 @@
             <p class="card-note">Every article on this page was produced by this skill.</p>
           </li>
 
-          <li class="card" style="--accent: var(--coral)">
+          <li class="card" style="--accent: var(--amber)">
             <p class="card-tag">Renderers · 02</p>
+            <h3><a href="slides/README.md">Slides</a></h3>
+            <p class="card-name">slides</p>
+            <p class="card-deck">The same pitch, as a deck. It splits where scrollytelling merges, because a fresh surface costs nothing and lets the presenter control when each piece lands. Every slide title is the beat&rsquo;s claim as a complete sentence — read the titles alone and the deck should tell the whole story. Renders through Figma Slides.</p>
+            <ul class="card-links">
+              <li><a href="slides/README.md">Explainer</a></li>
+              <li><a href="../skills/renderers/slides/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">External dependency. Without Figma it hands back an approved deck spec and stops.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--coral)">
+            <p class="card-tag">Renderers · 03</p>
             <h3><a href="tldraw-skill/draw-what-was-decided.html">Draw what was decided</a></h3>
             <p class="card-name">tldraw-skill</p>
             <p class="card-deck">Draws flows, journey maps, service blueprints, concept models, sitemaps, breadboards and wireframes on a local canvas. It owns coordinates, connectors, contrast and legibility — never the content. Needs the tldraw offline app running on the same machine.</p>
@@ -529,7 +553,7 @@
       <section class="group" aria-labelledby="group-utilities">
         <div class="group-head">
           <h2 id="group-utilities">Utilities</h2>
-          <p>Skills the others call while they draft. They own neither a decision nor an artifact, and they share one document between them.</p>
+          <p>Skills the others call while they draft. They own neither a decision nor an artifact, and they hold the profiles the rest of the library reads.</p>
         </div>
         <ul class="cards">
           <li class="card" style="--accent: var(--green)">
@@ -541,11 +565,23 @@
               <li><a href="writing-style/README.md">Explainer</a></li>
               <li><a href="../skills/utilities/writing-style/SKILL.md">SKILL.md</a></li>
             </ul>
-            <p class="card-note">Set up once per project, and saved there. A personal copy means the next project does not repeat it.</p>
+            <p class="card-note">For explaining and proposing. Product copy comes from the design system.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--teal)">
+            <p class="card-tag">Utilities · 02</p>
+            <h3><a href="visual-style/README.md">Visual Style</a></h3>
+            <p class="card-name">visual-style</p>
+            <p class="card-deck">What writing-style does for how things read, for what they look like. A palette with named roles, a type pair and scale, density, radius, stroke weight, illustration idiom — tokens a renderer can consume rather than adjectives it has to interpret. Three presets on one axis, what carries the meaning: Paper for prose, Whiteboard for the sketch, Blueprint for the data. Pick one and move.</p>
+            <ul class="card-links">
+              <li><a href="visual-style/README.md">Explainer</a></li>
+              <li><a href="../skills/utilities/visual-style/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Accessibility floors are not stylable. The contract out-ranks every token.</p>
           </li>
 
           <li class="card" style="--accent: var(--amber)">
-            <p class="card-tag">Utilities · 02</p>
+            <p class="card-tag">Utilities · 03</p>
             <h3><a href="slop-check/README.md">Slop Check</a></h3>
             <p class="card-name">slop-check</p>
             <p class="card-deck">Removes seventeen named patterns — throat-clearing openers, colon reveals, importance puffery, fake-profound endings — and nothing else. Asked what is wrong instead of asked for a fix, it names each pattern and quotes the line. It will not score writing and will not guess whether AI wrote it: detectors guess, a quoted line is evidence.</p>

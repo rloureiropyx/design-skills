@@ -1,19 +1,20 @@
 ---
 name: proposal
 description: >-
-  Write the document people read once and then decide on: the problem, the time
-  budget, the chosen direction, the rabbit holes, and what is deliberately left
-  out. Use when a solution direction has been chosen and needs sign-off; when
-  someone asks for a proposal, a "propuesta", a one-pager, a project brief, or a
-  pitch for work that is already shaped; or when a stakeholder asks what exactly
-  they are being asked to commit to. Reads a Framed Problem and a Directions
+  Write the document people read once and then decide on: problem, time budget,
+  chosen direction, rabbit holes, and what is deliberately out.
+  Use when a solution direction has been chosen and needs sign-off; when
+  someone asks for a proposal, a "propuesta", a one-pager, or a project brief for
+  work that is already shaped; or when a stakeholder asks what they are being
+  asked to commit to. Reads a Framed Problem and a Directions
   document, writes `PROPOSAL.md`. Do NOT use it to decide which problem is worth
   solving or to challenge a frame — that is `problem-framing`. Do NOT use it to
   explore or compare solution options, run a fit check, or resolve unknowns —
   that is `shaping`. Do NOT use it to re-voice, de-slop, or line-edit a proposal
-  that already exists — that is `slop-check`. Do NOT use it for a PRD, a
-  requirements specification, acceptance criteria, a roadmap, a status report, a
-  retrospective, or slides summarising work that is already approved.
+  that already exists — that is `slop-check`. Do NOT use it to narrate a decision
+  already made, or to write a talk, an article, or a deck — that is `pitch`. Do
+  NOT use it for a PRD, a requirements specification, acceptance criteria, a
+  roadmap, a status report, or a retrospective.
 ---
 
 # Proposal
@@ -166,7 +167,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 ## Method sources
 
 - Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup): the structure this document descends from — problem, appetite, solution, rabbit holes, no-gos — and the idea that time is fixed and scope moves.
-- Ryan Singer, [framing](https://www.ryansinger.co/framing/): the reason this is not called a pitch. In his current usage "pitch" is the raw request that arrives *before* framing. A pitch is something you win; this is something people read and decide on.
+- Ryan Singer, [framing](https://www.ryansinger.co/framing/): the reason this document is written to be declined rather than won. In his usage the raw ask that arrives *before* framing is the request, and what comes out the other side is something people read and decide on. In this library, `pitch` covers the separate job of communicating a decision once it has been made.
 - Ryan Singer, [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) — `framing-doc` and `kickoff-doc`: carrying the frame forward instead of re-deriving it, and the test that every sentence should be traceable to something someone actually said or decided.
 - Peter Yang, [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT): the pattern list behind `slop-check`, which `references/prose.md` re-cuts for a document that has to be traceable rather than persuasive.
 

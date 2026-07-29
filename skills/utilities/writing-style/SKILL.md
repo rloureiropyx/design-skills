@@ -5,13 +5,13 @@ description: >-
   instead of like a model. Use when the user asks to set up, configure, or update
   a writing style or voice profile; says "write like me", "escribí con mi voz",
   "esto no suena a mí", "make this sound like me"; asks what their writing style
-  is; says they do not know how to describe how they write; or when another skill
-  in this library asks for a voice profile and none exists yet. Works from real
-  writing samples, from a short exercise, or from a voice note when the user does
-  not write much, writes `WRITING_STYLE.md` into the project, and hands it to
-  whoever is drafting. Do NOT use it to remove AI-slop patterns, line-edit a
+  is; says they do not know how to describe how they   write; or when another skill asks for a voice profile and none exists yet.
+  Works from writing samples, a short exercise, or a voice note, writes
+  `WRITING_STYLE.md` into the project, and hands it to whoever drafts.
+  Do NOT use it to remove AI-slop patterns, line-edit a
   draft, or judge whether text reads as AI — that is `slop-check`. Do NOT use it
   to pick the goal, tone, or structure of a piece, to write the piece itself, or
+  to write UI copy — button labels, error messages, empty states, field help — or
   to define a company's brand voice, editorial standards, or a design system's
   UX-writing rules.
 ---
@@ -36,9 +36,19 @@ Conduct the conversation in the user's language.
 **Owns**: sentence-level voice — vocabulary, rhythm, person, hedging, punctuation habits, the moves
 this writer makes and the ones they refuse to make.
 
-**Does not own**: what a piece is for, its structure, its argument, or its claims. `scrollytelling`
-picks goal and tone. `proposal` decides what is promised. This skill changes neither. When a profile
+**Does not own**: what a piece is for, its structure, its argument, or its claims. `pitch` picks goal
+and tone. `proposal` decides what is promised. This skill changes neither. When a profile
 rule and a piece's structure conflict, the piece wins and you say so.
+
+**Does not own the product's words either.** This profile is for writing *about* an interface —
+explaining a decision, arguing a direction, narrating what changed. It is not for the words *inside*
+the interface. Button labels, empty states, error messages, field help, confirmation copy and
+notification text belong to the design system's content guidelines, where they are one team's shared
+standard rather than one person's voice. A personal profile applied to a product string is a bug: it
+puts a designer's hedging habits into an error message that six other people also write.
+
+If the user wants UX writing rules, say that plainly and point at their design system. If they do
+not have one, that is a content-guidelines problem, not a voice-profile problem.
 
 Stop before line-editing. Removing AI-slop patterns from a draft is `slop-check`.
 
@@ -228,6 +238,9 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   happened to write once.
 - **Letting the profile change structure or claims.** It governs how a sentence sounds, never what a
   document says. In a proposal in particular, voice is the door selling comes back through.
+- **Applying the profile to UI copy.** A button label, an error message or an empty state is the
+  product speaking, not the designer. Those come from the design system's content guidelines and are
+  written to one shared standard. This profile is for writing *about* the interface.
 - **Growing the profile every session.** Every added rule dilutes the ones already there. Replace,
   do not append.
 - **Promising indistinguishable imitation.** Say what it does: closer, easier to edit. Informal and

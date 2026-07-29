@@ -69,9 +69,17 @@ The cost is real and never paid at the moment you skip it, which is why skipping
 
 ## Renderers come last and decide nothing
 
-`scrollytelling` and `tldraw-skill` materialise a decision made elsewhere.
+`scrollytelling`, `slides` and `tldraw-skill` materialise a decision made elsewhere.
 
 Give a renderer an idea nobody has decided and it will not fail — it will produce something polished. A confident diagram of a confused decision travels further than the confusion did, and is much harder to argue with.
+
+## What happens after the decision
+
+`PROPOSAL.md` ends the chain. It is written for one reader and one decision, and it is deliberately un-sold — the point is that it can be declined.
+
+Explaining that decision afterwards to everyone who was not in the room is a different job with a different audience, and it gets its own document. `pitch` writes `PITCH.md`: audience, goal, tone, and an ordered list of claims with the evidence behind each one. It carries its facts from `PROPOSAL.md` and does not re-derive them, exactly like every other link.
+
+It sits after the chain rather than inside it, and it renders nothing. That is what lets the same narrative become a scroll article, a Figma Slides deck, or both, without either renderer having to invent a story or duplicate the other's work.
 
 ## You can start in the middle
 
@@ -83,7 +91,7 @@ Start wherever you are, write the missing document, carry on. The one thing you 
 
 None of this requires a quarter-long project. For solo work, `problem-framing` has a quick mode — five questions, one page — and two directions with a short fit check is a legitimate `DIRECTIONS.md`. The recipe scales down; the order does not change.
 
-- The skills: [`problem-framing`](../problem-framing/README.md) · [`shaping`](../shaping/README.md) · [`breadboarding`](../breadboarding/README.md) · [`proposal`](../proposal/README.md) · [`scrollytelling`](../scrollytelling/README.md) · [`tldraw`](../tldraw-skill/README.md)
+- The skills: [`problem-framing`](../problem-framing/README.md) · [`shaping`](../shaping/README.md) · [`breadboarding`](../breadboarding/README.md) · [`proposal`](../proposal/README.md) · [`pitch`](../pitch/README.md) · [`scrollytelling`](../scrollytelling/README.md) · [`slides`](../slides/README.md) · [`tldraw`](../tldraw-skill/README.md)
 - The index: [`docs/index.html`](../index.html)
 
 ---

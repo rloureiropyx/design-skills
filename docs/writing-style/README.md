@@ -7,9 +7,24 @@ No article yet. These notes are the explainer.
 Turns evidence of how you write into `WRITING_STYLE.md` — a short document about your voice, which
 every other skill in the library reads before it drafts prose you will publish.
 
-It is set up once per project. After that it is invisible: `scrollytelling` loads it before writing
-scene text, `proposal` loads it before saving, `slop-check` loads it to know which of your habits it
+It is set up once per project. After that it is invisible: `pitch` loads it before writing the
+beats, `proposal` loads it before saving, `slop-check` loads it to know which of your habits it
 is not allowed to touch.
+
+## It is not for the words in the product
+
+The most common misuse. This profile is for writing **about** an interface — explaining a decision,
+arguing a direction, narrating what changed for people who were not in the room. It is not for the
+words **inside** the interface.
+
+Button labels, empty states, error messages, field help, confirmation dialogs and notification text
+come from the design system's content guidelines. Those are one team's shared standard, reviewed and
+owned, and the whole point is that six designers writing the same error message produce the same
+error message. A personal voice profile applied there does the opposite: it puts your hedging habits,
+your em dashes and your sentence rhythm into a string that is not yours.
+
+Two different documents, two different owners, and the failure of confusing them is not obvious until
+the product starts sounding like whoever last touched it.
 
 ## Two inputs, kept apart
 
@@ -119,6 +134,7 @@ otherwise is selling.
 - Writing the piece. It is an input to drafting, not a drafting skill.
 - Company brand voice, editorial standards, or a design system's UX-writing rules. Those are
   organisational documents with owners and review; this is one person's habits.
+- UI copy of any kind — labels, errors, empty states, microcopy. Same reason, one level down.
 - Anyone wanting a voice invented for them. It preserves what is there; with no evidence at all there
   is nothing to preserve.
 
