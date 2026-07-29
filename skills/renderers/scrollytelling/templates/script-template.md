@@ -24,3 +24,4 @@ Reglas de validez (aplicar antes de aprobar):
 - La apertura plantea la tensión; el cierre la paga.
 - La apertura corresponde al objetivo: un argumento abre con una afirmación, una historia con un momento, una orientación con un mapa.
 - El tono elegido se sostiene en todas las escenas, no solo en la apertura.
+- Pasar el checklist de `references/prose.md`: sin revelaciones con dos puntos, sin "no es X, es Y", sin fragmentos apilados, y el cierre termina en una frase concreta, no en una metáfora.

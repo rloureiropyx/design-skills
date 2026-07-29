@@ -105,7 +105,7 @@ It has no fixed slot in the chain. It reads `FRAMED_PROBLEM.md` and the rest whe
 
 Assembles the document people read once and then decide on: problem, time budget, chosen direction, rabbit holes, what is deliberately out, and what is still uncertain.
 
-Everything is carried from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`, never rewritten. It refuses to write while the time budget is undefined or an unresolved `⚠️` is still on the selected direction. Output: `PROPOSAL.md`.
+Everything is carried from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`, never rewritten. It refuses to write while the time budget is undefined or an unresolved `⚠️` is still on the selected direction. Before presenting, it runs an AI-slop pass over its own draft — here that is a traceability check, since puffery and unattributed claims are the sentences that trace to nothing. Output: `PROPOSAL.md`.
 
 - Skill: [`skills/artifacts/proposal/SKILL.md`](skills/artifacts/proposal/SKILL.md)
 - Explainer: [`one-read-one-decision.html`](docs/proposal/one-read-one-decision.html) · [script](docs/proposal/one-read-one-decision.script.md)
@@ -114,7 +114,7 @@ Everything is carried from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`, never rewrit
 
 #### Scrollytelling
 
-Builds long-form web articles whose diagrams change as the reader scrolls. It settles the goal and tone first, writes a scene-by-scene script, gets that approved, and only then builds the article as a standalone accessible HTML file.
+Builds long-form web articles whose diagrams change as the reader scrolls. It settles the goal and tone first, writes a scene-by-scene script, runs an AI-slop pass over the scene text, gets the script approved, and only then builds the article as a standalone accessible HTML file.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](skills/renderers/scrollytelling/SKILL.md)
 - Explainer: [`scroll-is-not-a-story.html`](docs/scrollytelling/scroll-is-not-a-story.html) · [script](docs/scrollytelling/scroll-is-not-a-story.script.md). Script written first, approved, then built — the skill's own gate applied to its own explainer.

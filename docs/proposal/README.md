@@ -35,6 +35,22 @@ Neither term travels well outside that method. "Pitch" invites selling, which is
 
 **`Still open` is what makes it worth reading.** The risks carried from the frame, the assumptions not yet verified, the parts left for the design phase to decide. A reader who later discovers a surprise that was known now will discount everything the same team writes afterwards. The uncomfortable one is the one worth including.
 
+## The prose pass
+
+Before the document is presented, it goes through an AI-slop pass. In most writing that is a
+style concern; here it is a traceability one. "Marks a pivotal moment", "research shows",
+"significantly faster", and trailing clauses like "reducing friction across the experience" are
+sentences that trace back to neither the frame nor the directions document. They are also how a
+proposal starts selling without anyone deciding to sell.
+
+The pass does not make the writing tidy. "From four screens to one" survives it unchanged;
+"improves the approval experience" is what that sentence becomes if it is edited for tone
+instead. Where a line reads as puffery because the number is missing, the number goes back to the
+frame or into `Still open` — it does not get invented.
+
+The pattern list is condensed from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop)
+(MIT), re-cut for a document that has to be traceable rather than persuasive.
+
 ## What it refuses
 
 The skill will not write a proposal when any of these is missing, and it says which:
