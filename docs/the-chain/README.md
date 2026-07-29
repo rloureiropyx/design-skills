@@ -17,6 +17,8 @@ Each step is a document, and the document is the interface:
 
 `problem-framing` writes `FRAMED_PROBLEM.md`. `shaping` reads it and writes `DIRECTIONS.md`. `proposal` reads both and writes `PROPOSAL.md`. `breadboarding` makes a direction concrete along the way. A renderer draws or publishes the result at the end.
 
+The three documents are one chain, but the three skills are not in one group: `problem-framing` and `shaping` sit in `process/`, `proposal` in `artifacts/`. The groups answer "what does this skill own", not "where am I in the recipe". `proposal` owns no decision — the person reading it decides, which is why it is written to be declinable.
+
 Nothing else crosses between them. No shared memory, no "as we discussed", no context that only exists in a thread.
 
 ## Why a document and not a conversation

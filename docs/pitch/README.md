@@ -112,7 +112,9 @@ document anyone reads for pleasure.
 ## Who it is not for
 
 - Asking a decision-maker to approve something. That is `proposal` — one reader, one decision, written
-  to be declined. A pitch goes out *after* the decision, to everyone who was not there.
+  to be declined. A pitch goes out *after* the decision, to everyone who was not there. The other way
+  to tell them apart is latitude: a proposal for a given frame and chosen direction has roughly one
+  right shape, and this has many, because the room changes what is worth saying.
 - Deciding what the problem is, or comparing solution directions. `problem-framing` and `shaping`.
 - Building the article, the HTML, the deck or the Figma file. `scrollytelling` and `slides`.
 - Choosing what any of it looks like. `visual-style`, and the renderer asks — not this skill.

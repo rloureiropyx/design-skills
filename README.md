@@ -40,6 +40,8 @@ Updates arrive only when `version` changes, so an in-flight commit never surpris
 
 Grouped by what they own. The grouping is for people — Copilot routes on `name` and `description` alone and does not know which folder a skill sits in.
 
+**The grouping and the chain are two different cuts of the same set, and they do not line up.** The chain is `FRAMED_PROBLEM.md` → `DIRECTIONS.md` → `PROPOSAL.md`, but only the first two skills are in `process/`; `proposal` sits in `artifacts/`. That is not an oversight. `process` means *decides something*, and `proposal` decides nothing — the person reading it does, which is the entire reason it is written to be declinable. Read the groups as "what does this skill own", not as "where am I in the recipe".
+
 Each one reads what the last one wrote and does not re-decide it. When a later skill finds something that contradicts an earlier document, it says so instead of quietly rewriting it. There is one explainer about how the handoff works, rather than about any single skill:
 
 - [`the-handoff-is-the-interface.html`](docs/the-chain/the-handoff-is-the-interface.html) · [script](docs/the-chain/the-handoff-is-the-interface.script.md) · [notes](docs/the-chain/README.md) — why each step is a document, what skipping one costs, and why renderers decide nothing.
@@ -242,7 +244,11 @@ Once installed, a skill competes in a **flat global namespace** with every other
 
 `problem-framing`, `shaping`, and `proposal` are the sharpest case: all three talk about problems, requirements, and solutions, and each names the other two in its non-trigger clause. When one starts answering a prompt that belongs to another, that is the first place to look.
 
-`proposal` and `pitch` are the newest collision and possibly the worst, because both answer "write up the design decision" and the difference is entirely in the situation. A proposal has **one reader and one decision**, and is deliberately un-sold — written to be declined. A pitch has **many readers and no decision left to make**, and is written to be understood and remembered. Each names the other; watch for `pitch` stealing proposal prompts.
+`proposal` and `pitch` are the newest collision and possibly the worst, because both answer "write up the design decision" and the difference is entirely in the situation.
+
+The cleanest discriminator is **latitude**. A proposal, given a frame and a chosen direction, is close to determined — it is a compilation, and there is roughly one right shape for it. The same material can become five different narratives depending on who is in the room, which is an authorial act with real choices in it. One shape versus many.
+
+The situational version says the same thing: a proposal has **one reader and one decision**, and is deliberately un-sold — written to be declined. A pitch has **many readers and no decision left to make**, and is written to be understood and remembered. Each names the other; watch for `pitch` stealing proposal prompts.
 
 `scrollytelling` and `slides` both render a `PITCH.md` and both answer "make me something to show people." Scrolling has to be doing work for the piece, or it is decoration with an accessibility cost; if someone is standing up in a room, it is a deck. Neither decides what the thing says.
 
