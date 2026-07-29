@@ -235,6 +235,10 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   whole ceremony. Saving `PITCH.md` is an offer, not a step.
 - **Drifting into `proposal`.** If the user is asking a decision-maker to commit, they need a proposal
   and this skill should say so and stop.
+- **Taking a Shape Up "pitch" at face value.** In Shape Up the pitch *is* the betting-table document —
+  the thing someone approves or declines. That is `proposal`, not this. When the word arrives with
+  "betting table", "bet on this", "for the next cycle", or any request for sign-off, hand it to
+  `proposal` and say why in one line. The word is overloaded; the situation is not.
 
 ## Reference files
 

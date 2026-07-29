@@ -119,6 +119,29 @@ document anyone reads for pleasure.
 - Building the article, the HTML, the deck or the Figma file. `scrollytelling` and `slides`.
 - Choosing what any of it looks like. `visual-style`, and the renderer asks — not this skill.
 
+## Why it is called that, given Shape Up uses the word differently
+
+Worth writing down, because it comes up every time someone who knows Shape Up reads this list.
+
+In Shape Up, **the pitch is the betting-table document** — the thing you present so someone can bet on
+it or decline. In this library that is [`proposal`](../proposal/), not this skill. So the word is
+doing different work here than in the book the rest of the recipe comes from.
+
+It kept the name anyway, for one reason: it is the word already in use for this thing. The skill exists
+because someone kept saying "the pitch" to mean *how I am going to explain this to everyone*, and a
+library that renames its user's own vocabulary to match a book is a library that gets argued with
+before it gets used.
+
+The cost is a real routing risk, and it is handled where routing happens rather than here. Both
+descriptions name the other skill, and this one carries an anti-pattern for the specific trap: a
+request that says "pitch" but also says *betting table*, *bet on this*, *next cycle*, or asks for
+sign-off is a `proposal`, and the skill hands it over rather than writing beats for it.
+
+If this ever stops being worth it, the rename is mechanical — the folder, the frontmatter `name`,
+`PITCH.md`, and the references in `scrollytelling`, `slides`, `proposal` and `slop-check`.
+`scripts/check-skills.mjs` catches anything missed. `narrative` is the candidate; `explainer` is not,
+because "explain X" is the most common prompt shape there is and it would steal half the namespace.
+
 ## Sources
 
 - Michael Alley, [*The Craft of Scientific Presentations*](https://www.assertion-evidence.com/) —

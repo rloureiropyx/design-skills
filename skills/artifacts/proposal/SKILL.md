@@ -146,6 +146,10 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   "We are not doing that" ends the conversation and gets quietly reversed later without a record.
 - **Producing acceptance criteria or tickets.** They read as helpful and they commit the team to
   decisions this document was supposed to leave open.
+- **Narrating a decision instead of asking for one.** When the decision has already been made and the
+  job is explaining it to a room, this document is the wrong shape — it is written for one reader, to
+  be declined. Hand it to `pitch`. The reverse of the trap on the way in: someone saying "the pitch"
+  and meaning the betting table belongs *here*.
 - **Letting the voice profile change what the document says.** It governs how a sentence sounds.
   A rule that would make this read as advocacy loses to the document, and a pass that softens or
   strengthens a claim has stopped editing and started deciding.
