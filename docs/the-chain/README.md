@@ -93,7 +93,7 @@ Start wherever you are, write the missing document, carry on. The one thing you 
 
 None of this requires a quarter-long project. For solo work, `problem-framing` has a quick mode — five questions, one page — and two directions with a short fit check is a legitimate `DIRECTIONS.md`. The recipe scales down; the order does not change.
 
-- The skills: [`problem-framing`](../problem-framing/README.md) · [`shaping`](../shaping/README.md) · [`breadboarding`](../breadboarding/README.md) · [`proposal`](../proposal/README.md) · [`pitch`](../pitch/README.md) · [`scrollytelling`](../scrollytelling/README.md) · [`slides`](../slides/README.md) · [`tldraw`](../tldraw-skill/README.md)
+- The skills: [`problem-framing`](../problem-framing/README.md) · [`shaping`](../shaping/README.md) · [`proposal`](../proposal/README.md) · [`breadboarding`](../breadboarding/README.md) · [`wireframes`](../wireframes/README.md) · [`diagrams`](../diagrams/README.md) · [`pitch`](../pitch/README.md) · [`scrollytelling`](../scrollytelling/README.md) · [`slides`](../slides/README.md) · [`tldraw`](../tldraw-skill/README.md)
 - The index: [`docs/index.html`](../index.html)
 
 ---

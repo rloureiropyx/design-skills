@@ -78,3 +78,7 @@ Unlike the rest of the chain it has no fixed slot. A diagram is useful at any po
 Abby Covert, *Stuck? Diagrams Help* — the eight moves, the twelve recipes, the craft principles, and the creed the skill runs on: *"there is no right or wrong in diagramming; there is only better and on purpose."* Dan Brown, *Communicating Design*, chapters 1–2 — the three layers, the state conventions, and the meeting recipe for walking a group through one. The additions are the render-agnostic split, the carry-don't-re-derive rule, and the boundaries against the other skills here.
 
 - Skill: [`skills/artifacts/diagrams/SKILL.md`](../../skills/artifacts/diagrams/SKILL.md)
+
+---
+
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 24px at 812×375.

@@ -1,8 +1,8 @@
 # Notes — Scrollytelling
 
 ```
-scroll-is-not-a-story.script.md    the scene-by-scene script — approved
-scroll-is-not-a-story.html         the article — standalone, no build step
+how-a-scrollytelling-article-gets-made.script.md    the scene-by-scene script — approved
+how-a-scrollytelling-article-gets-made.html         the article — standalone, no build step
 ```
 
 ## What it does
@@ -66,7 +66,7 @@ one line.
 
 ## Its own gate, applied to itself
 
-The script for this article was written first and approved before a line of the article was built. See [`scroll-is-not-a-story.script.md`](scroll-is-not-a-story.script.md), then open [`scroll-is-not-a-story.html`](scroll-is-not-a-story.html).
+The script for this article was written first and approved before a line of the article was built. See [`how-a-scrollytelling-article-gets-made.script.md`](how-a-scrollytelling-article-gets-made.script.md), then open [`how-a-scrollytelling-article-gets-made.html`](how-a-scrollytelling-article-gets-made.html).
 
 ## Where it stops
 
@@ -77,4 +77,4 @@ and it does not decide what it looks like — [`visual-style`](../visual-style/)
 
 ---
 
-**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 47px at 667×375.
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 24px at 812×375.

@@ -50,4 +50,4 @@ Output: `FRAMED_PROBLEM.md`. It does not pick a solution and it does not authori
 
 ---
 
-**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled: no horizontal overflow, every scene reachable in both directions, one active scene at a time, cards readable without covering the pinned graphic, one `<main>`, one `<h1>`, an `<html lang>`, no heading-level skips. The tightest case is 667×375 — a narrow phone in landscape — where the longest card is 369px in a 375px viewport. Lengthening scene 9 will break that first.
+**Rendering.** The article has ten scenes. Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled: no horizontal overflow, every scene reachable in both directions, one active scene at a time, cards readable without covering the pinned graphic, one `<main>`, one `<h1>`, an `<html lang>`, no heading-level skips. Least clearance: 24px at 812x375.
