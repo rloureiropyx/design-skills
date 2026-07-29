@@ -2,7 +2,7 @@
   "name": "rolo",
   "metadata": {
     "description": "Product design skills by Raul Loureiro",
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "owner": {
     "name": "Raul Loureiro"
@@ -11,11 +11,11 @@
     {
       "name": "design-skills",
       "description": "Eight skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, wireframe the screens when layout turns out to be the real question, diagram what people are stuck on, then write it up as a proposal someone can approve or decline. Renderers turn the result into a scrollytelling explainer or a local tldraw canvas.",
-      "version": "2.4.0",
+      "version": "2.4.1",
       "author": {
         "name": "Raul Loureiro"
       },
-      "repository": "https://github.com/rloureiro_paychex/design-skills",
+      "repository": "https://github.com/rloureiropyx/design-skills",
       "keywords": [
         "product-design",
         "ux",
@@ -29,7 +29,7 @@
       ],
       "source": {
         "source": "github",
-        "repo": "rloureiro_paychex/design-skills"
+        "repo": "rloureiropyx/design-skills"
       }
     }
   ]
