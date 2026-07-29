@@ -1,79 +1,71 @@
 # Scene Script — The Handoff Is the Interface
 
-**Opening tension:** Three documents about the same project, each describing the problem slightly differently, all of them written by competent people.
+**Goal:** G6 · orient a newcomer — the reader ends knowing the landscape and where to start.
 
-**Top identification:** Present the library as a chain of skills — not five independent tools — before the tension resolves.
+**Tone:** T1 · plain and direct.
 
-**Final payoff:** The reader understands that the interface between these skills is a *document*, not a conversation. Each skill carries the previous decision forward rather than re-deriving it, each one can refuse to run when its input is missing, contradicting evidence travels back to the frame instead of being patched locally, and renderers materialise decisions they are never allowed to make. You can enter the chain in the middle. You cannot skip a document.
+**Opening tension:** The library lists eight skills as eight separate tools, and a newcomer cannot tell which one to open first.
 
-**Audience:** Product designers and product managers in enterprise B2B who have five separate explainers and no picture of the system. They will never open a `SKILL.md`, and they have not read Shape Up.
+**Top identification:** Present the eight skills as one chain — three ordered stages, three optional detours, and two renderers at the end — before the tension resolves.
 
-**Estimated reading time:** 4 minutes.
+**Final payoff:** Most of the skills are steps in one recipe. Each step reads the file the last one wrote, so the three main stages run in order and the rest hang off them. You can join wherever the earlier documents already exist. You cannot skip one, because the next skill asks for it and stops. Where to start is the first missing document.
 
-**Proposed pattern:** Sticky graphic + discrete steps throughout. The chain is one recurring diagram that gains, loses, and re-routes edges — a single motif is what makes a system article legible.
+**Audience:** Product designers and product managers in enterprise B2B who see eight skills in the index and no picture of how they fit. They will never open a `SKILL.md`, and they have not read Shape Up.
 
-| # | VISUAL — diagram state | COPY — 2–4 short sentences | TRANSITION |
+**Estimated reading time:** 3 minutes.
+
+**Proposed pattern:** Sticky graphic + discrete steps throughout. The recurring graphic is **the chain**: it starts as eight loose nodes and gains structure as the reader scrolls — the spine forms, filenames land on the arrows, detours branch off, renderers attach at the end.
+
+| # | VISUAL — the chain's state | COPY — 2–4 short sentences | TRANSITION |
 |---|---|---|---|
-| 1 · The tension | **Three documents, three problems.** A brief, a spec, and a deck side by side; the problem sentence in each is highlighted and each one reads differently. A coral badge reads "same project". | A brief, a spec, and a deck, all about the same project. Each one states the problem in its own words, and no two are identical. Nobody wrote the wrong thing — three competent people each restated the problem, and now the project has three of them. | Opens the sequence. |
-| 2 · Three roots | **Three lanes, three permissions.** Process · Artifacts · Renderers, each with what it may touch and one thing it must not. | Process skills change what the team believes. Artifact skills assemble the thing a group can act on. Renderers make a decision visible. The permissions are not a taxonomy — a renderer that is allowed to decide is how a diagram becomes an argument nobody agreed to. | The three documents pull apart into three labelled lanes. |
-| 3 · The chain | **Four nodes, three labelled edges.** Framing → shaping → proposal → rendered, with `FRAMED_PROBLEM.md`, `DIRECTIONS.md` and `PROPOSAL.md` written *on the arrows*, not in the boxes. | The skills are not the interesting part of this picture. The arrows are. The only thing that crosses from one skill to the next is a document, and that document is the entire interface — no shared memory, no "as we discussed", no context that lives only in a thread. | The lanes collapse into a single left-to-right chain; the filenames land on the edges. |
-| 4 · Carry, never re-derive | **One input, two exits.** From `FRAMED_PROBLEM.md`, a green "carry" path quoting a line verbatim, and a coral "re-derive" path that paraphrases and forks into two competing problem statements. | A downstream skill carries what the previous one decided. It quotes the line and cites where it came from. The moment it paraphrases instead, the problem has forked: two versions now exist, both defensible, and only one of them gets cited in the room. | The chain zooms into its first edge; the two paths separate. |
-| 5 · The gates | **Three refusals.** A gate on each edge: no evidence → no frame · unresolved <span aria-hidden="true">⚠️</span> → no selected direction · no time budget → no proposal. | Every skill in the chain can refuse to run. Framing buys time to direction, not permission to build. Shaping will not select a direction while an unknown is still flagged. The proposal will not be written over a missing time budget — and a skill that cannot refuse its input is a formatting tool, not a method. | The forked paths recede; a gate closes on each edge in turn. |
-| 6 · Skip a link | **Three removals, three named failures.** Each node dims in turn and the failure it causes appears downstream in coral. | Skip the frame and you get a direction that fits requirements nobody agreed to. Skip shaping and the time budget gets invented in the meeting, by whoever is most confident. Skip the proposal and the decision belongs to whoever spoke last. The cost is never paid where the link was skipped. | The gates open; nodes drop out of the chain one at a time. |
-| 7 · Backflow | **The return edge.** A green arrow runs from shaping back to the frame, labelled "reopen"; a coral arrow that patches the problem in place is struck through. | Downstream work is where a frame gets tested, so downstream is where it breaks. Evidence that contradicts the frame goes *back* to the frame and reopens it. Fixing it locally — a new sentence in the shaping doc — is the exact failure the chain exists to catch, because now the two documents disagree and neither one says so. | The chain reassembles; a return edge draws backwards along it. |
-| 8 · Renderers last | **A tidy picture of confusion.** An undecided idea enters a renderer and leaves as a clean, confident diagram stamped "looks decided". | A renderer owns coordinates, contrast and legibility. It does not own the content. Hand one an undecided idea and it returns a clean diagram of that confusion — and a clean diagram gets believed, which is worse than the confusion was. | The return edge fades; the last node in the chain fills the frame. |
-| 9 · The payoff | **Every entry, no skips.** Three entry arrows drop into the chain at different nodes; a skip attempt hits a stop marker on the missing edge. | You can enter this chain anywhere. Start at shaping when the problem is genuinely settled; start at the proposal when the direction was chosen last quarter. What you cannot do is skip a document, because the next skill asks for it and stops. The handoff is the interface — that is the whole method. | The renderer pulls back to the full chain; entry arrows and one stop marker resolve. |
+| 1 · Eight tools | Eight loose nodes scattered on the canvas, each labelled with a skill name, no connections between them. | The library has eight skills, and the index lists them as eight separate tools. A newcomer cannot tell which one to open first, or whether they are meant to be used together. They are used together. Most of them are steps in one recipe. | Opens the sequence. |
+| 2 · The three stages | Three of the nodes — `problem-framing`, `shaping`, `proposal` — slide into a left-to-right spine and connect with plain arrows; the other five fade back. | The recipe has three stages. Work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. `problem-framing`, `shaping`, and `proposal` are those three stages, in that order. | The scattered nodes settle; three of them line up and join. |
+| 3 · Files on the arrows | The filenames appear *on* the arrows: `FRAMED_PROBLEM.md`, then `DIRECTIONS.md`, then `PROPOSAL.md`, one per edge. | What passes from one stage to the next is a file. `problem-framing` writes `FRAMED_PROBLEM.md`, `shaping` reads it and writes `DIRECTIONS.md`, `proposal` reads both and writes `PROPOSAL.md`. Nothing else crosses between them, so the decision survives after the conversation is gone. | Labels drop onto the three edges of the spine. |
+| 4 · Carry and reopen | A quoted line copies forward along an edge in green; a coral return arrow runs backward from `shaping` to `problem-framing`, labelled "reopen". | Each stage carries the decision the last one made instead of restating it in new words. When a later stage finds evidence that contradicts the problem, it sends that back to be reframed. Rewriting the problem quietly in a later file is the failure the chain is built to catch. | The forward quote animates along the first edge; the return arrow draws backward over the spine. |
+| 5 · The detours | Three nodes — `breadboarding`, `wireframes`, `diagrams` — branch off the spine on dotted, optional connectors. | Three more skills are detours, not stages. `breadboarding` sketches a direction in words, `wireframes` works out a single screen when layout is the real question, and `diagrams` decides what a picture should show. You reach for them when a stage needs one, and skip them when it does not. | The return arrow settles; three side nodes branch off the spine on dotted lines. |
+| 6 · Renderers last | Two nodes — `scrollytelling` and `tldraw-skill` — attach after `proposal`; an article and a canvas icon come out of them. | Two skills come last. `scrollytelling` builds a scrolling article and `tldraw-skill` draws on a local canvas. They render a decision that was already made, and they are not allowed to make one. Hand a renderer an undecided idea and it returns a polished version of the confusion. | The detours dim; two renderer nodes attach at the end of the spine and emit their outputs. |
+| 7 · Where to start | The full chain is assembled. Entry arrows drop onto three different nodes; a coral stop marker sits on an edge where a document is missing. | You can join the chain wherever the earlier documents already exist. Start at `shaping` when the problem is settled, or at `proposal` when the direction was chosen last quarter. The one thing you cannot do is skip a document, because the next skill asks for it and stops. Start by writing the first one that is missing. | Everything reassembles into the full chain; entry arrows and one stop marker resolve. |
 
 ## Static prose bridges
 
-- **Before scene 1:** what this library is — five skills that look independent in the index and are not, and why a per-skill explainer cannot show the part that matters.
-- **After scene 3 — why a document and not a conversation:** persistence, a citable source, asynchronous review, and the enterprise reality that the person who approves the work was not in the room where it was decided.
-- **After scene 6 — joining a project already in progress:** the chain does not assume a clean start. An in-progress project usually has the documents implicitly; writing them down is what surfaces the disagreement.
-- **Before the closing:** a worked micro-example of a carried line — the same sentence appearing in the frame, the shaping doc, and the proposal, unchanged and attributed each time.
+- **Before scene 1:** what this library is — a set of skills that look independent in the index and are mostly steps in one recipe. A per-skill explainer can describe a step; it cannot show the order.
+- **After scene 3 — why a file and not a conversation:** the person who approves the spend was not in the room, the person who inherits the project joins in month three, and the auditor arrives after everyone has moved on. A file has a version and a reader six weeks later; a conversation has neither.
+- **After scene 4 — the three groups:** the skills sit in three folders. Process decides something, artifacts produce the thing people react to, renderers materialise a decision made elsewhere. The grouping is for people reading the repository; Copilot picks a skill by its name and description and never sees the folder.
+- **Before the closing:** joining a project already underway. Most real work has these documents already, in a thread or a slide or someone's head. Writing the missing one down is the work that was already happening, made inspectable.
 
 ## Diagram system
 
-Native SVG, no decorative imagery. One recurring chain motif; every diagram has a text equivalent in the scene copy.
+Native inline SVG, no decorative imagery. One recurring chain motif that gains structure scene by scene; every state has a text equivalent in the scene copy.
 
-1. **Three documents:** the opening tension, one problem stated three ways.
-2. **Three lanes:** what each root of the library is permitted to touch.
-3. **The chain:** four nodes, filenames on the edges.
-4. **Carry vs re-derive:** one input, two exits, one of them forking.
-5. **The gates:** three refusal conditions, one per edge.
-6. **Removals:** each skipped link and the failure it causes downstream.
-7. **The return edge:** contradicting evidence travelling back to the frame.
-8. **Renderer output:** confusion, rendered cleanly.
-9. **Entry points:** many ways in, no way to skip a document.
+1. **Eight loose nodes:** the opening landscape, no connections.
+2. **The spine:** three stages line up and join in order.
+3. **Files on the arrows:** the three filenames land on the edges.
+4. **Carry and reopen:** a quoted line forward, a reframe arrow backward.
+5. **The detours:** three optional skills branch off the spine.
+6. **Renderers last:** two renderers attach at the end and emit outputs.
+7. **Entry points:** many ways in, a stop marker where a document is missing.
 
 ## Art direction
 
-- **Central visual metaphor:** a chain whose edges carry the meaning. Boxes are cheap; the labelled arrows between them are the method.
-- **Graphic language:** editorial systems diagrams matching the five existing explainers.
-- **Colour semantics:** the frame in blue, the direction in green, the proposal in amber, renderers in violet, every failure and refusal in coral.
+- **Central visual metaphor:** the chain, assembling as the reader scrolls. The arrows between the nodes carry the meaning; the boxes are just the skills.
+- **Graphic language:** editorial systems diagrams matching the other explainers in the library.
+- **Colour semantics (from the house brief):** input and narrative in blue, a settled or valid state in green, a decision or approval in violet, caution and optional detours in amber, failure and the reframe path in coral, structure in slate/line. No colour is used decoratively.
 - **Motion:** discrete 0.4–0.8 second transitions on transform and opacity only.
-- **Mobile:** compact chain pinned above each text card, opaque, active state preserved at 375px.
-- **Accessibility:** refusals, failures and struck-through paths carry text labels, never colour alone.
+- **Mobile:** the compact chain pins above each text card, opaque, with the active state preserved at 375px.
+- **Accessibility:** the reopen path, the stop marker, and the dotted detours carry text labels, never colour alone.
 
 ## Beat validation
 
-- Every scene introduces one concept and changes the diagram state.
-- The opening states the tension: one problem, three descriptions, no way to tell which is current.
-- The closing pays it off: enter anywhere, skip nothing, because the handoff is the interface.
+- Every scene introduces one concept and changes the chain's state.
+- The opening states the tension: eight skills in the index, no way to tell which comes first.
+- The closing pays it off: join anywhere, skip nothing, start with the first missing document.
 - Every scene stays at or below four sentences.
 - All reader-facing copy, labels, and diagram annotations are in English.
-
-## Deliberately out of scope
-
-Routing — the flat global namespace, `name` and `description`, non-trigger clauses — is repo mechanics, not the method argument. It stays in the repository README. If a revision of this article starts explaining frontmatter fields, it has drifted into the routing map this piece was explicitly not written to be.
 
 ## Source section
 
 The article closes with method provenance:
 
-- [Shape Up](https://basecamp.com/shapeup) — time budget, shaping before building, and the people who decide, which this chain ends at.
+- [Shape Up](https://basecamp.com/shapeup) — a fixed time budget, deciding a direction before building, and ending at the people who decide.
 - [rjs/shaping-skills](https://github.com/rjs/shaping-skills) — Ryan Singer's discipline of carrying the frame forward rather than re-deriving it.
-- The refusal gates, the backflow rule, and the renderer boundary are this library's addition.
-
-## Delivery matrix
-
-Verified across nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Result recorded in [`README.md`](README.md).
+- The optional detours, the reframe-don't-rewrite rule, and the renderers that decide nothing are this library's addition.
