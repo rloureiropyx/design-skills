@@ -1,18 +1,20 @@
 ---
 name: proposal
 description: >-
-  Write the document people read once and then decide on: the problem, the time
-  budget, the chosen direction, the rabbit holes, and what is deliberately left
-  out. Use when a solution direction has been chosen and needs sign-off; when
-  someone asks for a proposal, a "propuesta", a one-pager, a project brief, or a
-  pitch for work that is already shaped; or when a stakeholder asks what exactly
-  they are being asked to commit to. Reads a Framed Problem and a Directions
+  Write the document people read once and then decide on: problem, time budget,
+  chosen direction, rabbit holes, and what is deliberately out.
+  Use when a solution direction has been chosen and needs sign-off; when
+  someone asks for a proposal, a "propuesta", a one-pager, or a project brief for
+  work that is already shaped; or when a stakeholder asks what they are being
+  asked to commit to. Reads a Framed Problem and a Directions
   document, writes `PROPOSAL.md`. Do NOT use it to decide which problem is worth
   solving or to challenge a frame — that is `problem-framing`. Do NOT use it to
   explore or compare solution options, run a fit check, or resolve unknowns —
-  that is `shaping`. Do NOT use it for a PRD, a requirements specification,
-  acceptance criteria, a roadmap, a status report, a retrospective, or slides
-  summarising work that is already approved.
+  that is `shaping`. Do NOT use it to re-voice, de-slop, or line-edit a proposal
+  that already exists — that is `slop-check`. Do NOT use it to narrate a decision
+  already made, or to write a talk, an article, or a deck — that is `pitch`. Do
+  NOT use it for a PRD, a requirements specification, acceptance criteria, a
+  roadmap, a status report, or a retrospective.
 ---
 
 # Proposal
@@ -96,11 +98,18 @@ Completion criterion: nothing known to be uncertain is presented as settled.
 
 ### 7. Write and confirm
 
-Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document. Read `references/prose.md` as well: in this document the AI-slop patterns are a traceability problem, not a style one — puffery, unattributed claims, and invented consequences are exactly the sentences that trace back to nothing. Run its checklist over the draft before presenting.
+Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document. Read `references/prose.md` as well: here the AI-slop patterns are a traceability problem, not a style one — puffery, unattributed claims, and invented consequences are exactly the sentences that trace back to nothing.
+
+Before saving, run two passes over the prose:
+
+1. **Voice.** Load `WRITING_STYLE.md` if one exists — the project's documentation directory, then the root — and apply its observed rules to the sentences. If there is none, say so in one line and offer `writing-style`; do not block the proposal on it. The profile governs sentence-level voice only. It never changes a section, an order, or a claim. When a profile rule would make the document read as advocacy, the document wins: this one is supposed to be un-sold, and voice is the door selling comes back through.
+2. **Slop.** Run the `slop-check` edit pass once, and close it on the checklist at the end of `references/prose.md`. `slop-check` owns the pattern list and the voice-profile precedence; `references/prose.md` adds what this document is stricter about — vague quantities, urgency language, unattributed claims, and vocabulary drift. One pass, both files. The taxonomy is a concrete version of what the anti-patterns below already forbid in the abstract: puffery, fake-strong verbs, faux-insight setups and unnamed attribution are what "selling" looks like sentence by sentence.
+
+Neither pass may add, remove, or soften a claim. If either wants to, that is a finding about the proposal, not about the prose — say so and leave the sentence.
 
 Present it and ask for one thing: the decision. Go ahead, do not go ahead, or send it back with a named reason.
 
-Completion criterion: the document is saved, no sentence in it exists only to make a paragraph land, and the decision asked for is explicit.
+Completion criterion: the document is saved, both passes have run, no sentence in it exists only to make a paragraph land, and the decision asked for is explicit.
 
 ## Enterprise constraints to surface
 
@@ -137,6 +146,13 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   "We are not doing that" ends the conversation and gets quietly reversed later without a record.
 - **Producing acceptance criteria or tickets.** They read as helpful and they commit the team to
   decisions this document was supposed to leave open.
+- **Narrating a decision instead of asking for one.** When the decision has already been made and the
+  job is explaining it to a room, this document is the wrong shape — it is written for one reader, to
+  be declined. Hand it to `pitch`. The reverse of the trap on the way in: someone saying "the pitch"
+  and meaning the betting table belongs *here*.
+- **Letting the voice profile change what the document says.** It governs how a sentence sounds.
+  A rule that would make this read as advocacy loses to the document, and a pass that softens or
+  strengthens a claim has stopped editing and started deciding.
 - **Puffery standing in for a fact.** "Marks a pivotal moment", "significantly faster", "research
   shows" — each is a sentence that traces to nothing, and each one that survives makes the
   traceable sentences around it look the same. Go back for the number or move it to `Still open`.
@@ -150,13 +166,13 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 ## Reference files
 
 - `templates/proposal.md` — the required `PROPOSAL.md` structure and where to save it. Read at step 7.
-- `references/prose.md` — the AI-slop patterns that produce untraceable sentences, the words to cut, and the checklist to run before presenting. Read at step 7, with the template.
+- `references/prose.md` — why the slop patterns are a traceability problem here, what this document is stricter about than the shared list, and the checklist to run before presenting. The pattern list itself lives in `slop-check`. Read at step 7, with the template.
 
 ## Method sources
 
 - Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup): the structure this document descends from — problem, appetite, solution, rabbit holes, no-gos — and the idea that time is fixed and scope moves.
-- Ryan Singer, [framing](https://www.ryansinger.co/framing/): the reason this is not called a pitch. In his current usage "pitch" is the raw request that arrives *before* framing. A pitch is something you win; this is something people read and decide on.
+- Ryan Singer, [framing](https://www.ryansinger.co/framing/): the reason this document is written to be declined rather than won. In his usage the raw ask that arrives *before* framing is the request, and what comes out the other side is something people read and decide on. In this library, `pitch` covers the separate job of communicating a decision once it has been made.
 - Ryan Singer, [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) — `framing-doc` and `kickoff-doc`: carrying the frame forward instead of re-deriving it, and the test that every sentence should be traceable to something someone actually said or decided.
-- Peter Yang, [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT): the pattern list behind `references/prose.md`, condensed and re-cut for a document that has to be traceable rather than persuasive.
+- Peter Yang, [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT): the pattern list behind `slop-check`, which `references/prose.md` re-cuts for a document that has to be traceable rather than persuasive.
 
 The enterprise sign-off, audit, and accessibility checks are additions, not Singer's.

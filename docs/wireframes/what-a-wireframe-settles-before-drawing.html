@@ -1,0 +1,1552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of how a wireframe is an ordered set of decisions — one purpose, listed contents, stated priority, functional color, one scenario, marginal annotations — settled before and during the drawing.">
+  <link rel="icon" href="data:,">
+  <title>What a Wireframe Settles Before Drawing — How the wireframes skill works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .proposal-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* Short viewports: the tallest scene cards have to clear the pinned
+       graphic. The copy is fixed by the script, so the card gives ground
+       instead - chrome and leading only, never the copy itself. */
+    @media (max-height: 720px) {
+      .step-card { padding: clamp(1rem, 2.4vw, 1.55rem); }
+      .scene-number { margin-bottom: .55rem; }
+      .step h2 { margin-bottom: .55rem; }
+      .step p { line-height: 1.4; }
+    }
+
+    @media (max-height: 560px) {
+      .step-card { padding: .85rem 1rem; }
+      .step h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .45rem; }
+      .scene-number { margin-bottom: .4rem; font-size: .62rem; }
+      .step p { font-size: .84rem; line-height: 1.3; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">The library · wireframes</p>
+        <h1>The drawing is the last decision.</h1>
+        <p class="hero-deck"><strong>A screen the room signed off on that still didn't say whether it would hold up when a real pay run hit it.</strong> It looked finished and settled nothing.</p>
+        <span class="scroll-cue">Scroll to assemble the screen</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">A pay-run approval screen stamped "signed off" while a question mark hangs over whether it works</title>
+        <desc id="hero-desc">A finished-looking wireframe carries an approval stamp, yet a coral question asks whether it would survive a real pay run — it looked done and decided nothing.</desc>
+        <defs>
+          <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity=".28"/>
+          </filter>
+          <marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+        </defs>
+        <g filter="url(#heroShadow)">
+          <rect x="70" y="70" width="330" height="380" rx="16" fill="#f9f8f1"/>
+        </g>
+        <g font-family="Inter, sans-serif">
+          <rect x="70" y="70" width="330" height="40" rx="16" fill="#e7e3d6"/>
+          <rect x="70" y="94" width="330" height="16" fill="#e7e3d6"/>
+          <text x="92" y="96" font-size="12" font-weight="700" fill="#5c6157">GLOBAL NAV</text>
+          <rect x="92" y="132" width="150" height="18" rx="5" fill="#d7d3c6"/>
+          <rect x="92" y="164" width="286" height="60" rx="9" fill="#eeece2" stroke="#d3cfc1"/>
+          <text x="104" y="188" font-size="11" font-weight="700" fill="#6a6f64">SUMMARY CARDS</text>
+          <text x="104" y="210" font-size="13" font-weight="700" fill="#3f443c">$—  ·  — employees  ·  — flagged</text>
+          <rect x="92" y="238" width="286" height="132" rx="9" fill="#eeece2" stroke="#d3cfc1"/>
+          <line x1="92" y1="270" x2="378" y2="270" stroke="#d3cfc1"/>
+          <line x1="92" y1="302" x2="378" y2="302" stroke="#d3cfc1"/>
+          <line x1="92" y1="334" x2="378" y2="334" stroke="#d3cfc1"/>
+          <text x="104" y="260" font-size="11" font-weight="700" fill="#6a6f64">FLAGGED-PAYCHECK TABLE</text>
+          <rect x="92" y="384" width="120" height="42" rx="9" fill="#173a2b"/>
+          <text x="152" y="410" font-size="13" font-weight="800" fill="#c9f1df" text-anchor="middle">APPROVE</text>
+          <rect x="228" y="384" width="90" height="42" rx="9" fill="#efece2" stroke="#cfcbbd"/>
+          <text x="273" y="410" font-size="13" font-weight="800" fill="#5c6157" text-anchor="middle">HOLD</text>
+          <g transform="rotate(9 340 118)">
+            <rect x="270" y="96" width="140" height="44" rx="10" fill="none" stroke="#63c99c" stroke-width="3"/>
+            <text x="340" y="124" font-size="15" font-weight="800" fill="#63c99c" text-anchor="middle" letter-spacing="1">SIGNED OFF</text>
+          </g>
+        </g>
+        <path d="M556 250 C500 250 470 262 436 288" fill="none" stroke="#ee795e" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#heroArrow)"/>
+        <text x="560" y="214" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#ee795e" text-anchor="end">Will it hold under</text>
+        <text x="560" y="236" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#ee795e" text-anchor="end">a real pay run?</text>
+        <text x="300" y="504" font-family="Inter, sans-serif" font-size="15" font-weight="800" fill="#ee795e" text-anchor="middle" letter-spacing="2">LOOKED FINISHED. SETTLED NOTHING.</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The skill · wireframes</p>
+      <h2 id="intro-title">What a wireframe settles before drawing.</h2>
+      <p>It decides what a screen must do, what goes on it, and how priority reads, then hands that to a renderer to draw.</p>
+      <p>It sits downstream: <code>shaping</code> has already selected a direction and set the time budget, and a breadboard may have listed the affordances. The wireframe carries that direction rather than inventing one, and is reached only when layout turns out to be the real question.</p>
+      <p class="definition">Note the words a reader will see kept straight: a candidate solution is a <strong>direction</strong>, the fixed build time is a <strong>time budget</strong>.</p>
+    </section>
+
+    <section class="scrolly" aria-label="How a wireframe is assembled, one decision at a time">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">One purpose</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="wfArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker>
+              <marker id="wfArrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ae8bf3"/></marker>
+              <marker id="wfArrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+              <marker id="wfArrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/></marker>
+              <pattern id="wfGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/></pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#wfGrid)" opacity=".5"/>
+
+            <!-- STATE 1: ONE PURPOSE -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="40" y="56">Decision 01 · Purpose</text>
+              <text class="svg-title" x="40" y="92">One sentence, not a layout.</text>
+              <text class="svg-tiny" x="300" y="128">PAY-RUN APPROVAL — SCREEN BOUNDARY</text>
+              <rect x="300" y="138" width="420" height="430" rx="14" fill="#141c17" stroke="#4a584d" stroke-width="1.5" stroke-dasharray="7 6"/>
+              <rect x="326" y="176" width="368" height="54" rx="10" fill="#1b2733" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-tiny" x="510" y="199" fill="#7fa9e8" text-anchor="middle">PURPOSE</text>
+              <text x="510" y="219" font-size="15" font-weight="650" fill="#bcd4ff" text-anchor="middle" font-family="Inter, sans-serif">Approve or hold this pay run.</text>
+              <text class="svg-small" x="510" y="400" fill="#8b958c" text-anchor="middle">(everything else absent)</text>
+              <text class="svg-small" x="40" y="600" fill="#9aa39a">Every later box earns its place against this one job.</text>
+            </g>
+
+            <!-- STATE 2: PAGE CONTENTS -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="40" y="56">Decision 02 · Contents</text>
+              <text class="svg-title" x="40" y="92">List it before you place it.</text>
+              <text class="svg-kicker" x="40" y="150" fill="#7fa9e8">Page contents</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="40" y="166" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="187" fill="#cdd9ea">Pay period</text>
+                <rect x="40" y="210" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="231" fill="#cdd9ea">Total cost</text>
+                <rect x="40" y="254" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="275" fill="#cdd9ea">Headcount</text>
+                <rect x="40" y="298" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="319" fill="#cdd9ea">Flagged-paycheck count</text>
+                <rect x="40" y="342" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="363" fill="#cdd9ea">The flagged paychecks</text>
+                <rect x="40" y="386" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="407" fill="#cdd9ea">Approve</text>
+                <rect x="40" y="430" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="451" fill="#cdd9ea">Hold</text>
+                <rect x="40" y="474" width="252" height="32" rx="7" fill="#151d26" stroke="#3c4f66"/><text class="svg-small" x="58" y="495" fill="#cdd9ea">Export register</text>
+              </g>
+              <rect x="340" y="150" width="380" height="418" rx="14" fill="#141c17" stroke="#4a584d" stroke-width="1.5" stroke-dasharray="7 6"/>
+              <rect x="356" y="172" width="348" height="40" rx="9" fill="#1b2733" stroke="#75a9ff" stroke-width="1.5"/>
+              <text x="530" y="197" font-size="13" font-weight="650" fill="#bcd4ff" text-anchor="middle" font-family="Inter, sans-serif">Approve or hold this pay run.</text>
+              <text class="svg-small" x="530" y="380" fill="#8b958c" text-anchor="middle">(still empty — arrangement comes later)</text>
+              <text class="svg-tiny" x="530" y="548" fill="#9aa39a" text-anchor="middle">Listing and arranging are different jobs.</text>
+            </g>
+
+            <!-- STATE 3: PRIORITY -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="40" y="56">Decision 03 · Priority</text>
+              <text class="svg-title" x="40" y="92">Rank it, apart from the layout.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="40" y="150" width="224" height="400" rx="12" fill="#1a1530" opacity=".55"/>
+                <rect x="284" y="150" width="224" height="400" rx="12" fill="#1a1530" opacity=".4"/>
+                <rect x="528" y="150" width="192" height="400" rx="12" fill="#1a1530" opacity=".28"/>
+                <rect x="40" y="150" width="224" height="44" rx="10" fill="#241b39" stroke="#9a83e0" stroke-width="1.5"/><text x="152" y="178" class="svg-label" fill="#d9ccf7" text-anchor="middle">HIGH</text>
+                <rect x="284" y="150" width="224" height="44" rx="10" fill="#221a34" stroke="#7b68b0" stroke-width="1.5"/><text x="396" y="178" class="svg-label" fill="#cabbef" text-anchor="middle">MEDIUM</text>
+                <rect x="528" y="150" width="192" height="44" rx="10" fill="#201a2e" stroke="#5e5286" stroke-width="1.5"/><text x="624" y="178" class="svg-label" fill="#b6a9d6" text-anchor="middle">LOW</text>
+                <rect x="56" y="216" width="192" height="46" rx="8" fill="#1a2230" stroke="#3e4c42"/><text class="svg-small" x="72" y="244" fill="#dbe3da">Flagged paychecks</text>
+                <rect x="56" y="272" width="192" height="46" rx="8" fill="#1a2230" stroke="#3e4c42"/><text class="svg-small" x="72" y="300" fill="#dbe3da">Approve control</text>
+                <rect x="300" y="216" width="192" height="46" rx="8" fill="#1a2230" stroke="#3e4c42"/><text class="svg-small" x="316" y="244" fill="#dbe3da">Totals</text>
+                <rect x="300" y="272" width="192" height="46" rx="8" fill="#1a2230" stroke="#3e4c42"/><text class="svg-small" x="316" y="300" fill="#dbe3da">Headcount</text>
+                <rect x="544" y="216" width="160" height="46" rx="8" fill="#1a2230" stroke="#3e4c42"/><text class="svg-small" x="560" y="244" fill="#dbe3da">Export link</text>
+                <rect x="544" y="272" width="160" height="46" rx="8" fill="#1a2230" stroke="#3e4c42"/><text class="svg-small" x="560" y="300" fill="#dbe3da">Period label</text>
+              </g>
+              <text class="svg-small" x="40" y="596" fill="#9aa39a">A Page Description Diagram — the ranking stated, no box drawn.</text>
+            </g>
+
+            <!-- STATE 4: PLACED REGIONS -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="40" y="56">Decision 04 · Regions</text>
+              <text class="svg-title" x="40" y="92">Placed as labeled zones.</text>
+              <rect x="300" y="134" width="420" height="440" rx="14" fill="#141c17" stroke="#5b6a5e" stroke-width="1.5"/>
+              <g font-family="Inter, sans-serif">
+                <rect x="316" y="150" width="388" height="32" rx="6" fill="#1c242c" stroke="#4a5a49"/><text class="svg-small" x="332" y="171" fill="#c3ccc3">Global nav</text>
+                <rect x="316" y="190" width="388" height="42" rx="6" fill="#1c242c" stroke="#4a5a49"/><text class="svg-small" x="332" y="216" fill="#c3ccc3">Header · pay period</text>
+                <rect x="316" y="242" width="120" height="64" rx="8" fill="#182a3a" stroke="#43607d"/><text class="svg-tiny" x="332" y="266" fill="#9dc0e6">TOTAL</text>
+                <rect x="450" y="242" width="120" height="64" rx="8" fill="#182a3a" stroke="#43607d"/><text class="svg-tiny" x="466" y="266" fill="#9dc0e6">HEADCOUNT</text>
+                <rect x="584" y="242" width="120" height="64" rx="8" fill="#182a3a" stroke="#43607d"/><text class="svg-tiny" x="600" y="266" fill="#9dc0e6">FLAGGED</text>
+                <rect x="316" y="320" width="388" height="150" rx="8" fill="#171f18" stroke="#6a7a68"/>
+                <text class="svg-tiny" x="332" y="344" fill="#aab4aa">FLAGGED-PAYCHECK TABLE</text>
+                <line x1="316" y1="362" x2="704" y2="362" stroke="#33403a"/><line x1="316" y1="392" x2="704" y2="392" stroke="#33403a"/><line x1="316" y1="422" x2="704" y2="422" stroke="#33403a"/><line x1="316" y1="452" x2="704" y2="452" stroke="#33403a"/>
+                <rect x="316" y="486" width="388" height="54" rx="8" fill="#20182f" stroke="#9a83e0"/>
+                <rect x="332" y="498" width="120" height="30" rx="7" fill="#2c2148"/><text class="svg-tiny" x="392" y="517" fill="#d9ccf7" text-anchor="middle">APPROVE</text>
+                <rect x="466" y="498" width="90" height="30" rx="7" fill="#1c242c" stroke="#4a5a49"/><text class="svg-tiny" x="511" y="517" fill="#c3ccc3" text-anchor="middle">HOLD</text>
+              </g>
+              <g font-family="Inter, sans-serif">
+                <text class="svg-tiny" x="40" y="168" fill="#8f9a91">STRUCTURAL</text><text class="svg-tiny" x="40" y="182" fill="#6e7770">global nav</text>
+                <text class="svg-tiny" x="40" y="212" fill="#8f9a91">STRUCTURAL</text><text class="svg-tiny" x="40" y="226" fill="#6e7770">header</text>
+                <text class="svg-tiny" x="40" y="272" fill="#7fa9e8">REUSABLE</text><text class="svg-tiny" x="40" y="286" fill="#6e7770">summary cards module</text>
+                <text class="svg-tiny" x="40" y="392" fill="#c9f1df">UNIQUE</text><text class="svg-tiny" x="40" y="406" fill="#6e7770">flagged-paycheck table</text>
+                <text class="svg-tiny" x="40" y="512" fill="#d9ccf7">UNIQUE</text><text class="svg-tiny" x="40" y="526" fill="#6e7770">approval bar</text>
+              </g>
+              <text class="svg-small" x="40" y="600" fill="#9aa39a">Table and approval bar get the most room — the ranking said so.</text>
+            </g>
+
+            <!-- STATE 5: TWO DIALS -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="40" y="56">Decision 05 · Two dials</text>
+              <text class="svg-title" x="40" y="92">Fidelity and annotation move apart.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="40" y="150" width="316" height="392" rx="12" fill="#141c17" stroke="#4a584d" stroke-width="1.5"/>
+                <rect x="56" y="166" width="284" height="26" rx="5" fill="#1c242c" stroke="#3e4c42"/>
+                <rect x="56" y="200" width="284" height="34" rx="5" fill="#1c242c" stroke="#3e4c42"/>
+                <rect x="56" y="244" width="88" height="50" rx="7" fill="#1c242c" stroke="#3e4c42"/>
+                <rect x="154" y="244" width="88" height="50" rx="7" fill="#1c242c" stroke="#3e4c42"/>
+                <rect x="252" y="244" width="88" height="50" rx="7" fill="#1c242c" stroke="#3e4c42"/>
+                <rect x="56" y="306" width="284" height="150" rx="7" fill="#171f18" stroke="#3e4c42"/>
+                <line x1="56" y1="340" x2="340" y2="340" stroke="#2c3630"/><line x1="56" y1="374" x2="340" y2="374" stroke="#2c3630"/><line x1="56" y1="408" x2="340" y2="408" stroke="#2c3630"/>
+                <rect x="56" y="468" width="284" height="30" rx="6" fill="#1c242c" stroke="#3e4c42"/>
+                <circle cx="330" cy="256" r="9" fill="#2a2416" stroke="#e7b85c" stroke-width="1.5"/><text class="svg-tiny" x="330" y="260" fill="#e7b85c" text-anchor="middle">1</text>
+                <circle cx="330" cy="318" r="9" fill="#2a2416" stroke="#e7b85c" stroke-width="1.5"/><text class="svg-tiny" x="330" y="322" fill="#e7b85c" text-anchor="middle">2</text>
+                <text class="svg-tiny" x="72" y="530" fill="#8f9a91">Grey boxes + note markers</text>
+              </g>
+              <g font-family="Inter, sans-serif">
+                <text class="svg-small" x="560" y="150" fill="#c3ccc3" text-anchor="middle" font-weight="700">FIDELITY</text>
+                <path d="M474 262 A86 86 0 0 1 646 262" fill="none" stroke="#4a584d" stroke-width="3"/>
+                <line x1="560" y1="262" x2="486" y2="248" stroke="#e7b85c" stroke-width="3"/><circle cx="560" cy="262" r="5" fill="#e7b85c"/>
+                <text class="svg-tiny" x="470" y="282" fill="#e7c98d" text-anchor="middle">LO</text>
+                <text class="svg-tiny" x="560" y="168" fill="#7a837b" text-anchor="middle">MID</text>
+                <text class="svg-tiny" x="650" y="282" fill="#7a837b" text-anchor="middle">HI</text>
+
+                <text class="svg-small" x="560" y="366" fill="#c3ccc3" text-anchor="middle" font-weight="700">ANNOTATION</text>
+                <path d="M474 478 A86 86 0 0 1 646 478" fill="none" stroke="#4a584d" stroke-width="3"/>
+                <line x1="560" y1="478" x2="634" y2="464" stroke="#75a9ff" stroke-width="3"/><circle cx="560" cy="478" r="5" fill="#75a9ff"/>
+                <text class="svg-tiny" x="470" y="498" fill="#7a837b" text-anchor="middle">NONE</text>
+                <text class="svg-tiny" x="560" y="384" fill="#7a837b" text-anchor="middle">LIGHT</text>
+                <text class="svg-tiny" x="652" y="498" fill="#9dc0e6" text-anchor="middle">HEAVY</text>
+              </g>
+              <text class="svg-small" x="40" y="600" fill="#9aa39a">Grey boxes can still gather rules, states, and behavior.</text>
+            </g>
+
+            <!-- STATE 6: SAMPLE CONTENT -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="40" y="56">Decision 06 · Sample content</text>
+              <text class="svg-title" x="40" y="92">Values that test the boxes.</text>
+              <rect x="300" y="134" width="420" height="440" rx="14" fill="#141c17" stroke="#5b6a5e" stroke-width="1.5"/>
+              <g font-family="Inter, sans-serif">
+                <rect x="316" y="150" width="182" height="48" rx="7" fill="#1c242c" stroke="#3e4c42"/><text class="svg-tiny" x="330" y="169" fill="#8f9a91">PAY PERIOD</text><text x="330" y="189" font-size="14" font-weight="700" fill="#e9eee8">MM/DD/YYYY</text>
+                <rect x="510" y="150" width="194" height="48" rx="7" fill="#1c242c" stroke="#3e4c42"/><text class="svg-tiny" x="524" y="169" fill="#8f9a91">TOTAL COST</text><text x="524" y="189" font-size="14" font-weight="700" fill="#e9eee8">$9,999,999.00</text>
+                <rect x="316" y="210" width="182" height="44" rx="7" fill="#1c242c" stroke="#3e4c42"/><text class="svg-tiny" x="330" y="228" fill="#8f9a91">HEADCOUNT</text><text x="330" y="246" font-size="13" font-weight="700" fill="#e9eee8">9,999 employees</text>
+                <rect x="316" y="270" width="388" height="250" rx="8" fill="#171f18" stroke="#6a7a68"/>
+                <text class="svg-tiny" x="332" y="292" fill="#aab4aa">EMPLOYEE</text><text class="svg-tiny" x="600" y="292" fill="#aab4aa">NET PAY</text>
+                <line x1="316" y1="304" x2="704" y2="304" stroke="#33403a"/>
+                <text class="svg-small" x="332" y="330" fill="#dbe3da">Aleksandra</text>
+                <text class="svg-small" x="332" y="348" fill="#dbe3da">Christophersen-Whitfield</text>
+                <text class="svg-small" x="600" y="330" fill="#dbe3da">$4,210.55</text>
+                <line x1="316" y1="368" x2="704" y2="368" stroke="#33403a"/>
+                <text class="svg-small" x="332" y="394" fill="#dbe3da">Devon Ng</text>
+                <text class="svg-small" x="600" y="394" fill="#e7b85c">$0.00</text>
+                <line x1="316" y1="414" x2="704" y2="414" stroke="#33403a"/>
+                <text class="svg-small" x="332" y="440" fill="#dbe3da">Priya Anand</text>
+                <text class="svg-small" x="600" y="440" fill="#dbe3da">$3,088.10</text>
+                <line x1="316" y1="460" x2="704" y2="460" stroke="#33403a"/>
+                <text class="svg-small" x="332" y="486" fill="#8f9a91">…9,996 more rows</text>
+              </g>
+              <text class="svg-small" x="510" y="600" fill="#9aa39a" text-anchor="middle">If it only survives three tidy rows, it isn't tested yet.</text>
+            </g>
+
+            <!-- STATE 7: FUNCTIONAL COLOR -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="40" y="56">Decision 07 · Functional color</text>
+              <text class="svg-title" x="40" y="92">Color only when it means something.</text>
+              <rect x="316" y="134" width="404" height="386" rx="14" fill="#141c17" stroke="#5b6a5e" stroke-width="1.5"/>
+              <g font-family="Inter, sans-serif">
+                <rect x="332" y="150" width="372" height="30" rx="6" fill="#1c242c" stroke="#3e4c42"/><text class="svg-tiny" x="348" y="170" fill="#8f9a91">GLOBAL NAV</text>
+                <rect x="332" y="190" width="372" height="290" rx="8" fill="#171f18" stroke="#3e4c42"/>
+                <text class="svg-tiny" x="348" y="212" fill="#aab4aa">FLAGGED-PAYCHECK TABLE</text>
+                <line x1="332" y1="224" x2="704" y2="224" stroke="#2c3630"/>
+                <path d="M352 250 l14 0 l-7 -13 z" fill="#ee795e"/>
+                <text class="svg-small" x="376" y="252" fill="#dbe3da">Marcus Bell — missing timecard</text>
+                <line x1="332" y1="270" x2="704" y2="270" stroke="#2c3630"/>
+                <text class="svg-small" x="352" y="298" fill="#dbe3da">Ana Duarte</text>
+                <text x="588" y="298" font-size="12" font-weight="650" fill="#75a9ff" text-decoration="underline" font-family="Inter, sans-serif">View register</text>
+                <line x1="332" y1="316" x2="704" y2="316" stroke="#2c3630"/>
+                <text class="svg-small" x="352" y="344" fill="#dbe3da">Priya Anand</text>
+                <line x1="332" y1="362" x2="704" y2="362" stroke="#2c3630"/>
+                <text class="svg-small" x="352" y="390" fill="#dbe3da">Devon Ng</text>
+              </g>
+              <path d="M300 268 l-16 0" stroke="#4a584d" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <rect x="44" y="238" width="240" height="60" rx="9" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <path d="M62 258 l14 0 l-7 -13 z" fill="#ee795e"/>
+              <text class="svg-tiny" x="84" y="260" fill="#f2a793">REVIEWER MARK · in the margin</text>
+              <text class="svg-small" x="62" y="284" fill="#f2a793">Whose approval is this?</text>
+              <g font-family="Inter, sans-serif">
+                <path d="M44 540 l14 0 l-7 -13 z" fill="#ee795e"/><text class="svg-tiny" x="70" y="540" fill="#c3ccc3">RED = validation error (inside)</text>
+                <text x="330" y="540" font-size="11" font-weight="650" fill="#75a9ff" text-decoration="underline">link</text><text class="svg-tiny" x="366" y="540" fill="#c3ccc3">BLUE = text link only</text>
+                <rect x="540" y="530" width="14" height="14" rx="3" fill="#2c3630"/><text class="svg-tiny" x="562" y="540" fill="#c3ccc3">GREY = everything else</text>
+              </g>
+              <text class="svg-small" x="40" y="600" fill="#9aa39a">Two reds can't be confused — one inside, one in the margin.</text>
+            </g>
+
+            <!-- STATE 8: ONE SCENARIO -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="40" y="56">Decision 08 · One scenario</text>
+              <text class="svg-title" x="40" y="92">One screen, one real moment.</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="48" y="150" width="316" height="180" rx="10" fill="#141c17" stroke="#43607d" stroke-width="1.5"/>
+                <text class="svg-small" x="66" y="178" fill="#9dc0e6" font-weight="700">Populated run</text>
+                <rect x="66" y="192" width="150" height="22" rx="6" fill="#182a3a" stroke="#43607d"/><text class="svg-tiny" x="141" y="207" fill="#9dc0e6" text-anchor="middle">18 FLAGGED</text>
+                <line x1="66" y1="238" x2="346" y2="238" stroke="#2c3630"/><line x1="66" y1="264" x2="346" y2="264" stroke="#2c3630"/><line x1="66" y1="290" x2="346" y2="290" stroke="#2c3630"/>
+                <rect x="66" y="300" width="80" height="20" rx="5" fill="#20182f" stroke="#9a83e0"/><text class="svg-tiny" x="106" y="314" fill="#d9ccf7" text-anchor="middle">APPROVE</text>
+
+                <rect x="396" y="150" width="316" height="180" rx="10" fill="#141c17" stroke="#4c8c6f" stroke-width="1.5"/>
+                <text class="svg-small" x="414" y="178" fill="#8fe0bd" font-weight="700">Clean run</text>
+                <rect x="414" y="192" width="200" height="22" rx="6" fill="#173a2b" stroke="#4c8c6f"/><text class="svg-tiny" x="514" y="207" fill="#8fe0bd" text-anchor="middle">0 FLAGGED — NOTHING TO HOLD</text>
+                <path d="M424 262 l12 12 l22 -26" fill="none" stroke="#63c99c" stroke-width="3"/>
+                <text class="svg-small" x="466" y="272" fill="#8fe0bd">ready to approve</text>
+
+                <rect x="48" y="360" width="316" height="180" rx="10" fill="#141c17" stroke="#a9853f" stroke-width="1.5"/>
+                <text class="svg-small" x="66" y="388" fill="#e7c98d" font-weight="700">Blocked run</text>
+                <rect x="66" y="402" width="230" height="22" rx="6" fill="#2a2416" stroke="#a9853f"/><text class="svg-tiny" x="181" y="417" fill="#e7c98d" text-anchor="middle">MISSING TIMECARDS — BLOCKED</text>
+                <path d="M66 452 l14 0 l-7 -13 z" fill="#e7b85c"/><text class="svg-small" x="90" y="454" fill="#e7c98d">3 paychecks cannot run</text>
+                <rect x="66" y="500" width="80" height="20" rx="5" fill="#1c242c" stroke="#4a5a49"/><text class="svg-tiny" x="106" y="514" fill="#7a837b" text-anchor="middle">APPROVE</text>
+
+                <rect x="396" y="360" width="316" height="180" rx="10" fill="#141c17" stroke="#5b6a5e" stroke-width="1.5"/>
+                <text class="svg-small" x="414" y="388" fill="#c3ccc3" font-weight="700">Read-only</text>
+                <rect x="414" y="402" width="220" height="22" rx="6" fill="#1c242c" stroke="#5b6a5e"/><text class="svg-tiny" x="524" y="417" fill="#c3ccc3" text-anchor="middle">NO APPROVAL RIGHTS</text>
+                <line x1="414" y1="448" x2="694" y2="448" stroke="#2c3630"/><line x1="414" y1="474" x2="694" y2="474" stroke="#2c3630"/>
+                <rect x="414" y="500" width="120" height="20" rx="5" fill="#171f18" stroke="#33403a" stroke-dasharray="4 4"/><text class="svg-tiny" x="474" y="514" fill="#6e7770" text-anchor="middle">APPROVE HIDDEN</text>
+              </g>
+              <text class="svg-small" x="40" y="600" fill="#9aa39a">Each variant is drawn and linked when a decision needs it.</text>
+            </g>
+
+            <!-- STATE 9: MARGIN NOTES -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="40" y="56">Decision 09 · Annotations</text>
+              <text class="svg-title" x="40" y="92">The behavior goes in the margin.</text>
+              <rect x="280" y="140" width="200" height="410" rx="12" fill="#141c17" stroke="#5b6a5e" stroke-width="1.5"/>
+              <g font-family="Inter, sans-serif">
+                <rect x="294" y="156" width="172" height="24" rx="5" fill="#1c242c" stroke="#3e4c42"/><text class="svg-tiny" x="308" y="172" fill="#8f9a91">NAV</text>
+                <rect x="294" y="190" width="172" height="30" rx="5" fill="#1c242c" stroke="#3e4c42"/>
+                <rect x="294" y="230" width="80" height="44" rx="6" fill="#182a3a" stroke="#43607d"/>
+                <rect x="386" y="230" width="80" height="44" rx="6" fill="#182a3a" stroke="#43607d"/>
+                <rect x="294" y="286" width="172" height="164" rx="6" fill="#171f18" stroke="#3e4c42"/>
+                <line x1="294" y1="316" x2="466" y2="316" stroke="#2c3630"/><line x1="294" y1="346" x2="466" y2="346" stroke="#2c3630"/><line x1="294" y1="376" x2="466" y2="376" stroke="#2c3630"/><line x1="294" y1="406" x2="466" y2="406" stroke="#2c3630"/>
+                <rect x="294" y="464" width="172" height="70" rx="6" fill="#20182f" stroke="#9a83e0"/>
+                <rect x="306" y="478" width="72" height="42" rx="6" fill="#2c2148"/><text class="svg-tiny" x="342" y="503" fill="#d9ccf7" text-anchor="middle">APPROVE</text>
+                <rect x="388" y="478" width="66" height="42" rx="6" fill="#1c242c" stroke="#4a5a49"/><text class="svg-tiny" x="421" y="503" fill="#c3ccc3" text-anchor="middle">HOLD</text>
+                <circle cx="386" cy="252" r="10" fill="#241b39" stroke="#ae8bf3" stroke-width="1.5"/><text class="svg-tiny" x="386" y="256" fill="#d9ccf7" text-anchor="middle">3</text>
+                <circle cx="342" cy="464" r="10" fill="#241b39" stroke="#ae8bf3" stroke-width="1.5"/><text class="svg-tiny" x="342" y="468" fill="#d9ccf7" text-anchor="middle">2</text>
+                <circle cx="421" cy="464" r="10" fill="#241b39" stroke="#ae8bf3" stroke-width="1.5"/><text class="svg-tiny" x="421" y="468" fill="#d9ccf7" text-anchor="middle">1</text>
+              </g>
+              <g font-family="Inter, sans-serif">
+                <circle cx="60" cy="250" r="11" fill="#241b39" stroke="#ae8bf3" stroke-width="1.5"/><text class="svg-tiny" x="60" y="254" fill="#d9ccf7" text-anchor="middle">2</text>
+                <text class="svg-small" x="82" y="246" fill="#cdd9ea">A hold triggers a notice</text>
+                <text class="svg-small" x="82" y="264" fill="#cdd9ea">to the run owner.</text>
+                <circle cx="500" cy="250" r="11" fill="#241b39" stroke="#ae8bf3" stroke-width="1.5"/><text class="svg-tiny" x="500" y="254" fill="#d9ccf7" text-anchor="middle">1</text>
+                <text class="svg-small" x="522" y="246" fill="#cdd9ea">Who can approve —</text>
+                <text class="svg-small" x="522" y="264" fill="#cdd9ea">admins with sign-off rights.</text>
+                <circle cx="500" cy="330" r="11" fill="#241b39" stroke="#ae8bf3" stroke-width="1.5"/><text class="svg-tiny" x="500" y="334" fill="#d9ccf7" text-anchor="middle">3</text>
+                <text class="svg-small" x="522" y="326" fill="#cdd9ea">Summary cards collapse to</text>
+                <text class="svg-small" x="522" y="344" fill="#cdd9ea">one column on a narrow screen.</text>
+              </g>
+              <text class="svg-small" x="40" y="600" fill="#9aa39a">Hand it over and they can tell you which paycheck to open first.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1 -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · The one thing</span>
+            <h2 id="scene-1-title">It starts with one sentence.</h2>
+            <p>A wireframe starts with one sentence, not a layout. This screen exists to let a payroll admin approve or hold a pay run. Every box added after this has to earn its place against that one job. Name the job wrong and the screen fills with things nobody needed.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 2 -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · Page contents</span>
+            <h2 id="scene-2-title">List it before you place it.</h2>
+            <p>Next comes a plain list of everything the screen carries, written before you decide where any of it goes. Pay period, total cost, headcount, the flagged paychecks, the approve and hold actions. Listing contents and arranging them are different jobs, and doing both at once lets the layout start driving the content. Keep the inventory dull and complete.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 3 -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · Priority</span>
+            <h2 id="scene-3-title">Rank it, apart from the layout.</h2>
+            <p>Then rank the contents by importance, apart from the layout. A Page Description Diagram sorts them into high, medium, and low without drawing a single box. Here the flagged paychecks and the approve control sit high, and the export link sits low. A big total at the top can own the eye while the real work sits in a table below it, so state the ranking instead of trusting size to carry it.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>The axes the build skips.</strong> There are two: <strong>scale</strong> (a complete screen, a single component, a state set, or a responsive set) and <strong>depth</strong> (a concept sketch, a requirements discussion, or an implementation handoff). Both are set on purpose, and both are independent of the priority work the scene just showed.
+        </aside>
+
+        <!-- SCENE 4 -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · Regions</span>
+            <h2 id="scene-4-title">Contents become labeled regions.</h2>
+            <p>Now the contents move into the boundary as labeled regions. The global nav is structural and repeats on every screen. The summary cards are a reusable module. The flagged-paycheck table and the approval bar are unique to this screen, and they get the most room because the ranking said so.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5 -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · Two dials</span>
+            <h2 id="scene-5-title">Fidelity and annotation are different dials.</h2>
+            <p>Fidelity and annotation are different dials. This screen can stay grey boxes while it gathers rules, states, and behavior notes. When a stakeholder asks for more detail, they usually mean more content and rules, not real color and type. Adding polish here would tell the room the design is finished while the structure is still the open question.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 6 -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Sample content</span>
+            <h2 id="scene-6-title">Fill the boxes with content that tests them.</h2>
+            <p>Sample content is a design decision, so fill the boxes with content that tests them. Symbolic values like <code>$9,999,999.00</code> and <code>MM/DD/YYYY</code> read as their type at a glance. Then push the edges: a run with 9,999 employees, a name too long for its column, a paycheck of <code>$0.00</code>. If the table only survives three tidy rows, the layout has not been tested yet.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>Most wireframes are templates.</strong> A page <em>type</em> like a pay-run review, not one specific run. Design the pattern, then prove it holds by instantiating it with one real scenario and its boundary content.
+        </aside>
+
+        <!-- SCENE 7 -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · Functional color</span>
+            <h2 id="scene-7-title">Color only when it carries meaning.</h2>
+            <p>Color only goes in when it carries meaning. Grayscale by default, red for a validation error like a paycheck missing a timecard, blue for a text link and nothing else. A button reads as a button by its shape, so coloring every control blue just adds noise. Because red already means an error inside the screen, a reviewer's problem mark goes in the margin outside, where the two reds can't be confused.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 8 -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · One scenario</span>
+            <h2 id="scene-8-title">One screen, one real moment.</h2>
+            <p>One screen shows one real moment, not every state stacked together. The populated run, the clean run with nothing flagged, and the blocked run with missing timecards are separate variants. Roles split it further. An admin without approval rights sees the same data with the approve button gone, and each variant is drawn and linked when a decision needs it.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 9 -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Annotations</span>
+            <h2 id="scene-9-title">The behavior goes in the margin.</h2>
+            <p>The behavior the picture can't show goes in the margin. Numbered notes sit outside the boundary, each on the same side as the thing it describes: who can approve, what a hold triggers, how the cards collapse on a narrow screen. The number links the note to its element, so a pointer that would cross the screen is left out. Hand this to a reviewer and they can tell you which paycheck to open first.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>Where this sits against its siblings.</strong> Not <a href="../problem-framing/frame-before-you-design.html"><code>problem-framing</code></a> (whether to build it), not <a href="../shaping/pick-a-direction.html"><code>shaping</code></a> (which direction), not <a href="../breadboarding/breadboard-before-you-draw-it.html"><code>breadboarding</code></a> (the mechanism in words), not <a href="../proposal/one-read-one-decision.html"><code>proposal</code></a> (the document someone approves). A breadboard's affordances <em>are</em> the page-contents inventory and its connection lines <em>are</em> the screen's exits, so the skill carries them rather than deriving a second set. When the screen contradicts the framed problem or the selected direction, it says so and sends it back instead of restating the problem in layout.
+        </aside>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">It tells a reviewer where to start.</h2>
+        <p><strong>A wireframe is an ordered set of decisions — one purpose, listed contents, stated priority, functional color, a single scenario, marginal annotations — made before and during the drawing rather than discovered in it.</strong> It carries a direction someone already chose, and a good one tells a reviewer where to start.</p>
+        <div class="final-equation"><span>Six decisions</span><span aria-hidden="true">→</span><span>then the drawing</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">Six settled decisions leading into a screen with the first thing to open marked</title>
+        <desc id="closing-diagram-desc">A checklist of six decisions — one purpose, listed contents, stated priority, functional color, a single scenario, marginal annotations — feeds into a drawn screen where one element is marked "open this first".</desc>
+        <defs>
+          <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+        </defs>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <rect x="34" y="58" width="356" height="46" rx="10" fill="#f4f1e8"/><path d="M52 81 l10 10 l18 -20" fill="none" stroke="#3f9d76" stroke-width="3"/><text x="96" y="86" font-size="14" fill="#1c2620">One purpose</text>
+          <rect x="34" y="116" width="356" height="46" rx="10" fill="#f4f1e8"/><path d="M52 139 l10 10 l18 -20" fill="none" stroke="#3f9d76" stroke-width="3"/><text x="96" y="144" font-size="14" fill="#1c2620">Listed contents</text>
+          <rect x="34" y="174" width="356" height="46" rx="10" fill="#f4f1e8"/><path d="M52 197 l10 10 l18 -20" fill="none" stroke="#3f9d76" stroke-width="3"/><text x="96" y="202" font-size="14" fill="#1c2620">Stated priority</text>
+          <rect x="34" y="232" width="356" height="46" rx="10" fill="#f4f1e8"/><path d="M52 255 l10 10 l18 -20" fill="none" stroke="#3f9d76" stroke-width="3"/><text x="96" y="260" font-size="14" fill="#1c2620">Functional color</text>
+          <rect x="34" y="290" width="356" height="46" rx="10" fill="#f4f1e8"/><path d="M52 313 l10 10 l18 -20" fill="none" stroke="#3f9d76" stroke-width="3"/><text x="96" y="318" font-size="14" fill="#1c2620">A single scenario</text>
+          <rect x="34" y="348" width="356" height="46" rx="10" fill="#f4f1e8"/><path d="M52 371 l10 10 l18 -20" fill="none" stroke="#3f9d76" stroke-width="3"/><text x="96" y="376" font-size="14" fill="#1c2620">Marginal annotations</text>
+        </g>
+        <path d="M398 226 H436" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)" fill="none"/>
+        <g font-family="Inter, sans-serif">
+          <rect x="452" y="96" width="212" height="300" rx="14" fill="#f9f8f1"/>
+          <rect x="452" y="96" width="212" height="30" rx="14" fill="#e7e3d6"/><rect x="452" y="112" width="212" height="14" fill="#e7e3d6"/>
+          <rect x="472" y="146" width="172" height="44" rx="8" fill="#fdeee9" stroke="#ee795e" stroke-width="2"/>
+          <text x="486" y="166" font-size="10" font-weight="800" fill="#b4462c" letter-spacing="1">OPEN THIS FIRST</text>
+          <text x="486" y="182" font-size="11" font-weight="700" fill="#7d2f1c">Marcus Bell — no timecard</text>
+          <line x1="472" y1="214" x2="644" y2="214" stroke="#d3cfc1"/><line x1="472" y1="240" x2="644" y2="240" stroke="#d3cfc1"/><line x1="472" y1="266" x2="644" y2="266" stroke="#d3cfc1"/>
+          <rect x="472" y="330" width="110" height="40" rx="9" fill="#173a2b"/><text x="527" y="355" font-size="13" font-weight="800" fill="#c9f1df" text-anchor="middle">APPROVE</text>
+        </g>
+        <text x="350" y="452" fill="#3f7a63" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">DECIDED BEFORE THE PIXELS, NOT DISCOVERED IN THEM</text>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where the method comes from.</h2>
+        <p class="sources-intro">The inventory, the ranking, and the content-area model are borrowed. The parts that are this library's own are named as such.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>Communicating Design</h3>
+            <p>Dan M. Brown, <em>Communicating Design</em> (2nd edition), chapter 7 — the page-contents inventory, the Page Description Diagram, the structural / reusable / unique content-area model, and the review-depth ladder.</p>
+            <a href="https://rosenfeldmedia.com/books/communicating-design/">Find the book</a>
+          </article>
+          <article class="source-card">
+            <h3>The wireframes skill</h3>
+            <p>The skill itself, with the discipline in depth in <code>references/method.md</code> and the review recipe in <code>references/facilitation.md</code>.</p>
+            <a href="../../skills/artifacts/wireframes/SKILL.md">Read the skill</a>
+          </article>
+          <article class="source-card">
+            <h3>This library's additions</h3>
+            <p>The enterprise pass, the carry-don't-re-derive rule, and the renderer split are this library's additions.</p>
+            <a href="https://github.com/rloureiro-paychex/design-skills">View the repository</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+
+  <footer>What a Wireframe Settles Before Drawing · An interactive explanation of the wireframes skill</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        1: 'One purpose',
+        2: 'Page contents',
+        3: 'Priority ranking',
+        4: 'Placed regions',
+        5: 'Two dials',
+        6: 'Sample content',
+        7: 'Functional color',
+        8: 'One scenario',
+        9: 'Margin notes'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

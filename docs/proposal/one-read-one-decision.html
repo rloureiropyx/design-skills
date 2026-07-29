@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An interactive explanation of how the proposal skill assembles a framed problem and a selected direction into a document a stakeholder can decide on in a single read.">
+  <meta name="description" content="An interactive explanation of how the proposal skill turns a framed problem and a chosen direction into one document a group can decide on in a single read.">
   <link rel="icon" href="data:,">
   <title>One Read, One Decision — How the proposal skill works</title>
   <style>
@@ -895,6 +895,7 @@
       .bridge-card { margin-bottom: 2.5rem; }
     }
 
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
@@ -902,6 +903,23 @@
         animation-iteration-count: 1 !important;
         transition-duration: .01ms !important;
       }
+    }
+
+    /* Short viewports: the tallest scene cards have to clear the pinned
+       graphic. The copy is fixed by the script, so the card gives ground
+       instead - chrome and leading only, never the copy itself. */
+    @media (max-height: 720px) {
+      .step-card { padding: clamp(1rem, 2.4vw, 1.55rem); }
+      .scene-number { margin-bottom: .55rem; }
+      .step h2 { margin-bottom: .55rem; }
+      .step p { line-height: 1.4; }
+    }
+
+    @media (max-height: 560px) {
+      .step-card { padding: .85rem 1rem; }
+      .step h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .45rem; }
+      .scene-number { margin-bottom: .4rem; font-size: .62rem; }
+      .step p { font-size: .84rem; line-height: 1.3; }
     }
   </style>
 </head>
@@ -911,272 +929,447 @@
 
   <main id="main">
     <article>
-    <!-- HERO -->
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">A product design skill · How the proposal works</p>
-        <h1>The work was done. The decision still wasn’t.</h1>
-        <p class="hero-deck"><strong>A third review ends with “let’s pick this up next week”.</strong> Not because the thinking is missing — because it is scattered across a deck, a doc, a thread, and someone’s memory. <code>proposal</code> assembles it into one thing a person can decide on.</p>
+        <p class="eyebrow">The library · The proposal skill</p>
+        <h1>One read, one decision.</h1>
+        <p class="hero-deck"><strong>A proposal is judged on whether it produces a decision.</strong> The sentences that stop it from doing so are the ones written to persuade. Every sentence has to trace back to the frame or to the directions document.</p>
         <span class="scroll-cue">Scroll to assemble the proposal</span>
       </div>
 
       <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
-        <title id="hero-title">Scattered fragments of thinking on one side and a single assembled document on the other</title>
-        <desc id="hero-desc">A deck, a thread, a spreadsheet and a sketch sit apart and undecidable. Assembled into one document, the same material becomes something a stakeholder can approve or decline.</desc>
-        <defs><filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter></defs>
-        <g opacity=".92">
-          <rect x="40" y="96" width="128" height="88" rx="12" fill="#e8e9e2" transform="rotate(-7 104 140)"/>
-          <rect x="52" y="212" width="116" height="76" rx="12" fill="#e8e9e2" transform="rotate(5 110 250)"/>
-          <rect x="30" y="316" width="140" height="70" rx="12" fill="#e8e9e2" transform="rotate(-4 100 351)"/>
-          <rect x="60" y="412" width="108" height="64" rx="12" fill="#e8e9e2" transform="rotate(8 114 444)"/>
+        <title id="hero-title">The proposal skill reading two documents and writing one decision</title>
+        <desc id="hero-desc">Two source documents, a framed problem and a directions document, feed into a proposal that produces a single decision. Nothing in the proposal is new; each part was decided upstream and placed here.</desc>
+        <defs>
+          <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity=".26"/>
+          </filter>
+          <marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#8f6fe0"/></marker>
+        </defs>
+        <g filter="url(#heroShadow)" font-family="Inter, sans-serif" font-weight="700">
+          <rect x="34" y="66" width="238" height="60" rx="14" fill="#f9f8f1" stroke="#75a9ff" stroke-width="2"/>
+          <text x="54" y="93" font-size="13" fill="#3b6bbf">INPUT</text>
+          <text x="54" y="114" font-size="15" fill="#151914">FRAMED_PROBLEM.md</text>
+          <rect x="348" y="66" width="238" height="60" rx="14" fill="#f9f8f1" stroke="#75a9ff" stroke-width="2"/>
+          <text x="368" y="93" font-size="13" fill="#3b6bbf">INPUT</text>
+          <text x="368" y="114" font-size="15" fill="#151914">DIRECTIONS.md</text>
         </g>
-        <text x="100" y="76" fill="#8d968c" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.2">SCATTERED</text>
-        <path d="M196 280 H268" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#heroArrow)"/>
-        <defs><marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
-        <g filter="url(#heroShadow)">
-          <rect x="292" y="86" width="268" height="388" rx="20" fill="#f9f8f1"/>
-          <text x="322" y="128" fill="#667068" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">PROPOSAL.MD</text>
-          <rect x="322" y="146" width="208" height="40" rx="9" fill="#dceddf"/><text x="340" y="171" fill="#244135" font-family="Inter, sans-serif" font-size="13" font-weight="700">Problem</text>
-          <rect x="322" y="196" width="208" height="40" rx="9" fill="#cfe9d8"/><text x="340" y="221" fill="#244135" font-family="Inter, sans-serif" font-size="13" font-weight="700">Time budget — 6 weeks</text>
-          <rect x="322" y="246" width="208" height="40" rx="9" fill="#eee4fb"/><text x="340" y="271" fill="#443259" font-family="Inter, sans-serif" font-size="13" font-weight="700">The direction</text>
-          <rect x="322" y="296" width="208" height="40" rx="9" fill="#f5e8c8"/><text x="340" y="321" fill="#57441f" font-family="Inter, sans-serif" font-size="13" font-weight="700">Rabbit holes</text>
-          <rect x="322" y="346" width="208" height="40" rx="9" fill="#f8ded6"/><text x="340" y="371" fill="#5c2f24" font-family="Inter, sans-serif" font-size="13" font-weight="700">Not this time</text>
-          <rect x="322" y="396" width="208" height="40" rx="9" fill="#e4eafa"/><text x="340" y="421" fill="#273752" font-family="Inter, sans-serif" font-size="13" font-weight="700">Still open</text>
+        <path d="M153 126 C153 190 240 190 262 226" fill="none" stroke="#8f6fe0" stroke-width="2.5" marker-end="url(#heroArrow)"/>
+        <path d="M467 126 C467 190 380 190 358 226" fill="none" stroke="#8f6fe0" stroke-width="2.5" marker-end="url(#heroArrow)"/>
+        <g filter="url(#heroShadow)" font-family="Inter, sans-serif" font-weight="700">
+          <rect x="176" y="232" width="268" height="96" rx="16" fill="#f4eefe" stroke="#ae8bf3" stroke-width="2.5"/>
+          <text x="200" y="266" font-size="18" fill="#151914">PROPOSAL.md</text>
+          <text x="200" y="294" font-size="13" fill="#6b4fb0">assembled, not authored</text>
+          <text x="200" y="314" font-size="12" fill="#6b6f66">each part decided upstream</text>
         </g>
-        <text x="426" y="524" fill="#63c99c" font-family="Inter, sans-serif" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="1.8">DECIDABLE</text>
+        <path d="M310 328 V392" fill="none" stroke="#8f6fe0" stroke-width="3" marker-end="url(#heroArrow)"/>
+        <g filter="url(#heroShadow)" font-family="Inter, sans-serif" font-weight="700">
+          <rect x="196" y="400" width="228" height="82" rx="16" fill="#ae8bf3"/>
+          <text x="310" y="434" font-size="17" fill="#1b1330" text-anchor="middle">ONE DECISION</text>
+          <text x="310" y="460" font-size="12" fill="#2c1f4a" text-anchor="middle">go · less · back · no</text>
+        </g>
+        <text x="310" y="524" fill="#8a5a45" font-family="Inter, sans-serif" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="1.6">READS TWO. WRITES ONE.</text>
       </svg>
     </header>
 
     <section class="intro" aria-labelledby="intro-title">
-      <p class="eyebrow">The job</p>
-      <h2 id="intro-title">Turn a chosen direction into something a person can say yes or no to.</h2>
-      <p>By the time a project reaches this point, the hard thinking has happened. A problem was framed. A direction was chosen over alternatives, against numbered requirements, inside a time budget. What is usually missing is a single artifact that lets someone who was not in those conversations commit — or decline — without reopening them.</p>
-      <p><code>proposal</code> assembles that artifact. It carries the frame and the direction forward rather than restating them in fresh words, and it refuses to write at all when an input it depends on is missing. Assembly, not authorship, is the whole discipline: anything that has to be invented here means a step upstream was skipped.</p>
-      <p class="definition"><strong>The output is a decision, not a document.</strong> <code>PROPOSAL.md</code> holds the problem, the time budget, the chosen direction, the rabbit holes, the exclusions, and what is still open — in the order a reader needs them, so one pass through it is enough to answer <em>are we doing this?</em></p>
+      <p class="eyebrow">The skill</p>
+      <h2 id="intro-title">A proposal is assembly, not authoring.</h2>
+      <p>A proposal is the document a group can act on without another meeting, and the last artifact written before Design starts.</p>
+      <p><code>proposal</code> is one of the eight skills in this library. It reads <code>FRAMED_PROBLEM.md</code> and <code>DIRECTIONS.md</code>, compresses what they settled, and writes <code>PROPOSAL.md</code>. Nothing in it is new.</p>
+      <p class="definition"><strong>Every sentence traces back to the frame or to the directions document.</strong> A sentence that traces to neither is the writer starting to sell.</p>
     </section>
 
     <section class="scrolly" aria-label="How a proposal is assembled">
       <div class="graphic-wrap">
         <div class="graphic-shell" aria-hidden="true">
-          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">No decision</span></div>
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 08</span><span class="graphic-label" id="diagram-label">Trace map</span></div>
           <svg viewBox="0 0 760 620" focusable="false">
             <defs>
-              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
-              </marker>
-              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
-              </pattern>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker>
+              <marker id="arrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ae8bf3"/></marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+              <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#75a9ff"/></marker>
+              <marker id="arrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/></pattern>
             </defs>
             <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
 
-            <!-- DIAGRAM 1: NO DECISION -->
-            <g class="diagram-state is-active" data-state="1"><text class="svg-kicker" x="64" y="56">The meeting</text><text class="svg-title" x="64" y="92">Everyone has an opinion. Nobody has a decision.</text><rect x="60" y="176" width="640" height="200" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="88" y="212" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">THE REVIEW</text><rect x="88" y="230" width="280" height="42" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="256.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">“How long is this, roughly?”</text><rect x="88" y="286" width="280" height="42" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="312.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">“Does this cover contractors?”</text><rect x="392" y="230" width="280" height="42" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="410" y="256.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">“What are we not doing?”</text><rect x="392" y="286" width="280" height="42" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="410" y="312.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">“Can we see the other option?”</text><rect x="60" y="418" width="640" height="72" rx="14" fill="#1b2720" stroke="#ee795e" stroke-width="1.8" stroke-dasharray="7 5"/><text x="380" y="452" fill="#ee795e" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" letter-spacing="1">OUTCOME: “LET’S PICK THIS UP NEXT WEEK”</text><text x="380" y="476" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Third time. The answers exist — they were never written in one place.</text><text class="svg-small" x="64" y="556">The work was done. The document that lets someone commit to it was not.</text></g>
+            <!-- DIAGRAM 1: TRACE MAP -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="40" y="60">The claim</text>
+              <text class="svg-title" x="40" y="96">One document, one decision.</text>
+              <rect x="70" y="150" width="250" height="58" rx="12" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-tiny" x="90" y="176" fill="#bcd4ff">INPUT · THE FRAME</text>
+              <text class="svg-small" x="90" y="196" fill="#dbe8ff">FRAMED_PROBLEM.md</text>
+              <rect x="440" y="150" width="250" height="58" rx="12" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-tiny" x="460" y="176" fill="#bcd4ff">INPUT · THE DIRECTION</text>
+              <text class="svg-small" x="460" y="196" fill="#dbe8ff">DIRECTIONS.md</text>
+              <path class="svg-line-muted" d="M195 208 C195 268 330 260 350 300" marker-end="url(#arrow)"/>
+              <path class="svg-line-muted" d="M565 208 C565 268 430 260 410 300" marker-end="url(#arrow)"/>
+              <text class="svg-tiny" x="248" y="258">trace</text>
+              <text class="svg-tiny" x="470" y="258">trace</text>
+              <rect x="270" y="304" width="220" height="76" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="2"/>
+              <text class="svg-tiny" x="292" y="332" fill="#dfd0fa">THE PROPOSAL</text>
+              <text class="svg-small" x="292" y="356" fill="#efe6ff">PROPOSAL.md</text>
+              <path d="M380 380 V444" fill="none" stroke="#ae8bf3" stroke-width="2.5" marker-end="url(#arrowViolet)"/>
+              <rect x="285" y="452" width="190" height="72" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-small" x="380" y="484" fill="#efe6ff" text-anchor="middle">A DECISION</text>
+              <text class="svg-tiny" x="380" y="506" fill="#c9b6f0" text-anchor="middle">go · less · back · no</text>
+              <text class="svg-small" x="40" y="576">Every sentence traces back to the frame or the directions document.</text>
+            </g>
+
             <!-- DIAGRAM 2: TWO INPUTS -->
-            <g class="diagram-state" data-state="2"><text class="svg-kicker" x="64" y="56">Two inputs</text><text class="svg-title" x="64" y="92">The proposal is assembled, not authored.</text><rect x="60" y="172" width="210" height="150" rx="14" fill="#f4f1e8"/><text x="84" y="204" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FRAMED_PROBLEM.MD</text><path d="M84 228 H246" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 248 H246" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 268 H218" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 288 H246" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><text class="svg-small" x="165" y="344" text-anchor="middle">user · tension · outcome</text><text class="svg-small" x="165" y="366" text-anchor="middle">evidence · boundaries</text><rect x="60" y="400" width="210" height="130" rx="14" fill="#f4f1e8"/><text x="84" y="432" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">DIRECTIONS.MD</text><path d="M84 456 H246" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 476 H246" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 496 H218" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><text class="svg-small" x="165" y="552" text-anchor="middle">direction · time budget · fit check</text><path class="svg-line" d="M270 250 C320 250 326 316 372 316" marker-end="url(#arrow)"/><path class="svg-line" d="M270 466 C320 466 326 350 372 316" marker-end="url(#arrow)"/><circle cx="452" cy="316" r="80" fill="#1d2a22" stroke="#63c99c" stroke-width="2"/><text class="svg-label" x="452" y="312" text-anchor="middle">proposal</text><text class="svg-small" x="452" y="336" text-anchor="middle">assemble · carry</text><path class="svg-line" d="M534 316 H600" marker-end="url(#arrow)"/><rect x="600" y="246" width="118" height="140" rx="14" fill="#f4f1e8"/><text x="624" y="278" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">PROPOSAL</text><path d="M624 302 H694" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M624 322 H694" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M624 342 H666" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M624 362 H694" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><text class="svg-small" x="64" y="596">Nothing here is new thinking. Anything that has to be invented at this point means a step was skipped.</text></g>
-            <!-- DIAGRAM 3: WHEN IT REFUSES -->
-            <g class="diagram-state" data-state="3"><text class="svg-kicker" x="64" y="56">The gate</text><text class="svg-title" x="64" y="92">Four reasons to refuse to write.</text><rect x="60" y="176" width="640" height="52" rx="11" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="78" y="199" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">No Framed Problem</text><text x="78" y="217" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="650">→ run problem-framing first. A proposal cannot argue for a problem nobody stated.</text><rect x="60" y="244" width="640" height="52" rx="11" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="78" y="267" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">No selected direction</text><text x="78" y="285" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="650">→ run shaping. Presenting options is a workshop, not a decision.</text><rect x="60" y="312" width="640" height="52" rx="11" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="78" y="335" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">No time budget</text><text x="78" y="353" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="650">→ ask for the number. Without it there is nothing to approve, only something to admire.</text><rect x="60" y="380" width="640" height="52" rx="11" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="78" y="403" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">An unresolved ⚠️ on the chosen direction</text><text x="78" y="421" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="650">→ run the spike. Do not sell an unknown as a plan.</text><rect x="60" y="456" width="640" height="52" rx="11" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="78" y="479" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">All four clear</text><text x="78" y="497" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="650">→ write the proposal.</text><text class="svg-small" x="64" y="556">The refusal is the useful part. A proposal written over a missing input transfers the gap to whoever approves it.</text></g>
-            <!-- DIAGRAM 4: TIME BUDGET FIRST -->
-            <g class="diagram-state" data-state="4"><text class="svg-kicker" x="64" y="56">Structure</text><text class="svg-title" x="64" y="92">Time budget goes near the top, not the footnotes.</text><rect x="60" y="166" width="300" height="330" rx="18" fill="#1b2720" stroke="#6d4a41" stroke-width="1.6"/><text x="88" y="200" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">BURIED — WRONG</text><rect x="88" y="216" width="244" height="36" rx="8" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="239.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Background</text><rect x="88" y="258" width="244" height="36" rx="8" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="281.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Research summary</text><rect x="88" y="300" width="244" height="36" rx="8" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="323.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">The solution, in detail</text><rect x="88" y="342" width="244" height="36" rx="8" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="365.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Mockups</text><rect x="88" y="384" width="244" height="36" rx="8" fill="#3a2118" stroke="#ee795e" stroke-width="2"/><text x="106" y="407.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Timeline (page 9)</text><text x="88" y="452" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11" font-weight="650">The reader forms an opinion on the</text><text x="88" y="472" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11" font-weight="650">solution before knowing its cost.</text><rect x="400" y="166" width="300" height="330" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="428" y="200" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">TIME BUDGET FIRST — RIGHT</text><rect x="428" y="216" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="239.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">The problem, in one line</text><rect x="428" y="258" width="244" height="36" rx="8" fill="#1f4536" stroke="#63c99c" stroke-width="2"/><text x="446" y="281.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Time budget: six weeks</text><rect x="428" y="300" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="323.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">The direction and its parts</text><rect x="428" y="342" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="365.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Rabbit holes · exclusions</text><rect x="428" y="384" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="407.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">What is still open</text><text x="428" y="452" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Every later paragraph is read as</text><text x="428" y="472" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">“is this worth six weeks?”</text><text class="svg-small" x="64" y="552">Time budget is not a schedule. It is the size of the commitment, and it changes how everything after it is read.</text></g>
-            <!-- DIAGRAM 5: THE DIRECTION -->
-            <g class="diagram-state" data-state="5"><text class="svg-kicker" x="64" y="56">The direction</text><text class="svg-title" x="64" y="92">Show the mechanism. Withhold the pixels.</text><rect x="60" y="168" width="380" height="290" rx="18" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="88" y="202" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">DIRECTION B — READINESS AHEAD OF THE RUN</text><rect x="88" y="220" width="324" height="46" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="248.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12.5" font-weight="750">Nightly sweep flags blockers</text><rect x="88" y="278" width="324" height="46" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="306.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12.5" font-weight="750">Owners are notified, with the fix</text><rect x="88" y="336" width="324" height="46" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="364.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12.5" font-weight="750">The run opens already clean</text><text x="88" y="414" fill="#b49cd8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Three mechanisms. Each one cuttable.</text><rect x="470" y="168" width="230" height="134" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/><text x="494" y="202" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">WHAT IT GIVES UP</text><text x="494" y="232" fill="#f4d89c" font-family="Inter, sans-serif" font-size="12" font-weight="650">Nothing improves for a run</text><text x="494" y="252" fill="#f4d89c" font-family="Inter, sans-serif" font-size="12" font-weight="650">that is already in trouble</text><text x="494" y="282" fill="#c9a869" font-family="Inter, sans-serif" font-size="11" font-weight="600">Direction A did fix that.</text><rect x="470" y="324" width="230" height="134" rx="16" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="6 5"/><text x="494" y="358" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">NOT IN THIS DOCUMENT</text><text x="494" y="388" fill="#8f9a90" font-family="Inter, sans-serif" font-size="12" font-weight="650">Layout · copy · states</text><text x="494" y="410" fill="#8f9a90" font-family="Inter, sans-serif" font-size="12" font-weight="650">Component choices</text><text x="494" y="438" fill="#6f7b72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Design decides those.</text><text class="svg-small" x="64" y="528">Naming what the direction gives up is what makes the rest of the document believable.</text></g>
-            <!-- DIAGRAM 6: RABBIT HOLES -->
-            <g class="diagram-state" data-state="6"><text class="svg-kicker" x="64" y="56">Rabbit holes</text><text class="svg-title" x="64" y="92">The traps, named before someone falls in.</text><path d="M100 210 C100 300 140 340 200 340 C260 340 300 300 300 210" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="200" y="190" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1.4">RABBIT HOLE</text><text x="200" y="268" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Retro-fitting the sweep</text><text x="200" y="292" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">to legacy pay groups</text><path class="svg-line" d="M312 275 H392" marker-end="url(#arrow)"/><rect x="404" y="216" width="296" height="120" rx="16" fill="#18342a" stroke="#63c99c" stroke-width="1.8"/><text x="428" y="250" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">THE PATCH</text><text x="428" y="280" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">Current-generation pay groups</text><text x="428" y="302" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">only, in this cycle.</text><text x="428" y="324" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="600">Legacy is a separate decision.</text><rect x="60" y="396" width="640" height="94" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="84" y="428" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13.5" font-weight="750">A rabbit hole is a specific trap with a specific patch</text><text x="84" y="454" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="600">“Scope creep” and “technical complexity” are not rabbit holes. They are worries.</text><text x="84" y="476" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="600">If it has no patch, it is a risk — and it belongs in the section below, not here.</text><text class="svg-small" x="64" y="552">This is the section a builder reads twice.</text></g>
-            <!-- DIAGRAM 7: NOT THIS TIME -->
-            <g class="diagram-state" data-state="7"><text class="svg-kicker" x="64" y="56">Not this time</text><text class="svg-title" x="64" y="92">Say it here or defend it in week four.</text><rect x="60" y="180" width="640" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="206" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Bulk-resolve across pay groups</text><text x="78" y="226" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Cut to fit the time budget. Named so it stops being re-proposed.</text><rect x="60" y="250" width="640" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="276" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Mobile-native experience</text><text x="78" y="296" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Out of scope for this cycle. Not a judgement about its value.</text><rect x="60" y="320" width="640" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="346" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Changing who owns a blocker</text><text x="78" y="366" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Touches permissions. A different decision, with its own time budget.</text><rect x="60" y="410" width="640" height="80" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="84" y="444" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13.5" font-weight="750">Why not now — never why not ever</text><text x="84" y="470" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="600">An exclusion closed forever turns the proposal into a verdict on other people’s ideas.</text><text class="svg-small" x="64" y="546">Every exclusion here was a real request from someone. Naming it is how they stay in the conversation.</text></g>
-            <!-- DIAGRAM 8: STILL OPEN -->
-            <g class="diagram-state" data-state="8"><text class="svg-kicker" x="64" y="56">Still open</text><text class="svg-title" x="64" y="92">The section that makes the rest trustworthy.</text><rect x="60" y="176" width="320" height="96" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="78" y="202" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Risks carried from the frame</text><text x="78" y="222" fill="#f4d89c" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Adoption depends on owners reading notifications.</text><rect x="396" y="176" width="304" height="96" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="414" y="202" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Assumptions not yet verified</text><text x="414" y="222" fill="#f4d89c" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">That a nightly window is acceptable to ops.</text><rect x="60" y="292" width="320" height="96" rx="12" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="78" y="318" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Open spike</text><text x="78" y="338" fill="#dfd0fa" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">R6 at 40,000 employees. Two days, before the build.</text><rect x="396" y="292" width="304" height="96" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="414" y="318" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Left for Design</text><text x="414" y="338" fill="#c8dcff" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Layout, copy, empty and error states.</text><rect x="60" y="416" width="640" height="82" rx="14" fill="#1b2720" stroke="#ee795e" stroke-width="1.6"/><text x="84" y="450" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13.5" font-weight="750">A surprise later that was known now costs every future proposal</text><text x="84" y="476" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="600">The uncomfortable item is the one worth writing. Everything else is decoration.</text><text class="svg-small" x="64" y="552">This is the difference between a proposal and a sales pitch.</text></g>
-            <!-- DIAGRAM 9: THE DECISION -->
-            <g class="diagram-state" data-state="9"><text class="svg-kicker" x="64" y="56">The decision</text><text class="svg-title" x="64" y="92">One read. Four possible answers.</text><rect x="60" y="172" width="220" height="300" rx="14" fill="#f4f1e8"/><text x="84" y="204" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">PROPOSAL.MD</text><path d="M84 228 H256" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 248 H256" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 268 H228" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 288 H256" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 308 H256" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 328 H228" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 348 H256" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path d="M84 368 H256" stroke="#9aa398" stroke-width="3" stroke-linecap="round"/><path class="svg-line" d="M292 322 H352" marker-end="url(#arrow)"/><rect x="370" y="176" width="330" height="62" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="388" y="202" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Approve</text><text x="388" y="222" fill="#c9f1df" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Worth the time budget. Build it.</text><rect x="370" y="254" width="330" height="62" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="388" y="280" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Approve with a smaller time budget</text><text x="388" y="300" fill="#c8dcff" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Worth doing, worth less. Shaping cuts scope.</text><rect x="370" y="332" width="330" height="62" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="388" y="358" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Send it back</text><text x="388" y="378" fill="#f4d89c" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">A stated open item has to be closed first.</text><rect x="370" y="410" width="330" height="62" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="388" y="436" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Decline</text><text x="388" y="456" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Not now. The reasoning stays on the record.</text><text class="svg-small" x="64" y="528">All four are successful outcomes. A proposal that can only be approved was written to be sold, not read.</text><text class="svg-small" x="64" y="554">The reasoning stays with the document, so the same argument does not have to be had again in a quarter.</text></g>
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="40" y="60">The inputs</text>
+              <text class="svg-title" x="40" y="96">Two inputs feed one proposal.</text>
+              <rect x="46" y="164" width="290" height="80" rx="14" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-small" x="66" y="192" fill="#dbe8ff">FRAMED_PROBLEM.md</text>
+              <text class="svg-tiny" x="66" y="216" fill="#bcd4ff">PROBLEM · EVIDENCE · BOUNDARIES</text>
+              <rect x="46" y="300" width="290" height="80" rx="14" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-small" x="66" y="328" fill="#dbe8ff">DIRECTIONS.md</text>
+              <text class="svg-tiny" x="66" y="352" fill="#bcd4ff">CHOSEN DIRECTION · TIME BUDGET</text>
+              <path d="M336 204 C420 204 440 260 470 282" fill="none" stroke="#75a9ff" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+              <path d="M336 340 C420 340 440 300 470 300" fill="none" stroke="#75a9ff" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+              <rect x="476" y="240" width="234" height="120" rx="16" fill="#251d33" stroke="#ae8bf3" stroke-width="2"/>
+              <text class="svg-small" x="596" y="286" fill="#efe6ff" text-anchor="middle">PROPOSAL.md</text>
+              <text class="svg-tiny" x="596" y="312" fill="#c9b6f0" text-anchor="middle">COMPRESSED</text>
+              <text class="svg-tiny" x="596" y="332" fill="#c9b6f0" text-anchor="middle">AND CARRIED FORWARD</text>
+              <path d="M120 380 C120 452 300 452 300 434" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="8 5"/>
+              <rect x="150" y="452" width="330" height="52" rx="12" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-small" x="172" y="483" fill="#f2a793">rewrite the problem in new words</text>
+              <path d="M156 458 L474 498 M474 458 L156 498" stroke="#ee795e" stroke-width="2" opacity=".85"/>
+              <text class="svg-small" x="40" y="556" fill="#f2a793">Struck out: rewriting changes it, so the approved version stops matching the evidenced one.</text>
+            </g>
+
+            <!-- DIAGRAM 3: REFUSAL GATE -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="40" y="60">The gate</text>
+              <text class="svg-title" x="40" y="96">Four conditions stop the writing.</text>
+              <rect x="44" y="146" width="300" height="52" rx="11" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="170" fill="#f2a793">BLOCK 01</text>
+              <text class="svg-small" x="140" y="178" fill="#f7cabb">No framed problem</text>
+              <rect x="44" y="212" width="300" height="52" rx="11" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="236" fill="#f2a793">BLOCK 02</text>
+              <text class="svg-small" x="140" y="244" fill="#f7cabb">No selected direction</text>
+              <rect x="44" y="278" width="300" height="52" rx="11" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="302" fill="#f2a793">BLOCK 03</text>
+              <text class="svg-small" x="140" y="310" fill="#f7cabb">No time budget</text>
+              <rect x="44" y="344" width="300" height="52" rx="11" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="368" fill="#f2a793">BLOCK 04</text>
+              <text class="svg-small" x="140" y="376" fill="#f7cabb">Warning flag still open</text>
+              <g stroke="#8b9a8f" stroke-width="6" stroke-linecap="round">
+                <path d="M418 150 V392"/><path d="M446 150 V392"/><path d="M474 150 V392"/>
+              </g>
+              <text class="svg-tiny" x="446" y="416" fill="#9ea99f" text-anchor="middle">CLOSED GATE</text>
+              <rect x="524" y="230" width="190" height="86" rx="14" fill="#20241f" stroke="#5b655a" stroke-width="1.5" stroke-dasharray="7 5"/>
+              <text class="svg-small" x="619" y="270" fill="#9ea99f" text-anchor="middle">PROPOSAL.md</text>
+              <text class="svg-tiny" x="619" y="292" fill="#8a938a" text-anchor="middle">NOT YET WRITTEN</text>
+              <text class="svg-small" x="40" y="470" fill="#f2a793">Each gap moves the decision to whoever approves the work.</text>
+            </g>
+
+            <!-- DIAGRAM 4: BUDGET FIRST -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="40" y="60">The order</text>
+              <text class="svg-title" x="40" y="96">Time budget goes first.</text>
+              <rect x="140" y="150" width="420" height="46" rx="11" fill="#1b2720" stroke="#3e4c42" stroke-width="1.5"/>
+              <text class="svg-small" x="164" y="178" fill="#e9eee8">Problem, carried from the frame</text>
+              <rect x="110" y="210" width="480" height="58" rx="12" fill="#33290f" stroke="#e7b85c" stroke-width="2.5"/>
+              <text class="svg-tiny" x="134" y="234" fill="#e7c98d">RAISED · READ FIRST</text>
+              <text class="svg-small" x="134" y="254" fill="#f3dca6">Time budget · the size of the commitment</text>
+              <rect x="140" y="282" width="420" height="46" rx="11" fill="#1b2720" stroke="#3e4c42" stroke-width="1.5"/>
+              <text class="svg-small" x="164" y="310" fill="#e9eee8">Direction, given as its parts</text>
+              <rect x="140" y="342" width="420" height="46" rx="11" fill="#1b2720" stroke="#3e4c42" stroke-width="1.5"/>
+              <text class="svg-small" x="164" y="370" fill="#e9eee8">Rabbit holes, each with its decision</text>
+              <rect x="140" y="402" width="420" height="46" rx="11" fill="#1b2720" stroke="#3e4c42" stroke-width="1.5"/>
+              <text class="svg-small" x="164" y="430" fill="#e9eee8">Exclusions, scoped to this cycle</text>
+              <path d="M600 239 C640 239 640 150 604 150" fill="none" stroke="#e7b85c" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+              <text class="svg-tiny" x="612" y="200" fill="#e7c98d">lifted</text>
+              <text class="svg-tiny" x="612" y="216" fill="#e7c98d">up</text>
+              <text class="svg-small" x="40" y="502">Put the number early, and every later paragraph is read against it.</text>
+            </g>
+
+            <!-- DIAGRAM 5: DIRECTION AS PARTS -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="40" y="60">Enough to decide</text>
+              <text class="svg-title" x="40" y="96">The direction as parts.</text>
+              <rect x="44" y="150" width="216" height="120" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="66" y="178" fill="#c9f1df">PART A</text>
+              <text class="svg-small" x="66" y="202" fill="#daf3e8">Something a person</text>
+              <text class="svg-small" x="66" y="222" fill="#daf3e8">can experience</text>
+              <text class="svg-tiny" x="66" y="250" fill="#8fd9b8">gives up: one line</text>
+              <rect x="272" y="150" width="216" height="120" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="294" y="178" fill="#c9f1df">PART B</text>
+              <text class="svg-small" x="294" y="202" fill="#daf3e8">Something a person</text>
+              <text class="svg-small" x="294" y="222" fill="#daf3e8">can experience</text>
+              <text class="svg-tiny" x="294" y="250" fill="#8fd9b8">gives up: one line</text>
+              <rect x="500" y="150" width="216" height="120" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="522" y="178" fill="#c9f1df">PART C</text>
+              <text class="svg-small" x="522" y="202" fill="#daf3e8">Something a person</text>
+              <text class="svg-small" x="522" y="222" fill="#daf3e8">can experience</text>
+              <text class="svg-tiny" x="522" y="250" fill="#8fd9b8">gives up: one line</text>
+              <rect x="214" y="304" width="332" height="196" rx="14" fill="#20241f" stroke="#5b655a" stroke-width="1.5" stroke-dasharray="7 5"/>
+              <g stroke="#4a544a" stroke-width="2" fill="none">
+                <path d="M244 336 H516"/><path d="M244 364 H430"/><path d="M244 392 H500"/><path d="M244 420 H400"/>
+              </g>
+              <rect x="300" y="440" width="160" height="34" rx="8" fill="#2a2f28"/>
+              <text class="svg-small" x="380" y="463" fill="#b6c0b7" text-anchor="middle">NOT HERE</text>
+              <text class="svg-tiny" x="380" y="322" fill="#9ea99f" text-anchor="middle">layout · copy · states · component choices</text>
+              <text class="svg-small" x="40" y="546">Settling those here turns the proposal into a specification no one agreed to.</text>
+            </g>
+
+            <!-- DIAGRAM 6: TRAPS AND CUTS -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="40" y="60">Named with reasons</text>
+              <text class="svg-title" x="40" y="96">Traps and cuts, each paired.</text>
+              <rect x="44" y="146" width="286" height="54" rx="11" fill="#33290f" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="170" fill="#e7c98d">RABBIT HOLE</text>
+              <text class="svg-small" x="64" y="188" fill="#f3dca6">A place the work could vanish</text>
+              <path d="M330 173 H426" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+              <rect x="432" y="146" width="286" height="54" rx="11" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="452" y="170" fill="#c9f1df">DECISION THAT KEEPS IT OUT</text>
+              <text class="svg-small" x="452" y="188" fill="#daf3e8">not that part, this cycle</text>
+              <rect x="44" y="214" width="286" height="54" rx="11" fill="#33290f" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="238" fill="#e7c98d">RABBIT HOLE</text>
+              <text class="svg-small" x="64" y="256" fill="#f3dca6">A second specific trap</text>
+              <path d="M330 241 H426" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+              <rect x="432" y="214" width="286" height="54" rx="11" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="452" y="238" fill="#c9f1df">DECISION THAT KEEPS IT OUT</text>
+              <text class="svg-small" x="452" y="256" fill="#daf3e8">its own reason, scoped</text>
+              <text class="svg-kicker" x="44" y="316">Exclusions</text>
+              <rect x="44" y="330" width="200" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-small" x="64" y="355" fill="#daf3e8">Excluded · this cycle</text>
+              <rect x="260" y="330" width="200" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-small" x="280" y="355" fill="#daf3e8">Excluded · this cycle</text>
+              <text class="svg-kicker" x="44" y="418" fill="#f2a793">Struck out · too vague to be a boundary</text>
+              <rect x="44" y="432" width="200" height="40" rx="10" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-small" x="64" y="457" fill="#f2a793">Performance</text>
+              <path d="M52 436 L236 468 M236 436 L52 468" stroke="#ee795e" stroke-width="2"/>
+              <rect x="260" y="432" width="200" height="40" rx="10" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-small" x="280" y="457" fill="#f2a793">Polish</text>
+              <path d="M268 436 L452 468 M452 436 L268 468" stroke="#ee795e" stroke-width="2"/>
+              <text class="svg-small" x="44" y="520">A permanent verdict gets reversed later with no record of why.</text>
+            </g>
+
+            <!-- DIAGRAM 7: BROKEN TRACE -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="40" y="60">The traceability check</text>
+              <text class="svg-title" x="40" y="96">One sentence, no source.</text>
+              <rect x="150" y="140" width="200" height="30" rx="8" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-tiny" x="250" y="160" fill="#bcd4ff" text-anchor="middle">FRAMED_PROBLEM.md</text>
+              <rect x="400" y="140" width="180" height="30" rx="8" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.5"/>
+              <text class="svg-tiny" x="490" y="160" fill="#bcd4ff" text-anchor="middle">DIRECTIONS.md</text>
+              <rect x="44" y="206" width="330" height="256" rx="14" fill="#1b2720" stroke="#3e4c42" stroke-width="1.5"/>
+              <g stroke="#4a544a" stroke-width="2" fill="none">
+                <path d="M70 238 H348"/><path d="M70 266 H320"/><path d="M70 322 H340"/><path d="M70 350 H300"/><path d="M70 406 H348"/><path d="M70 434 H310"/>
+              </g>
+              <rect x="60" y="284" width="298" height="30" rx="7" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-tiny" x="76" y="304" fill="#f2a793">"Significantly faster" · traces to nothing</text>
+              <path d="M300 284 C360 250 360 200 350 176" fill="none" stroke="#ee795e" stroke-width="2" stroke-dasharray="7 6"/>
+              <path d="M356 226 L386 214 M356 214 L386 226" stroke="#ee795e" stroke-width="2.5"/>
+              <text class="svg-tiny" x="398" y="224" fill="#f2a793">broken trace</text>
+              <text class="svg-kicker" x="430" y="300" fill="#f2a793">Peeling off, in coral</text>
+              <rect x="430" y="316" width="260" height="34" rx="9" fill="#33211d" stroke="#ee795e" stroke-width="1.5" opacity=".9"/>
+              <text class="svg-small" x="450" y="338" fill="#f2a793">"marks a pivotal moment"</text>
+              <rect x="452" y="366" width="248" height="34" rx="9" fill="#33211d" stroke="#ee795e" stroke-width="1.5" opacity=".7"/>
+              <text class="svg-small" x="472" y="388" fill="#f2a793">"significantly faster"</text>
+              <rect x="474" y="416" width="236" height="34" rx="9" fill="#33211d" stroke="#ee795e" stroke-width="1.5" opacity=".5"/>
+              <text class="svg-small" x="494" y="438" fill="#f2a793">"a game changer"</text>
+              <text class="svg-small" x="44" y="506">Thin line? The number comes from the frame, or the line moves to what is open.</text>
+            </g>
+
+            <!-- DIAGRAM 8: FOUR EXITS -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="40" y="60">One read, four answers</text>
+              <text class="svg-title" x="40" y="96">Four decision routes.</text>
+              <rect x="290" y="140" width="180" height="60" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="2"/>
+              <text class="svg-small" x="380" y="176" fill="#efe6ff" text-anchor="middle">PROPOSAL.md</text>
+              <path d="M330 200 C220 240 130 260 120 296" fill="none" stroke="#ae8bf3" stroke-width="2" marker-end="url(#arrowViolet)"/>
+              <path d="M355 200 C320 240 300 260 296 296" fill="none" stroke="#ae8bf3" stroke-width="2" marker-end="url(#arrowViolet)"/>
+              <path d="M405 200 C440 240 460 260 464 296" fill="none" stroke="#ae8bf3" stroke-width="2" marker-end="url(#arrowViolet)"/>
+              <path d="M430 200 C540 240 630 260 640 296" fill="none" stroke="#ae8bf3" stroke-width="2" marker-end="url(#arrowViolet)"/>
+              <rect x="44" y="304" width="152" height="128" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-small" x="120" y="352" fill="#efe6ff" text-anchor="middle">APPROVE</text>
+              <text class="svg-tiny" x="120" y="392" fill="#8fd9b8" text-anchor="middle">VALID</text>
+              <rect x="220" y="304" width="152" height="128" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-small" x="296" y="346" fill="#efe6ff" text-anchor="middle">APPROVE,</text>
+              <text class="svg-small" x="296" y="366" fill="#efe6ff" text-anchor="middle">LESS TIME</text>
+              <text class="svg-tiny" x="296" y="400" fill="#8fd9b8" text-anchor="middle">VALID</text>
+              <rect x="396" y="304" width="152" height="128" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-small" x="472" y="352" fill="#efe6ff" text-anchor="middle">SEND BACK</text>
+              <text class="svg-tiny" x="472" y="380" fill="#c9b6f0" text-anchor="middle">close one open item</text>
+              <text class="svg-tiny" x="472" y="400" fill="#8fd9b8" text-anchor="middle">VALID</text>
+              <rect x="572" y="304" width="152" height="128" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-small" x="648" y="352" fill="#efe6ff" text-anchor="middle">DECLINE</text>
+              <text class="svg-tiny" x="648" y="392" fill="#8fd9b8" text-anchor="middle">VALID</text>
+              <text class="svg-small" x="40" y="486">All four are outcomes a good proposal is built for. One read is enough.</text>
+            </g>
           </svg>
         </div>
       </div>
 
       <div class="steps">
-        <!-- SCENE 1: THE MEETING THAT NEVER DECIDES. — edit scene copy here -->
+        <!-- SCENE 1 -->
         <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
           <div class="step-card">
-            <span class="scene-number">01 · The tension</span>
-            <h2 id="scene-1-title">The meeting that never decides.</h2>
-            <p>The questions in the room are all reasonable: how long, what is excluded, does it cover contractors, what else was considered. Every answer exists somewhere. None of them are in the thing being presented, so the meeting ends the way the last two did.</p>
+            <span class="scene-number">01 · The claim</span>
+            <h2 id="scene-1-title">A proposal exists to produce a decision.</h2>
+            <p>A proposal exists to produce a decision. Someone reads it once and says go ahead, go ahead with less, send it back, or no. Every sentence in it traces back to the frame or to the directions document. A sentence that traces to neither is the writer starting to sell.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>Why “proposal” and not “pitch”?</strong> Ryan Singer moved the word. A <em>pitch</em> is now the raw request that arrives <em>before</em> framing; the output of shaping is a <em>proposal</em>, because by then the problem, the solution ingredients, and the time to spend have been brought together. The rename does real work — “pitch” invites selling.</aside>
-
-        <!-- SCENE 2: ASSEMBLED, NOT AUTHORED. — edit scene copy here -->
+        <!-- SCENE 2 -->
         <section class="step" data-state="2" aria-labelledby="scene-2-title">
           <div class="step-card">
-            <span class="scene-number">02 · Inputs</span>
-            <h2 id="scene-2-title">Assembled, not authored.</h2>
-            <p>The proposal takes two documents: <code>FRAMED_PROBLEM.md</code> for the problem, the evidence, and the boundaries, and <code>DIRECTIONS.md</code> for the direction, the time budget, and the fit check that selected it. Both are carried forward, not paraphrased. Rewriting a frame in this document is how two versions of the same problem start circulating.</p>
+            <span class="scene-number">02 · Carried, not rewritten</span>
+            <h2 id="scene-2-title">Two inputs, compressed and carried.</h2>
+            <p>The proposal reads two documents. The frame supplies the problem, the evidence, and the boundaries; the directions document supplies the chosen direction and the time budget. Both are compressed and carried forward. Rewriting the problem in fresh words changes it, and the version people approve stops matching the one that was evidenced.</p>
           </div>
         </section>
 
-        <!-- SCENE 3: FOUR REASONS TO REFUSE TO WRITE. — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>Why "proposal" and not "pitch".</strong> Shape Up called this a pitch in 2019; Ryan Singer has since moved off the word, and the raw ask that arrives before framing is the request. "Pitch" invites persuasion and a buyer. "Proposal" is the word people already use for a document that asks for a decision, and it names the reader's job rather than the writer's. In this library <em>pitch</em> is a separate skill doing the opposite job: communicating a decision after it has been made, to people who were not in the room.
+        </aside>
+
+        <!-- SCENE 3 -->
         <section class="step" data-state="3" aria-labelledby="scene-3-title">
           <div class="step-card">
             <span class="scene-number">03 · The gate</span>
-            <h2 id="scene-3-title">Four reasons to refuse to write.</h2>
-            <p>No framed problem, no selected direction, no time budget, or an unresolved flag on the chosen direction — any one of these stops the skill. The refusal is the useful part. A proposal written over a missing input does not solve the gap; it transfers it to whoever approves the work.</p>
+            <h2 id="scene-3-title">Four things stop the writing.</h2>
+            <p>Four things stop the proposal before a word is written. No framed problem, no selected direction, no time budget, or a warning flag still open on the chosen direction. Each gap means the reader would be asked to decide something no one has settled. Writing over it does not close the gap; it moves the gap to whoever approves the work.</p>
           </div>
         </section>
 
-        <!-- SCENE 4: TIME BUDGET NEAR THE TOP. — edit scene copy here -->
+        <!-- SCENE 4 -->
         <section class="step" data-state="4" aria-labelledby="scene-4-title">
           <div class="step-card">
-            <span class="scene-number">04 · Structure</span>
-            <h2 id="scene-4-title">Time budget near the top.</h2>
-            <p>A reader who meets the solution before its cost has already formed an opinion by the time the number arrives. Put the time budget early and every paragraph after it is read as the only question that matters: <em>is this worth six weeks?</em> Time budget is not a schedule — it is the size of the commitment.</p>
+            <span class="scene-number">04 · Time budget first</span>
+            <h2 id="scene-4-title">The time budget goes first.</h2>
+            <p>The time budget goes above the direction. A reader who meets the solution first has formed an opinion before the cost arrives. Put the number early, say where it came from, and every later paragraph is read against whether the work is worth that time. The time budget is the size of the commitment the business is choosing.</p>
           </div>
         </section>
 
-        <!-- SCENE 5: SHOW THE MECHANISM. WITHHOLD THE PIXELS. — edit scene copy here -->
+        <!-- SCENE 5 -->
         <section class="step" data-state="5" aria-labelledby="scene-5-title">
           <div class="step-card">
-            <span class="scene-number">05 · The solution</span>
-            <h2 id="scene-5-title">Show the mechanism. Withhold the pixels.</h2>
-            <p>The proposal presents the direction as its parts, plus one honest sentence about what it gives up. Layout, copy, states, and components are deliberately absent — pre-empting Design here is how a proposal becomes a specification nobody agreed to.</p>
+            <span class="scene-number">05 · Enough to decide</span>
+            <h2 id="scene-5-title">Enough of the direction, and no more.</h2>
+            <p>The direction appears as its parts, each one something a person can experience, with one honest line about what it gives up. Layout, copy, states, and component choices stay out. A builder weeks later needs room for the many decisions this document does not hold. Settling them here turns the proposal into a specification no one agreed to.</p>
           </div>
         </section>
 
-        <!-- SCENE 6: NAME THE TRAP AND ITS PATCH. — edit scene copy here -->
+        <!-- SCENE 6 -->
         <section class="step" data-state="6" aria-labelledby="scene-6-title">
           <div class="step-card">
-            <span class="scene-number">06 · The traps</span>
-            <h2 id="scene-6-title">Name the trap and its patch.</h2>
-            <p>A rabbit hole is a specific place this work could disappear into, paired with the specific decision that prevents it. “Retro-fitting the sweep to legacy pay groups” is one; the patch is “current-generation groups only, this cycle”. “Scope creep” and “technical complexity” are not rabbit holes — they are worries. If it has no patch, it is a risk.</p>
+            <span class="scene-number">06 · Named with their reasons</span>
+            <h2 id="scene-6-title">Traps and cuts, each with a reason.</h2>
+            <p>A rabbit hole is a specific place the work could vanish into, written with the decision that keeps it out. Naming the trap and pairing it with "not that part, this cycle" is what makes it a boundary. Exclusions work the same way, each with its reason and scoped to this cycle. An exclusion written as a permanent verdict gets reversed later with no record of why.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>This is the section a builder reads twice.</strong> It is also the one most often skipped, because writing it means admitting where the plan is fragile.</aside>
+        <aside class="bridge-card">
+          <strong>Surviving enterprise review.</strong> A proposal in enterprise B2B touches roles beyond the team, names what becomes auditable, depends on named systems of record, and states who outside the team has to agree before it ships. Any of these arriving after the decision is how a bounded project quietly becomes a bigger one.
+        </aside>
 
-        <!-- SCENE 7: SAY IT HERE OR DEFEND IT IN WEEK FOUR. — edit scene copy here -->
+        <!-- SCENE 7 -->
         <section class="step" data-state="7" aria-labelledby="scene-7-title">
           <div class="step-card">
-            <span class="scene-number">07 · The exclusions</span>
-            <h2 id="scene-7-title">Say it here or defend it in week four.</h2>
-            <p>Every exclusion was somebody’s real request. Naming them — bulk-resolve, mobile-native, changing blocker ownership — closes them for <em>this</em> cycle without closing them forever. Why not now, never why not ever: an exclusion written as a permanent verdict turns the proposal into a judgement on other people’s ideas.</p>
+            <span class="scene-number">07 · The traceability check</span>
+            <h2 id="scene-7-title">A slop pass is a traceability check.</h2>
+            <p>Before it is presented, the draft runs through a slop pass that works as a traceability check. "Significantly faster" and "marks a pivotal moment" trace back to neither document, and each one that survives makes the traceable sentences around it look invented too. Puffery is also where a proposal starts selling without anyone choosing to sell. When a line reads thin because a number is missing, the number comes from the frame, or the line moves to what is still open.</p>
           </div>
         </section>
 
-        <!-- SCENE 8: WHAT IS STILL OPEN. — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>A rabbit hole and its patch, in full.</strong> Rabbit hole: bulk actions could pull the team into building a general undo stack for every operation in the app. Patch: this cycle covers single-step undo on the bulk action only; multi-step and per-operation undo are a separate proposal. The pair names the specific trap and the decision that bounds it, which is what turns a worry on the page into a boundary.
+        </aside>
+
+        <!-- SCENE 8 -->
         <section class="step" data-state="8" aria-labelledby="scene-8-title">
           <div class="step-card">
-            <span class="scene-number">08 · The honesty</span>
-            <h2 id="scene-8-title">What is still open.</h2>
-            <p>Risks carried from the frame, assumptions not yet verified, the spike that has not run, and what is deliberately left for Design. A reader who discovers later something that was known now will discount every future proposal from the same team. The uncomfortable item is the one worth writing.</p>
-          </div>
-        </section>
-
-        <!-- SCENE 9: ONE READ. FOUR POSSIBLE ANSWERS. — edit scene copy here -->
-        <section class="step" data-state="9" aria-labelledby="scene-9-title">
-          <div class="step-card">
-            <span class="scene-number">09 · The payoff</span>
-            <h2 id="scene-9-title">One read. Four possible answers.</h2>
-            <p>Approve. Approve with a smaller time budget. Send it back to close a stated open item. Decline. All four are successful outcomes of a good proposal — a document that can only be approved was written to be sold. And because the reasoning stays attached, the same argument does not have to be had again next quarter.</p>
+            <span class="scene-number">08 · One read, four answers</span>
+            <h2 id="scene-8-title">A finished proposal can be answered four ways.</h2>
+            <p>A finished proposal can be answered four ways. It can be approved, approved with a smaller time budget, sent back to close one named open item, or declined. All four are outcomes a good proposal is built for. One read is enough to choose any of them.</p>
           </div>
         </section>
       </div>
-    </section>
-
-    <section class="next-moves-section" aria-labelledby="next-moves-title">
-      <div class="next-moves-inner">
-        <p class="eyebrow">The decision after the proposal</p>
-        <h2 id="next-moves-title">Four answers, all of them useful.</h2>
-        <p class="next-moves-lede">A proposal is written to be decided on, not to be won. Each outcome sends the work somewhere specific, and the reasoning stays with the document.</p>
-
-        <div class="next-moves-grid">
-          <article class="next-move-card"><h3>Approved</h3><p><strong>Build it.</strong> The time budget is committed and the exclusions hold. Design starts on what the proposal deliberately left open.</p></article>
-          <article class="next-move-card"><h3>Approved with a smaller time budget</h3><p><strong>Back to shaping, briefly.</strong> It is worth doing at a lower price. Cut scope against the requirement statuses — never against the deadline.</p></article>
-          <article class="next-move-card"><h3>Sent back</h3><p><strong>Close the open item first.</strong> Usually the spike. Run it, update <code>DIRECTIONS.md</code>, and re-assemble; the rest of the proposal still stands.</p></article>
-          <article class="next-move-card"><h3>Declined</h3><p><strong>Record why.</strong> The frame, the direction, and the reasoning stay in the project. A declined proposal is the cheapest possible version of finding this out.</p></article>
-          <article class="next-move-card"><h3>Reframe</h3><p><strong>The problem was the disagreement.</strong> When the objection is to the problem rather than the direction, the proposal is not the artifact to fix — return to <code>problem-framing</code>.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="output-section" aria-label="Proposal output structure">
-      <details>
-        <summary>Explore the complete <code>PROPOSAL.md</code> structure</summary>
-        <div class="output-grid">
-          <div class="output-item">Status</div><div class="output-item">The problem, in one line</div>
-          <div class="output-item">Who it affects</div><div class="output-item">Why now</div>
-          <div class="output-item">Time budget</div><div class="output-item">The direction</div>
-          <div class="output-item">Parts and mechanisms</div><div class="output-item">What it gives up</div>
-          <div class="output-item">Rabbit holes</div><div class="output-item">Patches for each</div>
-          <div class="output-item">Not this time</div><div class="output-item">Why not now</div>
-          <div class="output-item">Risks carried forward</div><div class="output-item">Unverified assumptions</div>
-          <div class="output-item">Open spikes</div><div class="output-item">Left for Design</div>
-          <div class="output-item">Sources — frame and shaping</div><div class="output-item">Saved as PROPOSAL.md</div>
-        </div>
-      </details>
     </section>
 
     <section class="closing" aria-labelledby="closing-title">
       <div class="closing-copy">
         <p class="eyebrow">The payoff</p>
-        <h2 id="closing-title">Now Design can start.</h2>
-        <p><strong>A proposal ends an argument so that a different one can begin.</strong> Once the decision is made, the questions change: what does the row look like, what happens when the sweep finds nothing, how does this announce itself to a screen reader, what does the empty state say. Those are better questions, and they are only worth asking once the direction and its price are settled. The proposal is what makes them safe to ask.</p>
-        <div class="final-equation"><span>Selected direction</span><span aria-hidden="true">→</span><span>A decision people can make</span></div>
+        <h2 id="closing-title">A proposal is assembly, not authoring.</h2>
+        <p><strong>Nothing in a proposal is new.</strong> It carries the frame and the direction forward instead of rewriting them, refuses to be written while a required input is missing, puts the time budget above the direction, gives enough of the direction to decide and no more, and names rabbit holes and exclusions as decisions with reasons. Every sentence passes through a traceability check. A finished one can be answered four ways in a single read.</p>
+        <div class="final-equation"><span>One read</span><span aria-hidden="true">→</span><span>One decision</span></div>
       </div>
 
       <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
-        <title id="closing-diagram-title">A proposal passing through a decision and opening into design work</title>
-        <desc id="closing-diagram-desc">The assembled proposal meets a decision point. Once approved, it opens into the design questions it deliberately left unanswered: layout, states, copy and accessibility.</desc>
-        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
-        <rect x="44" y="112" width="204" height="256" rx="18" fill="#f4f1e8"/>
-        <text x="70" y="146" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">PROPOSAL.MD</text>
-        <g font-family="Inter, sans-serif" font-size="12" font-weight="700">
-          <rect x="70" y="164" width="152" height="32" rx="8" fill="#dceddf"/><text x="86" y="185" fill="#244135">Problem</text>
-          <rect x="70" y="204" width="152" height="32" rx="8" fill="#cfe9d8"/><text x="86" y="225" fill="#244135">Time budget</text>
-          <rect x="70" y="244" width="152" height="32" rx="8" fill="#eee4fb"/><text x="86" y="265" fill="#443259">Direction</text>
-          <rect x="70" y="284" width="152" height="32" rx="8" fill="#f5e8c8"/><text x="86" y="305" fill="#57441f">Rabbit holes</text>
-          <rect x="70" y="324" width="152" height="32" rx="8" fill="#f8ded6"/><text x="86" y="345" fill="#5c2f24">Not this time</text>
+        <title id="closing-diagram-title">One proposal resolving into four valid decision routes</title>
+        <desc id="closing-diagram-desc">A single proposal produces four outcomes a good proposal is built for: approve, approve with a smaller time budget, send back to close one open item, or decline. Each route is labelled valid.</desc>
+        <defs>
+          <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#8f6fe0"/></marker>
+        </defs>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <rect x="270" y="34" width="160" height="58" rx="14" fill="#f4eefe" stroke="#ae8bf3" stroke-width="2.5"/>
+          <text x="350" y="70" font-size="15" fill="#151914" text-anchor="middle">PROPOSAL.md</text>
         </g>
-        <path d="M258 240 H320" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
-        <rect x="336" y="150" width="104" height="180" rx="52" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
-        <text x="388" y="232" fill="#fffdf7" font-family="Georgia, serif" font-size="19" text-anchor="middle">Decide</text>
-        <text x="388" y="258" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">ONE READ</text>
-        <path d="M450 240 H504" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
-        <text x="606" y="106" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">NOW WORTH ASKING</text>
-        <g font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">
-          <rect x="524" y="126" width="164" height="46" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="606" y="154" fill="#c8dcff">Layout and priority</text>
-          <rect x="524" y="186" width="164" height="46" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="606" y="214" fill="#c8dcff">Empty and error states</text>
-          <rect x="524" y="246" width="164" height="46" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="606" y="274" fill="#c8dcff">Copy and tone</text>
-          <rect x="524" y="306" width="164" height="46" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="606" y="334" fill="#c9f1df">Keyboard and announcement</text>
+        <path d="M300 92 C170 130 100 150 90 178" fill="none" stroke="#8f6fe0" stroke-width="2.5" marker-end="url(#closingArrow)"/>
+        <path d="M335 92 C300 130 270 150 260 178" fill="none" stroke="#8f6fe0" stroke-width="2.5" marker-end="url(#closingArrow)"/>
+        <path d="M365 92 C400 130 420 150 430 178" fill="none" stroke="#8f6fe0" stroke-width="2.5" marker-end="url(#closingArrow)"/>
+        <path d="M400 92 C530 130 600 150 600 178" fill="none" stroke="#8f6fe0" stroke-width="2.5" marker-end="url(#closingArrow)"/>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <rect x="20" y="186" width="140" height="120" rx="14" fill="#f4eefe" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="90" y="232" font-size="14" fill="#151914" text-anchor="middle">Approve</text>
+          <text x="90" y="272" font-size="11" fill="#3f7a63" text-anchor="middle" letter-spacing="1">VALID</text>
+          <rect x="190" y="186" width="140" height="120" rx="14" fill="#f4eefe" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="260" y="226" font-size="14" fill="#151914" text-anchor="middle">Approve,</text>
+          <text x="260" y="246" font-size="14" fill="#151914" text-anchor="middle">less time</text>
+          <text x="260" y="282" font-size="11" fill="#3f7a63" text-anchor="middle" letter-spacing="1">VALID</text>
+          <rect x="360" y="186" width="140" height="120" rx="14" fill="#f4eefe" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="430" y="226" font-size="14" fill="#151914" text-anchor="middle">Send back</text>
+          <text x="430" y="250" font-size="10" fill="#6b6f66" text-anchor="middle">one open item</text>
+          <text x="430" y="282" font-size="11" fill="#3f7a63" text-anchor="middle" letter-spacing="1">VALID</text>
+          <rect x="530" y="186" width="140" height="120" rx="14" fill="#f4eefe" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="600" y="232" font-size="14" fill="#151914" text-anchor="middle">Decline</text>
+          <text x="600" y="272" font-size="11" fill="#3f7a63" text-anchor="middle" letter-spacing="1">VALID</text>
         </g>
-        <path d="M504 240 C514 149 514 149 524 149 M504 240 H524 M504 240 C514 269 514 269 524 269 M504 240 C514 329 514 329 524 329" fill="none" stroke="#526058" stroke-width="2"/>
-        <text x="350" y="446" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">THE DECISION IS SETTLED. THE CRAFT IS NOT.</text>
+        <text x="350" y="368" fill="#6b4fb0" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle" letter-spacing="1.4">ALL FOUR ARE VALID OUTCOMES</text>
+        <text x="350" y="398" fill="#6b6f66" font-family="Inter, sans-serif" font-size="12" font-weight="600" text-anchor="middle">One read is enough to choose any of them.</text>
       </svg>
     </section>
 
     <section class="sources" aria-labelledby="sources-title">
       <div class="sources-inner">
         <p class="eyebrow">Method provenance</p>
-        <h2 id="sources-title">Where the structure comes from.</h2>
-        <p class="sources-intro">The section order is Ryan Singer’s and has been stable for a decade. What changed is the name, and one addition.</p>
+        <h2 id="sources-title">Where the proposal comes from.</h2>
+        <p class="sources-intro">Real links only. The refusal conditions and the enterprise-review checks are this library's addition, not Singer's.</p>
         <div class="source-grid">
           <article class="source-card">
             <h3>Shape Up</h3>
-            <p>The original structure — <strong>problem, time budget, solution, rabbit holes, exclusions</strong> — and the rule underneath it: the time budget is fixed and the scope is what moves.</p>
-            <a href="https://basecamp.com/shapeup/1.5-chapter-06">Read the pitch chapter</a>
+            <p>The structure this document descends from: problem, appetite, solution, rabbit holes, no-gos, and the idea that time is fixed and scope moves.</p>
+            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
           </article>
           <article class="source-card">
-            <h3>Singer on framing</h3>
-            <p>Why this is a <strong>proposal</strong> and not a pitch. In his current vocabulary “pitch” names the raw request that arrives before framing, and the output of shaping is the proposal: problem, ingredients, and time budget brought together.</p>
-            <a href="https://www.ryansinger.co/framing/">Read Singer on framing</a>
+            <h3>Framing</h3>
+            <p>Ryan Singer's later vocabulary, where the raw ask before framing is the request, which is why the output here is called a proposal.</p>
+            <a href="https://www.ryansinger.co/framing/">Read Framing</a>
           </article>
           <article class="source-card">
-            <h3>The addition</h3>
-            <p><strong>Still open</strong> is not in the original. Enterprise commitments are approved by people who will be held to them, and a proposal that hides an unresolved spike buys one approval at the cost of every later one.</p>
+            <h3>rjs/shaping-skills</h3>
+            <p>Carrying the frame forward instead of re-deriving it, and the test that every sentence trace to something someone said or decided.</p>
             <a href="https://github.com/rjs/shaping-skills">View the source skills</a>
+          </article>
+          <article class="source-card">
+            <h3>no-ai-slop</h3>
+            <p>The pattern list behind the traceability pass, re-cut for a document that has to be traceable rather than persuasive.</p>
+            <a href="https://github.com/petergyang/no-ai-slop">View no-ai-slop</a>
           </article>
         </div>
       </div>
     </section>
     </article>
   </main>
+
 
   <footer>One Read, One Decision · An interactive explanation of the proposal skill</footer>
 
@@ -1199,20 +1392,19 @@
       const label = document.getElementById('diagram-label');
       const progress = document.querySelector('.progress-bar');
       const labels = {
-        '1': 'No decision',
-        '2': 'Two inputs',
-        '3': 'When it refuses',
-        '4': 'Time budget first',
-        '5': 'The direction',
-        '6': 'Rabbit holes',
-        '7': 'Not this time',
-        '8': 'Still open',
-        '9': 'The decision'
+        1: 'Trace map',
+        2: 'Two inputs',
+        3: 'Refusal gate',
+        4: 'Budget first',
+        5: 'Direction as parts',
+        6: 'Traps and cuts',
+        7: 'Broken trace',
+        8: 'Four exits'
       };
       let activeState = 1;
 
       function updateMeta(n) {
-        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 08`;
         label.textContent = labels[n];
         steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
       }

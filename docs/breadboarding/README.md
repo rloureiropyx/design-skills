@@ -1,6 +1,11 @@
 # Notes — Breadboarding
 
-No article yet. These notes are the explainer.
+```
+breadboard-before-you-draw-it.script.md    the scene-by-scene script
+breadboard-before-you-draw-it.html         the article — standalone, no build step
+```
+
+Open [`breadboard-before-you-draw-it.html`](breadboard-before-you-draw-it.html) in a browser. No dependencies, no build step.
 
 ## What it does
 
@@ -51,3 +56,7 @@ The text breadboard is the artifact. If a picture helps — a workshop, a propos
 Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup), chapter 4. The enterprise list, the failure-path walk, and the keyboard check are additions.
 
 - Skill: [`skills/artifacts/breadboarding/SKILL.md`](../../skills/artifacts/breadboarding/SKILL.md)
+
+---
+
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 24px at 812×375.

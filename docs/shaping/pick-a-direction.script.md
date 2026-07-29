@@ -1,79 +1,73 @@
 # Scene Script — Pick a Direction
 
-**Opening tension:** Two people agree on the problem, hold two different solutions, and have no shared standard to choose between them.
-
-**Top identification:** Present `shaping` immediately as a product design skill, before the tension.
-
-**Final payoff:** The reader understands that shaping is a decision method, not a drawing phase. Requirements are numbered before directions are drawn, directions are scored against them in a binary fit check, unknowns are flagged rather than assumed away, and time budget is fixed while scope moves. It ends with one direction and an honest status.
-
-**Audience:** Product designers, product managers, and engineering leads in enterprise B2B. They may know Shape Up by reputation. They do not know this skill, and they work under constraints — roles, auditability, integrations, data volume — that the original method never addressed.
-
+**Goal:** G1 — explain how something works.
+**Tone:** T1 — plain and direct.
+**Opening tension:** A team agrees on the problem but holds two different solutions, and nothing written down says which one the solution has to satisfy.
+**Top identification:** Name `shaping` as a product design skill in the hero, before scene 1.
+**Final payoff:** The reader can describe the method. Requirements are written as capabilities and numbered, directions are scored against them in a binary fit check, unknowns are flagged instead of assumed, and the time budget stays fixed while scope moves. It ends with one direction at one version and an honest status.
+**Audience:** Product designers, PMs, and engineering leads in enterprise B2B. Some know Shape Up by reputation. None know this skill, and they work under constraints the original method never covered: roles, auditability, integrations, data volume.
 **Estimated reading time:** 4–5 minutes.
-
-**Proposed pattern:** Sticky graphic + discrete steps throughout, because each beat is one rule with its own diagram state. Full-viewport compositions for the opening and closing. Simple reveals for the prose bridges.
+**Proposed pattern:** Sticky graphic + discrete steps throughout, since each beat is one rule with its own diagram state. Static prose bridges carry the longer detail between beats.
 
 | # | VISUAL — diagram state | COPY — 2–4 short sentences | TRANSITION |
 |---|---|---|---|
-| 1 · The tension | **Two answers, no test.** A designer node and an engineer node both point into an empty dashed box labelled "which one is right?". Nothing occupies it. | A designer wants a guided wizard. An engineer wants a batch endpoint. Both are describing a real solution to the same agreed problem, and there is no shared standard either one can be held against. This argument is not resolved by seniority; it is resolved by writing the standard down. | Opens the sequence. |
-| 2 · Entry | **Frame in, direction out.** `FRAMED_PROBLEM.md` flows into shaping unchanged; a return arrow marked "contradicts the frame" goes back to framing. | Shaping reads `FRAMED_PROBLEM.md` and carries it forward. It does not re-derive the user, the tension, or the outcome in new words. When shaping finds evidence that genuinely contradicts the frame, it stops and sends that back. | The two solution nodes fall away; the framed problem slides in from the left. |
-| 3 · Step 1 | **Numbered requirement list.** `R0`–`R5` as rows, each with a status pill: OPEN, STRETCH, OUT. | What must a solution do to count? Each answer gets a number and a status: **OPEN** must be met, **STRETCH** is welcome but optional, **OUT** is deliberately excluded and named so it stops resurfacing. Nine top-level requirements is the ceiling. | The document unfolds into a numbered list. |
-| 4 · Step 1, continued | **The enterprise layer.** Five additional requirement rows appear below the first set — permissions, audit trail, system of record, data volume, accessibility. | Roles and permissions. Auditability. The integration whose system of record always wins. Forty thousand rows instead of forty. Keyboard and screen-reader behaviour. Each becomes a numbered requirement or an explicit non-requirement — silence about these is a decision, just an unrecorded one. | The list extends; the new rows arrive in a distinct colour. |
-| 5 · Step 2 | **Two directions, side by side.** Direction A and Direction B, each with a one-line "gives up" caption. | One direction is not a choice, it is a proposal wearing a process. The directions must differ *in kind*: fix the run at the moment it breaks, or move the work earlier so the run opens clean. A reader should be able to say in one sentence what each direction gives up. | The requirement list shrinks to a rail; two direction cards deal out beside it. |
-| 6 · Step 2, continued | **Layers versus mechanisms.** Left: three horizontal bands (UI, API, database) with a crossed-out cut line. Right: three vertical parts, one lifted out while the rest stand. | "UI, API, database" is not a set of parts — nothing works until all three land, so nothing can be cut. "Detect a blocker, resolve one inline, gate the close" is: each is something a person can do, and removing one leaves the rest standing. Vertical parts are what makes scope adjustable later. | The selected direction explodes into a before/after comparison. |
-| 7 · Step 3 | **A flagged part.** One part carries a warning triangle; a callout reads "we know what, not how". | For every part, one question: can we describe *how* this works? Not whether it is possible — whether we can say how. A part that fails that test gets a warning flag, and a flagged part counts as an outright failure in the check that follows. | The vertical parts re-form; one of them lights amber. |
-| 8 · Step 4 | **The fit check.** Requirements as rows, directions as columns, filled with pass and fail marks only. The flagged part's requirement reads as a failure. | Each direction is scored against each requirement as pass or fail. There is no "partially", and the absence of that option is the whole point. The matrix does not make the decision; it makes the disagreement visible enough to have. | The parts and the requirement rail converge into a matrix; marks resolve column by column. |
-| 9 · Step 5 | **Fixed time budget.** A time bar with a hard boundary; the "as drawn" scope bar visibly overruns it, then a STRETCH requirement is dropped and the bar fits. | Time budget is not an estimate; it is a decision about how much this problem is worth. When the selected direction does not fit, the move available is cutting scope — not extending the deadline. A direction that only fits by moving the date has not been worked out. | The matrix recedes; the time budget bar draws in and the overrun becomes visible. |
-| 10 · Step 6 | **Five exit statuses.** `direction-selected`, `spike-needed`, `budget-undefined`, `no-viable-direction`, `reframe` — one highlighted, the others live options. | Shaping ends with a selection and a status. A selected direction with a live spike attached is a real answer. A selected direction with an unknown quietly folded in is not. | The time budget bar collapses into a status list; one entry lights. |
+| 1 · The tension | **Two answers, no test.** A settled problem box in blue at the top. Two solution nodes in slate branch from it, each labelled (guided wizard, batch endpoint). Between them an empty slate box with no marks in it. | A team agrees on the problem. One person wants a guided wizard, another wants a batch endpoint. Both are real answers to it, and nothing written down says which one the solution has to satisfy. | Opens the sequence. |
+| 2 · Carries the frame | **In and out.** `FRAMED_PROBLEM.md` in blue flows into a shaping box. `DIRECTIONS.md` flows out the other side. A coral return arrow labelled "contradicts the frame" loops back toward problem-framing. | Shaping starts from `FRAMED_PROBLEM.md` and carries it forward word for word. It does not re-open the problem, the user, or the outcome. If the work turns up evidence that the frame is wrong, that goes back to `problem-framing`. What comes out is one file, `DIRECTIONS.md`. | The two solution nodes fall away and the frame slides in from the left. |
+| 3 · Requirements | **A numbered list.** Rows `R0`–`R5` in slate, each carrying a status pill: Core goal, Must-have, Nice-to-have, Out. | The first move is writing down what any solution has to be true of. Each one is a capability or a constraint, never a mechanism, and it gets a number. Each also gets a status, from Core goal down to Out, and that status is the scope dial. Nine at the top level is the ceiling. | The frame unfolds into a numbered list. |
+| 4 · Enterprise classes | **The list extends.** Five more rows arrive below the first set in amber: roles and permissions, audit trail, system of record, data volume, accessibility. | A framed problem rarely mentions who is allowed to act, what has to be logged, or how a direction behaves at forty thousand rows. Shaping walks a fixed list of these before any direction is drawn. Each one becomes a requirement or a recorded non-requirement. These are the constraints that invalidate a direction late, after everyone has agreed. | The list grows downward and the new rows arrive in amber. |
+| 5 · Two directions | **Different mechanisms.** The requirement list shrinks to a rail on the left. Two slate cards deal out beside it, Direction A and Direction B, each with a one-line "gives up" caption. | Now come the directions, and there have to be at least two that differ in mechanism. Fixing the run at the moment it breaks is one mechanism. Moving the work earlier so the run opens clean is another. A rearrangement of the same idea is not a second direction. | The list collapses to a rail and two cards deal out beside it. |
+| 6 · Parts, not layers | **Vertical against horizontal.** Left: three horizontal bands (UI, API, database) with a coral cut line struck through them. Right: three vertical parts, one lifted clear while the other two keep standing. | Each direction breaks into parts, and how you split it decides whether it can be cut later. UI, API, and database are layers, and nothing works until all three ship. Split into things a person can do, like detect a blocker or gate the close, and one part can be dropped while the rest still stand. | Direction A opens into the two-sided comparison. |
+| 7 · Flag the unknown | **One part lights amber.** The vertical parts re-form; one carries a warning flag and a callout reading "what, not how". | Every part gets one test. Can the team describe how it works, not just what it does? A part that fails gets a flag, and a flag counts as a failure in the check that follows. It marks missing work, so it cannot be accepted the way a risk can. | The comparison resolves back to one direction's parts and one turns amber. |
+| 8 · The fit check | **Binary matrix.** Requirements as rows, directions as columns, every cell a green pass mark or a coral fail mark. The flagged part's row reads as a fail. | The fit check scores every direction against every requirement. Each cell is a pass or a fail, and there is no third value. That constraint is the point, because a three-way scale lets every direction look respectable and settles nothing. When a direction passes everything and still feels wrong, a requirement is missing, so name it and run the check again. | The parts and the requirement rail converge into a grid; marks fill column by column. |
+| 9 · Time and scope | **Fixed bar, moving scope.** A time bar with a hard boundary. A scope bar overruns it in coral, one requirement drops to Out, and the scope bar settles inside the boundary in green. The version label ticks from `A2` to `A3`. | The time budget comes from the frame. It is the spend the business committed to, set before anyone estimated the work. When the chosen direction does not fit, scope moves and the deadline holds. Each cut becomes a new version, so the reason it was made survives. | The matrix recedes and the time bar draws in with its overrun showing. |
+| 10 · The exit | **Five statuses.** A short list: `direction-selected`, `spike-needed`, `budget-undefined`, `no-viable-direction`, `reframe`. One entry lights violet; the rest stay live. | Shaping ends by selecting one direction at one version, and by naming the requirement that separated it from the runner-up. When an unknown still blocks the leading direction, the honest exit is `spike-needed`, not a selection. When every candidate fails a Must-have, that result is worth more than a forced pick. The file that records all of it is `DIRECTIONS.md`. | The time bar collapses into the status list and one entry lights. |
 
 ## Static prose bridges
 
-- **Before scene 1:** what shaping is, exactly — the phase between knowing what problem to solve and knowing what to build. It ends with one solution direction and the reasoning that selected it, not with wireframes.
-- **After scene 3:** requirements are written as tests, not as features. "Users can see blockers" is a feature; "a payroll admin can tell, before the run starts, whether it will fail" is a test a direction can pass or fail.
-- **After scene 5:** each direction gets a breadboard — places, affordances, connection lines, in text — so the fit check runs against a mechanism rather than a paragraph. That is the `breadboarding` skill.
-- **After scene 8:** version lineage — a failed check is a brief, not a verdict. Fixing what failed produces `A2`, not a new direction; superseded versions stay visible with the reason, and only the current version appears in the matrix.
-- **After scene 7:** the spike convention — acceptance criteria phrased as *"we can describe how…"*, never *"we can decide if…"*. Spikes buy understanding; decisions come after.
-- **Before the closing:** what shaping hands to `proposal`, and what it deliberately does not resolve.
+- **Before scene 1:** what shaping is and where it sits. It runs between knowing which problem to solve and knowing what to build, and it ends with one solution direction and the reasoning that picked it, not with wireframes.
+- **After scene 3:** requirements read as tests, not features. "Users can see blockers" is a feature. "A payroll admin can tell, before the run starts, whether it will fail" is a test a direction either passes or fails.
+- **After scene 5:** each direction is made concrete with a breadboard — places, affordances, and connection lines, written in text — so the fit check runs against a mechanism instead of a paragraph. That is the `breadboarding` skill.
+- **After scene 8:** version lineage. A failed check is a brief, not a verdict. Fixing the failing part produces `A2`, then `A3`; a new letter is kept for a genuinely different mechanism. Superseded versions stay in the document, struck through with the reason, and only the current version appears in the matrix.
+- **After scene 9:** spikes. A flagged unknown on a leading direction gets one bounded investigation, with acceptance criteria phrased as *"we can describe how…"* rather than *"we can decide if…"*. The spike buys understanding; the decision happens afterwards, back in the fit check.
+- **Before the closing:** the handoff. Shaping passes `DIRECTIONS.md` and `FRAMED_PROBLEM.md` to `proposal`, and leaves layout, copy, component choices, and edge cases open for Design to decide.
 
 ## Diagram system
 
-Native SVG, no decorative imagery. Every diagram has a text equivalent in the scene copy.
+Native inline SVG, editorial systems-diagram language, no decorative imagery. Every state has a text equivalent in the scene copy.
 
-1. **Two-answer standoff:** the opening tension, an empty test at the centre.
-2. **Frame handoff:** the document in, the contradiction path back out.
-3. **Requirement list:** the recurring motif, numbered rows with status pills.
-4. **Enterprise extension:** the same list, extended in a second colour.
-5. **Direction cards:** two candidates with their trade-offs stated.
-6. **Layers versus mechanisms:** the horizontal/vertical comparison.
-7. **Flagged part:** the warning triangle and its callout.
-8. **Fit check matrix:** requirements × directions, binary marks only.
-9. **Time budget bar:** fixed boundary, variable scope.
-10. **Status list:** the five honest exits.
+1. **Two-answer standoff** — settled problem, two solutions, an empty test between them.
+2. **Frame handoff** — the frame in, the document out, the contradiction path back.
+3. **Requirement list** — the recurring motif, numbered rows with status pills.
+4. **Enterprise extension** — the same list, extended in amber.
+5. **Direction cards** — two candidates, each with what it gives up.
+6. **Layers versus parts** — horizontal bands cut through, vertical parts one lifted clear.
+7. **Flagged part** — the warning flag and its callout.
+8. **Fit-check matrix** — requirements by directions, pass and fail marks only.
+9. **Time and scope bars** — fixed boundary, scope moving inside it, version ticking up.
+10. **Status list** — the five exits, one selected.
 
 ## Art direction
 
-- **Central visual metaphor:** a test. Everything before it is opinion; everything after it is evidence.
-- **Graphic language:** editorial systems diagrams, clear labels, visible connections — matching the `problem-framing` article so the library reads as one thing.
-- **Colour semantics:** requirements in green, directions in blue, unknowns and time budget in amber, failure in coral, structure in slate.
+- **Graphic language:** editorial systems diagrams with clear labels and visible connections, matching the `problem-framing` article so the library reads as one publication.
+- **Colour semantics (house brief):** blue is input and narrative (the frame), green is a settled or valid state (a pass), coral is failure and the thing being argued against (a fail, a cut line), violet is the decision (the selected direction), amber is caution or a pending state (enterprise rows, a flagged part), slate and line are structure (requirements, directions, parts). No colour is used decoratively.
 - **Motion:** discrete 0.4–0.8 second transitions on transform and opacity only.
-- **Mobile:** compact diagram pinned above each text card, opaque, active state preserved at 375px.
-- **Accessibility:** pass/fail marks carry direction as well as colour; diagrams reinforce information already present in the copy.
+- **Mobile:** a compact diagram pinned above each text card, opaque, active state preserved at 375px.
+- **Accessibility:** pass and fail marks carry shape as well as colour; every diagram reinforces meaning the copy already states.
 
 ## Beat validation
 
 - Every scene introduces one concept and changes the diagram state.
 - The opening states the tension: two defensible answers, no shared test.
-- The closing pays it off: one direction, one status, and the reasoning that produced both.
+- The closing pays it off: one direction at one version, the decisive requirement, and an honest status.
 - Every scene stays at or below four sentences.
-- All reader-facing copy, labels, and diagram annotations are in English.
+- Vocabulary holds throughout: direction, version (`A1 → A2 → A3`), time budget, `DIRECTIONS.md`. Nothing reader-facing says "shape" or "appetite".
+- All reader-facing copy, labels, and annotations are in English.
 
 ## Source section
 
-The article closes with method provenance:
+The article closes with method provenance, real links only:
 
-- [rjs/shaping-skills](https://github.com/rjs/shaping-skills) — Ryan Singer's own agent skills, the source of the requirement/direction notation, the binary fit check, the flagged-unknown discipline, and parts as vertical mechanisms.
-- [Shape Up](https://basecamp.com/shapeup) — time budget as a fixed budget with variable scope.
+- [rjs/shaping-skills](https://github.com/rjs/shaping-skills) — Ryan Singer's own agent skills: the requirement and direction notation, the binary fit check, the flagged-unknown discipline, spikes with description-based acceptance criteria, and parts as vertical mechanisms.
+- [Shape Up](https://basecamp.com/shapeup) — fixed time and variable scope, the time budget as a design constraint, rabbit holes and no-gos.
+- [Some solution vs. no solution](https://www.ryansinger.co/some-solution-vs-no-solution/) and [shaping on the demand side](https://www.ryansinger.co/shaping-on-the-demand-side/) — the aim is confidence that a workable solution exists, and this work runs in both directions between problem and solution.
 - The enterprise requirement classes — roles and permissions, auditability, integrations, data volume, accessibility — are this library's addition, not Singer's.
-
-## Delivery matrix
-
-Verified across nine viewports from 320×568 to 1280×800. Least clearance: 27px at 667×375 (scene 4).

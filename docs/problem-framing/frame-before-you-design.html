@@ -903,6 +903,23 @@
         transition-duration: .01ms !important;
       }
     }
+
+    /* Short viewports: the tallest scene cards have to clear the pinned
+       graphic. The copy is fixed by the script, so the card gives ground
+       instead - chrome and leading only, never the copy itself. */
+    @media (max-height: 720px) {
+      .step-card { padding: clamp(1rem, 2.4vw, 1.55rem); }
+      .scene-number { margin-bottom: .55rem; }
+      .step h2 { margin-bottom: .55rem; }
+      .step p { line-height: 1.4; }
+    }
+
+    @media (max-height: 560px) {
+      .step-card { padding: .85rem 1rem; }
+      .step h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .45rem; }
+      .scene-number { margin-bottom: .4rem; font-size: .62rem; }
+      .step p { font-size: .84rem; line-height: 1.3; }
+    }
   </style>
 </head>
 <body>
@@ -911,400 +928,463 @@
 
   <main id="main">
     <article>
-    <!-- SCENE 0: THE TRAP -->
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">A product design skill · How problem-framing works</p>
         <h1>Frame before you design.</h1>
-        <p class="hero-deck"><strong>A solution can look right and still solve the wrong problem.</strong> The further a project advances, the harder that becomes to admit. <code>problem-framing</code> pressure-tests the problem before design moves forward.</p>
-        <span class="scroll-cue">Scroll to pressure-test the frame</span>
+        <p class="hero-deck"><strong>A request arrives already phrased as a solution.</strong> You could design it well and still answer a problem no one confirmed. <code>problem-framing</code> tests the problem first, and writes what it finds to one file: <code>FRAMED_PROBLEM.md</code>.</p>
+        <span class="scroll-cue">Scroll to test the problem</span>
       </div>
 
       <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
-        <title id="hero-title">A polished AI payroll-readiness dashboard resting on a cracked problem foundation</title>
-        <desc id="hero-desc">The illustration shows how an attractive solution can be unstable when the underlying problem is unclear.</desc>
+        <title id="hero-title">A polished payroll dashboard resting on an unconfirmed problem base</title>
+        <desc id="hero-desc">A finished solution looks convincing while the problem it answers has not been confirmed, drawn as a cracked base labelled Problem.</desc>
         <defs>
-          <linearGradient id="screenGlow" x1="0" x2="1">
-            <stop offset="0" stop-color="#75a9ff" stop-opacity=".8"/>
-            <stop offset="1" stop-color="#63c99c" stop-opacity=".8"/>
-          </linearGradient>
           <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/>
+            <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#000" flood-opacity=".28"/>
           </filter>
         </defs>
+        <rect x="176" y="40" width="268" height="54" rx="14" fill="#f9f8f1"/>
+        <text x="310" y="73" fill="#151914" font-family="Inter, sans-serif" font-size="15" font-weight="700" text-anchor="middle">"AI payroll-readiness dashboard"</text>
+        <path d="M310 94 V128" stroke="#667269" stroke-width="3" marker-end="url(#heroArrow)"/>
+        <defs><marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker></defs>
         <g filter="url(#heroShadow)">
-          <rect x="92" y="70" width="436" height="285" rx="24" fill="#f9f8f1"/>
-          <rect x="118" y="98" width="384" height="44" rx="10" fill="#e8e9e2"/>
-          <circle cx="143" cy="120" r="7" fill="#ee795e"/>
-          <circle cx="165" cy="120" r="7" fill="#e7b85c"/>
-          <circle cx="187" cy="120" r="7" fill="#63c99c"/>
-          <text x="128" y="181" fill="#151914" font-family="Inter, sans-serif" font-size="18" font-weight="750">AI payroll-readiness dashboard</text>
-          <rect x="128" y="202" width="132" height="112" rx="12" fill="#151d18"/>
-          <path d="M148 281 C176 250 192 269 214 232 S246 244 250 220" fill="none" stroke="url(#screenGlow)" stroke-width="6" stroke-linecap="round"/>
-          <rect x="279" y="202" width="94" height="48" rx="10" fill="#dfeae3"/>
-          <rect x="389" y="202" width="103" height="48" rx="10" fill="#e7e0f7"/>
-          <rect x="279" y="266" width="213" height="48" rx="10" fill="#ece7db"/>
+          <rect x="118" y="140" width="384" height="236" rx="22" fill="#f9f8f1"/>
+          <rect x="146" y="168" width="328" height="40" rx="9" fill="#e8e9e2"/>
+          <circle cx="170" cy="188" r="6" fill="#ee795e"/><circle cx="192" cy="188" r="6" fill="#e7b85c"/><circle cx="214" cy="188" r="6" fill="#63c99c"/>
+          <text x="146" y="250" fill="#151914" font-family="Inter, sans-serif" font-size="16" font-weight="750">Payroll readiness</text>
+          <rect x="146" y="268" width="150" height="90" rx="12" fill="#151d18"/>
+          <path d="M164 340 C190 312 206 328 226 296 S256 306 262 286" fill="none" stroke="#63c99c" stroke-width="5" stroke-linecap="round"/>
+          <rect x="312" y="268" width="76" height="42" rx="9" fill="#dfeae3"/>
+          <rect x="400" y="268" width="74" height="42" rx="9" fill="#e7e0f7"/>
+          <rect x="312" y="322" width="162" height="36" rx="9" fill="#ece7db"/>
         </g>
-        <path d="M85 414 H535 L506 492 H114 Z" fill="#222d26" stroke="#4a5a4e" stroke-width="2"/>
-        <path d="M269 414 L301 446 L282 466 L325 492 M363 414 L342 438 L366 459 L348 492" fill="none" stroke="#ee795e" stroke-width="5" stroke-linecap="round"/>
-        <text x="310" y="530" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">PROBLEM?</text>
+        <path d="M150 400 H470 L446 452 H174 Z" fill="#222d26" stroke="#4a5a4e" stroke-width="2"/>
+        <path d="M286 400 L312 422 L296 438 L328 452 M356 400 L338 420 L360 436 L344 452" fill="none" stroke="#ee795e" stroke-width="5" stroke-linecap="round"/>
+        <text x="310" y="500" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">PROBLEM?</text>
       </svg>
     </header>
 
     <section class="intro" aria-labelledby="intro-title">
       <p class="eyebrow">The job</p>
-      <h2 id="intro-title">Turn a fuzzy initiative into a clear, evidence-backed problem.</h2>
-      <p>A product team often starts with a feature request, a complaint, or a solution already attached. <code>problem-framing</code> slows the commitment down just enough to separate what was observed from what was assumed—and to decide what problem is worth solving.</p>
-      <p>The skill helps the designer remember every important question that should be answered before proposing solutions. It asks them one at a time, follows the evidence, and keeps unresolved questions visible.</p>
-      <p class="definition"><strong>The output is a written problem.</strong> The <code>Framed Problem</code> is a traceable account of the user, tension, outcome, evidence, assumptions, boundaries, and open question. It stays in the project so later sketches, scope choices, and decisions can be checked against the same intent.</p>
+      <h2 id="intro-title">A skill is a written procedure the assistant follows on demand.</h2>
+      <p>An agent skill is a set of instructions a coding assistant loads when the work matches. <code>problem-framing</code> is the one it loads when a request arrives as a solution and nobody has written down the problem underneath it.</p>
+      <p>Think of it as the designer's memory for the questions that have to be answered before anyone designs. It asks them one at a time, follows the evidence, and keeps the unresolved ones visible instead of letting them pass as settled.</p>
+      <p class="definition"><strong>Its only output is a written problem.</strong> A <code>Framed Problem</code> records the user, the tension, the outcome, the evidence, the assumptions, the boundary, and the open question, with the evidence kept under each claim. It stays in the project, so every later sketch and decision is checked against the same intent.</p>
     </section>
 
-    <section class="scrolly" aria-label="The problem-framing process">
+    <section class="scrolly" aria-label="The problem-framing loop">
       <div class="graphic-wrap">
         <div class="graphic-shell" aria-hidden="true">
-          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">Two entry points</span></div>
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">The stakes</span></div>
           <svg viewBox="0 0 760 620" focusable="false">
             <defs>
-              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
-              </marker>
-              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
-              </pattern>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker>
+              <marker id="arrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+              <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/></marker>
+              <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#75a9ff"/></marker>
+              <marker id="arrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ae8bf3"/></marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/></pattern>
             </defs>
             <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
 
-            <!-- DIAGRAM 1: TWO ENTRY POINTS -->
+            <!-- DIAGRAM 1: THE STAKES -->
             <g class="diagram-state is-active" data-state="1">
-              <text class="svg-kicker" x="64" y="92">Process map</text>
-              <text class="svg-title" x="64" y="128">Two routes. One framing discipline.</text>
-              <path class="svg-line" d="M230 247 C304 247 310 310 354 310" marker-end="url(#arrow)"/>
-              <path class="svg-line" d="M230 411 C304 411 310 346 354 346" marker-end="url(#arrow)"/>
-              <path class="svg-line" d="M510 328 H620" marker-end="url(#arrow)"/>
-              <rect class="svg-node" x="64" y="204" width="166" height="86" rx="16"/>
-              <circle class="svg-green" cx="92" cy="233" r="7"/>
-              <text class="svg-label" x="110" y="238">New project</text>
-              <text class="svg-small" x="92" y="264">Raw idea · request</text>
-              <rect class="svg-node" x="64" y="368" width="166" height="86" rx="16"/>
-              <circle class="svg-blue" cx="92" cy="397" r="7"/>
-              <text class="svg-label" x="110" y="402">In progress</text>
-              <text class="svg-small" x="92" y="428">Work · evidence · cost</text>
-              <circle cx="430" cy="328" r="88" fill="#1d2a22" stroke="#63c99c" stroke-width="2"/>
-              <circle cx="430" cy="328" r="62" fill="none" stroke="#63c99c" stroke-opacity=".3" stroke-width="14"/>
-              <text class="svg-label" x="430" y="322" text-anchor="middle">problem-framing</text>
-              <text class="svg-small" x="430" y="346" text-anchor="middle">pressure-test</text>
-              <rect x="620" y="280" width="104" height="96" rx="14" fill="#f4f1e8"/>
-              <path d="M642 304 H702 M642 326 H690 M642 348 H698" stroke="#5f685f" stroke-width="3" stroke-linecap="round"/>
-              <text class="svg-tiny" x="672" y="399" text-anchor="middle">FRAMED PROBLEM</text>
+              <text class="svg-kicker" x="40" y="60">The stakes</text>
+              <text class="svg-title" x="40" y="96">A good answer to an unconfirmed problem.</text>
+              <path class="svg-line" d="M252 292 H322" marker-end="url(#arrow)"/>
+              <rect class="svg-node" x="56" y="250" width="196" height="84" rx="16"/>
+              <text class="svg-tiny" x="76" y="282">REQUEST</text>
+              <text class="svg-small" x="76" y="306">AI payroll-readiness</text>
+              <text class="svg-small" x="76" y="324">dashboard</text>
+              <rect x="330" y="188" width="330" height="180" rx="18" fill="#f9f8f1"/>
+              <rect x="354" y="212" width="282" height="34" rx="8" fill="#e8e9e2"/>
+              <circle cx="374" cy="229" r="6" fill="#ee795e"/><circle cx="396" cy="229" r="6" fill="#e7b85c"/><circle cx="418" cy="229" r="6" fill="#63c99c"/>
+              <text x="354" y="290" fill="#151914" font-family="Inter, sans-serif" font-size="15" font-weight="750">AI payroll-readiness dashboard</text>
+              <rect x="354" y="302" width="120" height="46" rx="9" fill="#dfeae3"/>
+              <rect x="486" y="302" width="150" height="46" rx="9" fill="#ece7db"/>
+              <rect x="330" y="384" width="330" height="46" rx="10" fill="#33211d" stroke="#ee795e" stroke-width="2" stroke-dasharray="9 5"/>
+              <text x="495" y="413" fill="#ee795e" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle" letter-spacing="1.5">PROBLEM?</text>
+              <text class="svg-small" x="40" y="478" fill="#f2a793">The finished block rests on a problem nobody has confirmed.</text>
             </g>
 
-            <!-- DIAGRAM 2: EVIDENCE LEDGER -->
+            <!-- DIAGRAM 2: TWO ENTRY POINTS -->
             <g class="diagram-state" data-state="2">
-              <text class="svg-kicker" x="64" y="78">Evidence classification</text>
-              <text class="svg-title" x="64" y="114">Read first. Then separate.</text>
-              <g>
-                <rect class="svg-node" x="62" y="158" width="122" height="300" rx="16"/>
-                <text class="svg-small" x="84" y="188">PROJECT RECORD</text>
-                <g fill="#d8ddd7">
-                  <rect x="83" y="216" width="78" height="42" rx="7"/>
-                  <rect x="83" y="273" width="78" height="42" rx="7"/>
-                  <rect x="83" y="330" width="78" height="42" rx="7"/>
-                  <rect x="83" y="387" width="78" height="42" rx="7"/>
-                </g>
-                <text x="122" y="242" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">BRIEF</text>
-                <text x="122" y="299" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">METRICS</text>
-                <text x="122" y="356" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">RESEARCH</text>
-                <text x="122" y="413" fill="#263129" font-size="10" font-weight="700" text-anchor="middle">DECISIONS</text>
-              </g>
-              <path class="svg-line" d="M184 308 H236" marker-end="url(#arrow)"/>
-              <g>
-                <rect x="246" y="158" width="430" height="58" rx="12" fill="#18342a" stroke="#63c99c"/>
-                <circle class="svg-green" cx="272" cy="187" r="7"/><text class="svg-label" x="290" y="192">Observation</text><text class="svg-small" x="434" y="192">Directly seen or sourced</text>
-                <rect x="246" y="226" width="430" height="58" rx="12" fill="#1c2c43" stroke="#75a9ff"/>
-                <circle class="svg-blue" cx="272" cy="255" r="7"/><text class="svg-label" x="290" y="260">Interpretation</text><text class="svg-small" x="434" y="260">Explanation of evidence</text>
-                <rect x="246" y="294" width="430" height="58" rx="12" fill="#3c301b" stroke="#e7b85c"/>
-                <circle class="svg-amber" cx="272" cy="323" r="7"/><text class="svg-label" x="290" y="328">Assumption</text><text class="svg-small" x="434" y="328">Unverified dependency</text>
-                <rect x="246" y="362" width="430" height="58" rx="12" fill="#302444" stroke="#ae8bf3"/>
-                <circle class="svg-violet" cx="272" cy="391" r="7"/><text class="svg-label" x="290" y="396">Commitment</text><text class="svg-small" x="434" y="396">Authorized decision</text>
-                <rect x="246" y="430" width="430" height="58" rx="12" fill="#38241f" stroke="#ee795e"/>
-                <circle class="svg-coral" cx="272" cy="459" r="7"/><text class="svg-label" x="290" y="464">Preference</text><text class="svg-small" x="434" y="464">Value judgment</text>
-              </g>
-              <text class="svg-small" x="246" y="530">Facts discoverable here are not delegated back to the user.</text>
+              <text class="svg-kicker" x="40" y="60">The routes</text>
+              <text class="svg-title" x="40" y="96">Three ways in. One loop. One file.</text>
+              <path class="svg-line" d="M244 187 C300 200 314 280 352 296" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M244 305 H352" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M244 423 C300 410 314 330 352 314" marker-end="url(#arrow)"/>
+              <rect class="svg-node" x="56" y="150" width="188" height="74" rx="15"/>
+              <circle class="svg-green" cx="82" cy="178" r="7"/><text class="svg-label" x="100" y="183">New project</text>
+              <text class="svg-small" x="82" y="207">Raw request</text>
+              <rect class="svg-node" x="56" y="268" width="188" height="74" rx="15"/>
+              <circle class="svg-blue" cx="82" cy="296" r="7"/><text class="svg-label" x="100" y="301">In-progress project</text>
+              <text class="svg-small" x="82" y="325">Work already done</text>
+              <rect class="svg-node" x="56" y="386" width="188" height="74" rx="15"/>
+              <circle class="svg-amber" cx="82" cy="414" r="7"/><text class="svg-label" x="100" y="419">Quick frame</text>
+              <text class="svg-small" x="82" y="443">Small solo work</text>
+              <circle cx="432" cy="305" r="80" fill="#1d2a22" stroke="#63c99c" stroke-width="2"/>
+              <circle cx="432" cy="305" r="56" fill="none" stroke="#63c99c" stroke-opacity=".28" stroke-width="14"/>
+              <text class="svg-label" x="432" y="300" text-anchor="middle">framing loop</text>
+              <text class="svg-small" x="432" y="322" text-anchor="middle">the same questions</text>
+              <path class="svg-line" d="M512 305 H620" marker-end="url(#arrow)"/>
+              <rect x="628" y="256" width="96" height="98" rx="12" fill="#f4f1e8"/>
+              <path d="M650 282 H710 M650 304 H698 M650 326 H706" stroke="#5f685f" stroke-width="3" stroke-linecap="round"/>
+              <text class="svg-tiny" x="676" y="376" text-anchor="middle">FRAMED_PROBLEM.md</text>
             </g>
 
-            <!-- DIAGRAM 3: BASELINE STORY -->
+            <!-- DIAGRAM 3: EVIDENCE LEDGER -->
             <g class="diagram-state" data-state="3">
-              <text class="svg-kicker" x="64" y="82">Question 1 · What actually happened?</text>
-              <text class="svg-title" x="64" y="118">Turn the request into one real episode.</text>
-              <g transform="translate(48 230)">
-                <path class="svg-line" d="M104 48 H132 M226 48 H254 M348 48 H376 M470 48 H498 M592 48 H620" marker-end="url(#arrow)"/>
-                <g>
-                  <rect class="svg-node" x="0" y="0" width="104" height="96" rx="14"/><circle class="svg-green" cx="52" cy="25" r="9"/><text class="svg-small" x="52" y="53" text-anchor="middle">SMB HR admin</text><text class="svg-tiny" x="52" y="76" text-anchor="middle">WHO</text>
-                  <rect class="svg-node" x="132" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="179" y="43" text-anchor="middle">Finalize</text><text class="svg-small" x="179" y="60" text-anchor="middle">payroll</text><text class="svg-tiny" x="179" y="79" text-anchor="middle">GOAL</text>
-                  <rect class="svg-node" x="254" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="301" y="43" text-anchor="middle">Payroll</text><text class="svg-small" x="301" y="60" text-anchor="middle">review</text><text class="svg-tiny" x="301" y="79" text-anchor="middle">CONTEXT</text>
-                  <rect x="376" y="0" width="94" height="96" rx="14" fill="#3b251f" stroke="#ee795e" stroke-width="2"/><text class="svg-small" x="423" y="43" text-anchor="middle">Changes</text><text class="svg-small" x="423" y="60" text-anchor="middle">missing</text><text x="423" y="79" fill="#ee795e" font-size="9" font-weight="700" text-anchor="middle">FRICTION</text>
-                  <rect class="svg-node" x="498" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="545" y="43" text-anchor="middle">Chases</text><text class="svg-small" x="545" y="60" text-anchor="middle">managers</text><text class="svg-tiny" x="545" y="79" text-anchor="middle">NEXT</text>
-                  <rect class="svg-node" x="620" y="0" width="94" height="96" rx="14"/><text class="svg-small" x="667" y="43" text-anchor="middle">Payroll</text><text class="svg-small" x="667" y="60" text-anchor="middle">delayed</text><text class="svg-tiny" x="667" y="79" text-anchor="middle">IMPACT</text>
-                </g>
-                <path d="M412 99 L426 117 L418 134 L438 151" fill="none" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+              <text class="svg-kicker" x="40" y="60">Read first</text>
+              <text class="svg-title" x="40" y="96">Sort every claim into five lanes.</text>
+              <rect class="svg-node" x="40" y="222" width="150" height="164" rx="14"/>
+              <text class="svg-tiny" x="58" y="250">ON RECORD</text>
+              <text class="svg-small" x="58" y="278">Briefs</text>
+              <text class="svg-small" x="58" y="304">Notes</text>
+              <text class="svg-small" x="58" y="330">Metrics</text>
+              <text class="svg-small" x="58" y="356">Past decisions</text>
+              <path class="svg-line" d="M190 304 H256" marker-end="url(#arrow)"/>
+              <g>
+                <rect class="svg-node-light" x="264" y="120" width="456" height="52" rx="10"/>
+                <rect x="264" y="120" width="8" height="52" rx="4" fill="#63c99c"/>
+                <circle class="svg-green" cx="292" cy="146" r="6"/>
+                <text class="svg-label" x="310" y="143">Observation</text>
+                <text class="svg-small" x="310" y="161">a quote from a real person</text>
+                <rect x="556" y="128" width="152" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+                <text class="svg-tiny" x="632" y="150" text-anchor="middle" fill="#c9f1df">GROUND TRUTH</text>
               </g>
-              <rect x="142" y="432" width="476" height="84" rx="14" fill="#1c2721" stroke="#3f4c42"/>
-              <text class="svg-small" x="380" y="458" text-anchor="middle">Ask about the most recent person—not “users” in general.</text>
-              <text class="svg-label" x="380" y="489" text-anchor="middle">Where did they stop, and what happened next?</text>
+              <g>
+                <rect class="svg-node-light" x="264" y="184" width="456" height="52" rx="10"/>
+                <rect x="264" y="184" width="8" height="52" rx="4" fill="#75a9ff"/>
+                <circle class="svg-blue" cx="292" cy="210" r="6"/>
+                <text class="svg-label" x="310" y="207">Interpretation</text>
+                <text class="svg-small" x="310" y="225">what someone read into it</text>
+              </g>
+              <g>
+                <rect class="svg-node-light" x="264" y="248" width="456" height="52" rx="10"/>
+                <rect x="264" y="248" width="8" height="52" rx="4" fill="#e7b85c"/>
+                <circle class="svg-amber" cx="292" cy="274" r="6"/>
+                <text class="svg-label" x="310" y="271">Assumption</text>
+                <text class="svg-small" x="310" y="289">believed, not yet checked</text>
+              </g>
+              <g>
+                <rect class="svg-node-light" x="264" y="312" width="456" height="52" rx="10"/>
+                <rect x="264" y="312" width="8" height="52" rx="4" fill="#ae8bf3"/>
+                <circle class="svg-violet" cx="292" cy="338" r="6"/>
+                <text class="svg-label" x="310" y="335">Commitment</text>
+                <text class="svg-small" x="310" y="353">a decision already made</text>
+              </g>
+              <g>
+                <rect class="svg-node-light" x="264" y="376" width="456" height="52" rx="10"/>
+                <rect x="264" y="376" width="8" height="52" rx="4" fill="#ee795e"/>
+                <circle class="svg-coral" cx="292" cy="402" r="6"/>
+                <text class="svg-label" x="310" y="399">Preference</text>
+                <text class="svg-small" x="310" y="417">a taste dressed as a need</text>
+              </g>
+              <text class="svg-small" x="40" y="470">Every non-observation line is read as an interpretation of a quote.</text>
             </g>
 
-            <!-- DIAGRAM 4: CAUSAL QUESTION -->
+            <!-- DIAGRAM 4: FRAME DRIFT -->
             <g class="diagram-state" data-state="4">
-              <text class="svg-kicker" x="64" y="76">Question 2 · Why do we think that is the cause?</text>
-              <text class="svg-title" x="64" y="112">Challenge the explanation—not the observation.</text>
-              <g transform="translate(76 166)">
-                <rect x="40" y="0" width="390" height="88" rx="16" fill="#3a261f" stroke="#ee795e"/>
-                <text class="svg-tiny" x="68" y="28">VISIBLE LAYER</text><text class="svg-label" x="68" y="57">Symptom: payroll approval is delayed</text>
-                <path class="svg-line-muted" d="M235 88 V120"/>
-                <rect x="40" y="120" width="390" height="88" rx="16" fill="#1c2c43" stroke="#75a9ff"/>
-                <text class="svg-tiny" x="68" y="148">INTERPRETATION</text><text class="svg-label" x="68" y="177">“HR needs better visibility”</text>
-                <path d="M235 208 V240" fill="none" stroke="#e7b85c" stroke-width="3" stroke-dasharray="6 6"/>
-                <rect x="40" y="240" width="390" height="88" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/>
-                <text class="svg-tiny" x="68" y="268">PLAUSIBLE CAUSE</text><text class="svg-label" x="68" y="297">Employee changes arrive late</text>
-                <circle cx="505" cy="202" r="67" fill="none" stroke="#63c99c" stroke-width="13" stroke-opacity=".28"/>
-                <circle cx="505" cy="202" r="51" fill="none" stroke="#63c99c" stroke-width="2"/>
-                <path d="M548 245 L592 289" stroke="#63c99c" stroke-width="12" stroke-linecap="round"/>
-                <rect x="448" y="350" width="206" height="92" rx="14" fill="#f4f1e8"/>
-                <text x="466" y="376" fill="#5b635b" font-size="9" font-weight="800" letter-spacing="1">ASK THE DESIGNER</text>
-                <text x="466" y="400" fill="#171914" font-size="11" font-weight="700">What makes us think</text>
-                <text x="466" y="418" fill="#171914" font-size="11" font-weight="700">a dashboard fixes the delay?</text>
-              </g>
+              <text class="svg-kicker" x="40" y="60">In-progress path</text>
+              <text class="svg-title" x="40" y="96">Line them up. Name the gaps.</text>
+              <path class="svg-line-muted" d="M214 150 V420"/>
+              <rect class="svg-node" x="214" y="176" width="366" height="50" rx="10"/>
+              <text class="svg-label" x="236" y="206">Original brief</text>
+              <rect class="svg-node" x="214" y="264" width="300" height="50" rx="10"/>
+              <text class="svg-label" x="236" y="294">Work done since</text>
+              <rect class="svg-node" x="214" y="352" width="446" height="50" rx="10"/>
+              <text class="svg-label" x="236" y="382">New evidence</text>
+              <path d="M580 176 V226" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="7 4"/>
+              <path d="M514 264 V314" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="7 4"/>
+              <path d="M660 352 V402" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="7 4"/>
+              <text class="svg-tiny" x="592" y="205" fill="#f2a793">drift</text>
+              <text class="svg-tiny" x="526" y="293" fill="#f2a793">drift</text>
+              <text class="svg-tiny" x="586" y="381" fill="#f2a793">drift</text>
+              <text class="svg-tiny" x="214" y="444" fill="#f2a793">CORAL MARKS THE GAPS BETWEEN THEM</text>
+              <text class="svg-small" x="40" y="478">Eight weeks of screens are sunk cost, not proof the frame was right.</text>
             </g>
 
-            <!-- DIAGRAM 5: PROJECT REVIEW -->
+            <!-- DIAGRAM 5: BASELINE STORY -->
             <g class="diagram-state" data-state="5">
-              <text class="svg-kicker" x="64" y="74">Question 3 · What changed since kickoff?</text>
-              <text class="svg-title" x="64" y="110">Revisit the brief without discarding the work.</text>
-              <path class="svg-line" d="M96 294 H674" marker-end="url(#arrow)"/>
-              <g>
-                <circle cx="112" cy="294" r="14" fill="#63c99c"/><text class="svg-label" x="112" y="245" text-anchor="middle">Original frame</text><text class="svg-tiny" x="112" y="325" text-anchor="middle">KICKOFF</text>
-                <circle cx="250" cy="294" r="12" fill="#ae8bf3"/><text class="svg-label" x="250" y="245" text-anchor="middle">Design concept</text><text class="svg-tiny" x="250" y="325" text-anchor="middle">AI DASHBOARD</text>
-                <circle cx="388" cy="294" r="12" fill="#75a9ff"/><text class="svg-label" x="388" y="245" text-anchor="middle">Five interviews</text><text class="svg-tiny" x="388" y="325" text-anchor="middle">WORKFLOW</text>
-                <circle cx="526" cy="294" r="14" fill="#ee795e"/><text class="svg-label" x="526" y="245" text-anchor="middle">Blocker found</text><text class="svg-tiny" x="526" y="325" text-anchor="middle">MISSING INPUTS</text>
-                <circle cx="664" cy="294" r="14" fill="#e7b85c"/><text class="svg-label" x="664" y="245" text-anchor="middle">What now?</text><text class="svg-tiny" x="664" y="325" text-anchor="middle">REOPEN</text>
-              </g>
-              <path d="M112 278 C208 122 427 127 526 278" fill="none" stroke="#ee795e" stroke-width="3" stroke-dasharray="8 7"/>
-              <rect x="246" y="124" width="155" height="46" rx="10" fill="#3b251f" stroke="#ee795e"/>
-              <text x="323" y="153" fill="#ee795e" font-size="12" font-weight="750" text-anchor="middle">ORIGINAL CAUSE WEAKENED</text>
-              <path d="M528 310 C557 374 602 385 646 323" fill="none" stroke="#e7b85c" stroke-width="3"/>
-              <text class="svg-small" x="583" y="405" text-anchor="middle">Which decisions should reopen?</text>
-              <g transform="translate(86 424)">
-                <rect class="svg-node" width="588" height="72" rx="14"/>
-                <text class="svg-tiny" x="26" y="28">SUNK-COST BOUNDARY</text>
-                <text class="svg-label" x="26" y="51">Effort spent is cost history—not evidence to continue.</text>
-              </g>
+              <text class="svg-kicker" x="40" y="60">One episode</text>
+              <text class="svg-title" x="40" y="96">One concrete story, end to end.</text>
+              <path class="svg-line" d="M152 288 H172" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M294 288 H314" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M436 288 H456" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M578 288 H598" marker-end="url(#arrow)"/>
+              <rect class="svg-node" x="30" y="240" width="122" height="96" rx="14"/>
+              <text class="svg-small" x="91" y="284" text-anchor="middle">HR admin</text>
+              <text class="svg-small" x="91" y="302" text-anchor="middle">finalizes</text>
+              <text class="svg-small" x="91" y="320" text-anchor="middle">payroll</text>
+              <rect class="svg-node" x="172" y="240" width="122" height="96" rx="14"/>
+              <text class="svg-small" x="233" y="293" text-anchor="middle">changes</text>
+              <text class="svg-small" x="233" y="311" text-anchor="middle">missing</text>
+              <rect class="svg-node" x="314" y="240" width="122" height="96" rx="14"/>
+              <text class="svg-small" x="375" y="293" text-anchor="middle">chases</text>
+              <text class="svg-small" x="375" y="311" text-anchor="middle">managers</text>
+              <rect class="svg-node" x="456" y="240" width="122" height="96" rx="14"/>
+              <text class="svg-small" x="517" y="293" text-anchor="middle">approval</text>
+              <text class="svg-small" x="517" y="311" text-anchor="middle">slips a day</text>
+              <rect x="598" y="240" width="122" height="96" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="659" y="278" text-anchor="middle" fill="#c9f1df">OUTCOME</text>
+              <text class="svg-small" x="659" y="302" text-anchor="middle" fill="#c9f1df">on-time</text>
+              <text class="svg-small" x="659" y="320" text-anchor="middle" fill="#c9f1df">approval</text>
+              <text class="svg-small" x="40" y="480">The outcome is a change someone outside the team could notice.</text>
             </g>
 
-            <!-- DIAGRAM 6: FRAME MATRIX -->
+            <!-- DIAGRAM 6: CAUSAL MAP -->
             <g class="diagram-state" data-state="6">
-              <text class="svg-kicker" x="64" y="68">Compare plausible problem statements</text>
-              <text class="svg-title" x="64" y="104">The same behavior can have different causes.</text>
-              <g transform="translate(54 146)">
-                <text class="svg-tiny" x="276" y="0">EVIDENCE</text><text class="svg-tiny" x="374" y="0">LEVERAGE</text><text class="svg-tiny" x="470" y="0">OWNERSHIP</text><text class="svg-tiny" x="568" y="0">OPENNESS</text><text class="svg-tiny" x="651" y="0">BOUNDARY</text>
-                <g transform="translate(0 25)">
-                  <rect class="svg-node" width="650" height="68" rx="12"/>
-                  <text class="svg-label" x="18" y="31">HR lacks visibility</text><text class="svg-small" x="18" y="50">Dashboard assumed</text>
-                  <g fill="#526157"><circle cx="285" cy="34" r="6"/><circle cx="385" cy="34" r="6"/><circle cx="481" cy="34" r="6"/><circle cx="575" cy="34" r="6"/><circle cx="645" cy="34" r="6"/></g>
-                </g>
-                <g transform="translate(0 103)">
-                  <rect width="650" height="68" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
-                  <text class="svg-label" x="18" y="31">Missing changes surface late</text><text class="svg-small" x="18" y="50">Payroll readiness</text>
-                  <g fill="#63c99c"><circle cx="285" cy="34" r="8"/><circle cx="385" cy="34" r="8"/><circle cx="481" cy="34" r="8"/><circle cx="575" cy="34" r="8"/><circle cx="645" cy="34" r="8"/></g>
-                </g>
-                <g transform="translate(0 181)">
-                  <rect class="svg-node" width="650" height="68" rx="12"/>
-                  <text class="svg-label" x="18" y="31">Managers submit changes late</text><text class="svg-small" x="18" y="50">Different owner</text>
-                  <g fill="#75a9ff"><circle cx="285" cy="34" r="8"/><circle cx="385" cy="34" r="6"/><circle cx="481" cy="34" r="8"/><circle cx="575" cy="34" r="6"/><circle cx="645" cy="34" r="8"/></g>
-                </g>
-                <g transform="translate(0 259)">
-                  <rect class="svg-node" width="650" height="68" rx="12"/>
-                  <text class="svg-label" x="18" y="31">Inputs lack clear owners</text><text class="svg-small" x="18" y="50">Coordination frame</text>
-                  <g fill="#e7b85c"><circle cx="285" cy="34" r="6"/><circle cx="385" cy="34" r="8"/><circle cx="481" cy="34" r="6"/><circle cx="575" cy="34" r="8"/><circle cx="645" cy="34" r="6"/></g>
-                </g>
-              </g>
-              <text class="svg-small" x="54" y="540">Ask: Which explanation fits what we observed—and what would change the choice?</text>
+              <text class="svg-kicker" x="40" y="60">Test the cause</text>
+              <text class="svg-title" x="40" y="96">One symptom. Two candidate causes.</text>
+              <path d="M330 430 C280 356 210 320 172 250" fill="none" stroke="#ee795e" stroke-width="1.2" stroke-opacity=".55"/>
+              <path d="M450 430 C520 356 588 320 590 250" fill="none" stroke="#63c99c" stroke-width="3.4" marker-end="url(#arrowGreen)"/>
+              <rect class="svg-node-light" x="52" y="150" width="240" height="98" rx="16"/>
+              <text class="svg-tiny" x="72" y="180" fill="#e7c98d">WEAKER EXPLANATION</text>
+              <text class="svg-label" x="72" y="206">needs better visibility</text>
+              <text class="svg-small" x="72" y="230">matches what we wanted to build</text>
+              <rect class="svg-node-light" x="470" y="150" width="240" height="98" rx="16" stroke="#63c99c"/>
+              <text class="svg-tiny" x="490" y="180" fill="#c9f1df">STRONGER EXPLANATION</text>
+              <text class="svg-label" x="490" y="206">changes arrive late</text>
+              <text class="svg-small" x="490" y="230">what the evidence shows</text>
+              <rect class="svg-node" x="290" y="432" width="200" height="84" rx="16"/>
+              <text class="svg-tiny" x="312" y="462">SYMPTOM</text>
+              <text class="svg-label" x="312" y="488">approval delayed</text>
+              <text class="svg-small" x="390" y="556" text-anchor="middle">The weaker link gives way to the stronger one.</text>
             </g>
 
-            <!-- DIAGRAM 7: EVIDENCE GATE -->
+            <!-- DIAGRAM 7: FRAME MATRIX -->
             <g class="diagram-state" data-state="7">
-              <text class="svg-kicker" x="64" y="76">What evidence would change the choice?</text>
-              <text class="svg-title" x="64" y="112">Ask the tools a precise question.</text>
-              <g transform="translate(45 203)">
-                <circle cx="42" cy="84" r="24" fill="#e7b85c"/><text x="42" y="89" fill="#171914" font-size="13" font-weight="800" text-anchor="middle">A?</text>
-                <path class="svg-line" d="M68 84 H104" marker-end="url(#arrow)"/>
-                <g transform="translate(112)"><path d="M70 0 L140 84 L70 168 L0 84 Z" fill="#243229" stroke="#526257"/><text class="svg-tiny" x="70" y="66" text-anchor="middle">HIGH IMPACT</text><text class="svg-label" x="70" y="90" text-anchor="middle">If false?</text></g>
-                <path class="svg-line" d="M252 84 H284" marker-end="url(#arrow)"/>
-                <g transform="translate(292)"><path d="M70 0 L140 84 L70 168 L0 84 Z" fill="#243229" stroke="#526257"/><text class="svg-tiny" x="70" y="66" text-anchor="middle">WEAK EVIDENCE</text><text class="svg-label" x="70" y="90" text-anchor="middle">Today?</text></g>
-                <path class="svg-line" d="M432 84 H464" marker-end="url(#arrow)"/>
-                <g transform="translate(472)"><path d="M70 0 L140 84 L70 168 L0 84 Z" fill="#243229" stroke="#526257"/><text class="svg-tiny" x="70" y="66" text-anchor="middle">RESEARCHABLE</text><text class="svg-label" x="70" y="90" text-anchor="middle">Can learn?</text></g>
+              <text class="svg-kicker" x="40" y="60">Compare the frames</text>
+              <text class="svg-title" x="40" y="96">Four candidate problems, one recommended.</text>
+              <text class="svg-tiny" x="52" y="164">CANDIDATE FRAME</text>
+              <text class="svg-tiny" x="294" y="164" text-anchor="middle">EVIDENCE</text>
+              <text class="svg-tiny" x="410" y="164" text-anchor="middle">LEVERAGE</text>
+              <text class="svg-tiny" x="526" y="164" text-anchor="middle">OWNERSHIP</text>
+              <text class="svg-tiny" x="642" y="164" text-anchor="middle">BOUNDARY</text>
+              <g>
+                <rect class="svg-node-light" x="40" y="178" width="680" height="52" rx="10"/>
+                <text class="svg-small" x="60" y="209">Frame A · late changes</text>
+                <circle cx="294" cy="204" r="8" fill="#63c99c"/><circle cx="410" cy="204" r="8" fill="#63c99c"/><circle cx="526" cy="204" r="8" fill="none" stroke="#667269" stroke-width="1.5"/><circle cx="642" cy="204" r="8" fill="#63c99c"/>
               </g>
-              <path class="svg-line" d="M657 287 V368" marker-end="url(#arrow)"/>
-              <rect x="480" y="380" width="244" height="62" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
-              <text class="svg-tiny" x="602" y="405" text-anchor="middle">CHANGES A DECISION</text>
-              <text class="svg-label" x="602" y="428" text-anchor="middle">Ask for a targeted input</text>
-              <path class="svg-line" d="M602 442 V463 M602 463 H492 V478 M602 463 H672 V478"/>
-              <rect x="416" y="478" width="152" height="62" rx="13" fill="#1c2c43" stroke="#75a9ff"/>
-              <text class="svg-tiny" x="492" y="502" text-anchor="middle">QUANTITATIVE</text>
-              <text class="svg-label" x="492" y="520" text-anchor="middle">Metrics tool</text><text class="svg-tiny" x="492" y="535" text-anchor="middle">PAYROLL STALLS</text>
-              <rect x="596" y="478" width="152" height="62" rx="13" fill="#302444" stroke="#ae8bf3"/>
-              <text class="svg-tiny" x="672" y="502" text-anchor="middle">QUALITATIVE</text>
-              <text class="svg-label" x="672" y="520" text-anchor="middle">Research library</text><text class="svg-tiny" x="672" y="535" text-anchor="middle">SEARCH “MISSING”</text>
-              <path class="svg-line-muted" d="M226 371 C226 490 340 511 446 511" marker-end="url(#arrow)"/>
-              <text class="svg-small" x="236" y="503">Accepted risk</text>
+              <g>
+                <rect class="svg-node-light" x="40" y="238" width="680" height="52" rx="10"/>
+                <rect x="40" y="238" width="680" height="52" rx="10" fill="none" stroke="#ae8bf3" stroke-width="2.5"/>
+                <text class="svg-small" x="60" y="269" fill="#dfd0fa">Frame B · missing-change readiness</text>
+                <circle cx="294" cy="264" r="8" fill="#63c99c"/><circle cx="410" cy="264" r="8" fill="#63c99c"/><circle cx="526" cy="264" r="8" fill="#63c99c"/><circle cx="642" cy="264" r="8" fill="#63c99c"/>
+                <text class="svg-tiny" x="700" y="230" text-anchor="end" fill="#dfd0fa">RECOMMENDED</text>
+              </g>
+              <g>
+                <rect class="svg-node-light" x="40" y="298" width="680" height="52" rx="10"/>
+                <text class="svg-small" x="60" y="329">Frame C · manager compliance</text>
+                <circle cx="294" cy="324" r="8" fill="none" stroke="#667269" stroke-width="1.5"/><circle cx="410" cy="324" r="8" fill="#63c99c"/><circle cx="526" cy="324" r="8" fill="none" stroke="#667269" stroke-width="1.5"/><circle cx="642" cy="324" r="8" fill="#63c99c"/>
+              </g>
+              <g>
+                <rect class="svg-node-light" x="40" y="358" width="680" height="52" rx="10"/>
+                <text class="svg-small" x="60" y="389">Frame D · dashboard adoption</text>
+                <circle cx="294" cy="384" r="8" fill="none" stroke="#667269" stroke-width="1.5"/><circle cx="410" cy="384" r="8" fill="none" stroke="#667269" stroke-width="1.5"/><circle cx="526" cy="384" r="8" fill="#63c99c"/><circle cx="642" cy="384" r="8" fill="none" stroke="#667269" stroke-width="1.5"/>
+              </g>
+              <text class="svg-tiny" x="40" y="440">FILLED = SUPPORTED BY THE OBSERVATIONS</text>
+              <text class="svg-small" x="40" y="470">Rejected frames are kept with the evidence that would revive them.</text>
             </g>
 
-            <!-- DIAGRAM 8: SCOPE BOUNDARY -->
+            <!-- DIAGRAM 8: EVIDENCE GATE -->
             <g class="diagram-state" data-state="8">
-              <text class="svg-kicker" x="64" y="68">Which slice belongs in this project?</text>
-              <text class="svg-title" x="64" y="104">Choose one meaningful boundary.</text>
-              <rect x="158" y="151" width="450" height="328" rx="22" fill="#17261f" stroke="#63c99c" stroke-width="2"/>
-              <text x="184" y="181" fill="#63c99c" font-size="10" font-weight="800" letter-spacing="1">IN THE FRAME</text>
-              <g>
-                <rect class="svg-node-light" x="190" y="210" width="164" height="82" rx="13"/><text class="svg-tiny" x="210" y="237">USER</text><text class="svg-label" x="210" y="265">SMB HR admin</text>
-                <rect class="svg-node-light" x="412" y="210" width="164" height="82" rx="13"/><text class="svg-tiny" x="432" y="237">CONTEXT</text><text class="svg-label" x="432" y="265">Before payroll approval</text>
-                <rect class="svg-node-light" x="190" y="322" width="164" height="82" rx="13"/><text class="svg-tiny" x="210" y="349">OUTCOME</text><text class="svg-label" x="210" y="377">Approve on time</text>
-                <rect class="svg-node-light" x="412" y="322" width="164" height="82" rx="13"/><text class="svg-tiny" x="432" y="349">CHOSEN SLICE</text><text class="svg-label" x="432" y="377">Missing-change readiness</text>
-              </g>
-              <rect x="111" y="188" width="96" height="38" rx="9" fill="#302444" stroke="#ae8bf3"/><text x="159" y="212" fill="#d8c8fa" font-size="10" font-weight="750" text-anchor="middle">CONSTRAINTS</text>
-              <rect x="546" y="433" width="126" height="38" rx="9" fill="#3c301b" stroke="#e7b85c"/><text x="609" y="457" fill="#f0ca7b" font-size="10" font-weight="750" text-anchor="middle">TIME BUDGET</text>
-              <rect x="303" y="461" width="158" height="38" rx="9" fill="#3b251f" stroke="#ee795e"/><text x="382" y="485" fill="#f3a18e" font-size="10" font-weight="750" text-anchor="middle">MAJOR RISKS</text>
-              <g opacity=".7">
-                <rect class="svg-node" x="37" y="334" width="104" height="60" rx="12"/><text class="svg-small" x="89" y="359" text-anchor="middle">Adjacent</text><text class="svg-small" x="89" y="377" text-anchor="middle">problem</text>
-                <rect class="svg-node" x="621" y="255" width="104" height="60" rx="12"/><text class="svg-small" x="673" y="280" text-anchor="middle">Different</text><text class="svg-small" x="673" y="298" text-anchor="middle">user</text>
-              </g>
-              <text class="svg-tiny" x="89" y="414" text-anchor="middle">OUT</text><text class="svg-tiny" x="673" y="335" text-anchor="middle">OUT</text>
+              <text class="svg-kicker" x="40" y="60">Gate the evidence</text>
+              <text class="svg-title" x="40" y="96">Four checks before any request.</text>
+              <rect class="svg-node" x="300" y="112" width="160" height="48" rx="12"/>
+              <text class="svg-label" x="380" y="141" text-anchor="middle">assumption</text>
+              <path class="svg-line" d="M380 160 V174" marker-end="url(#arrow)"/>
+              <rect class="svg-node-light" x="270" y="176" width="220" height="38" rx="10"/>
+              <text class="svg-small" x="380" y="200" text-anchor="middle">it matters</text>
+              <path class="svg-line" d="M380 214 V224" marker-end="url(#arrow)"/>
+              <rect class="svg-node-light" x="270" y="226" width="220" height="38" rx="10"/>
+              <text class="svg-small" x="380" y="250" text-anchor="middle">the evidence is weak</text>
+              <path class="svg-line" d="M380 264 V274" marker-end="url(#arrow)"/>
+              <rect class="svg-node-light" x="270" y="276" width="220" height="38" rx="10"/>
+              <text class="svg-small" x="380" y="300" text-anchor="middle">more is reachable</text>
+              <path class="svg-line" d="M380 314 V324" marker-end="url(#arrow)"/>
+              <rect class="svg-node-light" x="270" y="326" width="220" height="38" rx="10"/>
+              <text class="svg-small" x="380" y="350" text-anchor="middle">it would move the decision</text>
+              <path class="svg-line" d="M368 372 C300 402 140 400 140 424" marker-end="url(#arrowBlue)" stroke="#75a9ff"/>
+              <path class="svg-line" d="M360 372 V424" marker-end="url(#arrowBlue)" stroke="#75a9ff"/>
+              <path d="M392 372 C520 402 610 400 610 424" fill="none" stroke="#e7b85c" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrowAmber)"/>
+              <rect class="svg-node-light" x="40" y="430" width="200" height="64" rx="12" stroke="#75a9ff"/>
+              <text class="svg-tiny" x="60" y="456" fill="#bcd4ff">REQUEST ONE QUERY</text>
+              <text class="svg-label" x="60" y="480" fill="#bcd4ff">Metrics</text>
+              <rect class="svg-node-light" x="260" y="430" width="200" height="64" rx="12" stroke="#75a9ff"/>
+              <text class="svg-tiny" x="280" y="456" fill="#bcd4ff">REQUEST ONE QUERY</text>
+              <text class="svg-label" x="280" y="480" fill="#bcd4ff">Research library</text>
+              <rect class="svg-node-light" x="500" y="430" width="220" height="64" rx="12" stroke="#e7b85c"/>
+              <text class="svg-tiny" x="520" y="456" fill="#e7c98d">OTHERWISE</text>
+              <text class="svg-label" x="520" y="480" fill="#e7c98d">Accept as risk, move on</text>
+              <text class="svg-tiny" x="40" y="414" fill="#e7c98d">AMBER = ACCEPTED RISK</text>
             </g>
 
-            <!-- DIAGRAM 9: STATUS TREE -->
+            <!-- DIAGRAM 9: SCOPE BOX -->
             <g class="diagram-state" data-state="9">
-              <text class="svg-kicker" x="64" y="66">Is the problem ready for directions?</text>
-              <text class="svg-title" x="64" y="102">Confirm the frame, then choose the next move.</text>
-              <rect x="74" y="176" width="190" height="244" rx="16" fill="#f4f1e8"/>
-              <text x="98" y="208" fill="#677067" font-size="9" font-weight="800" letter-spacing="1">FRAMED_PROBLEM.MD</text>
-              <g stroke="#808980" stroke-width="3" stroke-linecap="round"><path d="M98 239 H232"/><path d="M98 270 H215"/><path d="M98 301 H226"/><path d="M98 332 H205"/><path d="M98 363 H224"/></g>
-              <path class="svg-line" d="M264 298 H328" marker-end="url(#arrow)"/>
-              <path class="svg-line-muted" d="M348 298 V143 H420 M348 298 V195 H420 M348 298 V247 H420 M348 298 V299 H420 M348 298 V351 H420 M348 298 V403 H420 M348 298 V455 H420"/>
-              <g>
-                <rect x="420" y="121" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="148">Ready for directions</text>
-                <rect x="420" y="173" width="236" height="44" rx="10" fill="#1c2c43" stroke="#75a9ff"/><text class="svg-label" x="438" y="200">Revisit directions</text>
-                <rect x="420" y="225" width="236" height="44" rx="10" fill="#18342a" stroke="#63c99c"/><text class="svg-label" x="438" y="253">Continue current frame</text>
-                <rect x="420" y="277" width="236" height="44" rx="10" fill="#3c301b" stroke="#e7b85c"/><text class="svg-label" x="438" y="305">Evidence needed</text>
-                <rect x="420" y="329" width="236" height="44" rx="10" fill="#302444" stroke="#ae8bf3"/><text class="svg-label" x="438" y="357">Needs reframing</text>
-                <rect x="420" y="381" width="236" height="44" rx="10" fill="#243229" stroke="#68786c"/><text class="svg-label" x="438" y="409">Split</text>
-                <rect x="420" y="433" width="236" height="44" rx="10" fill="#3b251f" stroke="#ee795e"/><text class="svg-label" x="438" y="461">Stop</text>
-              </g>
-              <text class="svg-small" x="74" y="505">Saved in the project · read by shaping and everything after.</text>
+              <text class="svg-kicker" x="40" y="60">Draw the boundary</text>
+              <text class="svg-title" x="40" y="96">What is in, what stays out.</text>
+              <rect class="svg-node" x="40" y="120" width="680" height="320" rx="18"/>
+              <text class="svg-tiny" x="64" y="150" fill="#e7c98d">OUT OF SCOPE · MAJOR RISKS</text>
+              <rect x="110" y="166" width="540" height="196" rx="14" fill="#1d2a22" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="130" y="192" fill="#c9f1df">IN THIS SLICE</text>
+              <rect class="svg-node-light" x="130" y="204" width="242" height="66" rx="10"/>
+              <text class="svg-tiny" x="148" y="230">USER</text>
+              <text class="svg-small" x="148" y="252">SMB HR admin</text>
+              <rect class="svg-node-light" x="388" y="204" width="242" height="66" rx="10"/>
+              <text class="svg-tiny" x="406" y="230">MOMENT</text>
+              <text class="svg-small" x="406" y="252">48h before approval</text>
+              <rect class="svg-node-light" x="130" y="282" width="242" height="66" rx="10"/>
+              <text class="svg-tiny" x="148" y="308">SLICE NOW</text>
+              <text class="svg-small" x="148" y="330">surface missing changes</text>
+              <rect class="svg-node-light" x="388" y="282" width="242" height="66" rx="10"/>
+              <text class="svg-tiny" x="406" y="308">TIME BUDGET</text>
+              <text class="svg-small" x="406" y="330">two weeks, fixed</text>
+              <rect x="110" y="378" width="270" height="48" rx="10" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-tiny" x="126" y="400" fill="#f2a793">OUT OF SCOPE</text>
+              <text class="svg-small" x="126" y="418" fill="#f2a793">redesign payroll, every workflow</text>
+              <rect x="390" y="378" width="260" height="48" rx="10" fill="#3c301b" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="406" y="400" fill="#e7c98d">MAJOR RISK</text>
+              <text class="svg-small" x="406" y="418" fill="#e7c98d">false alerts erode HR trust</text>
+              <rect x="40" y="458" width="680" height="66" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-tiny" x="64" y="486" fill="#c9f1df">WORKING QUESTION</text>
+              <text class="svg-small" x="64" y="508" fill="#c9f1df">How might we surface missing changes before approval, without taking ownership from managers?</text>
+            </g>
+
+            <!-- DIAGRAM 10: STATUS HANDOFF -->
+            <g class="diagram-state" data-state="10">
+              <text class="svg-kicker" x="40" y="60">Hand it off</text>
+              <text class="svg-title" x="40" y="96">Tag the frame. Hand it to shaping.</text>
+              <rect class="svg-node" x="50" y="150" width="288" height="330" rx="16"/>
+              <text class="svg-tiny" x="74" y="182">PROJECT REFERENCE</text>
+              <text class="svg-label" x="74" y="206">FRAMED_PROBLEM.md</text>
+              <rect x="74" y="222" width="210" height="30" rx="15" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-small" x="90" y="242" fill="#dfd0fa">ready-for-directions</text>
+              <text class="svg-tiny" x="74" y="286" fill="#c9f1df">● ready-for-directions</text>
+              <text class="svg-tiny" x="74" y="308">○ revisit-directions</text>
+              <text class="svg-tiny" x="74" y="330">○ continue-current-frame</text>
+              <text class="svg-tiny" x="74" y="352">○ evidence-needed</text>
+              <text class="svg-tiny" x="74" y="374">○ needs-reframing</text>
+              <text class="svg-tiny" x="74" y="396">○ split</text>
+              <text class="svg-tiny" x="74" y="418">○ stop</text>
+              <text class="svg-tiny" x="74" y="456">seven statuses, one chosen</text>
+              <path class="svg-line" d="M338 305 H400" marker-end="url(#arrowViolet)" stroke="#ae8bf3"/>
+              <rect class="svg-node" x="400" y="150" width="300" height="330" rx="16" stroke="#ae8bf3"/>
+              <text class="svg-tiny" x="424" y="182">NEXT SKILL</text>
+              <text class="svg-label" x="424" y="206">shaping</text>
+              <text class="svg-small" x="424" y="230">explores 2–3 directions, picks one</text>
+              <rect class="svg-node-light" x="424" y="252" width="252" height="54" rx="10" stroke="#75a9ff" stroke-dasharray="6 4"/>
+              <text class="svg-small" x="444" y="284" fill="#bcd4ff">Direction A1</text>
+              <rect class="svg-node-light" x="424" y="318" width="252" height="54" rx="10" stroke="#e7b85c" stroke-dasharray="6 4"/>
+              <text class="svg-small" x="444" y="350" fill="#e7c98d">Direction A2</text>
+              <rect x="424" y="384" width="252" height="54" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-small" x="444" y="416" fill="#c9f1df">Direction A3 · picked</text>
+              <path d="M648 405 l10 10 l16 -20" fill="none" stroke="#63c99c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text class="svg-small" x="424" y="466">Framing buys time to explore, not approval to build.</text>
             </g>
           </svg>
         </div>
       </div>
 
       <div class="steps">
-        <!-- SCENE 1: TWO ENTRY POINTS — edit scene copy here -->
+        <!-- SCENE 0: THE STAKES -->
         <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
           <div class="step-card">
-            <span class="scene-number">01 · Entry</span>
-            <h2 id="scene-1-title">Two entry points.</h2>
-            <p>The skill can enter at the beginning or in the middle of the work. A new project brings a raw idea; an active project brings decisions, design explorations, feedback, and accumulated cost. Both need a problem frame grounded in evidence.</p>
+            <span class="scene-number">01 · The stakes</span>
+            <h2 id="scene-1-title">A good answer to an unconfirmed problem.</h2>
+            <p>A request arrives asking for an AI payroll-readiness dashboard. You could design it well and still solve a problem no one confirmed. The further the work goes, the more a wrong problem costs to correct. Problem framing tests the problem before design starts.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>What is being produced?</strong> Not a requirements document and not a proposed interface. A <code>Framed Problem</code> is the evidence-backed boundary that shaping can rely on.</aside>
-
-        <aside class="bridge-card"><strong>Not every problem needs the full pass.</strong> For solo work and small problems there is a <em>quick frame</em>: five questions, one page, same output file. It is a real frame, not a draft. What follows is the full version — and the skill has a written rule for when the short one stops being honest: more than one team affected, evidence people disagree about, or an assumption that would waste the whole budget if it were wrong.</aside>
-
-        <!-- SCENE 2: READ BEFORE ASKING — edit scene copy here -->
+        <!-- SCENE 1: TWO WAYS IN -->
         <section class="step" data-state="2" aria-labelledby="scene-2-title">
           <div class="step-card">
-            <span class="scene-number">02 · What do we know?</span>
-            <h2 id="scene-2-title">Read before asking.</h2>
-            <p>Before asking the designer anything, the skill reads the available project record. Its first internal question is: <strong>What do we know, and what are we merely explaining or assuming?</strong> Facts found in the documents are not asked again.</p>
+            <span class="scene-number">02 · Two ways in</span>
+            <h2 id="scene-2-title">Three ways in, one loop.</h2>
+            <p>The skill starts a new project from a raw request, or picks up a project already underway. A third path, the quick frame, fits small solo work that still needs its problem stated. Every path runs the same loop and ends in one file, <code>FRAMED_PROBLEM.md</code>.</p>
           </div>
         </section>
 
-        <!-- SCENE 3: BASELINE STORY — edit scene copy here -->
+        <!-- SCENE 2: READ BEFORE ASKING -->
         <section class="step" data-state="3" aria-labelledby="scene-3-title">
           <div class="step-card">
-            <span class="scene-number">03 · Question 1</span>
-            <h2 id="scene-3-title">What actually happened?</h2>
-            <p>The request says, “Add an AI payroll-readiness dashboard.” The skill asks: <strong>Tell me about the most recent payroll run that was delayed. What was the HR admin trying to complete, what was missing, what did they do next, and what was the consequence?</strong> One concrete episode replaces a feature request.</p>
+            <span class="scene-number">03 · Read before asking</span>
+            <h2 id="scene-3-title">Read the record before asking anything.</h2>
+            <p>Before asking the designer anything, the skill reads the briefs, notes, metrics, and prior decisions already on record. It sorts each claim into five lanes: observation, interpretation, assumption, commitment, and preference. A quote from a real person is the ground truth, and every other line is read as an interpretation of it.</p>
           </div>
         </section>
 
-        <!-- SCENE 4: CAUSAL QUESTION — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>One example, running through the rest.</strong> From here on, a single SMB HCM payroll-readiness case runs through every scene below. Each question changes one visible part of the same problem, so you can watch a fuzzy initiative resolve into a boundary and a working question.
+        </aside>
+
+        <!-- SCENE 3: FRAME DRIFT -->
         <section class="step" data-state="4" aria-labelledby="scene-4-title">
           <div class="step-card">
-            <span class="scene-number">04 · Question 2</span>
-            <h2 id="scene-4-title">Why do we think that is the cause?</h2>
-            <p>The skill offers a working hypothesis, then asks: <strong>What makes us think a dashboard would prevent the delay?</strong> In five workflow interviews, HR admins understood the payroll summary, but four still delayed approval while chasing missing employee changes from managers. The causal map changes before the next question is chosen.</p>
+            <span class="scene-number">04 · Frame drift</span>
+            <h2 id="scene-4-title">Line up the brief against the drift.</h2>
+            <p>When work is already underway, the skill lines up the original brief, the work done since, and the evidence gathered along the way. It names each gap as drift: the problem changed, scope crept, or the statement now exists to justify a solution already chosen. Eight weeks of screens are sunk cost, not evidence the frame was right.</p>
           </div>
         </section>
 
-        <!-- SCENE 5: PROJECT REVIEW — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>Only when work is underway.</strong> This drift check runs only for a project that is already in progress. A new project has no brief to have drifted from, so it skips this step and goes straight to the episode.
+        </aside>
+
+        <!-- SCENE 4: ONE REAL EPISODE -->
         <section class="step" data-state="5" aria-labelledby="scene-5-title">
           <div class="step-card">
-            <span class="scene-number">05 · Question 3</span>
-            <h2 id="scene-5-title">What changed since kickoff?</h2>
-            <p>For work already in progress, the skill asks: <strong>What have we learned since the original brief, and which decisions does that learning reopen?</strong> The AI dashboard concept still counts as work completed, but the time spent creating it is not evidence that visibility was the real problem.</p>
+            <span class="scene-number">05 · One real episode</span>
+            <h2 id="scene-5-title">Replace the label with one episode.</h2>
+            <p>The skill replaces the feature label with one concrete episode. An SMB HR admin finalizes payroll, finds employee changes missing, chases managers, and approval slips a day. It then fixes the outcome the frame is measured by, an observable change someone outside the team could notice.</p>
           </div>
         </section>
 
-        <aside class="bridge-card">
-          <strong>The question trail:</strong> What happened? Why do we think that is the cause? What changed? Which explanation fits? What evidence would change our choice? Which slice belongs in this project?
-        </aside>
-
-        <!-- SCENE 6: FRAME MATRIX — edit scene copy here -->
+        <!-- SCENE 5: TEST THE CAUSE -->
         <section class="step" data-state="6" aria-labelledby="scene-6-title">
           <div class="step-card">
-            <span class="scene-number">06 · Compare</span>
-            <h2 id="scene-6-title">Compare the possible problems.</h2>
-            <p>The same payroll delay can support several problem statements, and each one leads to a different design space. The skill explains the alternatives, recommends the one best supported by observations, then asks: <strong>Which explanation fits what we saw—and what evidence would make us choose another?</strong> This prevents the first story from becoming fact by default.</p>
+            <span class="scene-number">06 · Test the cause</span>
+            <h2 id="scene-6-title">Ask what makes it the cause.</h2>
+            <p>The first explanation is usually the one that matches what the team already wanted to build. The skill offers a hypothesis, then asks what makes anyone think it is the cause. The dashboard would show the summary, but the delay comes from changes that arrive late. The weaker link gives way to the stronger one.</p>
           </div>
         </section>
 
-        <!-- SCENE 7: EVIDENCE GATE — edit scene copy here -->
+        <!-- SCENE 6: COMPARE THE FRAMES -->
         <section class="step" data-state="7" aria-labelledby="scene-7-title">
           <div class="step-card">
-            <span class="scene-number">07 · Question 4</span>
-            <h2 id="scene-7-title">What evidence would change the choice?</h2>
-            <p>The skill proposes the exact input: <strong>In metrics, where do SMB payroll runs stall, and which missing-change types appear beforehand? In research, what episodes mention chasing managers, unconfirmed changes, or late payroll approval?</strong> It also states what result would support or weaken the frame.</p>
+            <span class="scene-number">07 · Compare the frames</span>
+            <h2 id="scene-7-title">Write several frames, recommend one.</h2>
+            <p>One payroll delay can support several different problems, and each points to a different design space. The skill writes three to five and compares them on evidence, leverage, ownership, and boundary. It recommends the one the observations support and keeps the rejected ones with the evidence that would revive them.</p>
           </div>
         </section>
 
-        <!-- SCENE 8: SCOPE BOUNDARY — edit scene copy here -->
+        <!-- SCENE 7: GATE THE EVIDENCE -->
         <section class="step" data-state="8" aria-labelledby="scene-8-title">
           <div class="step-card">
-            <span class="scene-number">08 · Question 5</span>
-            <h2 id="scene-8-title">Which slice belongs in this project?</h2>
-            <p>The team may not need—or be able—to solve the whole problem. The skill asks: <strong>Which meaningful part can this project influence now, and what must stay outside?</strong> It defines a chosen slice without prescribing how to solve it.</p>
+            <span class="scene-number">08 · Gate the evidence</span>
+            <h2 id="scene-8-title">Request evidence only when it moves the decision.</h2>
+            <p>The skill asks for research or metrics only when the answer could change the chosen frame. An assumption has to pass four tests: it matters, the evidence is weak, more evidence is reachable, and the result would move the decision. Only then does it request one exact query, in metrics or in the research library. Otherwise it records the risk and moves on.</p>
           </div>
         </section>
 
-        <aside class="bridge-card">
-          <strong>One boundary, in concrete terms:</strong>
-          <dl class="boundary-example">
-            <dt>User</dt><dd>An SMB HR admin responsible for payroll.</dd>
-            <dt>Context</dt><dd>The 48 hours before payroll approval.</dd>
-            <dt>Desired outcome</dt><dd>The admin resolves missing changes and approves payroll on time.</dd>
-            <dt>Constraint</dt><dd>Managers remain responsible for submitting employee changes.</dd>
-            <dt>Time budget</dt><dd>Two weeks of build time. The solution must change or shrink to fit the time—not the other way around.</dd>
-            <dt>Major risk</dt><dd>The platform may not distinguish a missing change from “no change,” causing false alerts and eroding HR trust.</dd>
-            <dt>Optional boundary</dt><dd>Supported payroll configurations are not yet defined. If this stays open, Direction may spread across every configuration and exceed the two-week build budget.</dd>
-            <dt>Chosen slice</dt><dd>Surface and resolve missing changes before payroll approval—not redesign payroll or every manager workflow.</dd>
-          </dl>
-        </aside>
-
-        <!-- SCENE 9: STATUS TREE — edit scene copy here -->
+        <!-- SCENE 8: DRAW THE BOUNDARY -->
         <section class="step" data-state="9" aria-labelledby="scene-9-title">
           <div class="step-card">
-            <span class="scene-number">09 · Confirm</span>
-            <h2 id="scene-9-title">Is the problem ready for directions?</h2>
-            <p><strong>Direction is the next phase:</strong> explore distinct solution hypotheses as breadboards, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed <code>Framed Problem</code> becomes the project’s problem reference point for shaping and everything after.</p>
+            <span class="scene-number">09 · Draw the boundary</span>
+            <h2 id="scene-9-title">Draw a boundary and a working question.</h2>
+            <p>The team may not be able to solve the whole problem at once. The skill draws the boundary: the user, the moment, the slice handled now, and what stays out. It records the time budget as fixed build time, alongside the risks that could destabilize the work. From that boundary comes one working question, open to several answers.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 9: HAND IT OFF -->
+        <section class="step" data-state="10" aria-labelledby="scene-10-title">
+          <div class="step-card">
+            <span class="scene-number">10 · Hand it off</span>
+            <h2 id="scene-10-title">Tag the file and hand it to shaping.</h2>
+            <p>The confirmed frame is written to <code>FRAMED_PROBLEM.md</code> and tagged with one of seven statuses. Ready-for-directions hands the file to <code>shaping</code>, which explores two or three solution directions and picks one. Framing buys the team time to explore solutions, not approval to build. The file stays the reference every later decision is checked against.</p>
           </div>
         </section>
       </div>
@@ -1312,25 +1392,25 @@
 
     <section class="next-moves-section" aria-labelledby="next-moves-title">
       <div class="next-moves-inner">
-        <p class="eyebrow">The decision after framing</p>
+        <p class="eyebrow">After the frame</p>
         <h2 id="next-moves-title">Every status has a next move.</h2>
-        <p class="next-moves-lede">Problem Framing does not automatically send every initiative to Direction. Its status tells the designer exactly what should happen next.</p>
+        <p class="next-moves-lede">The frame is tagged with one of seven statuses, and each names the action attached to it. Framing does not send every initiative onward; the status says what happens next.</p>
 
         <div class="next-moves-grid">
-          <article class="next-move-card"><h3>Ready for directions</h3><p><strong>Move forward.</strong> Use the Framed Problem as the reference while exploring approaches.</p></article>
-          <article class="next-move-card"><h3>Revisit directions</h3><p><strong>Re-evaluate the current approach.</strong> The problem frame changed; preserve valid decisions and reopen the ones the new evidence affects.</p></article>
-          <article class="next-move-card"><h3>Continue current frame</h3><p><strong>Keep the project moving.</strong> New evidence still supports the user, tension, outcome, and boundary; continue while monitoring known risks.</p></article>
-          <article class="next-move-card"><h3>Evidence needed</h3><p><strong>Ask a targeted question.</strong> Retrieve the exact metric or research input that can change the frame, then run framing again.</p></article>
-          <article class="next-move-card"><h3>Needs reframing</h3><p><strong>Return to the problem questions.</strong> The user, cause, outcome, or chosen slice is not coherent enough to guide approaches.</p></article>
-          <article class="next-move-card"><h3>Split</h3><p><strong>Create separate Framed Problems.</strong> The initiative contains independent users, tensions, or outcomes that should not share one direction.</p></article>
-          <article class="next-move-card"><h3>Stop</h3><p><strong>Do not continue downstream work.</strong> Record why the problem lacks sufficient evidence, value, ownership, or relevance.</p></article>
+          <article class="next-move-card"><h3>ready-for-directions</h3><p><strong>Hand it to shaping.</strong> The frame holds. Use it as the reference while exploring two or three solution directions.</p></article>
+          <article class="next-move-card"><h3>revisit-directions</h3><p><strong>Reopen the affected work.</strong> The frame changed; keep the decisions still valid and revisit the ones the new evidence touches.</p></article>
+          <article class="next-move-card"><h3>continue-current-frame</h3><p><strong>Keep going.</strong> New evidence still supports the user, tension, outcome, and boundary; continue while watching the known risks.</p></article>
+          <article class="next-move-card"><h3>evidence-needed</h3><p><strong>Ask one targeted question.</strong> Retrieve the exact metric or research input that could change the frame, then run framing again.</p></article>
+          <article class="next-move-card"><h3>needs-reframing</h3><p><strong>Return to the questions.</strong> The user, cause, outcome, or slice is not coherent enough to guide directions yet.</p></article>
+          <article class="next-move-card"><h3>split</h3><p><strong>Write separate frames.</strong> The initiative holds independent users, tensions, or outcomes that should not share one direction.</p></article>
+          <article class="next-move-card"><h3>stop</h3><p><strong>Do not continue.</strong> Record why the problem lacks the evidence, value, ownership, or relevance to justify more work.</p></article>
         </div>
       </div>
     </section>
 
     <section class="output-section" aria-label="Framed Problem output structure">
       <details>
-        <summary>Explore the complete <code>Framed Problem</code> handoff</summary>
+        <summary>Explore the complete <code>FRAMED_PROBLEM.md</code> handoff</summary>
         <div class="output-grid">
           <div class="output-item">Status</div><div class="output-item">Source request</div>
           <div class="output-item">Project checkpoint</div><div class="output-item">What changed</div>
@@ -1350,7 +1430,7 @@
         <div class="framed-example-intro">
           <p class="eyebrow">A concrete output</p>
           <h2 id="framed-example-title">What a Framed Problem looks like.</h2>
-          <p>The questions from the previous scenes consolidate into one concise project document. It states the problem, not the solution.</p>
+          <p>The questions from the scenes above consolidate into one concise project document. It states the problem, not the solution, and carries the evidence under each claim.</p>
         </div>
 
         <article class="framed-document" aria-label="Example Framed Problem document">
@@ -1360,15 +1440,15 @@
           <dl>
             <div class="framed-field">
               <dt>Status</dt>
-              <dd><span class="status-pill">Ready for directions</span></dd>
+              <dd><span class="status-pill">ready-for-directions</span></dd>
             </div>
             <div class="framed-field">
               <dt>Source request</dt>
-              <dd>“Add an AI payroll-readiness dashboard.” The dashboard remains a proposed solution, not part of the problem definition.</dd>
+              <dd>"Add an AI payroll-readiness dashboard." The dashboard stays a proposed solution, not part of the problem definition.</dd>
             </div>
             <div class="framed-field">
               <dt>Baseline story</dt>
-              <dd>An SMB HR admin tried to approve payroll, but several employee changes were missing or unconfirmed. They stopped to chase managers in chat and spreadsheets, delaying payroll approval.</dd>
+              <dd>An SMB HR admin tried to approve payroll, but several employee changes were missing or unconfirmed. They stopped to chase managers in chat and spreadsheets, and approval slipped a day.</dd>
             </div>
             <div class="framed-field">
               <dt>Chosen problem frame</dt>
@@ -1395,87 +1475,84 @@
                   <li><strong>Constraint:</strong> managers remain responsible for submitting employee changes.</li>
                   <li><strong>Time budget:</strong> two weeks of build time. The chosen solution must fit this fixed investment.</li>
                   <li><strong>Optional boundary:</strong> supported payroll configurations are not yet defined.</li>
-                  <li><strong>Consequence if deferred:</strong> Direction may expand across every configuration, exceed the two-week budget, and reopen the approach during Design. Resolve before the proposal.</li>
+                  <li><strong>Consequence if deferred:</strong> shaping may spread across every configuration, exceed the two-week budget, and reopen the direction later. Resolve before the proposal.</li>
                 </ul>
               </dd>
             </div>
             <div class="framed-field">
               <dt>Major risk</dt>
-              <dd>The platform may not reliably distinguish a missing employee change from a legitimate “no change” before payroll review. If that happens, false alerts could erode HR trust and make the chosen direction unusable.</dd>
+              <dd>The platform may not reliably distinguish a missing employee change from a legitimate "no change" before payroll review. If that happens, false alerts could erode HR trust and make the chosen direction unusable.</dd>
             </div>
             <div class="framed-field">
               <dt>Handoff</dt>
-              <dd>Explore materially different directions, each breadboarded. Each must preserve manager ownership, address early identification and resolution, and respond to the working question; none should assume a dashboard is the answer.</dd>
+              <dd>Hand to <code>shaping</code> to explore two or three materially different directions. Each must preserve manager ownership, address early identification and resolution, and answer the working question; none should assume a dashboard is the answer.</dd>
             </div>
           </dl>
         </article>
       </div>
     </section>
 
-    <!-- SCENE 10: HANDOFF TO DIRECTION -->
     <section class="closing" aria-labelledby="closing-title">
       <div class="closing-copy">
         <p class="eyebrow">The payoff</p>
-        <h2 id="closing-title">Now direction the solution direction.</h2>
-        <p><strong>Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.</strong> In Direction, each solution hypothesis becomes a breadboard: the places a person can be, what they can do or see there, and where each action takes them. The team evaluates the alternatives and picks one bounded direction. <code>FRAMED_PROBLEM.md</code> remains the reference every sketch and later decision is judged against.</p>
-        <div class="final-equation"><span>Framed problem</span><span aria-hidden="true">→</span><span>Rough solution sketches</span></div>
+        <h2 id="closing-title">A framed problem, not a solution.</h2>
+        <p><strong>Design does not begin by choosing an answer. It begins by confirming the problem the answer is for.</strong> The loop runs end to end: read the record, sort the evidence, recover an episode, test the cause, compare the frames, gate the evidence, draw the boundary, and hand <code>FRAMED_PROBLEM.md</code> to <code>shaping</code>. Framing buys the team time to explore solutions, not approval to build. The file stays the reference every later decision is checked against.</p>
+        <div class="final-equation"><span>Framed problem</span><span aria-hidden="true">→</span><span>Two or three directions</span></div>
       </div>
 
       <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
-        <title id="closing-diagram-title">A framed problem moving into rough solution sketches</title>
-        <desc id="closing-diagram-desc">A document backed by user, tension, outcome, and evidence passes into Direction, where each solution hypothesis becomes a breadboard before one direction is chosen.</desc>
+        <title id="closing-diagram-title">A framed problem handed to shaping, which explores directions and picks one</title>
+        <desc id="closing-diagram-desc">A document holding user, tension, outcome, and evidence passes to shaping, which explores two or three directions across versions and settles on one.</desc>
         <defs>
           <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
         </defs>
-        <rect x="44" y="100" width="216" height="274" rx="18" fill="#f4f1e8"/>
-        <text x="70" y="124" fill="#667068" font-family="Inter, sans-serif" font-size="9" font-weight="800" letter-spacing="1.3">PROJECT NORTH STAR</text>
-        <text x="70" y="142" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FRAMED_PROBLEM.MD</text>
+        <rect x="40" y="104" width="216" height="290" rx="18" fill="#f4f1e8"/>
+        <text x="66" y="130" fill="#667068" font-family="Inter, sans-serif" font-size="9" font-weight="800" letter-spacing="1.3">PROJECT REFERENCE</text>
+        <text x="66" y="148" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FRAMED_PROBLEM.MD</text>
         <g font-family="Inter, sans-serif" font-size="13" font-weight="700">
-          <rect x="70" y="166" width="162" height="38" rx="9" fill="#dceddf"/><text x="88" y="191" fill="#244135">User</text>
-          <rect x="70" y="216" width="162" height="38" rx="9" fill="#e4eafa"/><text x="88" y="241" fill="#273752">Tension</text>
-          <rect x="70" y="266" width="162" height="38" rx="9" fill="#f5e8c8"/><text x="88" y="291" fill="#57441f">Outcome</text>
-          <rect x="70" y="316" width="162" height="38" rx="9" fill="#eee4fb"/><text x="88" y="341" fill="#443259">Evidence</text>
+          <rect x="66" y="172" width="164" height="40" rx="9" fill="#dceddf"/><text x="84" y="198" fill="#244135">User</text>
+          <rect x="66" y="224" width="164" height="40" rx="9" fill="#e4eafa"/><text x="84" y="250" fill="#273752">Tension</text>
+          <rect x="66" y="276" width="164" height="40" rx="9" fill="#f5e8c8"/><text x="84" y="302" fill="#57441f">Outcome</text>
+          <rect x="66" y="328" width="164" height="40" rx="9" fill="#eee4fb"/><text x="84" y="354" fill="#443259">Evidence</text>
         </g>
-        <path d="M270 238 H336" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
-        <rect x="352" y="142" width="112" height="194" rx="56" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
-        <text x="408" y="232" fill="#fffdf7" font-family="Georgia, serif" font-size="22" text-anchor="middle">Direction</text>
-        <text x="408" y="255" fill="#9cac9f" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">EXPLORE</text>
-        <path d="M474 238 H525" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
-        <text x="606" y="72" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">ROUGH EXCALIDRAW</text>
+        <path d="M256 249 H322" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <rect x="338" y="150" width="120" height="198" rx="18" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
+        <text x="398" y="244" fill="#fffdf7" font-family="Georgia, serif" font-size="20" text-anchor="middle">shaping</text>
+        <text x="398" y="266" fill="#9cac9f" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">EXPLORE</text>
+        <path d="M458 249 H512" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
+        <text x="606" y="130" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">DIRECTIONS · A1 → A3</text>
         <g font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">
-          <rect x="548" y="92" width="116" height="58" rx="8" fill="#1c2c43" stroke="#75a9ff" stroke-width="2" stroke-dasharray="7 3"/><text x="606" y="126" fill="#c8dcff">Sketch A</text>
-          <rect x="548" y="178" width="116" height="58" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2" stroke-dasharray="5 4"/><text x="606" y="212" fill="#c9f1df">Sketch B</text>
-          <rect x="548" y="264" width="116" height="58" rx="7" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-dasharray="8 3"/><text x="606" y="298" fill="#f4d89c">Sketch C</text>
-          <rect x="548" y="350" width="116" height="58" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="2" stroke-dasharray="6 4"/><text x="606" y="384" fill="#dfd0fa">Sketch D</text>
+          <rect x="536" y="146" width="132" height="52" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2" stroke-dasharray="7 3"/><text x="602" y="177" fill="#c8dcff">Direction A1</text>
+          <rect x="536" y="212" width="132" height="52" rx="9" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-dasharray="8 3"/><text x="602" y="243" fill="#f4d89c">Direction A2</text>
+          <rect x="536" y="278" width="132" height="52" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="2.5"/><text x="602" y="309" fill="#c9f1df">Direction A3 · picked</text>
         </g>
-        <path d="M525 238 C536 150 536 122 548 122 M525 238 C536 207 536 207 548 207 M525 238 C536 293 536 293 548 293 M525 238 C536 378 536 378 548 378" fill="none" stroke="#526058" stroke-width="2"/>
-        <text x="350" y="454" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">A STRONG FRAME OPENS THE SOLUTION SPACE</text>
+        <path d="M512 249 C524 172 524 172 536 172 M512 249 C524 238 524 238 536 238 M512 249 C524 304 524 304 536 304" fill="none" stroke="#526058" stroke-width="2"/>
+        <text x="350" y="452" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">A CONFIRMED PROBLEM OPENS THE SOLUTION SPACE</text>
       </svg>
     </section>
 
     <section class="whole-picture" aria-labelledby="whole-picture-title">
       <div class="whole-picture-inner">
         <p class="eyebrow">The whole picture</p>
-        <h2 id="whole-picture-title">Define the direction. Then design.</h2>
-        <p class="whole-picture-lede">Problem Framing, Direction, Evaluate and Pick, and Proposal are direction-setting phases. They help the team choose what to pursue and keep the project from drifting toward the wrong problem or an unbounded solution. Design is where detailed interaction work, validation, and implementation guidance begin.</p>
+        <h2 id="whole-picture-title">Frame, shape, propose. Then design.</h2>
+        <p class="whole-picture-lede"><code>problem-framing</code>, <code>shaping</code>, and <code>proposal</code> are the three process skills that run in order, each reading the file the last one wrote. They keep the team from drifting toward the wrong problem or an unbounded solution; they do not do the detailed design themselves. Design begins once a proposal is approved.</p>
 
-        <div class="direction-band"><strong>Before Design:</strong> write the problem down, explore alternatives, evaluate and pick one approach, then secure commitment through the proposal. Optional constraints may remain open only when their consequence and decision deadline are explicit.</div>
+        <div class="direction-band"><strong>Before Design:</strong> write the problem down, explore two or three directions and pick one, then secure the decision through the proposal. Optional boundaries may stay open only when their consequence and deadline are explicit.</div>
 
         <div class="direction-zone">
-          <div class="direction-zone-header"><strong>Direction setting</strong><span>These phases prevent drift before detailed design begins.</span></div>
-          <div class="workflow-map" role="list" aria-label="Direction-setting workflow">
-            <article class="workflow-card" role="listitem"><span class="phase">01 · Ask before proposing</span><h3>Problem Framing</h3><p>Interrogate the request, evidence, assumptions, user, outcome, and meaningful problem slice.</p><span class="workflow-output">Output: FRAMED_PROBLEM.md</span></article>
-            <article class="workflow-card" role="listitem"><span class="phase">02 · Explore</span><h3>Direction</h3><p>Draw materially different approaches, expose their trade-offs, and adapt them to the fixed build-time budget.</p><span class="workflow-output">Output: candidate approaches</span></article>
-            <article class="workflow-card" role="listitem"><span class="phase">03 · Evaluate and pick</span><h3>Choose one approach</h3><p>Evaluate alternatives against the frame, the evidence, the time budget, the constraints, and what each risk costs; then pick one.</p><span class="workflow-output">Output: bounded direction</span></article>
-            <article class="workflow-card proposal-card" role="listitem"><span class="phase">04 · Propose the decision</span><h3>Proposal</h3><p>Present the problem, time budget, chosen direction, rabbit holes, and exclusions.</p><span class="workflow-output">Output: decision-ready proposal</span></article>
+          <div class="direction-zone-header"><strong>The process chain</strong><span>Three documents, in order: FRAMED_PROBLEM.md → DIRECTIONS.md → PROPOSAL.md.</span></div>
+          <div class="workflow-map" role="list" aria-label="Process-skill chain">
+            <article class="workflow-card" role="listitem"><span class="phase">01 · Frame the problem</span><h3>problem-framing</h3><p>Read the record, recover one real episode, test the cause, and draw a boundary around what gets solved now.</p><span class="workflow-output">Output: FRAMED_PROBLEM.md</span></article>
+            <article class="workflow-card" role="listitem"><span class="phase">02 · Pick a direction</span><h3>shaping</h3><p>Carry the frame forward, write what any solution must satisfy, explore two or three directions, and settle on one.</p><span class="workflow-output">Output: DIRECTIONS.md</span></article>
+            <article class="workflow-card proposal-card" role="listitem"><span class="phase">03 · Decide or not</span><h3>proposal</h3><p>Turn the problem and the chosen direction into one document someone can decide on in a single read.</p><span class="workflow-output">Output: PROPOSAL.md</span></article>
           </div>
         </div>
 
         <div class="design-bridge"><span>Approved proposal</span><b aria-hidden="true">↓</b></div>
         <article class="workflow-card design-card">
-          <div><span class="phase">05 · Detail and validate</span><h3>Design</h3></div>
-          <p>Make the detailed interaction and product decisions inside the approved direction. Validate behaviour and support implementation without losing the frame.</p>
-          <span class="workflow-output">Output: detailed design + learning</span>
+          <div><span class="phase">Next · Detail and validate</span><h3>Design</h3></div>
+          <p>Make the detailed interaction and product decisions inside the approved direction, drawing on the artifact and renderer skills when a step needs them. Validate behaviour and support implementation without losing the frame.</p>
+          <span class="workflow-output">Read next: <a href="../shaping/pick-a-direction.html">shaping</a> · <a href="../proposal/one-read-one-decision.html">proposal</a> · <a href="../breadboarding/breadboard-before-you-draw-it.html">breadboarding</a> · <a href="../wireframes/what-a-wireframe-settles-before-drawing.html">wireframes</a> · <a href="../diagrams/the-drawing-is-the-easy-part.html">diagrams</a> · <a href="../the-chain/the-handoff-is-the-interface.html">the whole chain</a></span>
         </article>
       </div>
     </section>
@@ -1483,22 +1560,27 @@
     <section class="sources" aria-labelledby="sources-title">
       <div class="sources-inner">
         <p class="eyebrow">Method provenance</p>
-        <h2 id="sources-title">Three ideas informed this skill.</h2>
-        <p class="sources-intro"><code>problem-framing</code> is a synthesis, not a new methodology presented in isolation. Each source contributes a distinct part of its behavior.</p>
+        <h2 id="sources-title">Where this skill comes from.</h2>
+        <p class="sources-intro"><code>problem-framing</code> is a synthesis of existing methods, not a new methodology. Each source contributes a distinct part of how it behaves.</p>
         <div class="source-grid">
           <article class="source-card">
             <h3>A More Beautiful Question</h3>
-            <p>Warren Berger’s <strong>Why → What if → How</strong> progression supplies the movement from challenging the situation, through alternative explanations, to an evidence-producing next step.</p>
-            <a href="https://amorebeautifulquestion.com/">Visit the book’s official site</a>
+            <p>Warren Berger's <strong>Why → What if → How</strong> path supplies the movement from questioning a situation to an evidence-producing next step.</p>
+            <a href="https://amorebeautifulquestion.com/">Visit the book's site</a>
           </article>
           <article class="source-card">
             <h3>Shape Up</h3>
-            <p><strong>Shape Up is a product-development method created at Basecamp.</strong> It calls the pre-build phase <em>shaping</em>: define a rough solution direction and a fixed build-time budget, then adapt the solution to that time while making boundaries, risk consequences, and exclusions explicit.</p>
+            <p>Ryan Singer's pre-build phase supplies the fixed time budget, adapting the solution to the time, and making boundaries, risks, and exclusions explicit.</p>
             <a href="https://basecamp.com/shapeup">Read Shape Up</a>
           </article>
           <article class="source-card">
+            <h3>rjs/shaping-skills</h3>
+            <p>Ryan Singer's writing on <a href="https://www.ryansinger.co/framing/">framing</a>, <a href="https://www.ryansinger.co/research-gives-us-the-problem-not-the-answer/">what research is for</a>, <a href="https://www.ryansinger.co/discovery-how-to-decide/">deciding between options</a>, and <a href="https://www.ryansinger.co/matching-problems-to-business-imperatives/">business imperatives</a> supplies quoted source as ground truth and framing as time to explore.</p>
+            <a href="https://github.com/rjs/shaping-skills">View the source skills</a>
+          </article>
+          <article class="source-card">
             <h3>grill-with-docs</h3>
-            <p>Matt Pocock’s interviewing pattern supplies one question at a time, a recommended answer, facts discovered from project context, and shared understanding that remains documented.</p>
+            <p>Matt Pocock's interviewing pattern supplies one question at a time, a recommended answer, project-context inspection before asking, and shared understanding kept in the project.</p>
             <a href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md">View the source skill</a>
           </article>
         </div>
@@ -1506,6 +1588,7 @@
     </section>
     </article>
   </main>
+
 
   <footer>Frame Before You Design · An interactive explanation of the problem-framing skill</footer>
 
@@ -1528,20 +1611,21 @@
       const label = document.getElementById('diagram-label');
       const progress = document.querySelector('.progress-bar');
       const labels = {
-        1: 'Two entry points',
-        2: 'Evidence ledger',
-        3: 'Baseline story',
-        4: 'Causal question',
-        5: 'Project review',
-        6: 'Frame matrix',
-        7: 'Evidence gate',
-        8: 'Scope boundary',
-        9: 'Status tree'
+        1: 'The stakes',
+        2: 'Two entry points',
+        3: 'Evidence ledger',
+        4: 'Frame drift',
+        5: 'Baseline story',
+        6: 'Causal map',
+        7: 'Frame matrix',
+        8: 'Evidence gate',
+        9: 'Scope boundary',
+        10: 'Status handoff'
       };
       let activeState = 1;
 
       function updateMeta(n) {
-        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 10`;
         label.textContent = labels[n];
         steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
       }

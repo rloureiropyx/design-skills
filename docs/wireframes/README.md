@@ -1,6 +1,11 @@
 # Notes — Wireframes
 
-No article yet. These notes are the explainer.
+```
+what-a-wireframe-settles-before-drawing.script.md    the scene-by-scene script
+what-a-wireframe-settles-before-drawing.html         the article — standalone, no build step
+```
+
+Open [`what-a-wireframe-settles-before-drawing.html`](what-a-wireframe-settles-before-drawing.html) in a browser. No dependencies, no build step.
 
 ## What it does
 
@@ -67,3 +72,7 @@ It also names four signs that the requirements, not the drawing, are what is uns
 A working synthesis of wireframe practice, drawing on Dan M. Brown, *Communicating Design* (2nd edition), chapter 7 — the page-contents inventory, the Page Description Diagram, the content-area model, and the review-depth ladder are his. The enterprise pass, the carry-don't-re-derive rule, and the renderer split are additions.
 
 - Skill: [`skills/artifacts/wireframes/SKILL.md`](../../skills/artifacts/wireframes/SKILL.md)
+
+---
+
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 24px at 812×375.

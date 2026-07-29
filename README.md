@@ -6,7 +6,7 @@ Most of them follow one short recipe:
 
 **Work out what the problem actually is → try two or three directions and pick one → write it up so people can decide.**
 
-That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. Two more skills draw or publish the result once something has been decided.
+That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. A fourth, `PITCH.md`, takes a decision that has already been made and works out how to explain it to everyone who was not in the room. Three renderers draw or publish the result, and three utilities the others call so what gets written sounds like you rather than like a model, and looks like one coherent thing rather than whatever the renderer felt like that day.
 
 The recipe is not new and it is not mine. It is mostly Ryan Singer's, with the bits added that enterprise B2B work needs and a small-team method does not cover: roles, permissions, audit, integrations, data volume, accessibility.
 
@@ -50,6 +50,8 @@ Updates arrive only when `version` changes, so an in-flight commit never surpris
 
 Grouped by what they own. The grouping is for people — Copilot routes on `name` and `description` alone and does not know which folder a skill sits in.
 
+**The grouping and the chain are two different cuts of the same set, and they do not line up.** The chain is `FRAMED_PROBLEM.md` → `DIRECTIONS.md` → `PROPOSAL.md`, but only the first two skills are in `process/`; `proposal` sits in `artifacts/`. That is not an oversight. `process` means *decides something*, and `proposal` decides nothing — the person reading it does, which is the entire reason it is written to be declinable. Read the groups as "what does this skill own", not as "where am I in the recipe".
+
 Each one reads what the last one wrote and does not re-decide it. When a later skill finds something that contradicts an earlier document, it says so instead of quietly rewriting it. There is one explainer about how the handoff works, rather than about any single skill:
 
 - [`the-handoff-is-the-interface.html`](docs/the-chain/the-handoff-is-the-interface.html) · [script](docs/the-chain/the-handoff-is-the-interface.script.md) · [notes](docs/the-chain/README.md) — why each step is a document, what skipping one costs, and why renderers decide nothing.
@@ -87,7 +89,7 @@ Sketches a solution in words instead of pixels: the places a person can be, what
 It is deliberately too coarse to express layout, which is what makes it useful — the mechanism can be argued about before the visual design is. Shaping calls it to make each direction concrete; wireframes come later, if layout turns out to be the real question.
 
 - Skill: [`skills/artifacts/breadboarding/SKILL.md`](skills/artifacts/breadboarding/SKILL.md)
-- Explainer: [notes](docs/breadboarding/README.md)
+- Explainer: [`breadboard-before-you-draw-it.html`](docs/breadboarding/breadboard-before-you-draw-it.html) · [script](docs/breadboarding/breadboard-before-you-draw-it.script.md) · [notes](docs/breadboarding/README.md)
 
 #### Wireframes
 
@@ -98,7 +100,7 @@ Scale, fidelity, annotation weight and abstraction are set as four independent a
 Most projects never need this step. It is for when layout is the real question.
 
 - Skill: [`skills/artifacts/wireframes/SKILL.md`](skills/artifacts/wireframes/SKILL.md)
-- Explainer: [notes](docs/wireframes/README.md)
+- Explainer: [`what-a-wireframe-settles-before-drawing.html`](docs/wireframes/what-a-wireframe-settles-before-drawing.html) · [script](docs/wireframes/what-a-wireframe-settles-before-drawing.script.md) · [notes](docs/wireframes/README.md)
 
 #### Diagrams
 
@@ -120,14 +122,38 @@ Everything is carried from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`, never rewrit
 - Skill: [`skills/artifacts/proposal/SKILL.md`](skills/artifacts/proposal/SKILL.md)
 - Explainer: [`one-read-one-decision.html`](docs/proposal/one-read-one-decision.html) · [script](docs/proposal/one-read-one-decision.script.md)
 
+#### Pitch
+
+Writes `PITCH.md`: what you are going to say when you explain a design decision to people who were not in the room, and in what order. Audience, goal, tone, a spine, and an ordered list of **beats** — each one a claim as a complete sentence, the evidence behind it, what has to be visible for it to land, and what breaks if it is cut.
+
+It renders nothing. It stops where a medium would have to be chosen, so the same narrative can become an article, a deck, or both. The claim-as-a-sentence rule is Michael Alley's assertion-evidence, and it is the one rule that most reliably catches the deck of topic labels that looks finished and says nothing.
+
+Facts are carried from `PROPOSAL.md` and the documents behind it, never re-derived. Evidence that does not exist yet is marked and listed as open rather than invented. The AI-slop pass runs here, once, before approval — renderers do not re-run it over approved text.
+
+Asked for an article or a deck with no `PITCH.md` in the project, the renderer runs this inline: one exchange, one approval, straight into the render. Two gates only when you asked for two.
+
+- Skill: [`skills/artifacts/pitch/SKILL.md`](skills/artifacts/pitch/SKILL.md)
+- Explainer: [`docs/pitch/README.md`](docs/pitch/README.md)
+
 ### Renderers — materialise a decision
 
 #### Scrollytelling
 
-Builds long-form web articles whose diagrams change as the reader scrolls. It settles the goal and tone first, writes a scene-by-scene script, runs an AI-slop pass over the scene text, gets the script approved, and only then builds the article as a standalone accessible HTML file.
+Builds long-form web articles whose diagrams change as the reader scrolls. It reads `PITCH.md`, maps the beats onto scenes — merging two beats when the graphic does not change between them, splitting one when the visual builds — gets the scene table approved, and only then builds the article as a standalone accessible HTML file.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](skills/renderers/scrollytelling/SKILL.md)
-- Explainer: [`scroll-is-not-a-story.html`](docs/scrollytelling/scroll-is-not-a-story.html) · [script](docs/scrollytelling/scroll-is-not-a-story.script.md). Script written first, approved, then built — the skill's own gate applied to its own explainer.
+- Explainer: [`how-a-scrollytelling-article-gets-made.html`](docs/scrollytelling/how-a-scrollytelling-article-gets-made.html) · [script](docs/scrollytelling/how-a-scrollytelling-article-gets-made.script.md). Script written first, approved, then built — the skill's own gate applied to its own explainer.
+
+#### Slides
+
+Turns the same `PITCH.md` into a presentation deck. It maps beats onto slides — splitting where scrollytelling merges, because a fresh surface costs nothing and lets the presenter control when each piece lands — writes `DECK.md` with titles, bodies and speaker notes, gets it approved, and then renders it as a Figma Slides file.
+
+Every slide title is the beat's claim as a complete sentence. Read the titles alone, in order, and the deck should tell the whole story.
+
+> **Runtime dependency.** Rendering needs the `figma-use-slides` skill from the Figma Copilot plugin, which this repo does not ship and cannot version. Without it the skill stops and hands back `DECK.md` — an approved deck spec that stands on its own — rather than degrading to a worse renderer.
+
+- Skill: [`skills/renderers/slides/SKILL.md`](skills/renderers/slides/SKILL.md)
+- Explainer: [`docs/slides/README.md`](docs/slides/README.md)
 
 #### tldraw
 
@@ -138,6 +164,63 @@ Draws a decided artifact — flow, journey map, service blueprint, concept model
 - Skill: [`skills/renderers/tldraw-skill/SKILL.md`](skills/renderers/tldraw-skill/SKILL.md)
 - Explainer: [`draw-what-was-decided.html`](docs/tldraw-skill/draw-what-was-decided.html) · [script](docs/tldraw-skill/draw-what-was-decided.script.md)
 
+### Utilities — serve whoever is drafting
+
+These three own neither a decision nor an artifact. They are called by the skills that write prose someone will read and by the renderers that put it on a screen, and they hold the two profiles the rest of the library reads.
+
+#### Writing Style
+
+Turns evidence of how you write into `WRITING_STYLE.md`: voice in a paragraph, three to five signature moves each with a quoted line under it, measurable defaults you can check a draft against, and the list of tics an editing pass must not remove.
+
+It records two things separately — what you **do**, from evidence, and what you are **going for**, from a few contrasted adjectives. Self-description is a weak input, since personal style is mostly implicit and "difficult to specify through prompts", so rules only come from something you actually wrote or said. Intent is filed as intent. Where the two disagree you decide once, and the decision is recorded; the skill will not average them.
+
+Three ways in, for people with different amounts of writing behind them: samples you already have, a two-prompt exercise, or a voice note when you would rather talk than type. The evidence has to cover *different subjects*, not only different places, or the profile learns the subject instead of the writer.
+
+Set up once per project, and saved there beside `FRAMED_PROBLEM.md`. A personal copy at `~/.copilot/writing-style/WRITING_STYLE.md` is offered so the next project does not repeat the interview. Neither path is inside the plugin directory, which `plugin update` replaces.
+
+Capped at about 120 lines, because instruction files past roughly 200 lines measurably reduce adherence — a profile that grows every session produces *less* consistent voice.
+
+It governs how you *explain* and *propose*, and nothing else. Button labels, empty states, error messages and field help come from the design system's content guidelines; a personal voice profile applied to product copy is a bug.
+
+- Skill: [`skills/utilities/writing-style/SKILL.md`](skills/utilities/writing-style/SKILL.md)
+- Explainer: [`docs/writing-style/README.md`](docs/writing-style/README.md)
+
+#### Visual Style
+
+Does for what things look like what `writing-style` does for how they read. Writes `VISUAL_STYLE.md`: a palette with named roles, a type pair and scale, density, radius, stroke weight, illustration idiom and motion character — tokens a renderer can consume, not adjectives it has to interpret.
+
+It is a **pick**, not an interview. Three presets, on one axis — what carries the meaning:
+
+| Preset | Meaning carried by | Character |
+| --- | --- | --- |
+| **Paper** | the prose; diagrams support it | The style these explainers are written in. Warm ground, dark ink, generous radius, dark diagram panels. |
+| **Whiteboard** | the sketch; prose annotates it | Hand-drawn, marker strokes, sticky-note colour. Deliberately unfinished, so people argue with it. |
+| **Blueprint** | the data and structure | Mono type, visible grid, tight density. For chart- and table-dense material. |
+
+Pick one and move, or adjust it and save the result. A renderer that finds no profile asks in one line and proceeds on Paper.
+
+**Accessibility floors are not stylable.** A preset cannot set contrast below 4.5:1, make colour the only carrier of meaning, or drop body type below the renderer's minimum. Where a token and the contract conflict, the contract wins, the renderer substitutes the profile's stated accessible variant, and it says that it did. All five Paper accents fail as text on the warm ground — measured, in the reference file — which is exactly why the house style puts diagrams on a dark panel.
+
+It does not apply to `wireframes`, where colour is functional notation, or to `breadboarding`, which has no pixels.
+
+- Skill: [`skills/utilities/visual-style/SKILL.md`](skills/utilities/visual-style/SKILL.md)
+- Explainer: [`docs/visual-style/README.md`](docs/visual-style/README.md)
+
+#### Slop Check
+
+Edits a draft to remove seventeen named patterns — throat-clearing openers, binary contrasts, colon reveals, importance puffery, fake-profound endings — plus a banned-word list and an empty-phrase list. Or, asked what is wrong instead of asked for a fix, it names each pattern and quotes the line without rewriting anything.
+
+Detect mode will not score writing and will not claim a text was written by AI. Detectors guess; a named pattern with the line quoted is evidence you can check.
+
+One rule out-ranks everything else: **a pattern in your voice profile's overrides section is not a finding.** If your writing is em dashes and fragments, they stay. Without that precedence a generic pass converges on the same clean prose whoever wrote the draft, which is the failure the pair exists to prevent.
+
+It runs in `pitch` over the claims and evidence before the beats are approved, and in `proposal` at step 7 before saving. It runs once, one layer up from the renderers: `scrollytelling` and `slides` implement approved copy verbatim, so a second pass there would edit text the user already signed off.
+
+The patterns are re-authored from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT), which is also where the minimum-effective-edit doctrine and the self-run eval come from. The profile-override precedence is an addition.
+
+- Skill: [`skills/utilities/slop-check/SKILL.md`](skills/utilities/slop-check/SKILL.md)
+- Explainer: [`docs/slop-check/README.md`](docs/slop-check/README.md)
+
 ## Repository layout
 
 ```
@@ -145,6 +228,7 @@ plugin.json                 the manifest — name, version, and what ships
 skills/process/<skill>/     skills that decide something
 skills/artifacts/<skill>/   skills that produce the thing people react to
 skills/renderers/<skill>/   skills that materialise a decision someone else made
+skills/utilities/<skill>/   skills the others call while drafting
 docs/index.html             the library index — a card grid linking every explainer
 docs/<skill>/               explainers: articles, scripts, notes — flat, never nested
 docs/the-chain/             the one explainer about the handoff rather than a single skill
@@ -154,7 +238,7 @@ scripts/check-skills.mjs    the structural check
 
 Skills sit in `skills/` at the root because that is where `copilot plugin install` reads them. That is deliberately **not** `.github/skills/`, which is where an installed skill lands in a *consuming* project. Authoring location and consumption location are different things.
 
-The three roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
+The four roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
 
 `docs/` stays **flat**: one folder per skill, named after the skill folder, whichever root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the grouping there would break it for no benefit. A folder there without a matching skill is a library-level explainer — currently only [`docs/the-chain/`](docs/the-chain/README.md). The check tolerates it: it asserts every skill has a folder, not that every folder is a skill.
 
@@ -166,11 +250,23 @@ Those sibling files are also why this ships as a plugin rather than as a link to
 
 Copilot picks a skill using the `name` and `description` in its YAML frontmatter. Those two fields decide whether a skill is ever used, and they are the most carefully written part of any skill here.
 
-Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed, and the `process` / `artifacts` / `renderers` grouping is invisible to the router. So every `description` ends by saying what must *not* route to it. A skill with no stated boundary claims prompts it should decline.
+Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed, and the `process` / `artifacts` / `renderers` / `utilities` grouping is invisible to the router. So every `description` ends by saying what must *not* route to it. A skill with no stated boundary claims prompts it should decline.
 
 `problem-framing`, `shaping`, and `proposal` are the sharpest case: all three talk about problems, requirements, and solutions, and each names the other two in its non-trigger clause. When one starts answering a prompt that belongs to another, that is the first place to look.
 
-`breadboarding`, `wireframes`, and `diagrams` are the second sharpest, because all three answer "draw me the thing." A breadboard is places and affordances in words, a wireframe is one screen, a diagram is a relationship between things — and each says so in the other two's terms.
+`proposal` and `pitch` are the newest collision and possibly the worst, because both answer "write up the design decision" and the difference is entirely in the situation.
+
+The cleanest discriminator is **latitude**. A proposal, given a frame and a chosen direction, is close to determined — it is a compilation, and there is roughly one right shape for it. The same material can become five different narratives depending on who is in the room, which is an authorial act with real choices in it. One shape versus many.
+
+The situational version says the same thing: a proposal has **one reader and one decision**, and is deliberately un-sold — written to be declined. A pitch has **many readers and no decision left to make**, and is written to be understood and remembered. Each names the other; watch for `pitch` stealing proposal prompts.
+
+`scrollytelling` and `slides` both render a `PITCH.md` and both answer "make me something to show people." Scrolling has to be doing work for the piece, or it is decoration with an accessibility cost; if someone is standing up in a room, it is a deck. Neither decides what the thing says.
+
+`breadboarding`, `wireframes`, and `diagrams` are the third sharpest, because all three answer "draw me the thing." A breadboard is places and affordances in words, a wireframe is one screen, a diagram is a relationship between things — and each says so in the other two's terms.
+
+`writing-style` and `slop-check` both answer "fix how this reads", and each names the other. One builds a profile and never edits a draft; the other edits a draft and never builds a profile. `slop-check` is also the only skill here that refuses a whole category of request on principle: it will not guess whether a text was written by AI, in either mode.
+
+`writing-style` and `visual-style` are a matched pair and rarely confused with each other, but `writing-style` is regularly confused with UI copy. It is not that: a personal voice profile is for explaining and proposing, and product words come from the design system.
 
 ## Working on the skills
 
@@ -198,7 +294,7 @@ There is no scenario suite. There was one and it was never run, which is worse t
 
 ## Adding a skill
 
-1. Copy [`templates/SKILL.template.md`](templates/SKILL.template.md) to `skills/<group>/<skill>/SKILL.md` — `process/` if it decides something, `artifacts/` if it produces the thing people react to, `renderers/` if it materialises a decision made elsewhere. Write it, including the `## Anti-patterns` section and the description's non-trigger clause.
+1. Copy [`templates/SKILL.template.md`](templates/SKILL.template.md) to `skills/<group>/<skill>/SKILL.md` — `process/` if it decides something, `artifacts/` if it produces the thing people react to, `renderers/` if it materialises a decision made elsewhere, `utilities/` if other skills call it while drafting. Write it, including the `## Anti-patterns` section and the description's non-trigger clause.
 2. Start the explainer in `docs/<skill>/` — flat, named after the skill folder, not the group.
 3. Add the skill to the list above.
 4. Add a new group to `plugin.json`'s `skills` array if you created one.
