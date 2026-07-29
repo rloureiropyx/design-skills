@@ -77,7 +77,7 @@ Sketches a solution in words instead of pixels: the places a person can be, what
 It is deliberately too coarse to express layout, which is what makes it useful — the mechanism can be argued about before the visual design is. Shaping calls it to make each direction concrete; wireframes come later, if layout turns out to be the real question.
 
 - Skill: [`skills/artifacts/breadboarding/SKILL.md`](skills/artifacts/breadboarding/SKILL.md)
-- Explainer: [notes](docs/breadboarding/README.md)
+- Explainer: [`breadboard-before-you-draw-it.html`](docs/breadboarding/breadboard-before-you-draw-it.html) · [script](docs/breadboarding/breadboard-before-you-draw-it.script.md) · [notes](docs/breadboarding/README.md)
 
 #### Wireframes
 
@@ -88,7 +88,7 @@ Scale, fidelity, annotation weight and abstraction are set as four independent a
 Most projects never need this step. It is for when layout is the real question.
 
 - Skill: [`skills/artifacts/wireframes/SKILL.md`](skills/artifacts/wireframes/SKILL.md)
-- Explainer: [notes](docs/wireframes/README.md)
+- Explainer: [`what-a-wireframe-settles-before-drawing.html`](docs/wireframes/what-a-wireframe-settles-before-drawing.html) · [script](docs/wireframes/what-a-wireframe-settles-before-drawing.script.md) · [notes](docs/wireframes/README.md)
 
 #### Diagrams
 
@@ -117,7 +117,7 @@ Everything is carried from `FRAMED_PROBLEM.md` and `DIRECTIONS.md`, never rewrit
 Builds long-form web articles whose diagrams change as the reader scrolls. It settles the goal and tone first, writes a scene-by-scene script, runs an AI-slop pass over the scene text, gets the script approved, and only then builds the article as a standalone accessible HTML file.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](skills/renderers/scrollytelling/SKILL.md)
-- Explainer: [`scroll-is-not-a-story.html`](docs/scrollytelling/scroll-is-not-a-story.html) · [script](docs/scrollytelling/scroll-is-not-a-story.script.md). Script written first, approved, then built — the skill's own gate applied to its own explainer.
+- Explainer: [`how-a-scrollytelling-article-gets-made.html`](docs/scrollytelling/how-a-scrollytelling-article-gets-made.html) · [script](docs/scrollytelling/how-a-scrollytelling-article-gets-made.script.md). Script written first, approved, then built — the skill's own gate applied to its own explainer.
 
 #### tldraw
 
