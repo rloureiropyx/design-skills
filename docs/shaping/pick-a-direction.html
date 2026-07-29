@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An interactive explanation of how the shaping skill turns a framed problem into one chosen solution direction, using numbered requirements and a binary fit check inside a fixed time budget.">
+  <meta name="description" content="An interactive explanation of the shaping skill: how a framed problem becomes numbered requirements, rival directions, a binary fit check, and one selected direction inside a fixed time budget.">
   <link rel="icon" href="data:,">
   <title>Pick a Direction — How the shaping skill works</title>
   <style>
@@ -903,6 +903,23 @@
         transition-duration: .01ms !important;
       }
     }
+
+    /* Short viewports: the tallest scene cards have to clear the pinned
+       graphic. The copy is fixed by the script, so the card gives ground
+       instead - chrome and leading only, never the copy itself. */
+    @media (max-height: 720px) {
+      .step-card { padding: clamp(1rem, 2.4vw, 1.55rem); }
+      .scene-number { margin-bottom: .55rem; }
+      .step h2 { margin-bottom: .55rem; }
+      .step p { line-height: 1.4; }
+    }
+
+    @media (max-height: 560px) {
+      .step-card { padding: .85rem 1rem; }
+      .step h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .45rem; }
+      .scene-number { margin-bottom: .4rem; font-size: .62rem; }
+      .step p { font-size: .84rem; line-height: 1.3; }
+    }
   </style>
 </head>
 <body>
@@ -911,286 +928,519 @@
 
   <main id="main">
     <article>
-    <!-- HERO -->
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">A product design skill · How shaping works</p>
-        <h1>Two good solutions. One argument that never ends.</h1>
-        <p class="hero-deck"><strong>Agreeing on the problem does not settle the solution.</strong> Two people can hold two defensible answers and have no shared test to choose between them. <code>shaping</code> writes the test down first, then makes the choice binary.</p>
-        <span class="scroll-cue">Scroll to run the fit check</span>
+        <p class="eyebrow">The library · The shaping skill</p>
+        <h1>Pick a direction.</h1>
+        <p class="hero-deck"><strong><code>shaping</code> is a product design skill.</strong> It takes a framed problem and works out which solution direction to build, inside a fixed time budget — and it ends with one direction and the reasoning that picked it.</p>
+        <span class="scroll-cue">Scroll to see how it decides</span>
       </div>
 
       <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
-        <title id="hero-title">Two competing solution directions weighed against a list of numbered requirements</title>
-        <desc id="hero-desc">Two proposals sit on either side of a checklist. Neither has been measured against it yet, so the argument between them has no way to end.</desc>
-        <defs><filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter></defs>
-        <g filter="url(#heroShadow)">
-          <rect x="46" y="92" width="222" height="212" rx="20" fill="#f9f8f1"/>
-          <text x="72" y="128" fill="#3d5b7a" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">DIRECTION A</text>
-          <rect x="72" y="146" width="170" height="34" rx="8" fill="#e4eafa"/>
-          <rect x="72" y="190" width="170" height="34" rx="8" fill="#e4eafa"/>
-          <rect x="72" y="234" width="118" height="34" rx="8" fill="#e4eafa"/>
-          <rect x="352" y="92" width="222" height="212" rx="20" fill="#f9f8f1"/>
-          <text x="378" y="128" fill="#5b4a7d" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">DIRECTION B</text>
-          <rect x="378" y="146" width="170" height="34" rx="8" fill="#eee4fb"/>
-          <rect x="378" y="190" width="118" height="34" rx="8" fill="#eee4fb"/>
-          <rect x="378" y="234" width="170" height="34" rx="8" fill="#eee4fb"/>
+        <title id="hero-title">A settled problem with two rival solutions and an empty test between them</title>
+        <desc id="hero-desc">A team agrees on the problem but holds two different solutions — a guided wizard and a batch endpoint — and nothing written says which one the solution has to satisfy.</desc>
+        <defs>
+          <marker id="heroLine" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#9aa39a"/></marker>
+        </defs>
+        <g font-family="Inter, sans-serif">
+          <rect x="200" y="54" width="220" height="70" rx="16" fill="#e9f1ff" stroke="#5b86d6" stroke-width="2"/>
+          <text x="310" y="84" font-size="11" font-weight="800" fill="#5b86d6" text-anchor="middle" letter-spacing="1.4">THE FRAMED PROBLEM</text>
+          <text x="310" y="108" font-size="16" font-weight="700" fill="#151914" text-anchor="middle">Everyone agrees on this</text>
+          <path d="M270 124 C210 180 150 190 150 232" fill="none" stroke="#9aa39a" stroke-width="2" marker-end="url(#heroLine)"/>
+          <path d="M350 124 C410 180 470 190 470 232" fill="none" stroke="#9aa39a" stroke-width="2" marker-end="url(#heroLine)"/>
+          <rect x="42" y="238" width="216" height="70" rx="16" fill="#f9f8f1" stroke="#b9b3a1" stroke-width="2"/>
+          <text x="150" y="272" font-size="11" font-weight="800" fill="#8a8472" text-anchor="middle" letter-spacing="1.2">SOLUTION A</text>
+          <text x="150" y="294" font-size="16" font-weight="700" fill="#151914" text-anchor="middle">Guided wizard</text>
+          <rect x="362" y="238" width="216" height="70" rx="16" fill="#f9f8f1" stroke="#b9b3a1" stroke-width="2"/>
+          <text x="470" y="272" font-size="11" font-weight="800" fill="#8a8472" text-anchor="middle" letter-spacing="1.2">SOLUTION B</text>
+          <text x="470" y="294" font-size="16" font-weight="700" fill="#151914" text-anchor="middle">Batch endpoint</text>
+          <rect x="250" y="336" width="120" height="96" rx="14" fill="none" stroke="#c26a52" stroke-width="2.5" stroke-dasharray="8 6"/>
+          <text x="310" y="388" font-size="13" font-weight="700" fill="#b4462c" text-anchor="middle">empty</text>
+          <text x="310" y="408" font-size="10" font-weight="700" fill="#b4462c" text-anchor="middle">no test</text>
         </g>
-        <path d="M268 198 H352" fill="none" stroke="#ee795e" stroke-width="4" stroke-dasharray="8 6"/>
-        <rect x="196" y="352" width="228" height="132" rx="16" fill="#222d26" stroke="#4a5a4e" stroke-width="2"/>
-        <text x="310" y="392" fill="#9cac9f" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.4">REQUIREMENTS</text>
-        <path d="M228 416 H392 M228 438 H364 M228 460 H384" stroke="#5f6b61" stroke-width="3" stroke-linecap="round"/>
-        <path d="M310 304 V344" fill="none" stroke="#4a5a4e" stroke-width="2" stroke-dasharray="6 6"/>
-        <text x="310" y="524" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">UNMEASURED</text>
+        <text x="310" y="486" fill="#c2593d" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="1.5">WHICH ONE MUST IT SATISFY?</text>
       </svg>
     </header>
 
     <section class="intro" aria-labelledby="intro-title">
-      <p class="eyebrow">The job</p>
-      <h2 id="intro-title">Turn a framed problem into one direction worth committing to.</h2>
-      <p>Framing decides what problem is worth solving. It does not decide what to build. <code>shaping</code> picks up there: it writes down what a solution must do, draws more than one way to do it, and then forces a choice using a test both options were measured against.</p>
-      <p>The method is Ryan Singer’s, adapted for enterprise work. Requirements get numbers so people can argue about <em>R4</em> instead of about tone. Directions get letters so a conversation can name them. Parts of a direction are mechanisms — things a user can do — not layers of a stack, because layers cannot be cut and mechanisms can.</p>
-      <p class="definition"><strong>The output is a decision with its reasoning attached.</strong> <code>DIRECTIONS.md</code> records the numbered requirements, the directions considered, the fit check that separated them, the time budget, and the one direction selected — so a month later the team can see not just what was chosen, but what it beat.</p>
+      <p class="eyebrow">The skill</p>
+      <h2 id="intro-title">Shaping settles which solution to build.</h2>
+      <p>A team agrees on the problem but holds two different solutions, and nothing written down says which one the solution has to satisfy.</p>
+      <p><code>shaping</code> is the second stage of the chain, after <code>problem-framing</code> and before <code>proposal</code>. It carries the framed problem forward and turns disagreement into a decision that can be checked.</p>
+      <p class="definition"><strong>Where it sits:</strong> shaping runs between knowing which problem to solve and knowing what to build, and it ends with one solution direction and the reasoning that picked it, not with wireframes.</p>
     </section>
 
-    <section class="scrolly" aria-label="The shaping process">
+    <section class="scrolly" aria-label="How shaping picks a direction">
       <div class="graphic-wrap">
         <div class="graphic-shell" aria-hidden="true">
-          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">The argument</span></div>
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">Two-answer standoff</span></div>
           <svg viewBox="0 0 760 620" focusable="false">
             <defs>
-              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
-              </marker>
-              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
-              </pattern>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker>
+              <marker id="arrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+              <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/></marker>
+              <marker id="arrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ae8bf3"/></marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/></pattern>
             </defs>
             <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
 
-            <!-- DIAGRAM 1: THE ARGUMENT -->
-            <g class="diagram-state is-active" data-state="1"><text class="svg-kicker" x="64" y="56">The standing argument</text><text class="svg-title" x="64" y="92">Same problem. Two answers.</text><path class="svg-line" d="M226 250 C300 250 306 300 352 300" marker-end="url(#arrow)"/><path class="svg-line" d="M226 430 C300 430 306 380 352 380" marker-end="url(#arrow)"/><rect class="svg-node" x="60" y="208" width="166" height="86" rx="16"/><circle class="svg-blue" cx="88" cy="237" r="7"/><text class="svg-label" x="106" y="242">Designer</text><text class="svg-small" x="88" y="268">“A guided wizard.”</text><rect class="svg-node" x="60" y="388" width="166" height="86" rx="16"/><circle class="svg-coral" cx="88" cy="417" r="7"/><text class="svg-label" x="106" y="422">Engineer</text><text class="svg-small" x="88" y="448">“Just batch the API.”</text><rect x="352" y="270" width="200" height="140" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="7 5"/><text x="452" y="330" fill="#9aa69c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">WHICH ONE IS RIGHT?</text><text x="452" y="356" fill="#7d8a80" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Nobody can say</text><text class="svg-small" x="452" y="470" text-anchor="middle">Two solutions, no shared test. The loudest voice wins.</text><text class="svg-small" x="64" y="560">Both may be defensible. Neither has been measured against anything.</text></g>
-            <!-- DIAGRAM 2: LOAD THE FRAME -->
-            <g class="diagram-state" data-state="2"><text class="svg-kicker" x="64" y="56">Step 1 · Load the frame</text><text class="svg-title" x="64" y="92">Shaping does not re-open the problem.</text><rect x="60" y="180" width="230" height="270" rx="18" fill="#f4f1e8"/><text x="88" y="214" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">FRAMED_PROBLEM.MD</text><g font-family="Inter, sans-serif" font-size="13" font-weight="700"><rect x="88" y="236" width="174" height="36" rx="9" fill="#dceddf"/><text x="106" y="260" fill="#244135">User</text><rect x="88" y="282" width="174" height="36" rx="9" fill="#e4eafa"/><text x="106" y="306" fill="#273752">Tension</text><rect x="88" y="328" width="174" height="36" rx="9" fill="#f5e8c8"/><text x="106" y="352" fill="#57441f">Outcome</text><rect x="88" y="374" width="174" height="36" rx="9" fill="#eee4fb"/><text x="106" y="398" fill="#443259">Boundaries</text></g><path class="svg-line" d="M290 315 H352" marker-end="url(#arrow)"/><circle cx="452" cy="315" r="86" fill="#1d2a22" stroke="#63c99c" stroke-width="2"/><circle cx="452" cy="315" r="60" fill="none" stroke="#63c99c" stroke-opacity=".3" stroke-width="14"/><text class="svg-label" x="452" y="310" text-anchor="middle">shaping</text><text class="svg-small" x="452" y="334" text-anchor="middle">explore · choose</text><path class="svg-line-muted" d="M538 315 H620"/><rect x="620" y="270" width="96" height="90" rx="14" fill="#f4f1e8"/><path d="M642 296 H698 M642 316 H688 M642 336 H694" stroke="#5f685f" stroke-width="3" stroke-linecap="round"/><text class="svg-tiny" x="668" y="382" text-anchor="middle">DIRECTIONS.MD</text><text class="svg-small" x="64" y="528">If the frame contradicts what shaping finds, shaping sends it back — it does not quietly rewrite it.</text></g>
+            <!-- DIAGRAM 1: TWO-ANSWER STANDOFF -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="40" y="56">The tension</text>
+              <text class="svg-title" x="40" y="92">Two answers, no test.</text>
+              <rect x="280" y="130" width="200" height="64" rx="14" fill="#1d2a22" stroke="#75a9ff" stroke-width="2"/>
+              <text class="svg-tiny" x="380" y="156" fill="#bcd4ff" text-anchor="middle">SETTLED PROBLEM</text>
+              <text class="svg-small" x="380" y="178" fill="#e9eee8" text-anchor="middle">everyone agrees on this</text>
+              <path class="svg-line" d="M330 194 C270 250 190 258 190 326" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M430 194 C490 250 570 258 570 326" marker-end="url(#arrow)"/>
+              <rect class="svg-node" x="90" y="330" width="200" height="66" rx="14"/>
+              <text class="svg-tiny" x="110" y="358">SOLUTION A</text>
+              <text class="svg-label" x="110" y="380">Guided wizard</text>
+              <rect class="svg-node" x="470" y="330" width="200" height="66" rx="14"/>
+              <text class="svg-tiny" x="490" y="358">SOLUTION B</text>
+              <text class="svg-label" x="490" y="380">Batch endpoint</text>
+              <rect x="310" y="336" width="140" height="112" rx="12" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="8 6"/>
+              <text class="svg-small" x="380" y="388" fill="#f2a793" text-anchor="middle">empty</text>
+              <text class="svg-tiny" x="380" y="410" fill="#f2a793" text-anchor="middle">NO SHARED TEST</text>
+              <text class="svg-small" x="40" y="502" fill="#f2a793">Both answer the problem. Nothing written says which one the solution must satisfy.</text>
+            </g>
+
+            <!-- DIAGRAM 2: FRAME HANDOFF -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="40" y="56">Carries the frame</text>
+              <text class="svg-title" x="40" y="92">In, and out.</text>
+              <rect class="svg-node" x="40" y="150" width="180" height="54" rx="12" opacity=".7"/>
+              <text class="svg-small" x="130" y="182" text-anchor="middle">problem-framing</text>
+              <path d="M348 258 C348 168 300 160 226 178" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="8 5" marker-end="url(#arrowCoral)"/>
+              <text class="svg-small" x="470" y="150" fill="#f2a793" text-anchor="middle">contradicts the frame → back to problem-framing</text>
+              <rect x="40" y="270" width="190" height="82" rx="16" fill="#1d2a22" stroke="#75a9ff" stroke-width="2"/>
+              <text class="svg-tiny" x="60" y="298" fill="#bcd4ff">INPUT</text>
+              <text class="svg-small" x="60" y="322" fill="#e9eee8">FRAMED_</text>
+              <text class="svg-small" x="60" y="340" fill="#e9eee8">PROBLEM.md</text>
+              <path class="svg-line" d="M230 311 H298" marker-end="url(#arrow)"/>
+              <rect class="svg-node" x="300" y="262" width="160" height="98" rx="16"/>
+              <text class="svg-label" x="380" y="304" text-anchor="middle">shaping</text>
+              <text class="svg-tiny" x="380" y="326" text-anchor="middle">CARRIED WORD FOR WORD</text>
+              <path class="svg-line" d="M460 311 H528" marker-end="url(#arrow)"/>
+              <rect x="530" y="270" width="190" height="82" rx="16" fill="#1d2a22" stroke="#75a9ff" stroke-width="2"/>
+              <text class="svg-tiny" x="550" y="298" fill="#bcd4ff">OUTPUT</text>
+              <text class="svg-small" x="550" y="330" fill="#e9eee8">DIRECTIONS.md</text>
+              <text class="svg-small" x="40" y="430">It does not re-open the problem, the user, or the outcome.</text>
+              <text class="svg-small" x="40" y="454">What comes out is one file.</text>
+            </g>
+
             <!-- DIAGRAM 3: REQUIREMENT LIST -->
-            <g class="diagram-state" data-state="3"><text class="svg-kicker" x="64" y="56">Step 2 · Requirements</text><text class="svg-title" x="64" y="92">Write what a solution must do. Number it.</text><rect x="60" y="168" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="193" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R1</text><text x="116" y="193" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">An admin sees which employees block the payroll run</text><text x="684" y="193" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><rect x="60" y="216" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="241" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R2</text><text x="116" y="241" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Blockers can be resolved without leaving the run</text><text x="684" y="241" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><rect x="60" y="264" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="289" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R3</text><text x="116" y="289" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">The run cannot close while a blocker is unresolved</text><text x="684" y="289" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><rect x="60" y="312" width="640" height="40" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><text x="76" y="337" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800">R4</text><text x="116" y="337" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">A second approver can override with a reason</text><text x="684" y="337" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">STRETCH</text><rect x="60" y="360" width="640" height="40" rx="10" fill="#3c301b" stroke="#e7b85c" stroke-width="1.6"/><text x="76" y="385" fill="#e7b85c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R5</text><text x="116" y="385" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Bulk-resolve across pay groups</text><text x="684" y="385" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OUT — next cycle</text><rect x="60" y="408" width="640" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="76" y="433" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800">R6</text><text x="116" y="433" fill="#e9eee8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Works for a 40,000-employee tenant</text><text x="684" y="433" fill="#9aa69c" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing=".8">OPEN</text><text class="svg-small" x="64" y="486">Statuses are the scope dial: OPEN must be met, STRETCH is welcome, OUT is named so it stops being re-argued.</text><text class="svg-small" x="64" y="512">Nine top-level requirements is the ceiling. More means the problem was never sliced.</text><text x="700" y="556" fill="#5f6b61" font-family="Inter, sans-serif" font-size="28" font-weight="800" text-anchor="end">R1–R9</text></g>
-            <!-- DIAGRAM 4: ENTERPRISE LAYER -->
-            <g class="diagram-state" data-state="4"><text class="svg-kicker" x="64" y="56">The enterprise layer</text><text class="svg-title" x="64" y="92">The requirements nobody writes down.</text><rect x="60" y="168" width="320" height="56" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="78" y="194" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Roles and permissions</text><text x="78" y="214" fill="#c9f1df" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Who may see it. Who may act on it.</text><rect x="396" y="168" width="304" height="56" rx="12" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="414" y="194" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Auditability</text><text x="414" y="214" fill="#c8dcff" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Who did what, and can we prove it</text><rect x="60" y="240" width="320" height="56" rx="12" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="78" y="266" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Integrations</text><text x="78" y="286" fill="#dfd0fa" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">The system of record wins</text><rect x="396" y="240" width="304" height="56" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="414" y="266" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Data volume</text><text x="414" y="286" fill="#f4d89c" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">40,000 rows, not 40</text><rect x="60" y="312" width="320" height="56" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="338" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Operational complexity</text><text x="78" y="358" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Who supports it on day 90</text><rect x="396" y="312" width="304" height="56" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="414" y="338" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Accessibility</text><text x="414" y="358" fill="#c9f1df" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Keyboard, focus, announcement</text><rect x="60" y="404" width="640" height="72" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="7 5"/><text class="svg-label" x="84" y="434">Each one becomes a numbered requirement or an explicit non-requirement.</text><text class="svg-small" x="84" y="458">Silence here is where enterprise projects die in month three, not in week one.</text><text class="svg-small" x="64" y="528">Consumer-scale shaping skips this list. Enterprise work cannot.</text></g>
-            <!-- DIAGRAM 5: CANDIDATE DIRECTIONS -->
-            <g class="diagram-state" data-state="5"><text class="svg-kicker" x="64" y="56">Step 3 · Candidate directions</text><text class="svg-title" x="64" y="92">Two directions that differ in kind, not in polish.</text><rect x="60" y="168" width="300" height="290" rx="18" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="88" y="202" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.4">DIRECTION A</text><text x="88" y="228" fill="#e9eee8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Blocking checklist in the run</text><rect x="88" y="248" width="244" height="44" rx="12" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="275.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Run screen lists blockers</text><rect x="88" y="302" width="244" height="44" rx="12" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="329.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Inline resolve per row</text><rect x="88" y="356" width="244" height="44" rx="12" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="383.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="750">Close button gated</text><text x="88" y="434" fill="#8fa6c4" font-family="Inter, sans-serif" font-size="11" font-weight="650">Admin never leaves the run</text><rect x="400" y="168" width="300" height="290" rx="18" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="428" y="202" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.4">DIRECTION B</text><text x="428" y="228" fill="#e9eee8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Readiness ahead of the run</text><rect x="428" y="248" width="244" height="44" rx="12" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="446" y="275.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Nightly readiness sweep</text><rect x="428" y="302" width="244" height="44" rx="12" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="446" y="329.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Owners notified early</text><rect x="428" y="356" width="244" height="44" rx="12" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="446" y="383.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="13" font-weight="750">Run opens already clean</text><text x="428" y="434" fill="#b49cd8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Work moves off the deadline</text><text class="svg-small" x="64" y="508">One direction is not a choice, and three near-identical ones are the same direction wearing three hats.</text><text class="svg-small" x="64" y="534">Materially different means a reader can say what each one gives up.</text></g>
-            <!-- DIAGRAM 6: VERTICAL PARTS -->
-            <g class="diagram-state" data-state="6"><text class="svg-kicker" x="64" y="56">Parts</text><text class="svg-title" x="64" y="92">A part is a mechanism, not a screen.</text><rect x="60" y="160" width="300" height="300" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="88" y="192" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">HORIZONTAL — WRONG</text><rect x="88" y="210" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="235.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">The UI layer</text><rect x="88" y="258" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="283.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">The API layer</text><rect x="88" y="306" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="106" y="331.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">The database layer</text><text x="88" y="386" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11" font-weight="650">Nothing works until all three land.</text><text x="88" y="408" fill="#c08a7c" font-family="Inter, sans-serif" font-size="11" font-weight="650">You cannot cut one and still ship.</text><rect x="400" y="160" width="300" height="300" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="428" y="192" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">VERTICAL — RIGHT</text><rect x="428" y="210" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="235.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">Detect a blocker</text><rect x="428" y="258" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="283.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">Resolve one inline</text><rect x="428" y="306" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="331.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">Gate the close</text><text x="428" y="386" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Each part is a thing the admin can do.</text><text x="428" y="408" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="650">Cut one and the rest still works.</text><text class="svg-small" x="64" y="520">Vertical parts are what makes scope adjustable later. Horizontal layers are all-or-nothing.</text></g>
-            <!-- DIAGRAM 7: FLAGGED UNKNOWN -->
-            <g class="diagram-state" data-state="7"><text class="svg-kicker" x="64" y="56">Step 4 · Flag the unknowns</text><text class="svg-title" x="64" y="92">If nobody can describe it, it does not pass.</text><rect x="60" y="180" width="300" height="52" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="78" y="211.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Detect a blocker</text><circle cx="400" cy="206" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M395 206 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="430" y="211" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">We can describe how.</text><rect x="60" y="250" width="300" height="52" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="78" y="281.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="750">Resolve one inline</text><circle cx="400" cy="276" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M395 276 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="430" y="281" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">We can describe how.</text><rect x="60" y="320" width="300" height="52" rx="12" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="78" y="351.0" fill="#f4d89c" font-family="Inter, sans-serif" font-size="13" font-weight="750">Sync back to the ledger</text><path d="M400 335 L411 354 H389 Z" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-linejoin="round"/><text x="400" y="352" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle">!</text><text x="430" y="351" fill="#e7b85c" font-family="Inter, sans-serif" font-size="12" font-weight="700">Nobody can describe how.</text><rect x="60" y="404" width="640" height="86" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/><text x="84" y="434" fill="#f4d89c" font-family="Inter, sans-serif" font-size="14" font-weight="750">A flagged part is an automatic failure — not a caveat</text><text x="84" y="462" fill="#c9a869" font-family="Inter, sans-serif" font-size="12" font-weight="600">It stays a failure until a spike answers it. Optimism is not a resolution.</text><text class="svg-small" x="64" y="542">The flag is deliberately expensive. That is what stops “we’ll figure it out in build.”</text></g>
-            <!-- DIAGRAM 8: FIT CHECK -->
-            <g class="diagram-state" data-state="8"><text class="svg-kicker" x="64" y="56">Step 5 · The fit check</text><text class="svg-title" x="64" y="92">Binary. No “partially”.</text><text x="300" y="196" fill="#75a9ff" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">DIRECTION A</text><text x="470" y="196" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">DIRECTION B</text><text x="64" y="244" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R1 See the blockers</text><text x="64" y="296" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R2 Resolve in place</text><text x="64" y="348" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R3 Cannot close dirty</text><text x="64" y="400" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R4 Override with reason</text><text x="64" y="452" fill="#c3ccc4" font-family="Inter, sans-serif" font-size="12" font-weight="650">R6 40,000 employees</text><circle cx="300" cy="240" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M295 240 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="292" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M295 292 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="344" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M295 344 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="396" r="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><path d="M295 391 l10 10 M305 391 l-10 10" fill="none" stroke="#ee795e" stroke-width="2.4" stroke-linecap="round"/><circle cx="300" cy="448" r="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><path d="M295 443 l10 10 M305 443 l-10 10" fill="none" stroke="#ee795e" stroke-width="2.4" stroke-linecap="round"/><circle cx="470" cy="240" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 240 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="470" cy="292" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 292 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="470" cy="344" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 344 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="470" cy="396" r="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M465 396 l4 4 l7 -8" fill="none" stroke="#63c99c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M470 437 L481 456 H459 Z" fill="#3c301b" stroke="#e7b85c" stroke-width="2" stroke-linejoin="round"/><text x="470" y="454" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle">!</text><rect x="580" y="216" width="130" height="264" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="645" y="300" fill="#ee795e" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle">A FAILS</text><text x="645" y="322" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">R4, R6</text><text x="645" y="372" fill="#e7b85c" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle">B FAILS</text><text x="645" y="394" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">R6 — flagged</text><text class="svg-small" x="64" y="534">“Partially” is how a direction survives a check it should have failed. The column forces the argument into the open.</text></g>
-            <!-- DIAGRAM 9: FIXED TIME BUDGET -->
-            <g class="diagram-state" data-state="9"><text class="svg-kicker" x="64" y="56">Scope · Time budget</text><text class="svg-title" x="64" y="92">The time is fixed. The scope moves.</text><text x="64" y="176" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">SIX WEEKS — FIXED</text><rect x="60" y="192" width="552" height="30" rx="8" fill="#63c99c" opacity=".18"/><rect x="60" y="192" width="552" height="30" rx="8" fill="none" stroke="#63c99c" stroke-width="1.6"/><text x="336" y="212" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="2">TIME BUDGET</text><path d="M612 168 V500" class="svg-line" stroke-dasharray="6 6" fill="none"/><text x="64" y="274" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">DIRECTION B AS DRAWN</text><rect x="60" y="290" width="640" height="44" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="1.6"/><path d="M612 290 h78 a10 10 0 0 1 10 10 v24 a10 10 0 0 1 -10 10 h-78 z" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="88" y="318" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="650">Sweep · notify · clean run · bulk-resolve</text><text x="656" y="317" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" text-anchor="middle">OVER</text><text x="64" y="386" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">DIRECTION B, SCOPE CUT</text><rect x="60" y="402" width="552" height="44" rx="10" fill="#302444" stroke="#ae8bf3" stroke-width="1.6"/><text x="88" y="430" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="650">Sweep · notify · clean run</text><text x="656" y="430" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">R5 cut</text><text x="656" y="452" fill="#6f7b72" font-family="Inter, sans-serif" font-size="10" font-weight="650" text-anchor="middle">and named</text><text class="svg-small" x="64" y="534">Extending the deadline is the move that is not available. Cutting a STRETCH requirement is.</text></g>
-            <!-- DIAGRAM 10: SELECTED DIRECTION -->
-            <g class="diagram-state" data-state="10"><text class="svg-kicker" x="64" y="56">Step 8 · Decide</text><text class="svg-title" x="64" y="92">One direction. And the honest status.</text><rect x="60" y="164" width="316" height="300" rx="18" fill="#302444" stroke="#ae8bf3" stroke-width="2.5"/><text x="88" y="198" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.6">SELECTED</text><text x="88" y="228" fill="#fffdf7" font-family="Inter, sans-serif" font-size="16" font-weight="750">Direction B — readiness ahead</text><rect x="88" y="250" width="260" height="40" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="275.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="750">Nightly readiness sweep</text><rect x="88" y="298" width="260" height="40" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="323.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="750">Owners notified early</text><rect x="88" y="346" width="260" height="40" rx="9" fill="#241a35" stroke="#5b4a7d" stroke-width="2"/><text x="106" y="371.0" fill="#dfd0fa" font-family="Inter, sans-serif" font-size="12" font-weight="750">Run opens already clean</text><text x="88" y="424" fill="#b49cd8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Time budget: 6 weeks · R5 cut</text><rect x="404" y="164" width="296" height="140" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="430" y="200" fill="#e7b85c" font-family="Inter, sans-serif" font-size="12" font-weight="800" letter-spacing="1.2">STATUS: SPIKE-NEEDED</text><text x="430" y="232" fill="#f4d89c" font-family="Inter, sans-serif" font-size="14" font-weight="700">R6 at 40,000 employees</text><text x="430" y="258" fill="#c9a869" font-family="Inter, sans-serif" font-size="11" font-weight="600">Two days. One question:</text><text x="430" y="280" fill="#c9a869" font-family="Inter, sans-serif" font-size="11" font-weight="600">can the sweep finish overnight?</text><rect x="404" y="324" width="296" height="140" rx="16" fill="#f4f1e8"/><text x="430" y="358" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">DIRECTIONS.MD</text><path d="M430 384 H660 M430 404 H628 M430 424 H648" stroke="#8d968c" stroke-width="3" stroke-linecap="round"/><text x="430" y="452" fill="#667068" font-family="Inter, sans-serif" font-size="11" font-weight="700">Goes to the proposal</text><text class="svg-small" x="64" y="534">A selected direction with a live spike is a real answer. A selected direction with a hidden unknown is not.</text></g>
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="40" y="52">Requirements</text>
+              <text class="svg-title" x="40" y="88">A numbered list.</text>
+              <g font-family="Inter, sans-serif">
+                <rect class="svg-node" x="60" y="110" width="640" height="52" rx="12"/>
+                <text class="svg-label" x="80" y="142">R0</text>
+                <text class="svg-small" x="130" y="142">Admin sees run health before close</text>
+                <rect x="520" y="122" width="160" height="28" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+                <text class="svg-tiny" x="600" y="140" fill="#c9f1df" text-anchor="middle">CORE GOAL</text>
+                <rect class="svg-node" x="60" y="176" width="640" height="52" rx="12"/>
+                <text class="svg-label" x="80" y="208">R1</text>
+                <text class="svg-small" x="130" y="208">Blocker detected before the run starts</text>
+                <rect x="520" y="188" width="160" height="28" rx="14" fill="#1d2a33" stroke="#75a9ff" stroke-width="1.5"/>
+                <text class="svg-tiny" x="600" y="206" fill="#bcd4ff" text-anchor="middle">MUST-HAVE</text>
+                <rect class="svg-node" x="60" y="242" width="640" height="52" rx="12"/>
+                <text class="svg-label" x="80" y="274">R2</text>
+                <text class="svg-small" x="130" y="274">Close gated on unresolved blockers</text>
+                <rect x="520" y="254" width="160" height="28" rx="14" fill="#1d2a33" stroke="#75a9ff" stroke-width="1.5"/>
+                <text class="svg-tiny" x="600" y="272" fill="#bcd4ff" text-anchor="middle">MUST-HAVE</text>
+                <rect class="svg-node" x="60" y="308" width="640" height="52" rx="12"/>
+                <text class="svg-label" x="80" y="340">R3</text>
+                <text class="svg-small" x="130" y="340">Inline fix without leaving the flow</text>
+                <rect x="520" y="320" width="160" height="28" rx="14" fill="#332a12" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-tiny" x="600" y="338" fill="#f0d69a" text-anchor="middle">NICE-TO-HAVE</text>
+                <rect class="svg-node" x="60" y="374" width="640" height="52" rx="12"/>
+                <text class="svg-label" x="80" y="406">R4</text>
+                <text class="svg-small" x="130" y="406">Historical run comparison</text>
+                <rect x="520" y="386" width="160" height="28" rx="14" fill="#332a12" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-tiny" x="600" y="404" fill="#f0d69a" text-anchor="middle">NICE-TO-HAVE</text>
+                <rect class="svg-node" x="60" y="440" width="640" height="52" rx="12"/>
+                <text class="svg-label" x="80" y="472">R5</text>
+                <text class="svg-small" x="130" y="472">Bulk re-run from the summary view</text>
+                <rect x="520" y="452" width="160" height="28" rx="14" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+                <text class="svg-tiny" x="600" y="470" fill="#f2a793" text-anchor="middle">OUT</text>
+              </g>
+              <text class="svg-small" x="60" y="524">A capability or a constraint, never a mechanism. Status is the scope dial — nine at the top level is the ceiling.</text>
+            </g>
+
+            <!-- DIAGRAM 4: ENTERPRISE EXTENSION -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="40" y="52">Enterprise classes</text>
+              <text class="svg-title" x="40" y="88">The list extends.</text>
+              <rect class="svg-node" x="60" y="108" width="640" height="40" rx="10" opacity=".7"/>
+              <text class="svg-small" x="80" y="133" fill="#b7c0b8">R0–R5 · carried from the framed problem</text>
+              <g font-family="Inter, sans-serif">
+                <rect x="60" y="166" width="640" height="50" rx="12" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-label" x="80" y="196" fill="#f0d69a">R6</text>
+                <text class="svg-small" x="130" y="196" fill="#f0d69a">Roles and permissions</text>
+                <text class="svg-tiny" x="680" y="196" fill="#e7b85c" text-anchor="end">WHO MAY ACT</text>
+                <rect x="60" y="228" width="640" height="50" rx="12" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-label" x="80" y="258" fill="#f0d69a">R7</text>
+                <text class="svg-small" x="130" y="258" fill="#f0d69a">Audit trail</text>
+                <text class="svg-tiny" x="680" y="258" fill="#e7b85c" text-anchor="end">WHAT IS LOGGED</text>
+                <rect x="60" y="290" width="640" height="50" rx="12" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-label" x="80" y="320" fill="#f0d69a">R8</text>
+                <text class="svg-small" x="130" y="320" fill="#f0d69a">System of record</text>
+                <text class="svg-tiny" x="680" y="320" fill="#e7b85c" text-anchor="end">SOURCE OF TRUTH</text>
+                <rect x="60" y="352" width="640" height="50" rx="12" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-label" x="80" y="382" fill="#f0d69a">R9</text>
+                <text class="svg-small" x="130" y="382" fill="#f0d69a">Data volume</text>
+                <text class="svg-tiny" x="680" y="382" fill="#e7b85c" text-anchor="end">40,000 ROWS</text>
+                <rect x="60" y="414" width="640" height="50" rx="12" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-label" x="80" y="444" fill="#f0d69a">R10</text>
+                <text class="svg-small" x="130" y="444" fill="#f0d69a">Accessibility</text>
+                <text class="svg-tiny" x="680" y="444" fill="#e7b85c" text-anchor="end">REQUIRED</text>
+              </g>
+              <text class="svg-small" x="60" y="498">Each becomes a requirement or a recorded non-requirement — the constraints that</text>
+              <text class="svg-small" x="60" y="520">invalidate a direction late, after everyone has agreed.</text>
+            </g>
+
+            <!-- DIAGRAM 5: DIRECTION CARDS -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="40" y="56">Two directions</text>
+              <text class="svg-title" x="40" y="92">Different mechanisms.</text>
+              <rect class="svg-node" x="40" y="140" width="150" height="410" rx="14" opacity=".55"/>
+              <text class="svg-tiny" x="60" y="168">REQUIREMENTS</text>
+              <text class="svg-small" x="60" y="200" fill="#8f988f">R0 · core</text>
+              <text class="svg-small" x="60" y="228" fill="#8f988f">R1 · must</text>
+              <text class="svg-small" x="60" y="256" fill="#8f988f">R2 · must</text>
+              <text class="svg-small" x="60" y="284" fill="#8f988f">R3 · nice</text>
+              <text class="svg-small" x="60" y="312" fill="#8f988f">R4 · nice</text>
+              <text class="svg-small" x="60" y="340" fill="#8f988f">R6 · roles</text>
+              <text class="svg-small" x="60" y="368" fill="#8f988f">R7 · audit</text>
+              <text class="svg-small" x="60" y="396" fill="#8f988f">R9 · volume</text>
+              <text class="svg-small" x="60" y="424" fill="#8f988f">…</text>
+              <rect class="svg-node-light" x="220" y="164" width="230" height="240" rx="16"/>
+              <text class="svg-tiny" x="244" y="196">DIRECTION A</text>
+              <text class="svg-label" x="244" y="224">Fix at the break</text>
+              <text class="svg-small" x="244" y="252">Catch the run as it</text>
+              <text class="svg-small" x="244" y="272">fails and repair it.</text>
+              <line x1="244" y1="300" x2="426" y2="300" stroke="#526257" stroke-width="1.5"/>
+              <text class="svg-tiny" x="244" y="330" fill="#f2a793">GIVES UP</text>
+              <text class="svg-small" x="244" y="356" fill="#f2a793">a clean-open</text>
+              <text class="svg-small" x="244" y="376" fill="#f2a793">guarantee</text>
+              <rect class="svg-node-light" x="480" y="164" width="230" height="240" rx="16"/>
+              <text class="svg-tiny" x="504" y="196">DIRECTION B</text>
+              <text class="svg-label" x="504" y="224">Move work earlier</text>
+              <text class="svg-small" x="504" y="252">Shift it forward so</text>
+              <text class="svg-small" x="504" y="272">the run opens clean.</text>
+              <line x1="504" y1="300" x2="686" y2="300" stroke="#526257" stroke-width="1.5"/>
+              <text class="svg-tiny" x="504" y="330" fill="#f2a793">GIVES UP</text>
+              <text class="svg-small" x="504" y="356" fill="#f2a793">late-stage</text>
+              <text class="svg-small" x="504" y="376" fill="#f2a793">flexibility</text>
+              <text class="svg-small" x="220" y="452">At least two that differ in mechanism. A rearrangement of</text>
+              <text class="svg-small" x="220" y="474">the same idea is not a second direction.</text>
+            </g>
+
+            <!-- DIAGRAM 6: LAYERS VERSUS PARTS -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="40" y="56">Parts, not layers</text>
+              <text class="svg-title" x="40" y="92">Vertical against horizontal.</text>
+              <text class="svg-tiny" x="50" y="150" fill="#f2a793">LAYERS · ALL THREE OR NOTHING</text>
+              <rect class="svg-node" x="50" y="164" width="300" height="56" rx="10"/>
+              <text class="svg-label" x="70" y="198">UI</text>
+              <rect class="svg-node" x="50" y="230" width="300" height="56" rx="10"/>
+              <text class="svg-label" x="70" y="264">API</text>
+              <rect class="svg-node" x="50" y="296" width="300" height="56" rx="10"/>
+              <text class="svg-label" x="70" y="330">Database</text>
+              <path d="M64 172 L338 346" stroke="#ee795e" stroke-width="3" stroke-dasharray="9 6"/>
+              <text class="svg-small" x="50" y="384" fill="#f2a793">Cut here and nothing ships.</text>
+              <text class="svg-tiny" x="430" y="150" fill="#c9f1df">PARTS · DROP ONE, REST STAND</text>
+              <path d="M540 208 V178" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+              <text class="svg-tiny" x="540" y="170" fill="#c9f1df" text-anchor="middle">lift out</text>
+              <rect class="svg-node-light" x="430" y="216" width="90" height="170" rx="12"/>
+              <rect class="svg-node-light" x="500" y="216" width="90" height="130" rx="12" transform="translate(0,-46)" fill="#18342a" stroke="#63c99c"/>
+              <rect class="svg-node-light" x="620" y="216" width="90" height="170" rx="12"/>
+              <text class="svg-small" x="475" y="410" fill="#b7c0b8" text-anchor="middle">detect</text>
+              <text class="svg-small" x="545" y="410" fill="#c9f1df" text-anchor="middle">gate</text>
+              <text class="svg-small" x="665" y="410" fill="#b7c0b8" text-anchor="middle">notify</text>
+              <text class="svg-small" x="50" y="452">UI, API, and database are layers. Split into things a person can do and one</text>
+              <text class="svg-small" x="50" y="474">part can be dropped while the rest still stand.</text>
+            </g>
+
+            <!-- DIAGRAM 7: FLAGGED PART -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="40" y="56">Flag the unknown</text>
+              <text class="svg-title" x="40" y="92">One part lights amber.</text>
+              <rect class="svg-node-light" x="150" y="270" width="120" height="180" rx="14"/>
+              <rect class="svg-node-light" x="320" y="270" width="120" height="180" rx="14"/>
+              <rect x="490" y="270" width="120" height="180" rx="14" fill="#2a2410" stroke="#e7b85c" stroke-width="2"/>
+              <path d="M550 270 V228" stroke="#e7b85c" stroke-width="2.5"/>
+              <path d="M550 232 L588 244 L550 258 Z" fill="#e7b85c"/>
+              <rect x="430" y="150" width="290" height="66" rx="12" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-label" x="452" y="180" fill="#f0d69a">"what, not how"</text>
+              <text class="svg-tiny" x="452" y="202" fill="#e7b85c">A FLAG COUNTS AS A FAILURE</text>
+              <path class="svg-line" d="M575 216 V226" marker-end="url(#arrowAmber)"/>
+              <path d="M200 474 l8 9 l16 -19" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M370 474 l8 9 l16 -19" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="550" y="484" font-family="Inter, sans-serif" font-size="22" font-weight="800" fill="#e7b85c" text-anchor="middle">?</text>
+              <text class="svg-small" x="210" y="516" text-anchor="middle" fill="#b7c0b8">detect</text>
+              <text class="svg-small" x="380" y="516" text-anchor="middle" fill="#b7c0b8">gate</text>
+              <text class="svg-small" x="550" y="516" text-anchor="middle" fill="#f0d69a">notify — describe how?</text>
+              <text class="svg-small" x="40" y="566">Every part gets one test: can the team describe how it works, not just what it does?</text>
+            </g>
+
+            <!-- DIAGRAM 8: FIT-CHECK MATRIX -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="40" y="52">The fit check</text>
+              <text class="svg-title" x="40" y="88">Binary matrix.</text>
+              <rect x="430" y="112" width="130" height="40" rx="10" fill="#243229" stroke="#526257" stroke-width="1.5"/>
+              <text class="svg-label" x="495" y="138" text-anchor="middle">Dir A</text>
+              <rect x="576" y="112" width="130" height="40" rx="10" fill="#243229" stroke="#526257" stroke-width="1.5"/>
+              <text class="svg-label" x="641" y="138" text-anchor="middle">Dir B</text>
+              <g font-family="Inter, sans-serif">
+                <rect class="svg-node" x="54" y="164" width="366" height="46" rx="10"/>
+                <text class="svg-small" x="74" y="192">R0 · Run health visible</text>
+                <path d="M485 187 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M633 179 l16 16 M649 179 l-16 16" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+                <rect class="svg-node" x="54" y="220" width="366" height="46" rx="10"/>
+                <text class="svg-small" x="74" y="248">R1 · Blocker detected</text>
+                <path d="M485 243 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M634 235 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect class="svg-node" x="54" y="276" width="366" height="46" rx="10"/>
+                <text class="svg-small" x="74" y="304">R2 · Close gated</text>
+                <path d="M485 299 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M633 291 l16 16 M649 291 l-16 16" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+                <rect class="svg-node" x="54" y="332" width="366" height="46" rx="10"/>
+                <text class="svg-small" x="74" y="360">R3 · Inline fix</text>
+                <path d="M485 355 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M634 347 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="54" y="388" width="366" height="46" rx="10" fill="#2a2410" stroke="#e7b85c" stroke-width="1.5"/>
+                <text class="svg-small" x="74" y="416" fill="#f0d69a">R4 · Notify owner ⚑ flagged</text>
+                <path d="M481 411 l16 16 M497 411 l-16 16" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+                <path d="M634 403 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect class="svg-node" x="54" y="444" width="366" height="46" rx="10"/>
+                <text class="svg-small" x="74" y="472">R5 · Bulk re-run</text>
+                <path d="M485 467 l7 8 l14 -17" fill="none" stroke="#63c99c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M633 459 l16 16 M649 459 l-16 16" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+              </g>
+              <text class="svg-small" x="54" y="524">Each cell is a pass ✓ or a fail ✗ — no third value. Pass everything and still feel wrong?</text>
+              <text class="svg-small" x="54" y="546">A requirement is missing. Name it and run the check again.</text>
+            </g>
+
+            <!-- DIAGRAM 9: TIME AND SCOPE -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="40" y="56">Time and scope</text>
+              <text class="svg-title" x="40" y="92">Fixed bar, moving scope.</text>
+              <path d="M582 146 V430" stroke="#ae8bf3" stroke-width="3" stroke-dasharray="6 5"/>
+              <text class="svg-tiny" x="582" y="138" fill="#dfd0fa" text-anchor="middle">DEADLINE — FIXED</text>
+              <rect x="60" y="158" width="522" height="46" rx="8" fill="#243229" stroke="#526257" stroke-width="1.5"/>
+              <text class="svg-small" x="80" y="186" fill="#e9eee8">time budget · set before anyone estimated the work</text>
+              <rect x="60" y="238" width="650" height="44" rx="8" fill="#33211d" stroke="#ee795e" stroke-width="1.5"/>
+              <text class="svg-small" x="80" y="265" fill="#f2a793">scope A2 — overruns the boundary</text>
+              <path class="svg-line" d="M660 282 C660 306 400 306 400 330" marker-end="url(#arrow)"/>
+              <text class="svg-small" x="120" y="322" fill="#b7c0b8">move one requirement to Out →</text>
+              <rect x="60" y="342" width="500" height="44" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-small" x="80" y="369" fill="#c9f1df">scope A3 — fits inside the boundary</text>
+              <text x="60" y="440" font-family="Inter, sans-serif" font-size="22" font-weight="800" fill="#ae8bf3">A2 → A3</text>
+              <text class="svg-small" x="210" y="436" fill="#dfd0fa">each cut becomes a new version</text>
+              <text class="svg-small" x="60" y="486">The deadline holds; scope moves. The reason a cut was made survives.</text>
+            </g>
+
+            <!-- DIAGRAM 10: STATUS LIST -->
+            <g class="diagram-state" data-state="10">
+              <text class="svg-kicker" x="40" y="56">The exit</text>
+              <text class="svg-title" x="40" y="92">Five statuses.</text>
+              <rect x="90" y="132" width="580" height="62" rx="14" fill="#251d33" stroke="#ae8bf3" stroke-width="2"/>
+              <circle cx="118" cy="163" r="7" fill="#ae8bf3"/>
+              <text class="svg-label" x="140" y="160" fill="#dfd0fa">direction-selected</text>
+              <text class="svg-tiny" x="140" y="180" fill="#c8b6ee">one direction, one version, decisive requirement named</text>
+              <rect class="svg-node" x="90" y="204" width="580" height="58" rx="14"/>
+              <text class="svg-label" x="140" y="230">spike-needed</text>
+              <text class="svg-tiny" x="140" y="250">an unknown still blocks the leading direction</text>
+              <rect class="svg-node" x="90" y="272" width="580" height="58" rx="14"/>
+              <text class="svg-label" x="140" y="298">budget-undefined</text>
+              <text class="svg-tiny" x="140" y="318">no time budget to check a direction against</text>
+              <rect class="svg-node" x="90" y="340" width="580" height="58" rx="14"/>
+              <text class="svg-label" x="140" y="366">no-viable-direction</text>
+              <text class="svg-tiny" x="140" y="386">every candidate fails a Must-have</text>
+              <rect class="svg-node" x="90" y="408" width="580" height="58" rx="14"/>
+              <text class="svg-label" x="140" y="434">reframe</text>
+              <text class="svg-tiny" x="140" y="454">evidence contradicts the framed problem</text>
+              <text class="svg-small" x="90" y="502">One entry lights; the rest stay live. All of it recorded in DIRECTIONS.md.</text>
+            </g>
           </svg>
         </div>
       </div>
 
       <div class="steps">
-        <!-- SCENE 1: TWO ANSWERS, NO TEST. — edit scene copy here -->
+        <!-- SCENE 1 -->
         <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
           <div class="step-card">
             <span class="scene-number">01 · The tension</span>
             <h2 id="scene-1-title">Two answers, no test.</h2>
-            <p>A designer wants a guided wizard. An engineer wants a batch endpoint. Both are describing a real solution to the same agreed problem, and there is no shared standard either one can be held against. This argument is not resolved by seniority; it is resolved by writing the standard down.</p>
+            <p>A team agrees on the problem. One person wants a guided wizard, another wants a batch endpoint. Both are real answers to it, and nothing written down says which one the solution has to satisfy.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>What is shaping, exactly?</strong> The phase between knowing what problem to solve and knowing what to build. It ends with one solution direction and the reasoning that selected it — not with wireframes.</aside>
-
-        <!-- SCENE 2: START FROM THE FRAME, DON’T REDO IT. — edit scene copy here -->
+        <!-- SCENE 2 -->
         <section class="step" data-state="2" aria-labelledby="scene-2-title">
           <div class="step-card">
-            <span class="scene-number">02 · Entry</span>
-            <h2 id="scene-2-title">Start from the frame, don’t redo it.</h2>
-            <p>Shaping reads <code>FRAMED_PROBLEM.md</code> and carries it forward. It does not re-derive the user, the tension, or the outcome in new words. When shaping finds evidence that genuinely contradicts the frame, it stops and sends that back — quietly rewriting the problem to fit a solution is the failure this boundary exists to prevent.</p>
+            <span class="scene-number">02 · Carries the frame</span>
+            <h2 id="scene-2-title">In and out.</h2>
+            <p>Shaping starts from <code>FRAMED_PROBLEM.md</code> and carries it forward word for word. It does not re-open the problem, the user, or the outcome. If the work turns up evidence that the frame is wrong, that goes back to <code>problem-framing</code>. What comes out is one file, <code>DIRECTIONS.md</code>.</p>
           </div>
         </section>
 
-        <!-- SCENE 3: NUMBER THE REQUIREMENTS. — edit scene copy here -->
+        <!-- SCENE 3 -->
         <section class="step" data-state="3" aria-labelledby="scene-3-title">
           <div class="step-card">
-            <span class="scene-number">03 · Step 1</span>
-            <h2 id="scene-3-title">Number the requirements.</h2>
-            <p>What must a solution do to count? Each answer gets a number and a status: <strong>OPEN</strong> must be met, <strong>STRETCH</strong> is welcome but optional, <strong>OUT</strong> is deliberately excluded and named so it stops resurfacing. Nine top-level requirements is the ceiling — more usually means the problem was never sliced.</p>
+            <span class="scene-number">03 · Requirements</span>
+            <h2 id="scene-3-title">A numbered list.</h2>
+            <p>The first move is writing down what any solution has to be true of. Each one is a capability or a constraint, never a mechanism, and it gets a number. Each also gets a status, from Core goal down to Out, and that status is the scope dial. Nine at the top level is the ceiling.</p>
           </div>
         </section>
 
-        <!-- SCENE 4: THE REQUIREMENTS ENTERPRISE ADDS. — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>Requirements read as tests, not features.</strong> "Users can see blockers" is a feature. "A payroll admin can tell, before the run starts, whether it will fail" is a test a direction either passes or fails.
+        </aside>
+
+        <!-- SCENE 4 -->
         <section class="step" data-state="4" aria-labelledby="scene-4-title">
           <div class="step-card">
-            <span class="scene-number">04 · Step 1, continued</span>
-            <h2 id="scene-4-title">The requirements enterprise adds.</h2>
-            <p>Roles and permissions. Auditability. The integration whose system of record always wins. Forty thousand rows instead of forty. Who supports this on day ninety. Keyboard and screen-reader behaviour. Each becomes a numbered requirement or an explicit non-requirement — because in enterprise work, silence here is what kills a project in month three.</p>
+            <span class="scene-number">04 · Enterprise classes</span>
+            <h2 id="scene-4-title">The list extends.</h2>
+            <p>A framed problem rarely mentions who is allowed to act, what has to be logged, or how a direction behaves at forty thousand rows. Shaping walks a fixed list of these before any direction is drawn. Each one becomes a requirement or a recorded non-requirement. These are the constraints that invalidate a direction late, after everyone has agreed.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>Why numbers?</strong> Because “it doesn’t feel right” cannot be answered. “It fails R4” can.</aside>
-
-        <!-- SCENE 5: DRAW AT LEAST TWO. — edit scene copy here -->
+        <!-- SCENE 5 -->
         <section class="step" data-state="5" aria-labelledby="scene-5-title">
           <div class="step-card">
-            <span class="scene-number">05 · Step 3</span>
-            <h2 id="scene-5-title">Draw at least two.</h2>
-            <p>One direction is not a choice, it is a proposal wearing a process. They have to differ <em>in kind</em>: fix the run at the moment it breaks, or move the work earlier so the run opens clean. A reader should be able to say in one sentence what each one gives up.</p>
+            <span class="scene-number">05 · Two directions</span>
+            <h2 id="scene-5-title">Different mechanisms.</h2>
+            <p>Now come the directions, and there have to be at least two that differ in mechanism. Fixing the run at the moment it breaks is one mechanism. Moving the work earlier so the run opens clean is another. A rearrangement of the same idea is not a second direction.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>Each direction gets a breadboard.</strong> Places a person can be, what they can do or see in each one, which action takes them where — in text, too coarse to express layout. It is the cheapest way to find the missing place or the action with no destination, and it turns a paragraph into something the fit check can actually be run against. That is the <code>breadboarding</code> skill.</aside>
+        <aside class="bridge-card">
+          <strong>From paragraph to mechanism.</strong> Each direction is made concrete with a breadboard — places, affordances, and connection lines, written in text — so the fit check runs against a mechanism instead of a paragraph. That is the <code>breadboarding</code> skill.
+        </aside>
 
-        <!-- SCENE 6: PARTS ARE MECHANISMS, NOT LAYERS. — edit scene copy here -->
+        <!-- SCENE 6 -->
         <section class="step" data-state="6" aria-labelledby="scene-6-title">
           <div class="step-card">
-            <span class="scene-number">06 · Step 3, continued</span>
-            <h2 id="scene-6-title">Parts are mechanisms, not layers.</h2>
-            <p>“UI, API, database” is not a set of parts — nothing works until all three land, so nothing can be cut. “Detect a blocker, resolve one inline, gate the close” is: each is something a person can do, and removing one leaves the rest standing. Vertical parts are what makes scope adjustable later.</p>
+            <span class="scene-number">06 · Parts, not layers</span>
+            <h2 id="scene-6-title">Vertical against horizontal.</h2>
+            <p>Each direction breaks into parts, and how you split it decides whether it can be cut later. UI, API, and database are layers, and nothing works until all three ship. Split into things a person can do, like detect a blocker or gate the close, and one part can be dropped while the rest still stand.</p>
           </div>
         </section>
 
-        <!-- SCENE 7: IF NOBODY CAN DESCRIBE IT, FLAG IT. — edit scene copy here -->
+        <!-- SCENE 7 -->
         <section class="step" data-state="7" aria-labelledby="scene-7-title">
           <div class="step-card">
-            <span class="scene-number">07 · Step 4</span>
-            <h2 id="scene-7-title">If nobody can describe it, flag it.</h2>
-            <p>For every part, one question: can we describe <em>how</em> this works? Not whether it is possible — whether we can say how. A part that fails that test gets a warning flag, and a flagged part counts as an outright failure in the check that follows. It stays one until a spike answers it. Optimism is not a resolution.</p>
+            <span class="scene-number">07 · Flag the unknown</span>
+            <h2 id="scene-7-title">One part lights amber.</h2>
+            <p>Every part gets one test. Can the team describe how it works, not just what it does? A part that fails gets a flag, and a flag counts as a failure in the check that follows. It marks missing work, so it cannot be accepted the way a risk can.</p>
           </div>
         </section>
 
-        <!-- SCENE 8: EVERY DIRECTION, EVERY REQUIREMENT, BINARY. — edit scene copy here -->
+        <!-- SCENE 8 -->
         <section class="step" data-state="8" aria-labelledby="scene-8-title">
           <div class="step-card">
-            <span class="scene-number">08 · Step 5</span>
-            <h2 id="scene-8-title">Every direction, every requirement, binary.</h2>
-            <p>Each direction is scored against each requirement as pass or fail. There is no “partially”, and the absence of that option is the whole point — “partially” is how a weak direction survives a check it should have failed. The matrix does not make the decision; it makes the disagreement visible enough to have.</p>
+            <span class="scene-number">08 · The fit check</span>
+            <h2 id="scene-8-title">Binary matrix.</h2>
+            <p>The fit check scores every direction against every requirement. Each cell is a pass or a fail, and there is no third value. That constraint is the point, because a three-way scale lets every direction look respectable and settles nothing. When a direction passes everything and still feels wrong, a requirement is missing, so name it and run the check again.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>A failed check is a brief, not a verdict.</strong> Fix what failed and you have a new <em>version</em>, not a new direction: <code>A1 → A2 → A3</code>, left to right, each one recording what changed and why. Superseded versions stay in the document, struck through, with the reason — six weeks later “we decided not to” and “we forgot” look identical. Only the current version of each live direction appears in the matrix.</aside>
+        <aside class="bridge-card">
+          <strong>Version lineage.</strong> A failed check is a brief, not a verdict. Fixing the failing part produces <code>A2</code>, then <code>A3</code>; a new letter is kept for a genuinely different mechanism. Superseded versions stay in the document, struck through with the reason, and only the current version appears in the matrix.
+        </aside>
 
-        <aside class="bridge-card"><strong>When the matrix and your judgement disagree,</strong> the requirement list is usually wrong — something that matters was never written down. Fix the list, then re-run the check. Do not overrule the matrix silently.</aside>
-
-        <!-- SCENE 9: THE TIME IS FIXED. THE SCOPE MOVES. — edit scene copy here -->
+        <!-- SCENE 9 -->
         <section class="step" data-state="9" aria-labelledby="scene-9-title">
           <div class="step-card">
-            <span class="scene-number">09 · Scope</span>
-            <h2 id="scene-9-title">The time is fixed. The scope moves.</h2>
-            <p>Time budget is not an estimate; it is a decision about how much this problem is worth. When the selected direction does not fit, the move available is cutting scope — dropping a STRETCH requirement, removing a part — not extending the deadline. A direction that only fits by moving the date has not been worked out.</p>
+            <span class="scene-number">09 · Time and scope</span>
+            <h2 id="scene-9-title">Fixed bar, moving scope.</h2>
+            <p>The time budget comes from the frame. It is the spend the business committed to, set before anyone estimated the work. When the chosen direction does not fit, scope moves and the deadline holds. Each cut becomes a new version, so the reason it was made survives.</p>
           </div>
         </section>
 
-        <!-- SCENE 10: ONE DIRECTION, AND AN HONEST STATUS. — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>Spikes.</strong> A flagged unknown on a leading direction gets one bounded investigation, with acceptance criteria phrased as <em>"we can describe how…"</em> rather than <em>"we can decide if…"</em>. The spike buys understanding; the decision happens afterwards, back in the fit check.
+        </aside>
+
+        <!-- SCENE 10 -->
         <section class="step" data-state="10" aria-labelledby="scene-10-title">
           <div class="step-card">
-            <span class="scene-number">10 · Step 8</span>
-            <h2 id="scene-10-title">One direction, and an honest status.</h2>
-            <p>Shaping ends with a selection and a status: <code>direction-selected</code>, <code>spike-needed</code>, <code>budget-undefined</code>, <code>no-viable-direction</code>, or <code>reframe</code>. A selected direction with a live spike attached is a real answer. A selected direction with an unknown quietly folded into it is not.</p>
+            <span class="scene-number">10 · The exit</span>
+            <h2 id="scene-10-title">Five statuses.</h2>
+            <p>Shaping ends by selecting one direction at one version, and by naming the requirement that separated it from the runner-up. When an unknown still blocks the leading direction, the honest exit is <code>spike-needed</code>, not a selection. When every candidate fails a Must-have, that result is worth more than a forced pick. The file that records all of it is <code>DIRECTIONS.md</code>.</p>
           </div>
         </section>
+
+        <aside class="bridge-card">
+          <strong>The handoff.</strong> Shaping passes <code>DIRECTIONS.md</code> and <code>FRAMED_PROBLEM.md</code> to <code>proposal</code>, and leaves layout, copy, component choices, and edge cases open for Design to decide.
+        </aside>
       </div>
-    </section>
-
-    <section class="next-moves-section" aria-labelledby="next-moves-title">
-      <div class="next-moves-inner">
-        <p class="eyebrow">The decision after shaping</p>
-        <h2 id="next-moves-title">Every status has a next move.</h2>
-        <p class="next-moves-lede">Shaping does not automatically send every direction to a proposal. The status says what happens next, and two of the five are ways of saying “not yet”.</p>
-
-        <div class="next-moves-grid">
-          <article class="next-move-card"><h3>direction-selected</h3><p><strong>Move forward.</strong> One direction passes every OPEN requirement, fits the time budget, and carries no unresolved flag. Write the proposal.</p></article>
-          <article class="next-move-card"><h3>spike-needed</h3><p><strong>Buy an answer first.</strong> A flagged part decides whether the direction is viable. Run a timeboxed spike with a written question, then re-run the fit check.</p></article>
-          <article class="next-move-card"><h3>budget-undefined</h3><p><strong>Ask for the number.</strong> Without a time budget the fit check has no failure condition and every direction passes. Get the time budget before choosing.</p></article>
-          <article class="next-move-card"><h3>no-viable-direction</h3><p><strong>Cut or reframe.</strong> No direction meets the OPEN requirements inside the time budget. Either the time budget is too small for this problem or the problem is too big for this time budget — say which.</p></article>
-          <article class="next-move-card"><h3>reframe</h3><p><strong>Send it back to framing.</strong> Shaping found evidence that contradicts the frame. Do not rewrite the problem here; return it with what was found.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="output-section" aria-label="Shaping document output structure">
-      <details>
-        <summary>Explore the complete <code>DIRECTIONS.md</code> handoff</summary>
-        <div class="output-grid">
-          <div class="output-item">Status</div><div class="output-item">Frame carried forward</div>
-          <div class="output-item">Time budget</div><div class="output-item">Requirements (R1–R9)</div>
-          <div class="output-item">Requirement statuses</div><div class="output-item">Candidate directions</div>
-          <div class="output-item">Parts per direction</div><div class="output-item">Breadboards</div>
-          <div class="output-item">Version lineage (A1 → A2)</div><div class="output-item">Discarded versions and why</div>
-          <div class="output-item">Flagged unknowns</div><div class="output-item">Failure notes</div>
-          <div class="output-item">Fit check matrix</div><div class="output-item">Open spikes</div>
-          <div class="output-item">Selected direction</div><div class="output-item">What it gives up</div>
-          <div class="output-item">Scope cuts made</div><div class="output-item">Enterprise constraints</div>
-          <div class="output-item">Saved as DIRECTIONS.md</div>
-        </div>
-      </details>
     </section>
 
     <section class="closing" aria-labelledby="closing-title">
       <div class="closing-copy">
         <p class="eyebrow">The payoff</p>
-        <h2 id="closing-title">Now it can be committed to.</h2>
-        <p><strong>A direction is not a design. It is a decision with its reasoning attached.</strong> The fit check does not tell anyone what the interface looks like, how a row behaves on a narrow screen, or what the empty state says — that is Design’s work, and it is deliberately still open. What shaping settles is the harder thing: which direction, at what cost, giving up what. <code>DIRECTIONS.md</code> hands the proposal a decision that can be read, questioned, and approved without re-running the argument.</p>
-        <div class="final-equation"><span>Framed problem</span><span aria-hidden="true">→</span><span>One selected direction</span></div>
+        <h2 id="closing-title">One direction, at one version, with an honest status.</h2>
+        <p><strong>You can describe the method now.</strong> Requirements are written as capabilities and numbered, directions are scored against them in a binary fit check, unknowns are flagged instead of assumed, and the time budget stays fixed while scope moves. It ends with one direction at one version and an honest status.</p>
+        <div class="final-equation"><span>Fixed time</span><span aria-hidden="true">→</span><span>Moving scope</span></div>
       </div>
 
       <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
-        <title id="closing-diagram-title">Numbered requirements filtering several candidate directions down to one selection</title>
-        <desc id="closing-diagram-desc">A list of numbered requirements acts as a filter. Several candidate directions enter it and one passes through, carrying its time budget and an open spike with it.</desc>
-        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
-        <text x="128" y="72" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">CANDIDATE DIRECTIONS</text>
-        <g font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle">
-          <rect x="52" y="96" width="152" height="58" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="128" y="131" fill="#c8dcff">Direction A</text>
-          <rect x="52" y="182" width="152" height="58" rx="9" fill="#302444" stroke="#ae8bf3" stroke-width="2"/><text x="128" y="217" fill="#dfd0fa">Direction B</text>
-          <rect x="52" y="268" width="152" height="58" rx="9" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="128" y="303" fill="#f4d89c">Direction C</text>
+        <title id="closing-diagram-title">DIRECTIONS.md with one direction selected and a status</title>
+        <desc id="closing-diagram-desc">The output file records the selected direction A3, the requirement that separated it from the runner-up, and the exit status direction-selected.</desc>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <text x="44" y="60" font-size="13" fill="#8a94a8" letter-spacing="1.4">DIRECTIONS.md</text>
+          <rect x="44" y="80" width="612" height="88" rx="16" fill="#eaf7f0" stroke="#3f7a63" stroke-width="2"/>
+          <text x="70" y="112" font-size="11" fill="#3f7a63" letter-spacing="1.3">SELECTED</text>
+          <text x="70" y="142" font-size="16" fill="#151914">Direction A, version A3 · fix at the break, scope cut to fit</text>
+          <rect x="44" y="188" width="612" height="88" rx="16" fill="#f4f1e8"/>
+          <text x="70" y="220" font-size="11" fill="#667068" letter-spacing="1.3">DECISIVE REQUIREMENT</text>
+          <text x="70" y="250" font-size="16" fill="#151914">R2 · close gated on unresolved blockers — B could not meet it</text>
+          <rect x="44" y="296" width="612" height="88" rx="16" fill="#efe7fb" stroke="#7b57c9" stroke-width="2"/>
+          <text x="70" y="328" font-size="11" fill="#7b57c9" letter-spacing="1.3">STATUS</text>
+          <text x="70" y="358" font-size="16" fill="#151914">direction-selected</text>
         </g>
-        <path d="M212 125 C248 125 250 238 278 238 M212 211 H278 M212 297 C248 297 250 238 278 238" fill="none" stroke="#526058" stroke-width="2"/>
-        <rect x="286" y="118" width="104" height="240" rx="16" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
-        <text x="338" y="222" fill="#fffdf7" font-family="Georgia, serif" font-size="19" text-anchor="middle">Fit</text>
-        <text x="338" y="248" fill="#fffdf7" font-family="Georgia, serif" font-size="19" text-anchor="middle">check</text>
-        <text x="338" y="278" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">R1 – R9</text>
-        <path d="M400 238 H452" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
-        <rect x="468" y="140" width="188" height="196" rx="16" fill="#302444" stroke="#ae8bf3" stroke-width="2.5"/>
-        <text x="562" y="180" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.4">SELECTED</text>
-        <text x="562" y="212" fill="#fffdf7" font-family="Inter, sans-serif" font-size="15" font-weight="750" text-anchor="middle">Direction B</text>
-        <g font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle" fill="#dfd0fa">
-          <rect x="494" y="230" width="136" height="30" rx="7" fill="#241a35"/><text x="562" y="250">Time budget: 6 weeks</text>
-          <rect x="494" y="268" width="136" height="30" rx="7" fill="#241a35"/><text x="562" y="288">R5 cut, named</text>
-          <rect x="494" y="306" width="136" height="18" rx="6" fill="#3c301b"/><text x="562" y="319" fill="#f4d89c" font-size="10">1 open spike</text>
-        </g>
-        <text x="350" y="440" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">A CHOICE THAT SURVIVES BEING QUESTIONED</text>
+        <text x="350" y="446" fill="#3f7a63" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">THE REASONING THAT PICKED IT SURVIVES</text>
       </svg>
     </section>
 
     <section class="sources" aria-labelledby="sources-title">
       <div class="sources-inner">
         <p class="eyebrow">Method provenance</p>
-        <h2 id="sources-title">Where this comes from.</h2>
-        <p class="sources-intro">This is Ryan Singer’s method, adapted rather than copied. The adaptations are the parts enterprise work needs and a small-team method can skip.</p>
+        <h2 id="sources-title">Where the method comes from.</h2>
+        <p class="sources-intro">The notation and the binary check are borrowed. The enterprise requirement classes are this library's own addition, and are named as such.</p>
         <div class="source-grid">
           <article class="source-card">
-            <h3>Shape Up</h3>
-            <p>Basecamp’s product-development method: a <strong>fixed time budget with variable scope</strong>, a rough solution direction settled before a build cycle, and boundaries and exclusions stated up front rather than discovered mid-build.</p>
-            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
-          </article>
-          <article class="source-card">
-            <h3>Ryan Singer’s shaping skills</h3>
-            <p>The R/S notation, requirement statuses, the parts-as-mechanisms rule, the deliberately <strong>binary fit check</strong>, and spikes whose acceptance criterion is “we can describe how” rather than “we think it will work”.</p>
+            <h3>rjs/shaping-skills</h3>
+            <p>Ryan Singer's own agent skills: the requirement and direction notation, the binary fit check, the flagged-unknown discipline, spikes with description-based acceptance criteria, and parts as vertical mechanisms.</p>
             <a href="https://github.com/rjs/shaping-skills">View the source skills</a>
           </article>
           <article class="source-card">
-            <h3>The enterprise adaptation</h3>
-            <p>Roles, permissions, auditability, integrations, data volume, operational complexity, and accessibility are seeded as requirement classes. They are not part of the original method and are the most common reason an otherwise sound direction fails late.</p>
-            <a href="https://www.ryansinger.co/">Read Singer on framing and shaping</a>
+            <h3>Shape Up</h3>
+            <p>Fixed time and variable scope, the time budget as a design constraint, rabbit holes and no-gos.</p>
+            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
+          </article>
+          <article class="source-card">
+            <h3>Some solution vs. no solution</h3>
+            <p>The aim is confidence that a workable solution exists, and this work runs in both directions between problem and solution. See also <a href="https://www.ryansinger.co/shaping-on-the-demand-side/">shaping on the demand side</a>.</p>
+            <a href="https://www.ryansinger.co/some-solution-vs-no-solution/">Read the essay</a>
+          </article>
+          <article class="source-card">
+            <h3>This library's addition</h3>
+            <p>The enterprise requirement classes — roles and permissions, auditability, integrations, data volume, accessibility — are this library's addition, not Singer's.</p>
+            <a href="../the-chain/the-handoff-is-the-interface.html">See the whole chain</a>
           </article>
         </div>
       </div>
     </section>
     </article>
   </main>
+
 
   <footer>Pick a Direction · An interactive explanation of the shaping skill</footer>
 
@@ -1213,16 +1463,16 @@
       const label = document.getElementById('diagram-label');
       const progress = document.querySelector('.progress-bar');
       const labels = {
-        '1': 'The argument',
-        '2': 'Load the frame',
-        '3': 'Requirement list',
-        '4': 'Enterprise layer',
-        '5': 'Candidate directions',
-        '6': 'Vertical parts',
-        '7': 'Flagged unknown',
-        '8': 'Fit check',
-        '9': 'Fixed time budget',
-        '10': 'Selected direction'
+        1: 'Two-answer standoff',
+        2: 'Frame handoff',
+        3: 'Requirement list',
+        4: 'Enterprise extension',
+        5: 'Direction cards',
+        6: 'Layers versus parts',
+        7: 'Flagged part',
+        8: 'Fit-check matrix',
+        9: 'Time and scope',
+        10: 'Status list'
       };
       let activeState = 1;
 
