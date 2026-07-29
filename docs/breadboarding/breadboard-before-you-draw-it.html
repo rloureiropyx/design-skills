@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of breadboarding: sketching a solution in words as places, affordances, and connection lines, so the mechanism is arguable before anyone draws a screen.">
+  <link rel="icon" href="data:,">
+  <title>Breadboard Before You Draw It — How breadboarding works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .proposal-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <style>
+    /* Landscape phones (wide, short): the longest scene card must fit fully in
+       the readable column at 375px tall, so shrink the card type a step further. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .step h2 { font-size: clamp(1.3rem, 3.4vw, 1.7rem); margin-bottom: .55rem; }
+      .step p { font-size: .84rem; line-height: 1.42; }
+      .scene-number { font-size: .62rem; margin-bottom: .5rem; }
+      .step-card { padding: .9rem 1.05rem; }
+    }
+  </style>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">The library · Artifacts · breadboarding</p>
+        <h1>Breadboard before you draw it.</h1>
+        <p class="hero-deck"><strong>Breadboarding sketches a solution in words</strong> — places, affordances, and connection lines — so the mechanism can be argued about before anyone draws a screen. A one-line solution reads as finished, yet two people picture different screens and neither can start building.</p>
+        <span class="scroll-cue">Scroll to build the breadboard</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">One solution sentence, with two people picturing two different screens</title>
+        <desc id="hero-desc">A single sentence card sits at the top. Two arrows lead down to two different screen sketches, one for each person, showing that the sentence does not settle what to build.</desc>
+        <defs>
+          <marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+        </defs>
+        <g font-family="Inter, sans-serif">
+          <rect x="96" y="46" width="428" height="118" rx="16" fill="#12253a" stroke="#75a9ff" stroke-width="2"/>
+          <text x="120" y="82" font-size="11" font-weight="800" letter-spacing="1.4" fill="#8fb8ff">SOLUTION SENTENCE</text>
+          <text x="120" y="112" font-size="15" font-weight="600" fill="#dbe8ff">a place where a payroll admin can see</text>
+          <text x="120" y="136" font-size="15" font-weight="600" fill="#dbe8ff">unapproved timesheets and chase them.</text>
+          <path d="M230 164 C210 210 170 224 150 258" fill="none" stroke="#ee795e" stroke-width="2.5" marker-end="url(#heroArrow)"/>
+          <path d="M390 164 C410 210 452 224 472 258" fill="none" stroke="#ee795e" stroke-width="2.5" marker-end="url(#heroArrow)"/>
+          <g>
+            <rect x="40" y="272" width="220" height="196" rx="14" fill="#f6f4ec" stroke="#c9c5ba" stroke-width="1.5"/>
+            <text x="60" y="300" font-size="10" font-weight="800" letter-spacing="1.2" fill="#61655c">PERSON A PICTURES</text>
+            <rect x="60" y="316" width="180" height="20" rx="5" fill="#dfe7f6"/>
+            <rect x="60" y="346" width="120" height="14" rx="4" fill="#e3e0d6"/>
+            <rect x="60" y="372" width="180" height="60" rx="6" fill="#eef1e9" stroke="#c9c5ba"/>
+            <text x="70" y="408" font-size="11" fill="#61655c">a dashboard</text>
+          </g>
+          <g>
+            <rect x="360" y="272" width="220" height="196" rx="14" fill="#f6f4ec" stroke="#c9c5ba" stroke-width="1.5"/>
+            <text x="380" y="300" font-size="10" font-weight="800" letter-spacing="1.2" fill="#61655c">PERSON B PICTURES</text>
+            <rect x="380" y="316" width="180" height="14" rx="4" fill="#e3e0d6"/>
+            <rect x="380" y="340" width="180" height="22" rx="5" fill="#dfe7f6"/>
+            <rect x="380" y="372" width="86" height="60" rx="6" fill="#eef1e9" stroke="#c9c5ba"/>
+            <rect x="474" y="372" width="86" height="60" rx="6" fill="#eef1e9" stroke="#c9c5ba"/>
+            <text x="390" y="452" font-size="11" fill="#61655c">an inbox and a detail pane</text>
+          </g>
+        </g>
+        <text x="310" y="512" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="1.4">NEITHER CAN START BUILDING</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">What it is</p>
+      <h2 id="intro-title">Sketch the solution in words first.</h2>
+      <p>Breadboarding sketches a solution in words instead of pixels, at a fidelity too coarse to express layout, so the mechanism is arguable before the design is.</p>
+      <p>It names three things and stops. That is the whole notation, and it cannot express layout — which is exactly why you can argue about the mechanism without arguing about the visual design at the same time.</p>
+      <p class="definition"><strong>Places</strong> are anywhere a person can be. <strong>Affordances</strong> are what a person can see or do in a place. <strong>Connection lines</strong> say which action leads where.</p>
+    </section>
+
+    <section class="scrolly" aria-label="Building a breadboard, one step at a time">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">The sentence</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="bbArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker>
+              <marker id="bbGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+              <marker id="bbAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/></marker>
+              <marker id="bbCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+              <pattern id="bbGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/></pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#bbGrid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: THE SENTENCE -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="40" y="60">The worked example</text>
+              <text class="svg-title" x="40" y="100">One sentence.</text>
+              <rect x="96" y="212" width="568" height="176" rx="18" fill="#12253a" stroke="#75a9ff" stroke-width="2"/>
+              <text class="svg-tiny" x="124" y="252" fill="#8fb8ff">SOLUTION SENTENCE</text>
+              <text class="svg-label" x="124" y="288" fill="#dbe8ff">a place where a payroll admin can see</text>
+              <text class="svg-label" x="124" y="318" fill="#dbe8ff">unapproved timesheets and chase them</text>
+              <text class="svg-label" x="124" y="348" fill="#dbe8ff">before the run locks.</text>
+              <text class="svg-small" x="96" y="440">It sounds finished. Ask two people to picture it and they</text>
+              <text class="svg-small" x="96" y="462" fill="#f2a08a">picture different screens — neither can start building.</text>
+            </g>
+
+            <!-- DIAGRAM 2: THREE SYMBOLS -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="40" y="60">The notation</text>
+              <text class="svg-title" x="40" y="100">Three symbols, and nothing else.</text>
+              <rect x="228" y="130" width="304" height="38" rx="10" fill="#12253a" stroke="#4d7cc0" stroke-width="1.5"/>
+              <text class="svg-tiny" x="380" y="154" text-anchor="middle" fill="#8fb8ff">the solution sentence, above</text>
+              <rect class="svg-node" x="112" y="212" width="96" height="58" rx="12"/>
+              <text class="svg-tiny" x="160" y="246" text-anchor="middle">PLACE</text>
+              <text class="svg-label" x="248" y="236">Place</text>
+              <text class="svg-small" x="248" y="258">anywhere a person can be</text>
+              <circle cx="134" cy="330" r="5" fill="#75a9ff"/>
+              <line x1="150" y1="330" x2="208" y2="330" stroke="#63c99c" stroke-width="3"/>
+              <text class="svg-label" x="248" y="326">Affordance</text>
+              <text class="svg-small" x="248" y="348">what a person can see or do</text>
+              <path class="svg-line" d="M112 420 H206" marker-end="url(#bbArrow)"/>
+              <text class="svg-label" x="248" y="416">Connection line</text>
+              <text class="svg-small" x="248" y="438">which action leads where</text>
+              <text class="svg-small" x="112" y="512" fill="#eec877">Too coarse to show layout — that is the point.</text>
+            </g>
+
+            <!-- DIAGRAM 3: THE STARTING PLACE -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="40" y="60">Step 1 · The starting place</text>
+              <text class="svg-title" x="40" y="100">Start where the person is.</text>
+              <g opacity=".5">
+                <rect class="svg-node" x="596" y="128" width="128" height="86" rx="10"/>
+                <text class="svg-tiny" x="614" y="150">KEY</text>
+                <text class="svg-tiny" x="614" y="170">[ ] place</text>
+                <text class="svg-tiny" x="614" y="188">— affordance</text>
+                <text class="svg-tiny" x="614" y="206">→ connection</text>
+              </g>
+              <rect class="svg-node" x="240" y="200" width="300" height="196" rx="16"/>
+              <text class="svg-label" x="266" y="242">Payroll run checklist</text>
+              <rect x="452" y="218" width="66" height="26" rx="8" fill="#233a2e" stroke="#63c99c" stroke-width="1.2"/>
+              <text class="svg-tiny" x="485" y="235" text-anchor="middle" fill="#7fd6b0">(start)</text>
+              <line x1="266" y1="262" x2="514" y2="262" stroke="#3e4c42" stroke-width="1.2"/>
+              <text class="svg-small" x="266" y="312">empty — no affordances yet</text>
+              <text class="svg-small" x="240" y="448">Where the admin works the day before the run locks.</text>
+              <text class="svg-small" x="240" y="470" fill="#eec877">The most skipped step, and the most often wrong.</text>
+            </g>
+
+            <!-- DIAGRAM 4: SEE AND DO -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="40" y="60">Step 2 · What they see and do</text>
+              <text class="svg-title" x="40" y="100">Fill the place in.</text>
+              <rect class="svg-node" x="230" y="150" width="300" height="326" rx="16"/>
+              <text class="svg-label" x="256" y="190">Payroll run checklist</text>
+              <rect x="440" y="168" width="66" height="26" rx="8" fill="#233a2e" stroke="#63c99c" stroke-width="1.2"/>
+              <text class="svg-tiny" x="473" y="185" text-anchor="middle" fill="#7fd6b0">(start)</text>
+              <line x1="256" y1="208" x2="504" y2="208" stroke="#3e4c42" stroke-width="1.2"/>
+              <text class="svg-tiny" x="256" y="240" fill="#8fb8ff">SEE</text>
+              <text class="svg-small" x="256" y="266" fill="#9cc0ff">[see] runs due today</text>
+              <text class="svg-small" x="256" y="292" fill="#9cc0ff">[see] count still unapproved</text>
+              <text class="svg-tiny" x="256" y="346" fill="#7fd6b0">DO</text>
+              <text class="svg-small" x="256" y="372" fill="#7fd6b0">[do] open who is missing</text>
+              <text class="svg-small" x="256" y="398" fill="#7fd6b0">[do] mark the run ready</text>
+              <text class="svg-small" x="230" y="516">Only actions: nothing to act on. Only information: a dead end.</text>
+            </g>
+
+            <!-- DIAGRAM 5: CONNECTION LINES -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="40" y="60">Step 3 · The lines</text>
+              <text class="svg-title" x="40" y="100">Every action leads somewhere.</text>
+              <rect class="svg-node" x="46" y="150" width="280" height="356" rx="16"/>
+              <text class="svg-label" x="70" y="188">Payroll run checklist</text>
+              <text class="svg-tiny" x="70" y="222" fill="#8fb8ff">SEE</text>
+              <text class="svg-small" x="70" y="246" fill="#9cc0ff">[see] runs due today</text>
+              <text class="svg-small" x="70" y="270" fill="#9cc0ff">[see] count still unapproved</text>
+              <text class="svg-tiny" x="70" y="316" fill="#7fd6b0">DO</text>
+              <text class="svg-small" x="70" y="340" fill="#7fd6b0">[do] open who is missing</text>
+              <text class="svg-small" x="70" y="366" fill="#7fd6b0">[do] mark the run ready</text>
+              <text class="svg-small" x="70" y="392" fill="#eec877">[do] chase an approver</text>
+              <rect class="svg-node" x="520" y="238" width="200" height="120" rx="14"/>
+              <text class="svg-label" x="542" y="278">Unapproved</text>
+              <text class="svg-label" x="542" y="300">timesheets</text>
+              <text class="svg-tiny" x="542" y="330" fill="#9cc0ff">a second place</text>
+              <path d="M326 336 C 430 336 430 298 520 298" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#bbGreen)"/>
+              <path d="M326 392 C 400 392 430 418 452 438" fill="none" stroke="#e7b85c" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#bbAmber)"/>
+              <circle cx="470" cy="446" r="7" fill="none" stroke="#e7b85c" stroke-width="2"/>
+              <text class="svg-small" x="360" y="470" fill="#eec877">chase an approver — no place to lead to yet</text>
+              <text class="svg-small" x="360" y="492" fill="#eec877">the dangling line is the most useful thing so far</text>
+            </g>
+
+            <!-- DIAGRAM 6: THE UNHAPPY PATHS -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="40" y="60">Step 4 · Walk the wrong paths</text>
+              <text class="svg-title" x="40" y="100">Read it, then break it.</text>
+              <rect class="svg-node" x="46" y="150" width="300" height="272" rx="16"/>
+              <text class="svg-label" x="70" y="186">Payroll run checklist</text>
+              <text class="svg-small" x="70" y="222" fill="#6f7d90">[see] runs due today</text>
+              <text class="svg-small" x="70" y="246" fill="#6f7d90">[see] count still unapproved</text>
+              <rect x="66" y="262" width="264" height="30" rx="7" fill="#3a3121" stroke="#e7b85c" stroke-width="1.4"/>
+              <text class="svg-small" x="78" y="282" fill="#eec877">[see] empty: nothing unapproved</text>
+              <text class="svg-small" x="70" y="342" fill="#6f8f80">[do] open who is missing</text>
+              <rect x="240" y="326" width="94" height="24" rx="7" fill="#3a201c" stroke="#ee795e" stroke-width="1.3"/>
+              <text class="svg-tiny" x="287" y="342" text-anchor="middle" fill="#f2a08a">permission</text>
+              <text class="svg-small" x="70" y="380" fill="#6f8f80">[do] mark the run ready</text>
+              <rect x="240" y="364" width="94" height="24" rx="7" fill="#3a201c" stroke="#ee795e" stroke-width="1.3"/>
+              <text class="svg-tiny" x="287" y="380" text-anchor="middle" fill="#f2a08a">permission</text>
+              <rect class="svg-node" x="520" y="176" width="200" height="110" rx="14"/>
+              <text class="svg-label" x="542" y="216">Unapproved</text>
+              <text class="svg-label" x="542" y="238">timesheets</text>
+              <path d="M540 286 C 540 372 346 372 346 320" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="9 8" marker-end="url(#bbCoral)"/>
+              <text class="svg-small" x="360" y="410" fill="#f2a08a">no drawn way back to the checklist</text>
+              <text class="svg-small" x="46" y="462">Empty state, permissions that are not theirs, and</text>
+              <text class="svg-small" x="46" y="484" fill="#f2a08a">a missing return path — all found by walking it.</text>
+            </g>
+
+            <!-- DIAGRAM 7: THE LEAST-PRIVILEGED ROLE -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="40" y="60">Step 5 · The least-privileged role</text>
+              <text class="svg-title" x="40" y="100">Redraw it for the manager.</text>
+              <g opacity=".5">
+                <rect class="svg-node" x="40" y="168" width="248" height="300" rx="16"/>
+                <text class="svg-label" x="62" y="204">Admin</text>
+                <text class="svg-small" x="62" y="244" fill="#9cc0ff">[see] runs due</text>
+                <text class="svg-small" x="62" y="272" fill="#9cc0ff">[see] unapproved</text>
+                <text class="svg-small" x="62" y="316" fill="#7fd6b0">[do] open who is missing</text>
+                <text class="svg-small" x="62" y="344" fill="#7fd6b0">[do] mark the run ready</text>
+              </g>
+              <path class="svg-line" d="M296 318 H352" marker-end="url(#bbArrow)"/>
+              <text class="svg-tiny" x="324" y="304" text-anchor="middle">redrawn</text>
+              <rect x="366" y="168" width="330" height="300" rx="16" fill="#241a34" stroke="#ae8bf3" stroke-width="2"/>
+              <text class="svg-label" x="390" y="204" fill="#d5c4f7">Line manager</text>
+              <rect x="560" y="182" width="112" height="26" rx="8" fill="#2f2447" stroke="#ae8bf3" stroke-width="1.2"/>
+              <text class="svg-tiny" x="616" y="199" text-anchor="middle" fill="#c3a7f7">a role copy</text>
+              <line x1="390" y1="224" x2="672" y2="224" stroke="#5a4b78" stroke-width="1.2"/>
+              <text class="svg-small" x="390" y="264" fill="#9cc0ff">[see] unapproved for their team</text>
+              <text class="svg-small" x="390" y="292" fill="#9cc0ff">[see] runs due</text>
+              <text class="svg-small" x="390" y="336" fill="#7fd6b0">[do] open who is missing</text>
+              <text class="svg-small" x="390" y="378" fill="#7d8a80" text-decoration="line-through">[do] mark the run ready</text>
+              <rect x="576" y="362" width="104" height="24" rx="7" fill="#33261f" stroke="#e7b85c" stroke-width="1.2"/>
+              <text class="svg-tiny" x="628" y="378" text-anchor="middle" fill="#eec877">not theirs</text>
+              <text class="svg-small" x="40" y="500">Fewer affordances is a finding. Delegation raises the same question.</text>
+            </g>
+
+            <!-- DIAGRAM 8: FLAG, DON'T FILL -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="40" y="60">Step 6 · Flag, don't fill</text>
+              <text class="svg-title" x="40" y="100">Mark the gap. Leave it open.</text>
+              <rect class="svg-node" x="46" y="160" width="252" height="180" rx="16"/>
+              <text class="svg-label" x="70" y="196">Payroll run checklist</text>
+              <line x1="70" y1="212" x2="274" y2="212" stroke="#3e4c42" stroke-width="1.2"/>
+              <text class="svg-small" x="70" y="248" fill="#6f8f80">[do] open who is missing</text>
+              <text class="svg-small" x="70" y="284" fill="#eec877">[do] chase an approver</text>
+              <path d="M298 280 C 336 280 344 258 360 250" fill="none" stroke="#e7b85c" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#bbAmber)"/>
+              <path d="M388 226 L414 274 L362 274 Z" fill="none" stroke="#e7b85c" stroke-width="2.5"/>
+              <text x="388" y="268" text-anchor="middle" fill="#eec877" font-family="Inter, sans-serif" font-size="20" font-weight="800">!</text>
+              <text class="svg-tiny" x="388" y="296" text-anchor="middle" fill="#eec877">WARNING</text>
+              <text class="svg-small" x="470" y="150" fill="#eec877">three candidate readings — none chosen</text>
+              <rect x="470" y="168" width="252" height="42" rx="10" fill="none" stroke="#e7b85c" stroke-width="1.5" stroke-dasharray="6 5"/>
+              <text class="svg-small" x="486" y="194" fill="#eec877">a reminder screen?</text>
+              <rect x="470" y="224" width="252" height="42" rx="10" fill="none" stroke="#e7b85c" stroke-width="1.5" stroke-dasharray="6 5"/>
+              <text class="svg-small" x="486" y="250" fill="#eec877">nothing a person can observe?</text>
+              <rect x="470" y="280" width="252" height="42" rx="10" fill="none" stroke="#e7b85c" stroke-width="1.5" stroke-dasharray="6 5"/>
+              <text class="svg-small" x="486" y="306" fill="#eec877">a step nobody has decided?</text>
+              <text class="svg-small" x="46" y="392">Filled in with something plausible, it would read a week later</text>
+              <text class="svg-small" x="46" y="414">as a decision the team never made.</text>
+            </g>
+
+            <!-- DIAGRAM 9: THE FINISHED BREADBOARD -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="40" y="56">The finished breadboard</text>
+              <text class="svg-title" x="40" y="92">One sketch, three holes found.</text>
+              <rect class="svg-node" x="40" y="128" width="280" height="372" rx="16"/>
+              <text class="svg-label" x="62" y="162">Payroll run checklist</text>
+              <text class="svg-tiny" x="62" y="182" fill="#7fd6b0">(start)</text>
+              <line x1="62" y1="196" x2="298" y2="196" stroke="#3e4c42" stroke-width="1.2"/>
+              <text class="svg-tiny" x="62" y="224" fill="#8fb8ff">SEE</text>
+              <text class="svg-small" x="62" y="248" fill="#9cc0ff">[see] runs due today</text>
+              <text class="svg-small" x="62" y="272" fill="#9cc0ff">[see] count still unapproved</text>
+              <text class="svg-tiny" x="62" y="316" fill="#7fd6b0">DO</text>
+              <text class="svg-small" x="62" y="340" fill="#7fd6b0">[do] open who is missing</text>
+              <text class="svg-small" x="62" y="364" fill="#7fd6b0">[do] mark the run ready</text>
+              <text class="svg-small" x="62" y="388" fill="#eec877">[do] chase an approver</text>
+              <rect class="svg-node" x="520" y="128" width="210" height="118" rx="14"/>
+              <text class="svg-label" x="542" y="168">Unapproved</text>
+              <text class="svg-label" x="542" y="190">timesheets</text>
+              <text class="svg-tiny" x="542" y="220" fill="#9cc0ff">a second place</text>
+              <path d="M320 340 C 430 340 460 200 520 190" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#bbGreen)"/>
+              <text class="svg-tiny" x="430" y="300" text-anchor="middle" fill="#7fd6b0">valid</text>
+              <path d="M540 246 C 540 344 320 344 320 300" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="9 8" marker-end="url(#bbCoral)"/>
+              <text class="svg-small" x="360" y="414" fill="#f2a08a">no way back from the timesheet</text>
+              <path d="M320 388 C 372 388 396 412 414 430" fill="none" stroke="#e7b85c" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#bbAmber)"/>
+              <path d="M446 430 L470 474 L422 474 Z" fill="none" stroke="#e7b85c" stroke-width="2.2"/>
+              <text x="446" y="468" text-anchor="middle" fill="#eec877" font-family="Inter, sans-serif" font-size="16" font-weight="800">!</text>
+              <text class="svg-small" x="490" y="464" fill="#eec877">chase leads nowhere yet</text>
+              <text class="svg-small" x="40" y="536">A missing return, a role that cannot finish, an action with no destination.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 1 -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">01 · The sentence</span>
+            <h2 id="scene-1-title">A solution sentence, alone.</h2>
+            <p>A team lands on one line for its solution. <em>"A place where a payroll admin can see unapproved timesheets and chase them before the run locks."</em> It sounds finished. Ask two people to picture it and they picture different screens, and neither can start building.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 2 -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">02 · The notation</span>
+            <h2 id="scene-2-title">Three symbols, and nothing else.</h2>
+            <p>A breadboard names three things and stops. Places are anywhere a person can be. Affordances are what a person can see or do in a place, and connection lines say which action leads where. It is too coarse to show layout, and that is the point.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>Why it is worth ten minutes.</strong> A sentence like the one in scene 1 hides four questions — where the person starts, what they see, what they can do, and where each of those leads. Finding the one with no answer costs ten minutes here and a week after a wireframe. Note that breadboarding <em>carries</em> the framed problem from <code>problem-framing</code> rather than re-deriving it; the frame here is that payroll admins cannot tell, before the run locks, which timesheets are still unapproved.
+        </aside>
+
+        <!-- SCENE 3 -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">03 · The starting place</span>
+            <h2 id="scene-3-title">The first box.</h2>
+            <p>Start with the place the person is actually in when the problem happens, not a guess. In this example that is the payroll run checklist, where the admin works the day before lock. A solution that begins somewhere nobody visits is a solution nobody uses. This is the most skipped step and the most often wrong.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 4 -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">04 · What they see and do</span>
+            <h2 id="scene-4-title">Affordances fill the place.</h2>
+            <p>In every place, write what the person can see and what they can do. On the checklist the admin sees the runs due and a count of timesheets still unapproved. They can open the list of who is missing, and mark the run ready. A place with only actions has nothing to act on, and a place with only information is a dead end.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5 -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">05 · The lines</span>
+            <h2 id="scene-5-title">Connections drawn, one dangling.</h2>
+            <p>Every action has to lead somewhere. Open the list of who is missing leads to the unapproved timesheets, a second place. Chase an approver has no place to lead to yet, so its line ends in the air. That dangling line is the most useful thing the breadboard has found so far.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>What a place is and is not.</strong> A place is somewhere a person can be sent to, not a section of a screen or a state of a component. An empty list, a loading list, and a failed list are the same place showing different things, written as <code>[see]</code> affordances rather than promoted to new places.
+        </aside>
+
+        <!-- SCENE 6 -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">06 · Walk the wrong paths</span>
+            <h2 id="scene-6-title">The unhappy paths light up.</h2>
+            <p>Read it as the user, then walk the paths where things go wrong. When nothing is unapproved, the checklist needs something to show other than an empty box. When a manager without unlock rights lands here, half the actions are not theirs. And once the admin opens a timesheet, there is no drawn way back to the checklist.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 7 -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">07 · The least-privileged role</span>
+            <h2 id="scene-7-title">The place, redrawn for a manager.</h2>
+            <p>Redraw the starting place as the least privileged person who reaches it. A line manager can see the unapproved timesheets for their team but cannot mark the run ready. That version of the place has fewer affordances, and the gap is a finding, not a detail to smooth over. Delegation raises the same question, since someone chasing on another admin's behalf may need a place of their own.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 8 -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">08 · Flag, don't fill</span>
+            <h2 id="scene-8-title">The gap marked.</h2>
+            <p>Mark the chase-an-approver action with a warning rather than inventing where it goes. The line might need a reminder screen, or it might do nothing a person can observe, or it might be a step nobody has decided. Naming which of the three keeps an open question open. Filled in with something plausible, it would read a week later as a decision the team never made.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>The rest of the enterprise pass.</strong> Approval and hand-off, audit (where a person later reads what happened, which is itself a place), bulk and volume, what the place shows when the upstream system is stale, and the keyboard path including where focus lands after each connection line.
+        </aside>
+
+        <!-- SCENE 9 -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Your first move</span>
+            <h2 id="scene-9-title">The finished breadboard.</h2>
+            <p>The breadboard found three things the sentence hid. There is no way back from the timesheet, a line manager cannot finish the task, and chasing an approver leads nowhere yet. Take one solution sentence you are holding and write down the place the person starts. Then list what they can see and do there, and follow the first action that has nowhere to go.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>Where breadboarding sits in the chain.</strong> After <code>problem-framing</code>, before <code>shaping</code>, feeding a wireframe only once layout turns out to be the real question. A flag here becomes a <code>⚠</code> in <code>DIRECTIONS.md</code> and an automatic failure in shaping's fit check. The text breadboard is the artifact; a drawing is a copy of it, handed to <code>tldraw-skill</code> only after the words are settled.
+        </aside>
+      </div>
+    </section>
+
+    <section class="next-moves-section" aria-labelledby="next-moves-title">
+      <div class="next-moves-inner">
+        <p class="eyebrow">What a breadboard finds</p>
+        <h2 id="next-moves-title">Four holes a sentence hides.</h2>
+        <p class="next-moves-lede">Each one is cheap to find here and expensive to find after a wireframe. The names come from walking the breadboard as the user, not from the happy path.</p>
+        <div class="next-moves-grid">
+          <article class="next-move-card"><h3>The starting place</h3><p><strong>Most commonly skipped, most commonly wrong.</strong> A solution that begins somewhere nobody goes is a solution nobody uses.</p></article>
+          <article class="next-move-card"><h3>Actions with no destination</h3><p><strong>The place does not exist, the action does nothing observable, or a step is undecided.</strong> All three are worth saying out loud.</p></article>
+          <article class="next-move-card"><h3>Paths with no way back</h3><p><strong>A breadboard reads fine forwards</strong> and frequently has no return path. The missing return is a coral line, not a detail.</p></article>
+          <article class="next-move-card"><h3>Gaps</h3><p><strong>Anything the team can name but not describe gets a warning flag.</strong> An absence, not a risk — never filled with something plausible.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">Now breadboard your own sentence.</h2>
+        <p><strong>You can breadboard a solution sentence yourself.</strong> You know the three-element notation, you have watched it surface a missing return path, a role that cannot finish, and an action with no destination, and you leave with a first move you can make on your own sentence.</p>
+        <div class="final-equation"><span>Your sentence</span><span aria-hidden="true">→</span><span>the first line that dangles</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">The three findings, then the reader's first move</title>
+        <desc id="closing-diagram-desc">Three findings the breadboard surfaced — a missing return path in coral, a role that cannot finish in violet, and an action with no destination in amber — followed by a green box with the first move to make.</desc>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <rect x="44" y="60" width="612" height="76" rx="14" fill="#fdeee9" stroke="#ee795e" stroke-width="2"/>
+          <text x="70" y="90" font-size="11" fill="#b4462c" letter-spacing="1.3">MISSING RETURN PATH</text>
+          <text x="70" y="118" font-size="15" fill="#7d2f1c">No drawn way back from the timesheet to the checklist.</text>
+          <rect x="44" y="152" width="612" height="76" rx="14" fill="#efe7fb" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="70" y="182" font-size="11" fill="#5c3fa0" letter-spacing="1.3">A ROLE THAT CANNOT FINISH</text>
+          <text x="70" y="210" font-size="15" fill="#3f2a70">A line manager can see the timesheets but cannot mark the run ready.</text>
+          <rect x="44" y="244" width="612" height="76" rx="14" fill="#fbf1dc" stroke="#e7b85c" stroke-width="2"/>
+          <text x="70" y="274" font-size="11" fill="#8a6414" letter-spacing="1.3">AN ACTION WITH NO DESTINATION</text>
+          <text x="70" y="302" font-size="15" fill="#5f4610">Chasing an approver leads nowhere yet — flagged, not filled.</text>
+          <rect x="44" y="356" width="612" height="104" rx="16" fill="#e4f4ec" stroke="#63c99c" stroke-width="2"/>
+          <text x="70" y="388" font-size="11" fill="#2f7a5c" letter-spacing="1.3">YOUR FIRST MOVE</text>
+          <text x="70" y="416" font-size="15" fill="#1f5540">Write the place the person starts. List what they see and do.</text>
+          <text x="70" y="440" font-size="15" fill="#1f5540">Follow the first action that has nowhere to go.</text>
+        </g>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where breadboarding comes from.</h2>
+        <p class="sources-intro">The notation is Ryan Singer's. The enterprise pass, the failure-path walk, and the keyboard check are this library's additions, named as such.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>Shape Up, chapter 4</h3>
+            <p>Ryan Singer's places, affordances, and connection lines, and the argument for sketching at a fidelity too coarse to express layout. Breadboarding is Singer's; the article does not overstate the connection.</p>
+            <a href="https://basecamp.com/shapeup">Read Shape Up</a>
+          </article>
+          <article class="source-card">
+            <h3>This library's additions</h3>
+            <p>The enterprise classes — least-privileged role, delegation, approval and hand-off, audit, bulk and volume, system of record, keyboard path — the failure-path walk, and the keyboard check are this library's, not Singer's.</p>
+            <a href="../the-chain/the-handoff-is-the-interface.html">See where it sits in the chain</a>
+          </article>
+          <article class="source-card">
+            <h3>The skill and its notation</h3>
+            <p>The skill file and its notation reference define places, affordances, and connection lines, and the flag that keeps an open question open.</p>
+            <a href="../../skills/artifacts/breadboarding/SKILL.md">Read SKILL.md</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+
+  <footer>Breadboard Before You Draw It · An interactive explanation of the breadboarding skill</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        1: 'The sentence',
+        2: 'Three symbols',
+        3: 'Starting place',
+        4: 'See and do',
+        5: 'Connection lines',
+        6: 'Unhappy paths',
+        7: 'Least-privileged role',
+        8: 'Flag the gap',
+        9: 'Finished breadboard'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 09`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
