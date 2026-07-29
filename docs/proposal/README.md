@@ -35,22 +35,6 @@ Neither term travels well outside that method. "Pitch" invites selling, which is
 
 **`Still open` is what makes it worth reading.** The risks carried from the frame, the assumptions not yet verified, the parts left for the design phase to decide. A reader who later discovers a surprise that was known now will discount everything the same team writes afterwards. The uncomfortable one is the one worth including.
 
-## The prose pass
-
-Before the document is presented, it goes through an AI-slop pass. In most writing that is a
-style concern; here it is a traceability one. "Marks a pivotal moment", "research shows",
-"significantly faster", and trailing clauses like "reducing friction across the experience" are
-sentences that trace back to neither the frame nor the directions document. They are also how a
-proposal starts selling without anyone deciding to sell.
-
-The pass does not make the writing tidy. "From four screens to one" survives it unchanged;
-"improves the approval experience" is what that sentence becomes if it is edited for tone
-instead. Where a line reads as puffery because the number is missing, the number goes back to the
-frame or into `Still open` — it does not get invented.
-
-The pattern list is condensed from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop)
-(MIT), re-cut for a document that has to be traceable rather than persuasive.
-
 ## What it refuses
 
 The skill will not write a proposal when any of these is missing, and it says which:
@@ -63,6 +47,35 @@ The skill will not write a proposal when any of these is missing, and it says wh
 | An unresolved `⚠️` | Writing up an absence turns it into a promise. |
 
 A document that looks decision-ready gets treated as decision-ready, which is why there is no partial version "just to react to".
+
+## Voice, and the prose pass
+
+Step 7 applies the voice profile and then runs one slop pass over the finished prose.
+
+The profile governs sentences only — never a section, an order, or a claim. When a profile rule would
+make the document read as advocacy, the document wins. This is the one artifact in the library whose
+job is to be un-sold, and voice is the door selling comes back through.
+
+The slop pass earns its place here for the same reason. In most writing an AI-slop pass is a style
+concern; here it is a traceability one. "Marks a pivotal moment", "research shows", "significantly
+faster", and trailing clauses like "reducing friction across the experience" are sentences that trace
+back to neither the frame nor the directions document. They are also how a proposal starts selling
+without anyone deciding to sell — a concrete version of what the skill's anti-patterns already forbid
+in the abstract.
+
+The pass does not make the writing tidy. "From four screens to one" survives it unchanged; "improves
+the approval experience" is what that sentence becomes if it is edited for tone instead. Where a line
+reads as puffery because the number is missing, the number goes back to the frame or into `Still
+open` — it does not get invented.
+
+Neither pass may add, remove, or soften a claim. When one wants to, that is a finding about the
+proposal, not about the prose.
+
+The patterns live in the [`slop-check`](../slop-check/) utility, so `proposal`, `scrollytelling`, and
+anything added later edit against one list and one set of profile overrides. The skill keeps a short
+addendum of its own for what this document is stricter about: vague quantities, urgency language,
+unattributed claims, and calling the same thing four names. The list is condensed from Peter Yang's
+[`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT).
 
 ## Where it stops
 
