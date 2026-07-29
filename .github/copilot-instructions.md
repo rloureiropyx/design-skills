@@ -54,7 +54,11 @@ The skills form one chain, and each link is a document: `problem-framing` writes
 
 A downstream skill **carries** what an upstream one decided; it never re-derives it. When a downstream skill finds evidence that contradicts the frame, it sends that back rather than quietly restating the problem in new words.
 
-A fourth document sits beside the chain rather than inside it. `writing-style` writes `WRITING_STYLE.md` — how one person writes — and `slop-check`, `scrollytelling`, and `proposal` read it. It is user-owned and lives at `~/.copilot/writing-style/WRITING_STYLE.md` by default, because a file written inside the installed plugin directory is destroyed by `plugin update`. A project may override it with its own `WRITING_STYLE.md`, which wins on any rule it states.
+A fourth document sits beside the chain rather than inside it. `writing-style` writes `WRITING_STYLE.md` — how one person writes — and `slop-check`, `scrollytelling`, and `proposal` read it. It lives **in the project**, beside `FRAMED_PROBLEM.md`, and exactly one profile applies at a time: there is no merging and no precedence chain. `~/.copilot/writing-style/WRITING_STYLE.md` is a personal copy whose only job is to save repeating setup in the next project, read at setup time and when there is no project at all. Never write either inside the installed plugin directory, which `plugin update` replaces.
+
+That document separates what the writer **does** from what they are **going for**. Rules come from evidence — samples, a short exercise, or a transcript — and each quotes a line. The `## Intent` section holds the adjectives and aspirations and is not applied to a draft unless the profile records a decision saying so. When intent and habit disagree the skill surfaces it and the user chooses; averaging them produces a voice nobody has.
+
+A consumer that finds no profile asks once, offers a fast path, and proceeds without one if declined. It never blocks the artifact on setup.
 
 That document governs sentence-level voice and nothing else. It never changes a structure, an argument, or a claim — least of all in `proposal`, whose whole job is to be un-sold. When a voice rule and a document's structure conflict, the document wins and the skill says so rather than averaging them.
 

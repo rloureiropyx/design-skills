@@ -101,7 +101,7 @@ Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that fi
 
 Before saving, run two passes over the prose:
 
-1. **Voice.** Load `WRITING_STYLE.md` if one exists — the project's documentation directory or root first, then `~/.copilot/writing-style/WRITING_STYLE.md` — and apply it to the sentences. The profile governs sentence-level voice only. It never changes a section, an order, or a claim. When a profile rule would make the document read as advocacy, the document wins: this one is supposed to be un-sold, and voice is the door selling comes back through.
+1. **Voice.** Load `WRITING_STYLE.md` if one exists — the project's documentation directory, then the root — and apply its observed rules to the sentences. If there is none, say so in one line and offer `writing-style`; do not block the proposal on it. The profile governs sentence-level voice only. It never changes a section, an order, or a claim. When a profile rule would make the document read as advocacy, the document wins: this one is supposed to be un-sold, and voice is the door selling comes back through.
 2. **Slop.** Run the `slop-check` edit pass. The slop taxonomy is a concrete version of what the anti-patterns below already forbid in the abstract — importance puffery, fake-strong verbs, faux-insight setups and unnamed attribution are what "selling" looks like sentence by sentence.
 
 Neither pass may add, remove, or soften a claim. If either wants to, that is a finding about the proposal, not about the prose — say so and leave the sentence.

@@ -4,63 +4,91 @@ No article yet. These notes are the explainer.
 
 ## What it does
 
-Reads two or three things you have already written and turns them into `WRITING_STYLE.md` — a short
-document about how you write, which every other skill reads before it drafts prose you will publish.
+Turns evidence of how you write into `WRITING_STYLE.md` — a short document about your voice, which
+every other skill in the library reads before it drafts prose you will publish.
 
-It is set up once. After that it is invisible: `scrollytelling` loads it before writing scene text,
-`proposal` loads it before saving, `slop-check` loads it to know which of your habits it is not
-allowed to touch.
+It is set up once per project. After that it is invisible: `scrollytelling` loads it before writing
+scene text, `proposal` loads it before saving, `slop-check` loads it to know which of your habits it
+is not allowed to touch.
 
-## Why samples instead of "describe your style"
+## Two inputs, kept apart
 
-Because self-description is a weak input.
+The profile records **what you do** and **what you are going for**, separately, and never lets the
+second quietly become the first.
 
-Three findings point the same way. Personal style is mostly implicit, so it "is difficult to specify
-through prompts" — a writer asked to describe their voice reports what they aspire to rather than
-what they do ([Wang et al., 2025](https://arxiv.org/abs/2509.14543)). Demonstrations beat rule lists,
-and *retrieved* real samples beat generated ones ([Li et al., 2025](https://arxiv.org/abs/2503.05010)).
-And "clear, direct, approachable" is what everyone says, so it constrains nothing.
+**Evidence** is where rules come from — two or three things you have already written, a two-prompt
+exercise, or a voice note. Personal style is mostly implicit, so it "is difficult to specify through
+prompts": a writer asked to describe their voice reports what they aspire to rather than what they do
+([Wang et al., 2025](https://arxiv.org/abs/2509.14543)). Demonstrations beat rule lists, and
+*retrieved* real samples beat generated ones ([Li et al., 2025](https://arxiv.org/abs/2503.05010)).
 
-This is also why writing tasks are a fallback rather than the default. Writing on request is writing
-while observed. It produces your careful register, which is a real thing but is not your voice.
+**Intent** is the other half, and it is a different question. "Describe your writing" returns an
+aspiration wearing the costume of an observation. "What do you want a reader to walk away thinking?"
+returns a target, which is useful precisely because it is filed as one. Setup asks for three or four
+adjectives and pushes on each once — *direct* as against blunt, or as against long-winded? — because
+an adjective that is not contrasted with anything constrains nothing.
 
-The one rule people get wrong: the samples must be about **different subjects**, not just from
-different places. Content and style entangle in a writer's history, so three samples about the same
-project teach the model that project's vocabulary instead of your rhythm
+Where the two disagree, the profile says so and you decide once. If your samples hedge and you want to
+sound decisive, that is a choice, not a defect, and it gets recorded as a drafting rule. What the skill
+will not do is average them, which produces a voice nobody has.
+
+The one rule people get wrong on the evidence side: samples must be about **different subjects**, not
+just from different places. Content and style entangle in a writer's history, so three samples about
+the same project teach the model that project's vocabulary instead of your rhythm
 ([Zhang et al., 2025](https://arxiv.org/abs/2503.05213)).
+
+## If you do not write much
+
+Plenty of people have no writing corpus and no vocabulary for describing their own style. That is a
+supported path, not a degraded one.
+
+**Talk instead of typing.** Send a voice note or dictate, and the profile is built from the transcript.
+For a non-writer this is usually the better input: speech carries rhythm, vocabulary, directness,
+hedging, and what you do instead of a joke — the parts a writing task under observation flattens
+first. What it cannot give you is punctuation, formatting, or paragraph structure, so a profile built
+this way says so and leaves those rules out rather than inventing them.
+
+**Pick, do not describe.** When the profile is shown back, if you cannot say what is wrong, you get the
+same paragraph drafted two or three ways and one question: which sounds most like you, and which would
+you never send. Recognition is a much easier ask than description, and the rejection carries as much
+information as the pick.
 
 ## What the profile looks like
 
 Eight sections, about 120 lines total:
 
 - **Voice**, one paragraph — the part most likely to be the only part read
-- **What the writing is for** — from three questions asked at setup
-- **Signature moves**, three to five, each with a line quoted from a sample underneath it
+- **Intent** — the adjectives, what you would hate a reader to think, and every place your intent and
+  your evidence disagree, each with the decision you made about it
+- **Signature moves**, three to five, each with a line quoted from your evidence underneath it
 - **Do / Don't**, including the absences: what you never do
 - **Measurable defaults** — sentence-length band, person, contractions, hedging, em dashes, headings
 - **Slop-rule overrides** — the tics `slop-check` must leave alone
-- **Language coverage** — which languages the samples were in, and what does not transfer
-- **Asserted, not observed** — what you said you do that the samples do not show
+- **Language coverage** — which languages the evidence was in, and what does not transfer
+- **Revisions** — what was replaced, and when
 
 Two of those carry more weight than the rest.
 
 **Measurable defaults** is what makes the profile checkable. "Direct" cannot be verified in a draft.
 "Most sentences run 8-18 words" can.
 
-**Asserted, not observed** exists because the repo separates observations from claims everywhere
-else, and voice is no exception. It is not a lesser section — it is often where your intent lives,
-ahead of your current habits. It is separate so a later reader can tell which rules came from
-evidence.
+**Intent** is not applied by default. It exists so the gap between what you want and what you do stays
+visible instead of being smoothed into the rules — the same observations-versus-claims discipline the
+rest of the library uses, pointed at voice. Only the drafting rules you decided on under *Where this
+differs* change a draft.
 
 ## Where the file lives
 
-`~/.copilot/writing-style/WRITING_STYLE.md` by default. Your voice, every project, and it survives
-`copilot plugin update` — a file written inside the installed plugin directory would not, because
-that directory is replaced.
+**In the project**, beside `FRAMED_PROBLEM.md` — the documentation directory when there is one, the
+root otherwise. That is the file every consumer reads, and it sits with the rest of the project's
+context rather than in a global setting you cannot see from the repo.
 
-A project can override it with its own `WRITING_STYLE.md` beside `FRAMED_PROBLEM.md`. That is a
-project or client voice. It wins on every rule it states; anything it is silent about falls back to
-your file.
+A personal copy at `~/.copilot/writing-style/WRITING_STYLE.md` is offered at the end of setup. It has
+one job: so the next project starts from it instead of repeating the interview. It is a copy, not a
+link — editing one does not change the other — and nothing reads it while a project profile exists.
+Outside a project it is the only file there is.
+
+Neither path is inside the installed plugin directory, which `copilot plugin update` replaces.
 
 ## Why the cap
 
@@ -73,7 +101,9 @@ owner expects, and the reason it is worth writing down.
 
 ## What it costs
 
-Five minutes at setup, once. After that, one file read before each draft.
+Five minutes at setup if you have samples to hand, two if you answer the intent questions and talk
+through a voice note. Once per project, and less than that if you keep the personal copy. After that,
+one file read before each draft.
 
 The honest limit: models approximate personal style acceptably in structured formats and struggle
 with informal, idiosyncratic writing even when given samples
@@ -89,8 +119,8 @@ otherwise is selling.
 - Writing the piece. It is an input to drafting, not a drafting skill.
 - Company brand voice, editorial standards, or a design system's UX-writing rules. Those are
   organisational documents with owners and review; this is one person's habits.
-- Anyone who does not have two or three things they have already written. The fallback tasks work,
-  but they produce a weaker profile and the skill says so.
+- Anyone wanting a voice invented for them. It preserves what is there; with no evidence at all there
+  is nothing to preserve.
 
 ## Sources
 

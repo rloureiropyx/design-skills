@@ -29,11 +29,15 @@ The script header records both, and every scene is checked against them.
 
 Two utilities hook into Phase 1, and neither touches Phase 2.
 
-**The voice profile** loads after the goal and tone are set. `WRITING_STYLE.md`, if one exists, from
-the project or from `~/.copilot/writing-style/`. Tone and profile answer different questions: the tone
-decides the register, the profile decides what that register sounds like in this person's hands.
-`T1 Plain and direct` is a category; the profile is why your plain and direct does not read like
-anyone else's. When they genuinely conflict, the skill names it and picks one rather than averaging.
+**The voice profile** loads after the goal and tone are set — `WRITING_STYLE.md` from the project. If
+there is none, the skill asks before drafting rather than quietly proceeding: full setup, a two-minute
+version built from the intent questions and a voice note, or skip. A scrollytelling piece is published
+under your name, and a first draft written with no profile is a draft you rewrite by hand.
+
+Tone and profile answer different questions: the tone decides the register, the profile decides what
+that register sounds like in this person's hands. `T1 Plain and direct` is a category; the profile is
+why your plain and direct does not read like anyone else's. When they genuinely conflict, the skill
+names it and picks one rather than averaging.
 
 **The slop pass** runs over the TEXTO column of the draft script — the prose a reader sees — before
 the script is presented for approval. VISUAL and TRANSICIÓN are direction notes and are left alone,

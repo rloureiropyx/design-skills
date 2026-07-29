@@ -134,11 +134,13 @@ These two own neither a decision nor an artifact. They are called by the skills 
 
 #### Writing Style
 
-Reads two or three things you have already written and turns them into `WRITING_STYLE.md`: voice in a paragraph, three to five signature moves each with a line quoted from a sample, measurable defaults you can check a draft against, and the list of tics an editing pass must not remove.
+Turns evidence of how you write into `WRITING_STYLE.md`: voice in a paragraph, three to five signature moves each with a quoted line under it, measurable defaults you can check a draft against, and the list of tics an editing pass must not remove.
 
-It asks for real writing rather than adjectives, because self-description is the weakest input there is — personal style is mostly implicit and "difficult to specify through prompts". Prompted writing tasks are the fallback, since writing on request produces your careful register rather than your voice. The samples have to be about *different subjects*, not only from different places, or the profile learns the subject instead of the writer.
+It records two things separately — what you **do**, from evidence, and what you are **going for**, from a few contrasted adjectives. Self-description is a weak input, since personal style is mostly implicit and "difficult to specify through prompts", so rules only come from something you actually wrote or said. Intent is filed as intent. Where the two disagree you decide once, and the decision is recorded; the skill will not average them.
 
-Set up once. Saved to `~/.copilot/writing-style/WRITING_STYLE.md`, outside the plugin directory so `plugin update` cannot delete it. A project can override it with its own file, which wins on any rule it states.
+Three ways in, for people with different amounts of writing behind them: samples you already have, a two-prompt exercise, or a voice note when you would rather talk than type. The evidence has to cover *different subjects*, not only different places, or the profile learns the subject instead of the writer.
+
+Set up once per project, and saved there beside `FRAMED_PROBLEM.md`. A personal copy at `~/.copilot/writing-style/WRITING_STYLE.md` is offered so the next project does not repeat the interview. Neither path is inside the plugin directory, which `plugin update` replaces.
 
 Capped at about 120 lines, because instruction files past roughly 200 lines measurably reduce adherence — a profile that grows every session produces *less* consistent voice.
 

@@ -29,10 +29,13 @@ Work in the language of the draft.
 
 ## Read the voice profile first
 
-Before either mode, load `WRITING_STYLE.md` if one exists:
+Before either mode, load `WRITING_STYLE.md` if one exists. It lives in the project — the documentation
+directory, then the project root. Outside a project, fall back to
+`~/.copilot/writing-style/WRITING_STYLE.md`.
 
-1. the project's documentation directory, then the project root;
-2. `~/.copilot/writing-style/WRITING_STYLE.md`.
+Apply the profile's observed rules. Its `## Intent` section is what the writer is aiming for, not what
+they do, and this pass does not enforce aspirations — except where a drafting rule under *Where this
+differs* says to.
 
 **A pattern listed in that file's `## Slop-rule overrides` section is not a finding.** Not in edit
 mode, not in detect mode, not "flagged for awareness". If the writer's voice is em dashes and

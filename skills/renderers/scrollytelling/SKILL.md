@@ -44,13 +44,17 @@ All of it in one message. Four or five questions, then a draft — a long questi
 
 If the user picks a goal and tone that fight each other, say so and offer the nearest pair that works. Then do what they say.
 
-**Then load the voice profile.** Check for `WRITING_STYLE.md` — the project's documentation directory or root first, then `~/.copilot/writing-style/WRITING_STYLE.md`. If one exists, say so in one line and hold it while drafting.
+**Then load the voice profile.** Check for `WRITING_STYLE.md` in the project — the documentation directory, then the root. If one exists, say so in one line and hold it while drafting.
+
+**If there is none, ask before drafting.** A scrollytelling piece is written to be published under someone's name, and a first draft written without a profile is a draft they will rewrite by hand. Ask once, offer three options, and take the answer:
+
+> No writing-style profile in this project yet. Want to set one up before I draft? Full version is about five minutes — I read two or three things you've already written. Quick version is two minutes: a few questions about what you want to come across as, plus a voice note if you'd rather talk than type. Or skip it and I draft without one.
+
+Run `writing-style` if they take either option. Draft without one if they skip, and do not ask again in this session.
 
 The tone menu and the profile answer different questions and neither replaces the other. The tone decides the register — how much this piece hedges, how long its sentences run, whether it is allowed to be funny. The profile decides what that register sounds like in this person's hands. `T1 Plain and direct` is a category; the profile is why this writer's plain and direct does not read like anyone else's.
 
 When a profile rule contradicts the chosen tone, name the conflict and pick one, in half a line. Do not average them.
-
-If no profile exists, draft without one. Mention once that `writing-style` can build one in about five minutes, and drop it if they do not take it up.
 
 ### 2. Propose a draft script — never a blank page
 
