@@ -1,76 +1,82 @@
 # Scene Script — Frame Before You Design
 
-**Opening tension:** How can a designer avoid building a convincing answer to the wrong problem—even after the project is already underway?
+**Goal:** G1 — explain how something works. The reader ends up able to describe the mechanism `problem-framing` runs.
 
-**Top identification:** Present `problem-framing` immediately as a product design skill before introducing the tension.
+**Tone:** T1 — plain and direct. Short sentences, no metaphor unless it does real work.
 
-**Final payoff:** The reader understands that `problem-framing` does not produce a solution. It turns a fuzzy initiative into a traceable `Framed Problem` and decides whether the work is ready for directions, needs evidence, must be reframed, can continue, or should stop.
+**Opening tension:** A request arrives already phrased as a solution. What does `problem-framing` do to keep a team from designing a good answer to a problem no one has confirmed?
 
-**Audience:** Product designers and product managers. They understand briefs, research, and product design processes, but do not need prior knowledge of Shape Up or agent skills.
+**Top identification:** The hero identifies `problem-framing` as a product design skill and names its one output, `FRAMED_PROBLEM.md`, before the first scene.
+
+**Final payoff:** The reader can describe the loop end to end: read the record, sort the evidence, recover an episode, test the cause, compare frames, gate the evidence, draw the boundary, and hand `FRAMED_PROBLEM.md` to `shaping`. The skill produces a framed problem, not a solution, and framing buys time to explore rather than approval to build.
+
+**Audience:** Product designers and product managers. They know briefs, research, and metrics. They do not need prior knowledge of Shape Up or agent skills.
 
 **Estimated reading time:** 4–5 minutes.
 
-**Proposed pattern:** Sticky graphic + discrete steps. A persistent diagram evolves in place as the reader scrolls. The opening and closing use full-viewport compositions.
+**Proposed pattern:** Sticky graphic + discrete steps. One inline SVG system diagram builds part by part as the reader scrolls; each scene switches it to one new state. Static prose bridges carry the longer explanation between scroll beats.
 
 | # | VISUAL — diagram state | COPY — 2–4 short sentences | TRANSITION |
 |---|---|---|---|
-| 0 · The trap | **Foundation diagram.** A polished “AI payroll-readiness dashboard” block sits on a cracked foundation labeled “Problem?”. Everything beyond the block fades into darkness. | **A solution can look right and still solve the wrong problem.** The further a project advances, the harder that becomes to admit. `problem-framing` pressure-tests the problem before design moves forward. | — |
-| 1 · Two entry points | **Process map.** Two nodes—“New project” and “In-progress project”—flow into a central `problem-framing` lens. A single output node, `Framed Problem`, waits on the other side. | The skill can enter at the beginning or in the middle of the work. A new project brings a raw idea; an active project brings decisions, design explorations, feedback, and accumulated cost. Both need a problem frame grounded in evidence. | The dashboard shrinks into one input among many; the two routes draw themselves toward the lens. |
-| 2 · What do we already know? | **Evidence classification diagram.** Briefs, notes, metrics, research, prototypes, and decisions flow into five color-coded lanes: Observation, Interpretation, Assumption, Commitment, and Preference. | Before asking the designer anything, the skill reads the available project record. Its first internal question is: **What do we know, and what are we merely explaining or assuming?** Facts found in the documents are not asked again. | Project artifacts enter the lens and sort into five animated evidence lanes. |
-| 3 · Question 1: What actually happened? | **Baseline-story flow diagram using an SMB HCM case.** SMB HR admin → Finalize payroll → Final review → Changes missing → Chases managers → Payroll delayed. | The request says, “Add an AI payroll-readiness dashboard.” The skill asks: **Tell me about the most recent payroll run that was delayed. What was the HR admin trying to complete, what was missing, what did they do next, and what was the consequence?** One concrete episode replaces a feature request. | The evidence lanes collapse into the payroll episode; the exact stopping point gains focus. |
-| 4 · Question 2: Why do we think that is the cause? | **Causal-layer diagram.** Symptom: payroll approval is delayed. Initial explanation: HR needs better visibility. Competing cause: employee changes arrive late. One question points at the unsupported causal link. | The skill offers a working hypothesis, then asks: **What makes us think a dashboard would prevent the delay?** In five workflow interviews, HR admins understood the payroll summary, but four still delayed approval while chasing missing employee changes from managers. The causal map changes before the next question is chosen. | The “visibility” link weakens and “missing changes surface late” becomes the stronger explanation. |
-| 5 · Question 3: What changed since kickoff? | **Project review timeline.** Original frame → AI dashboard concept → Five workflow interviews → Missing-input blocker discovered → Current understanding. | For work already in progress, the skill asks: **What have we learned since the original brief, and which decisions does that learning reopen?** The concept still counts as work completed, but the time spent creating it is not evidence that visibility was the real problem. | The causal map stretches into a timeline; new evidence preserves or breaks earlier decisions. |
-| 6 · Compare the possible problems | **Frame-comparison matrix grounded in the HCM example.** “HR lacks visibility,” “Missing changes surface late,” “Managers submit changes late,” and “Inputs lack clear owners” are compared across evidence, leverage, ownership, openness, and boundary. | The same payroll delay can support several problem statements, and each one leads to a different design space. The skill explains the alternatives, recommends the one best supported by observations, then asks: **Which explanation fits what we saw—and what evidence would make us choose another?** This is how the team avoids treating its first story as fact. | Four concrete versions of the payroll-readiness problem appear side by side; the evidence-backed choice is highlighted. |
-| 7 · What evidence would change the choice? | **Decision-gate diagram.** Assumption tokens move through four checks, then branch into “Metrics tool” and “Research library.” Example query cards show payroll stalls and a search for missing-change episodes. | The skill asks for evidence only when it can change the selected problem. It proposes the exact input: **In metrics, where do SMB payroll runs stall, and which missing-change types appear beforehand? In research, what episodes mention chasing managers, unconfirmed changes, or late payroll approval?** It also states what result would support or weaken the frame. | The chosen frame exposes one critical uncertainty; the tool-specific questions appear beneath it. |
-| 8 · Which slice belongs in this project? | **Scope-boundary diagram.** Inside: SMB HR admins, the 48 hours before payroll approval, missing-change readiness, on-time approval. Outside: payroll calculation, every manager workflow, and the whole HCM platform. | The team may not need—or be able—to solve the whole problem. The skill asks: **Which meaningful part can this project influence now, and what must stay outside?** It defines a chosen slice without prescribing how to solve it. A static bridge explains the HCM example, defines the time budget as two weeks of fixed build time, and shows that an optional undefined boundary must include the concrete consequence of leaving it open. | The evidence gate expands into a boundary box; example elements move inside or outside. |
-| 9 · Is the problem ready for directions? | **Status tree.** The boundary box becomes `FRAMED_PROBLEM.md` and branches to seven possible statuses. A “Problem reference” label remains attached to the document. | **Direction is the next phase:** explore distinct solution hypotheses as breadboards, evaluate their trade-offs, and pick one bounded direction—without producing a hi-fi design. The skill first checks that the critical problem questions were answered or explicitly left open. The confirmed `Framed Problem` becomes the reference point for shaping and later work. | The bounded example becomes a persistent project document; the next-step branches unfold. |
-| 10 · Direction the solution direction | **Handoff diagram.** `FRAMED_PROBLEM.md` moves through a `Direction` gate while remaining connected to the project. Each possible mechanism appears as a breadboard. | **Design does not begin by choosing an answer. It begins by remembering the questions that make an answer meaningful.** In Direction, each hypothesis becomes a rough sketch showing its mechanism, essential elements, relationships, and key interactions. The team evaluates the alternatives and picks one bounded direction while the framed problem judges every decision. | The Direction gate opens; the full system resolves into one final relationship: “Framed problem → Rough solution sketches.” |
+| 0 · The stakes | **Straight-line diagram.** A request card, `AI payroll-readiness dashboard`, flows by a single arrow into a finished solution block. The block rests on a base labelled `Problem?` drawn in coral. | A request arrives asking for an AI payroll-readiness dashboard. You could design it well and still solve a problem no one confirmed. The further the work goes, the more a wrong problem costs to correct. Problem framing tests the problem before design starts. | — (opening state) |
+| 1 · Two ways in | **Pipeline map.** Three entry nodes, `New project`, `In-progress project`, and `Quick frame`, converge on one framing loop. A single output node, `FRAMED_PROBLEM.md`, sits on the far side. | The skill starts a new project from a raw request, or picks up a project already underway. A third path, the quick frame, fits small solo work that still needs its problem stated. Every path runs the same loop and ends in one file, `FRAMED_PROBLEM.md`. | The request card shrinks into one input; the three routes draw themselves toward the loop and the output appears. |
+| 2 · Read before asking | **Evidence ledger.** Briefs, notes, metrics, and past decisions flow into five colour-coded lanes: observation, interpretation, assumption, commitment, and preference. Observation quotes are boxed as source material. | Before asking the designer anything, the skill reads the briefs, notes, metrics, and prior decisions already on record. It sorts each claim into five lanes: observation, interpretation, assumption, commitment, and preference. A quote from a real person is the ground truth, and every other line is read as an interpretation of it. | The loop opens; project documents enter and sort into the five lanes. |
+| 3 · Frame drift | **Timeline compare.** Three stacked bars, `Original brief`, `Work since`, and `New evidence`, align on one axis. Coral markers flag the gaps between them. | When work is already underway, the skill lines up the original brief, the work done since, and the evidence gathered along the way. It names each gap as drift: the problem changed, scope crept, or the statement now exists to justify a solution already chosen. Eight weeks of screens are sunk cost, not evidence the frame was right. | The ledger folds into a timeline; the drift markers light along the gaps. |
+| 4 · One real episode | **Baseline-story flow.** Five stages in a row: `HR admin finalizes payroll` → `changes missing` → `chases managers` → `approval slips` → `outcome`. The outcome node is drawn in green. | The skill replaces the feature label with one concrete episode. An SMB HR admin finalizes payroll, finds employee changes missing, chases managers, and approval slips a day. It then fixes the outcome the frame is measured by, an observable change someone outside the team could notice. | The timeline resolves into a single left-to-right story; the outcome node settles into place. |
+| 5 · Test the cause | **Causal map.** A symptom node, `approval delayed`, links up to two candidate causes: `needs better visibility` and `changes arrive late`. The visibility link thins as the other thickens. | The first explanation is usually the one that matches what the team already wanted to build. The skill offers a hypothesis, then asks what makes anyone think it is the cause. The dashboard would show the summary, but the delay comes from changes that arrive late. The weaker link gives way to the stronger one. | The story lifts into a two-branch cause map; one link fades while the other strengthens. |
+| 6 · Compare the frames | **Frame-comparison matrix.** Four candidate problems form rows; `evidence`, `leverage`, `ownership`, and `boundary` form columns. The recommended row is outlined in violet. | One payroll delay can support several different problems, and each points to a different design space. The skill writes three to five and compares them on evidence, leverage, ownership, and boundary. It recommends the one the observations support and keeps the rejected ones with the evidence that would revive them. | The single cause map fans into four rows; the chosen row gains its violet outline. |
+| 7 · Gate the evidence | **Decision gate.** An assumption token passes through four checks, then branches to two request cards, `Metrics` and `Research library`. A third branch, `Accept as risk`, drawn in amber, loops back. | The skill asks for research or metrics only when the answer could change the chosen frame. An assumption has to pass four tests: it matters, the evidence is weak, more evidence is reachable, and the result would move the decision. Only then does it request one exact query, in metrics or in the research library. Otherwise it records the risk and moves on. | The chosen row exposes one assumption; the assumption runs the four checks and the branches appear. |
+| 8 · Draw the boundary | **Scope box.** An inner box holds `user`, `moment`, `slice now`, `time budget`; an outer band holds `out of scope` and `major risks`. A working question sits below in green. | The team may not be able to solve the whole problem at once. The skill draws the boundary: the user, the moment, the slice handled now, and what stays out. It records the time budget as fixed build time, alongside the risks that could destabilize the work. From that boundary comes one working question, open to several answers. | The gate expands into a boundary box; included parts move inside, excluded parts move to the band, and the question forms beneath. |
+| 9 · Hand it off | **Status handoff.** The boundary box becomes a `FRAMED_PROBLEM.md` document tagged with one of seven statuses. An arrow carries it to a `shaping` node, which shows two or three direction sketches. | The confirmed frame is written to `FRAMED_PROBLEM.md` and tagged with one of seven statuses. Ready-for-directions hands the file to `shaping`, which explores two or three solution directions and picks one. Framing buys the team time to explore solutions, not approval to build. The file stays the reference every later decision is checked against. | The boundary box becomes the document; the status tag sets and the handoff arrow reaches `shaping`. |
 
 ## Static prose bridges
 
-- Between scenes 1 and 2: a short explanation of an agent skill and the meaning of `Framed Problem`.
-- The introduction establishes the skill as the designer's memory for critical pre-solution questions and the output as the project's framed problem.
-- The same SMB HCM payroll-readiness example runs through scenes 3–9 so every question changes one visible part of the problem.
-- After scene 9: an expandable diagram of the complete `Framed Problem` structure received by Direction.
-- After scene 9: a visible seven-card guide explains the action attached to every next-move status: Ready for directions, Revisit directions, Continue current frame, Evidence needed, Needs reframing, Split, and Stop.
-- Before the closing: a visible, document-style example consolidates the SMB HCM case into a complete `Framed Problem`, including status, source request, baseline story, chosen frame, user and outcome, evidence, working question, boundaries, major risk, and the Direction handoff.
-- After the closing: a compact, non-linear whole-picture diagram groups `Problem Framing`, `Direction`, `Evaluate and Pick`, and `Proposal` inside a two-by-two **Direction Setting** zone. An approved proposal flows downward into **Design**, where detailed interaction work, validation, and implementation guidance happen. The grouping explains that the earlier phases prevent drift rather than perform detailed design.
+- Before scene 0, in `section.intro`: a plain-prose definition of an agent skill and of a `Framed Problem`, for a reader who will never open `SKILL.md`. It states that the skill is the designer's memory for the questions that have to be answered before anyone designs, and that its only output is a written problem with the evidence under it.
+- Between scenes 2 and 3: a short note that the same SMB HCM payroll-readiness example runs through scenes 4–9, so each question changes one visible part of the same problem.
+- After scene 3: one sentence marking scene 3 as the in-progress path only; a new project skips the drift check and goes straight to the episode.
+- After scene 7: a seven-card guide naming the action attached to each status — ready-for-directions, revisit-directions, continue-current-frame, evidence-needed, needs-reframing, split, and stop.
+- Before scene 9's payoff: a document-style example that consolidates the SMB HCM case into a full `FRAMED_PROBLEM.md`, showing status, source request, baseline story, chosen frame, users and outcome, evidence, working question, boundaries, major risks, and the handoff line.
+- In `section.whole-picture`, after the closing: a compact non-linear diagram placing `problem-framing` before `shaping` and `proposal`, with an approved proposal flowing into Design. It states that these earlier steps keep later work from drifting rather than doing the detailed design themselves, and links the sibling articles.
 
 ## Diagram system
 
-The article will use native SVG diagrams rather than decorative imagery. Every diagram will have a text equivalent in the scene copy.
+Native inline SVG only, one `<g class="diagram-state">` per scene, exactly one visible at a time. Editorial systems-diagram language: labelled boxes, visible connections, restrained depth, no decorative gradients. Every diagram has its full meaning carried in the scene copy, so the graphic can be marked `aria-hidden` if a label cannot survive the mobile scale.
 
-1. **Pipeline map:** new and in-progress entry paths through `problem-framing` to a `Framed Problem`.
-2. **Evidence ledger:** five semantic lanes for observations, interpretations, assumptions, commitments, and preferences.
-3. **Causal map:** baseline story plus symptom → interpretation → plausible cause.
-4. **Project review timeline:** original frame compared with intervening decisions, work, and new evidence.
-5. **Problem comparison:** concrete alternative explanations compared across decision criteria.
-6. **Evidence gate:** four tests controlling whether to request a targeted input from the metrics tool or research library.
-7. **Scope boundary:** included problem slice, exclusions, constraints, time budget, and major risks.
-8. **Status tree and handoff:** seven possible outcomes leading—or deliberately not leading—to Direction.
+1. **Straight-line diagram** — request to finished solution on an unverified base.
+2. **Pipeline map** — three entry paths through the framing loop to one `FRAMED_PROBLEM.md`.
+3. **Evidence ledger** — five semantic lanes for observation, interpretation, assumption, commitment, and preference.
+4. **Timeline compare** — original brief, work since, and new evidence with drift gaps flagged.
+5. **Baseline-story flow** — a single concrete episode from stuck point to outcome.
+6. **Causal map** — one symptom against two competing causes.
+7. **Frame-comparison matrix** — candidate problems scored across decision criteria.
+8. **Decision gate** — four assumption checks branching to metrics, research, or accepted risk.
+9. **Scope box** — included slice, exclusions, time budget, risks, and the working question.
+10. **Status handoff** — `FRAMED_PROBLEM.md`, its status, and the arrow to `shaping`.
 
 ## Art direction
 
-- **Central visual metaphor:** a lens that turns scattered project signals into a clear, evidence-backed frame.
-- **Graphic language:** editorial systems diagrams, clear labels, visible connections, restrained depth, and no decorative illustration.
-- **Color semantics:** observations in cool green, interpretations in blue, assumptions in amber, commitments in violet, and drift alerts in coral.
-- **Motion:** discrete 0.4–0.8 second transitions using transform and opacity; no scrolljacking.
-- **Mobile:** a compact diagram remains above each text card and preserves the active state at approximately 375px width.
-- **Accessibility:** diagrams reinforce information already present in the text; reduced motion switches states instantly.
+- **Graphic language:** one persistent system diagram that builds part by part, not a set of separate illustrations. Labels stay in the reader's own terms.
+- **Colour semantics (shared across the library):** blue for narrative and input, green for a settled or valid state, violet for a decision or approval, coral for failure and drift, amber for a caution or pending state, and line/slate for structure. No colour used decoratively when it carries one of these meanings.
+- **Lane colours in scene 2:** observation green, interpretation blue, assumption amber, commitment violet, preference coral — the bias the method guards against.
+- **Motion:** discrete 0.4–0.8s transitions on transform and opacity only. No scrolljacking. Reduced motion switches states instantly.
+- **Mobile:** a compact diagram pins above each text card and preserves the active state at ~375px width; the text scrolls underneath it.
+- **Accessibility:** the diagram reinforces what the copy already says; nothing is conveyed by motion alone.
 
 ## Beat validation
 
-- Every scene introduces one concept and changes the diagram state.
-- The opening states the risk of solving the wrong problem.
-- The closing connects the `Framed Problem` to Direction without prescribing a solution.
-- The narrative covers both new and in-progress projects.
-- Every scene stays below four sentences.
-- All reader-facing copy, labels, controls, and diagram annotations will be in English.
+- Scene 0 states the tension on the mechanism's stakes, matching G1 (it opens on what the skill is for, not on a claim to argue).
+- Every scene introduces one concept and changes the diagram to one new state; no two adjacent scenes share a state.
+- Scene 9 pays off scene 0 and ends on a concrete sentence about the file, not a metaphor or a recap.
+- Both entry branches are covered: new-project flow in scenes 4–9, in-progress drift in scene 3.
+- Current vocabulary throughout: `directions` and `shaping`, `time budget` as fixed build time, `proposal` as the sign-off document. No "shape", "appetite", "pitch", or "Direction phase".
+- Every scene stays at four sentences or fewer. All reader-facing copy, labels, and annotations are in English.
+- The prose checklist in `references/prose.md` was run over every COPY cell: no colon reveals, no dramatic fragmentation, no throat-clearing or faux-insight openers, no importance puffery, no weasel attribution, one name per recurring object (`the skill`, `the frame`, `FRAMED_PROBLEM.md`), no em dashes in scene text, no banned words, and no mid-sentence bold.
 
 ## Source section
 
-The article closes with method provenance:
+The article closes with method provenance, real links only:
 
-- Warren Berger, [*A More Beautiful Question*](https://amorebeautifulquestion.com/) — `Why → What if → How` and questions as a path to action.
-- Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup) — a product-development method created at Basecamp; shaping defines a rough direction and fixed build-time budget, adapts the solution to the available time, and makes boundaries, risk consequences, and exclusions explicit.
-- Matt Pocock, [`grill-with-docs`](https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md) — one question at a time, recommended answers, project-context inspection, and persistent shared understanding.
+- Warren Berger, [*A More Beautiful Question*](https://amorebeautifulquestion.com/) — `Why → What if → How` as a path from questioning a situation to an evidence-producing next step.
+- Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup) — the pre-build phase that sets a rough direction and a fixed build-time budget, adapts the solution to the time, and makes boundaries, risks, and exclusions explicit.
+- Ryan Singer, [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) and his writing on [framing](https://www.ryansinger.co/framing/), [what research is for](https://www.ryansinger.co/research-gives-us-the-problem-not-the-answer/), [deciding between options](https://www.ryansinger.co/discovery-how-to-decide/), and [business imperatives](https://www.ryansinger.co/matching-problems-to-business-imperatives/) — quoted source material as ground truth, the *who said this and where* test, the options landscape, and framing as a commitment to spend exploration time rather than to build.
+- Matt Pocock, [`grill-with-docs`](https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md) — one question at a time, a recommended answer, project-context inspection before asking, and shared understanding kept in the project.
