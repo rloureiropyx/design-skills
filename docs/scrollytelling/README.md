@@ -25,9 +25,9 @@ This was added because the alternative is worse: without a stated goal, a script
 
 The script header records both, and every scene is checked against them.
 
-## Voice, and the slop pass
+## Voice, and the prose pass
 
-Two utilities hook into Phase 1, and neither touches Phase 2.
+Two things hook into Phase 1, and neither touches Phase 2.
 
 **The voice profile** loads after the goal and tone are set — `WRITING_STYLE.md` from the project. If
 there is none, the skill asks before drafting rather than quietly proceeding: full setup, a two-minute
@@ -39,14 +39,24 @@ that register sounds like in this person's hands. `T1 Plain and direct` is a cat
 why your plain and direct does not read like anyone else's. When they genuinely conflict, the skill
 names it and picks one rather than averaging.
 
-**The slop pass** runs over the TEXTO column of the draft script — the prose a reader sees — before
-the script is presented for approval. VISUAL and TRANSICIÓN are direction notes and are left alone,
-and so is any scene text you wrote yourself: the pass edits what the skill drafted, not what you
-contributed.
+**The prose pass** runs over the TEXTO column of the draft script — the prose a reader sees — before
+the script is presented for approval. Colon reveals, "it's not X, it's Y", faux-insight setups,
+stacked fragments, and the closing metaphor that substitutes for a payoff. A scene is 2–4 sentences,
+which is the length at which a draft reaches for a dramatic reveal instead of a sentence. The scroll
+is already the drama.
 
-That placement is the point. Phase 2 implements the approved copy verbatim, so an editing pass over
-built HTML would change text you already signed off, which is the gate this skill exists to hold. The
+The pass removes patterns, not voice. Restraint in a dry piece and a stated side in an opinionated one
+are tone choices, not slop, and anything listed in the profile's overrides section is this writer's
+voice and is left alone. VISUAL and TRANSICIÓN are direction notes and are skipped, and so is any
+scene text you wrote yourself: the pass edits what the skill drafted, not what you contributed.
+
+That placement is the point. It runs on the table rather than the built HTML, because a wording change
+after the article exists means editing markup and re-running the viewport matrix — and because Phase 2
+implements the approved copy verbatim, so a later pass would change text you already signed off. The
 copy gets cleaned while it can still be argued with, and what changed is reported alongside the draft.
+
+The pattern list is condensed from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop)
+(MIT), with Spanish equivalents added and the list re-cut for scene text.
 
 ## Its own gate, applied to itself
 

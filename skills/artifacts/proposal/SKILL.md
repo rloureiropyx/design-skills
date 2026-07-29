@@ -97,7 +97,7 @@ Completion criterion: nothing known to be uncertain is presented as settled.
 
 ### 7. Write and confirm
 
-Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document.
+Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document. Read `references/prose.md` as well: in this document the AI-slop patterns are a traceability problem, not a style one — puffery, unattributed claims, and invented consequences are exactly the sentences that trace back to nothing. Run its checklist over the draft before presenting.
 
 Before saving, run two passes over the prose:
 
@@ -108,7 +108,7 @@ Neither pass may add, remove, or soften a claim. If either wants to, that is a f
 
 Present it and ask for one thing: the decision. Go ahead, do not go ahead, or send it back with a named reason.
 
-Completion criterion: the document is saved, both passes have run, and the decision asked for is explicit.
+Completion criterion: the document is saved, both passes have run, no sentence in it exists only to make a paragraph land, and the decision asked for is explicit.
 
 ## Enterprise constraints to surface
 
@@ -148,15 +148,26 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - **Letting the voice profile change what the document says.** It governs how a sentence sounds.
   A rule that would make this read as advocacy loses to the document, and a pass that softens or
   strengthens a claim has stopped editing and started deciding.
+- **Puffery standing in for a fact.** "Marks a pivotal moment", "significantly faster", "research
+  shows" — each is a sentence that traces to nothing, and each one that survives makes the
+  traceable sentences around it look the same. Go back for the number or move it to `Still open`.
+- **Rotating the vocabulary.** Direction, then approach, then solution, then concept. A reader
+  deciding on one thing assumes four names mean four things, and asks which one they are
+  approving. Pick the word and repeat it.
+- **Smoothing a specific fact while editing.** "From four screens to one" becoming "improves the
+  approval experience" is what happens when the prose pass is run for tone instead of for slop.
+  The pass removes patterns; it does not make paragraphs tidy.
 
 ## Reference files
 
 - `templates/proposal.md` — the required `PROPOSAL.md` structure and where to save it. Read at step 7.
+- `references/prose.md` — the AI-slop patterns that produce untraceable sentences, the words to cut, and the checklist to run before presenting. Read at step 7, with the template.
 
 ## Method sources
 
 - Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup): the structure this document descends from — problem, appetite, solution, rabbit holes, no-gos — and the idea that time is fixed and scope moves.
 - Ryan Singer, [framing](https://www.ryansinger.co/framing/): the reason this is not called a pitch. In his current usage "pitch" is the raw request that arrives *before* framing. A pitch is something you win; this is something people read and decide on.
 - Ryan Singer, [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) — `framing-doc` and `kickoff-doc`: carrying the frame forward instead of re-deriving it, and the test that every sentence should be traceable to something someone actually said or decided.
+- Peter Yang, [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT): the pattern list behind `references/prose.md`, condensed and re-cut for a document that has to be traceable rather than persuasive.
 
 The enterprise sign-off, audit, and accessibility checks are additions, not Singer's.

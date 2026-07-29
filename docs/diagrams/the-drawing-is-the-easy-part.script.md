@@ -2,96 +2,74 @@
 
 **Goal:** G2 — argue a position. The claim: a diagram fails before anything is drawn, so the tool was never the variable.
 
-**Tone:** T1 — plain and direct. Short sentences, no metaphor that isn't doing work, says "this is hard" when it is.
+**Tone:** T1 — plain and direct. Short sentences, no metaphor that isn't working, says "this is hard" when it is.
 
-**Opening tension:** A diagram everyone approved in the meeting and nobody used afterwards. The drawing was fine.
+**Opening tension:** A diagram everyone approved in the meeting and nobody opened again. The drawing was fine.
 
-**Top identification:** Present `diagrams` immediately as the skill that decides what a diagram shows, before the tension.
+**Top identification:** The intro prose names `diagrams` as the skill that decides what a diagram shows before anything is drawn, so scene 1 can open straight on the claim.
 
-**Final payoff:** The reader accepts that intention, audience, scope and scale are the diagram, and that the render is the last and cheapest step. They leave with the eight moves and one usable test: show it to the person it was for.
+**Final payoff:** The reader accepts that intention, audience, scope and scale decide whether a diagram works, and that the render is the last and cheapest step. They leave with the eight moves and one test they can run today.
 
 **Audience:** Product designers, PMs and engineers who already make diagrams and assume the hard part is the tool. They have Figma, Miro, Mermaid and a whiteboard. They have never written down who a diagram was for.
 
-**Estimated reading time:** 4 minutes.
+**Estimated reading time:** 3 minutes.
 
-**Proposed pattern:** Sticky graphic + discrete steps throughout. Full-viewport composition for the opening and the closing.
+**Proposed pattern:** Sticky graphic + discrete steps throughout, with static prose bridges between sequences. Full-viewport composition for scene 1 and scene 7.
 
 | # | VISUAL — diagram state | COPY — 2–4 short sentences | TRANSITION |
 |---|---|---|---|
-| 1 · The claim | **A good drawing that did nothing.** A finished, tidy diagram sits centred and approved. It desaturates, and four unanswered questions surface beneath it: who is this for · what should they be able to do afterwards · what is deliberately out · how will they read it. | Everyone nodded at the diagram in the meeting. A week later nobody had used it. The drawing was fine — aligned, legible, spaced. It failed four decisions earlier, before anything was drawn. | Opens the sequence. |
-| 2 · The definition | **Two gates.** Candidates approach from the left — an org chart, a photographed whiteboard, a slide of boxes and arrows. Gate one asks *does it help someone?* Gate two asks *is it visually represented?* Most stall at the first. | A diagram is a visual representation that helps someone. Two conditions, both required, and the first one is where things fail. It has to help someone — even if that someone is you. Passing the second gate and failing the first is not a rendering problem. | The approved diagram shrinks into the queue of candidates. |
-| 3 · Intention | **One sentence with two blanks.** *The diagram helps [audience] to [do or understand or decide X].* The blanks fill in. Beside it, three alternatives light up and stay lit: a table, an email, one sentence. | Write that sentence before anything else. "Make a diagram" is a request for a medium, not an intention. The sentence has a second job: it tells you when a table, an email or a single sentence would do the job better. Sometimes the right answer is not a diagram. | The gates dissolve into the sentence. |
-| 4 · Audience | **The same subject, twice.** One version for the people who live the process — their words, their steps, shallow. One for the people who build it — system names, states, deeper. Neither is the reduced version of the other. | A diagram is only good in the eye of the beholder. Someone who lives a process and someone who builds it need different vocabulary and different depth. That is two diagrams, not one diagram at two zoom levels. Picking one audience is what makes every later decision decidable. | The sentence splits down the middle into two readers. |
-| 5 · Scope | **Covers / does not cover, then three layers.** A boundary line with items sorted either side. Behind it, three stacked bands — essentials, elaboration, context. Bands two and three dim to half. | Say what it covers and what it does not, out loud, before drawing. Then build in importance order: essentials first, then elaboration, then context. Detail earns its place by serving the intention, not by being known. When in doubt, ship the essentials and add one thing. | The two readers recede; the boundary line is drawn between them. |
-| 6 · The type | **One word breaking into twelve.** The word *flowchart* fractures; the pieces sort themselves into three columns — time, arrangement, context — with the twelve recipes landing under them. | People say "flowchart" for anything with a box in it. Pick the type from what the reader is stuck on instead: time, arrangement, or context. Twelve recipes cover almost everything, and they are a grammar rather than templates. When none of them fit, adapt the nearest one and say which. | The layer bands rotate into three columns. |
-| 7 · The key | **A key that outgrows itself.** Three rows stay: visual vocabulary, sources and timeframe, a note of intention. Rows four to nine — colour meanings, abbreviations, leftover research — arrive and turn coral. | A key holds three things. The visual vocabulary, the sources and timeframe, and a note of intention. When it starts explaining what a colour means or decoding an abbreviation, it has become a decoder ring — and that is evidence the diagram is underlabelled, not a fix for it. The same goes for colour: anything meaningful needs a second cue behind it. | One column collapses into a legend box in the corner. |
-| 8 · The render | **One vocabulary, three outputs.** Shapes, containers, connectors, brackets, axes, lanes, overlaps, labels, key — feeding a local canvas, a shared board, and a fenced Mermaid block. The three results read identically. | Those nine things are what the earlier decisions produce, and they do not change when the tool does. A local canvas, a shared board, or a Mermaid block in a markdown file all render the same diagram. Picking the tool first is picking the only part that was never the variable. | The legend fans back out into the full vocabulary. |
-| 9 · The payoff | **Eight moves and a loop.** Four unlit — intention, audience, scope, scale. Four lit — shapes, lines, labels, key. An arrow returns from the end to a single reader holding it. | Four decisions with no drawing in them, then four with drawing, then a loop. There is no right or wrong in diagramming; there is only better, and on purpose. Which means the test is not whether you like it, and not whether it passes a checklist. Show it to the person it was for and watch what they do. | The three outputs converge into one diagram, handed over. |
+| 1 · The claim | A finished, tidy diagram sits centred, boxes aligned, stamped approved in violet. It desaturates to coral, and four empty slots surface beneath it: who is it for, what should they do after, what is left out, how will they read it. | Everyone approved the diagram in the meeting. A week later nobody had opened it again. The lines were straight, the boxes aligned, the labels legible. It had already failed four decisions before anyone drew a box. | Opens the sequence, full viewport. |
+| 2 · The definition | The approved drawing slides into a row of candidates — an org chart, a photographed whiteboard, a slide of boxes — moving toward two gates. Gate one reads *does it help someone* in blue; gate two reads *is it visually represented* in structural line. Most candidates stop at gate one and turn coral. | A diagram is a visual representation that helps someone. Both conditions have to hold, and the first one is where diagrams fail. A tidy drawing that helps no one still clears the easy gate. It was never going to work, and the rendering had nothing to do with it. | The approved diagram shrinks into the queue and meets the two gates. |
+| 3 · Intention | The gates dissolve into one sentence with two blank slots, drawn in blue: *the diagram helps ___ to ___.* Three alternatives light up green beside it — a table, an email, one sentence. | Write one sentence before anything else. The diagram helps this audience to do or decide this thing. If you cannot fill the blanks, you are not ready to draw. Sometimes the finished sentence shows that an email would do the job better. | The gates collapse into the sentence; the alternatives fade in beside it. |
+| 4 · Audience | The sentence splits down the middle into two reader columns in blue. One is shallow and uses everyday words; one is deeper and uses system names and states. Neither column contains the other. | A diagram is only good to the person reading it. Someone who lives a process and someone who builds it need different words and different depth. Two readers means two diagrams. Pick one reader and every later choice has an answer. | The sentence divides into the two readers. |
+| 5 · Scope | A boundary line is drawn between the two readers, with items sorted onto either side. Behind it, three bands stack up: essentials in green, elaboration and context muted to amber. | Say what the diagram covers and what it leaves out, before drawing. Then build in importance order. The essentials come first, the elaboration second, the context last. When you are unsure, ship the essentials and stop. | The readers recede; the boundary line and the three layers appear. |
+| 6 · The render | The layers collapse into one vocabulary block — shapes, containers, connectors, labels, a key. Three arrows run from it to a local canvas, a shared board, and a fenced Mermaid block. All three draw the identical diagram in green; the tool names stay in muted line. | By now the decisions have produced a small vocabulary of shapes, containers, connectors, labels, and a key. A local canvas, a shared board, or a Mermaid block all draw the same diagram from it. Picking the tool first picks the one part that was never the variable. | The layer bands feed into the single vocabulary and its three outputs. |
+| 7 · The payoff | Eight moves stand in a row. Four are unlit — intention, audience, scope, scale — and four are lit green — shapes, lines, labels, key. An arrow loops from the last move back to a single blue reader holding the finished diagram. | Four decisions come before any drawing, and four come with it. The order decides whether the diagram works, and the tool does not. There is no right or wrong in diagramming, only better and on purpose. So show it to the person it was for and watch whether they use it. | The three outputs converge into one diagram, handed to the reader. |
 
 ## Static prose bridges
 
-- **Before scene 1:** what this skill is — the discipline that decides what a diagram shows, sitting one step upstream of anything that draws.
-- **After scene 3:** scale, the fourth in-visual decision, which the scenes skip: size times interaction mode, and why a poster, a worksheet, a slide and a wall are four different diagrams of the same thing.
-- **After scene 6:** the twelve recipes named, one line each, grouped by centre of stuck-ness — and the note that some of them (flows, sitemaps, concept models, journey maps) are deep enough to be skills of their own.
-- **After scene 7:** the rest of the craft bar — obvious starting place, reading order, neatness, contrast that survives colour-blindness, and the fact that a chart is not a diagram.
-- **Before the closing:** where this sits against the other skills — not `problem-framing`, not `wireframes`, not `breadboarding` — and what it will decline to draw.
+- **Before scene 1:** what this skill is — the discipline that decides what a diagram shows and writes it down, sitting one step upstream of anything that draws.
+- **After scene 3:** scale, the fourth decision the scenes compress. Scale is size times interaction mode, and a poster, a worksheet, a slide and a wall are four different diagrams of the same subject.
+- **After scene 5:** choosing the type from what the reader is stuck on rather than the word they used — time, arrangement, or context, across twelve recipes that behave as a grammar. Some of those types (flows, sitemaps, concept models, journey maps) run deep enough to be skills of their own.
+- **After scene 5:** the key as the tell. A key holds the visual vocabulary, the sources and timeframe, and a note of intention. When it starts explaining what a colour means or decoding an abbreviation it has become a decoder ring, which is a sign the diagram is underlabelled. Any colour that carries meaning needs a second cue behind it, because contrast has to survive colour-blindness.
+- **Before scene 7:** where this sits against the neighbours — not `problem-framing`, not `shaping`, not `wireframes`, not `breadboarding` — and what it declines to draw, including a chart of numbers and a decision nobody has made yet.
 
 ## Diagram system
 
-Native SVG, no decorative imagery. Every diagram has a text equivalent in the scene copy.
+Native inline SVG, editorial systems-diagram language, no decorative imagery. Every state has a text equivalent in the scene copy.
 
-1. **The approved diagram:** a finished drawing with four unanswered questions under it.
-2. **Two gates:** helps someone · is visually represented.
-3. **The intention sentence:** two blanks, three alternatives beside it.
+1. **The approved diagram:** a finished, approved drawing that desaturates, with four unanswered questions under it.
+2. **Two gates:** helps someone · is visually represented, with a queue of candidates stalling at the first.
+3. **The intention sentence:** two blanks, three green alternatives beside it.
 4. **Two readers:** the same subject rendered for people who live it and people who build it.
 5. **Scope boundary and three layers:** in / out, then essentials · elaboration · context.
-6. **Twelve recipes in three columns:** time · arrangement · context.
-7. **The key that outgrows itself:** three legitimate rows, six illegitimate ones.
-8. **One vocabulary, three renderers:** identical output from a local canvas, a shared board, and Mermaid.
-9. **The eight moves:** four unlit, four lit, and a loop back to a reader.
+6. **One vocabulary, three renderers:** identical output from a local canvas, a shared board, and a Mermaid block.
+7. **The eight moves:** four unlit, four lit, and a loop back to a single reader.
 
 ## Art direction
 
-- **Central visual metaphor:** the invisible decisions surfacing. Everything the reader cannot see in a finished diagram is what the article draws.
+- **Central visual idea:** the invisible decisions made visible. Everything a reader cannot see in a finished diagram is what this article draws.
 - **Graphic language:** editorial systems diagrams matching the rest of the library.
-- **Colour semantics:** in-visual decisions in blue, drawn elements in olive, the reader and audience in teal, symptoms and failures in coral.
+- **Colour semantics (house brief):** blue for input, the intention sentence and the reader; green for a valid or settled state and the alternatives worth taking; violet for the approval stamp; amber for the pending, lower-priority layers; coral for the failure being argued against; structural line for boundaries and tool names.
 - **Motion:** discrete 0.4–0.8 second transitions on transform and opacity only.
-- **Mobile:** compact diagram pinned above each text card, opaque, active state preserved at 375px. Scene 6's twelve items reduce to three labelled columns with counts.
-- **Accessibility:** the coral "symptom" state is always named in the copy, never carried by colour alone. Scene 2's two gates are stated as two conditions in the text.
+- **Mobile:** compact diagram pinned above each text card, opaque, active state preserved at 375px. Scene 6's three renderers reduce to three labelled rows; scene 7's eight moves reduce to a four-plus-four split with the loop implied.
+- **Accessibility:** the coral failure state is always named in the copy, never carried by colour alone. Scene 2's two gates are stated as two conditions in the text.
 
 ## Beat validation
 
 - Every scene introduces one concept and changes the diagram state.
-- The opening states the tension: a well-drawn diagram nobody used.
-- The closing pays it off: four decisions before drawing, and a test that involves a real reader.
+- The opening states the claim, as G2 requires: a well-drawn diagram nobody used, failed before it was drawn.
+- The evidence sits in the middle: definition, intention, audience, scope, render.
+- The closing states the consequence: the order of the decisions decides the outcome, and the test is a real reader.
 - Every scene stays at or below four sentences.
-- Scene 1 opens on a claim, as G2 requires — not on a mechanism and not on a story.
 - All reader-facing copy, labels, and diagram annotations are in English.
 
 ## Source section
 
-The article closes with method provenance:
+The article closes with method provenance, real links only.
 
-- Abby Covert, *Stuck? Diagrams Help* — the definition, the eight moves, the twelve recipes, the craft principles, and the creed quoted in scene 9.
+- Abby Covert, *Stuck? Diagrams Help* — the definition, the eight moves, the twelve recipes, the craft principles, and the creed quoted in scene 7.
 - Dan Brown, *Communicating Design*, chapters 1–2 — the three layers and the stopping rule in scene 5.
-- The skill's own `references/recipes.md` and `references/craft.md` — the recipe groupings and the key rules quoted here.
-
-## Delivery matrix
-
-Verified in headless Chromium against the built file. Every viewport: zero horizontal overflow, and all nine scenes activate scrolling down and scrolling back up.
-
-"Clearance" is the vertical gap between the pinned graphic and the active card at the best settled offset for that scene — measured by scanning each scene's scroll range in 4px steps, not by `scrollIntoView`. `n/a` means the layout is side by side, so the card and the graphic never overlap horizontally and the measure does not apply.
-
-| Viewport | Layout | Tallest card | Least clearance | Worst scene |
-| --- | --- | --- | --- | --- |
-| 320 × 568 | stacked, pinned | 296px | **56px** | 1 |
-| 390 × 844 | stacked, pinned | 335px | 154px | 1 |
-| 768 × 1024 | stacked, pinned | 280px | 402px | 1 |
-| 844 × 390 | two column | 287px | n/a | — |
-| 667 × 375 | two column | 356px | n/a | — |
-| 1024 × 768 | two column | 485px | n/a | — |
-| 1100 × 700 | two column | 498px | n/a | — |
-| 1280 × 800 | two column | 467px | n/a | — |
-| 1440 × 900 | two column | 485px | n/a | — |
-
-320 × 568 is the binding constraint. Three scene paragraphs (5, 7, 8) were cut by roughly two lines each to get there; before the cut the tallest card was 337px and scene 8 had no offset where the card cleared the graphic. If a future edit lengthens a scene paragraph, re-measure this column first.
+- [`skills/artifacts/diagrams/SKILL.md`](../../skills/artifacts/diagrams/SKILL.md) — the eight moves and the type-selection logic.
+- [`skills/artifacts/diagrams/references/recipes.md`](../../skills/artifacts/diagrams/references/recipes.md) — the twelve recipes named in the type bridge.
+- [`skills/artifacts/diagrams/references/craft.md`](../../skills/artifacts/diagrams/references/craft.md) — the key rules and the colour-backup rule quoted in the bridges.
