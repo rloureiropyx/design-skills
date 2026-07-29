@@ -72,4 +72,4 @@ Inputs: `FRAMED_PROBLEM.md` and `DIRECTIONS.md`. Output: `PROPOSAL.md`.
 
 ---
 
-**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 47px at 667×375.
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 8px at 320×568.

@@ -911,274 +911,445 @@
 
   <main id="main">
     <article>
-    <!-- HERO -->
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">A product design skill · How the tldraw renderer works</p>
-        <h1>A tidy picture of an undecided idea.</h1>
-        <p class="hero-deck"><strong>“Draw me a flow” is a perfectly normal sentence with four undecided questions inside it.</strong> <code>tldraw-skill</code> is a renderer: it owns how to draw something well, and deliberately refuses to own what to draw.</p>
-        <span class="scroll-cue">Scroll to see where the line is</span>
+        <p class="eyebrow">The library · The tldraw renderer</p>
+        <h1>Draw what was decided.</h1>
+        <p class="hero-deck"><strong>Someone asks for a flow, and the request leaves four questions open.</strong> Which flow, for whom, covering what, at what fidelity. Draw before those are answered and you get a tidy picture of an idea nobody has decided. This skill is a renderer: it draws decisions, it does not make them.</p>
+        <span class="scroll-cue">Scroll to see the split</span>
       </div>
 
       <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
-        <title id="hero-title">A neatly drawn diagram whose boxes are all blank</title>
-        <desc id="hero-desc">A canvas of well-aligned, evenly spaced boxes joined by tidy arrows. Every box is empty, because the decisions the diagram should express were never made.</desc>
-        <defs><filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter></defs>
-        <g filter="url(#heroShadow)">
-          <rect x="52" y="82" width="516" height="330" rx="20" fill="#f9f8f1"/>
-          <rect x="52" y="82" width="516" height="40" rx="20" fill="#e8e9e2"/>
-          <rect x="52" y="106" width="516" height="16" fill="#e8e9e2"/>
-          <circle cx="78" cy="102" r="6" fill="#ee795e"/><circle cx="98" cy="102" r="6" fill="#e7b85c"/><circle cx="118" cy="102" r="6" fill="#63c99c"/>
-          <text x="300" y="107" fill="#8d968c" font-family="Inter, sans-serif" font-size="11" font-weight="700" text-anchor="middle">blockers.tldraw</text>
-          <g fill="#eceadf" stroke="#c9c5ba" stroke-width="2">
-            <rect x="86" y="158" width="120" height="66" rx="10"/>
-            <rect x="250" y="158" width="120" height="66" rx="10"/>
-            <rect x="414" y="158" width="120" height="66" rx="10"/>
-            <rect x="86" y="288" width="120" height="66" rx="10"/>
-            <rect x="250" y="288" width="120" height="66" rx="10"/>
-            <rect x="414" y="288" width="120" height="66" rx="10"/>
-          </g>
-          <g stroke="#b6b2a7" stroke-width="3" fill="none">
-            <path d="M206 191 H244"/><path d="M370 191 H408"/>
-            <path d="M206 321 H244"/><path d="M370 321 H408"/>
-            <path d="M146 224 V282"/>
-          </g>
+        <title id="hero-title">A request to draw a flow, ringed by four unanswered questions</title>
+        <desc id="hero-desc">One request chip sits at the centre with four question chips around it: which flow, for whom, covering what, at what fidelity. None is answered yet.</desc>
+        <defs>
+          <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity=".26"/>
+          </filter>
+        </defs>
+        <g stroke="#c9c5ba" stroke-width="1.5">
+          <line x1="310" y1="250" x2="310" y2="162"/>
+          <line x1="310" y1="314" x2="310" y2="402"/>
+          <line x1="210" y1="282" x2="190" y2="282"/>
+          <line x1="410" y1="282" x2="430" y2="282"/>
         </g>
-        <text x="310" y="470" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="2">PERFECTLY ALIGNED</text>
-        <text x="310" y="500" fill="#8d968c" font-family="Inter, sans-serif" font-size="14" font-weight="650" text-anchor="middle">Entirely undecided</text>
+        <g filter="url(#heroShadow)" font-family="Inter, sans-serif" font-weight="700">
+          <rect x="210" y="250" width="200" height="64" rx="16" fill="#f9f8f1"/><text x="310" y="288" font-size="16" fill="#151914" text-anchor="middle">draw me a flow</text>
+          <rect x="225" y="110" width="170" height="52" rx="14" fill="#f7e7c4"/><text x="310" y="142" font-size="14" fill="#5b4a1e" text-anchor="middle">which flow?</text>
+          <rect x="40" y="250" width="150" height="64" rx="14" fill="#f7e7c4"/><text x="115" y="287" font-size="14" fill="#5b4a1e" text-anchor="middle">for whom?</text>
+          <rect x="430" y="250" width="160" height="64" rx="14" fill="#f7e7c4"/><text x="510" y="287" font-size="14" fill="#5b4a1e" text-anchor="middle">covering what?</text>
+          <rect x="210" y="402" width="200" height="52" rx="14" fill="#f7e7c4"/><text x="310" y="434" font-size="14" fill="#5b4a1e" text-anchor="middle">at what fidelity?</text>
+        </g>
+        <text x="310" y="506" fill="#ee795e" font-family="Inter, sans-serif" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="2">DRAW WHAT, EXACTLY?</text>
       </svg>
     </header>
 
     <section class="intro" aria-labelledby="intro-title">
       <p class="eyebrow">The job</p>
-      <h2 id="intro-title">Materialise a decided artifact on a canvas you own.</h2>
-      <p>tldraw’s offline desktop app is a local, private, infinite canvas that saves to a real <code>.tldraw</code> file on disk. <code>tldraw-skill</code> drives it through the app’s local HTTP API — creating directions, binding arrows, laying out columns, linting, screenshotting, and saving.</p>
-      <p>It is a <strong>renderer</strong>, and the distinction is load-bearing. A flow, a journey map, a service blueprint, a breadboard, a wireframe: each has its own discipline that decides intention, audience, structure, and fidelity. This skill picks up after those decisions and does not attempt them, because nothing in the drawing mechanics knows who the diagram is for.</p>
-      <p class="definition"><strong>The output is a file, not a picture in a chat.</strong> A saved <code>.tldraw</code> document the user owns, opens, edits, and undoes like their own work — with the screenshot used only as the agent’s own verification.</p>
+      <h2 id="intro-title">A renderer draws a decision it did not make.</h2>
+      <p>This library is a set of product design skills. Most of them decide something: what the problem is, which direction to build, what a picture should show. Two of them decide nothing and draw what the others settled. <code>tldraw-skill</code> is one of those two.</p>
+      <p>It draws on a local tldraw canvas: a flow, a journey map, a service blueprint, a sitemap, a breadboard, a set of wireframes. Deciding what to draw and drawing it well are different jobs, and the split between them is the whole design of this skill.</p>
+      <p class="definition"><strong>Bring it a decision.</strong> A discipline skill works out intention, audience, artifact type, structure, and fidelity. This one places the shapes, binds the arrows, checks the result, and saves the file. Two facts decide whether it works at all: the work stays on the machine, and it needs the desktop app running.</p>
     </section>
 
-    <section class="scrolly" aria-label="How the tldraw renderer works">
+    <section class="scrolly" aria-label="How the tldraw renderer works, scene by scene">
       <div class="graphic-wrap">
         <div class="graphic-shell" aria-hidden="true">
-          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">The ambiguous ask</span></div>
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 09</span><span class="graphic-label" id="diagram-label">The ask</span></div>
           <svg viewBox="0 0 760 620" focusable="false">
             <defs>
-              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
-              </marker>
-              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
-              </pattern>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#667269"/></marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+              <marker id="arrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/></marker>
+              <marker id="arrowAmberBoth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/></marker>
+              <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/></marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/></pattern>
             </defs>
             <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
 
-            <!-- DIAGRAM 1: THE AMBIGUOUS ASK -->
-            <g class="diagram-state is-active" data-state="1"><text class="svg-kicker" x="64" y="56">The ask</text><text class="svg-title" x="64" y="92">“Draw me a flow.”</text><rect x="60" y="176" width="640" height="120" rx="16" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="380" y="226" fill="#e9eee8" font-family="Inter, sans-serif" font-size="17" font-weight="700" text-anchor="middle">“Draw me a flow for the payroll blockers thing.”</text><text x="380" y="262" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11.5" font-weight="600" text-anchor="middle">A perfectly normal sentence containing four undecided questions.</text><rect x="60" y="336" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="362" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Which flow?</text><text x="78" y="382" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">User, task, or cross-actor service?</text><rect x="390" y="336" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="408" y="362" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">For whom?</text><text x="408" y="382" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">An engineer, or a compliance reviewer?</text><rect x="60" y="406" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="432" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Which states?</text><text x="78" y="452" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Happy path only, or errors and recovery?</text><rect x="390" y="406" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="408" y="432" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">At what fidelity?</text><text x="408" y="452" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Zoning, lo-fi, or annotated?</text><text class="svg-small" x="64" y="528">Drawing now produces a tidy picture of an undecided idea — the most expensive kind of artifact,</text><text class="svg-small" x="64" y="552">because it looks finished.</text></g>
-            <!-- DIAGRAM 2: THE BOUNDARY -->
-            <g class="diagram-state" data-state="2"><text class="svg-kicker" x="64" y="56">The boundary</text><text class="svg-title" x="64" y="92">Decide over here. Draw over there.</text><rect x="60" y="166" width="300" height="300" rx="18" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="88" y="202" fill="#75a9ff" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">DISCIPLINE SKILL</text><text x="88" y="230" fill="#c8dcff" font-family="Inter, sans-serif" font-size="14" font-weight="700">Decides WHAT and WHY</text><rect x="88" y="250" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="273.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Intention and audience</text><rect x="88" y="292" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="315.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Which artifact type</text><rect x="88" y="334" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="357.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Structure and scope</text><rect x="88" y="376" width="244" height="36" rx="8" fill="#16233a" stroke="#3d5b7a" stroke-width="2"/><text x="106" y="399.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Fidelity rung</text><path class="svg-line" d="M360 316 H400" marker-end="url(#arrow)"/><rect x="400" y="166" width="300" height="300" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="2"/><text x="428" y="202" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">TLDRAW-SKILL</text><text x="428" y="230" fill="#c9f1df" font-family="Inter, sans-serif" font-size="14" font-weight="700">Owns HOW to draw it</text><rect x="428" y="250" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="273.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Direction records and props</text><rect x="428" y="292" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="315.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Layout math</text><rect x="428" y="334" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="357.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Arrows and bindings</text><rect x="428" y="376" width="244" height="36" rx="8" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="446" y="399.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="11.5" font-weight="750">Lint, screenshot, export</text><text class="svg-small" x="64" y="520">The split is not bureaucracy. A renderer that also decides will quietly decide badly,</text><text class="svg-small" x="64" y="544">because nothing in the drawing mechanics knows who the diagram is for.</text></g>
-            <!-- DIAGRAM 3: STAYS ON THE MACHINE -->
-            <g class="diagram-state" data-state="3"><text class="svg-kicker" x="64" y="56">Why this renderer</text><text class="svg-title" x="64" y="92">It never leaves the machine.</text><rect x="60" y="180" width="300" height="240" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="88" y="216" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">LOCAL</text><path d="M148 262 h84 a10 10 0 0 1 10 10 v46 a10 10 0 0 1 -10 10 h-84 a10 10 0 0 1 -10 -10 v-46 a10 10 0 0 1 10 -10 z" fill="#18342a" stroke="#63c99c" stroke-width="2"/><path d="M162 262 v-16 a28 28 0 0 1 56 0 v16" fill="none" stroke="#63c99c" stroke-width="4"/><circle cx="190" cy="294" r="7" fill="#63c99c"/><text x="210" y="372" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle">~/Documents/flow.tldraw</text><text x="210" y="396" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle">A file you own</text><rect x="400" y="180" width="300" height="240" rx="18" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5" stroke-dasharray="7 5"/><text x="428" y="216" fill="#8f9a90" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">NOT THIS</text><rect x="428" y="240" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="446" y="265.0" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="750">A cloud workspace</text><rect x="428" y="292" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="446" y="317.0" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="750">A shared team board</text><rect x="428" y="344" width="244" height="40" rx="9" fill="#241a18" stroke="#6d4a41" stroke-width="2"/><text x="446" y="369.0" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="750">A link that needs an account</text><rect x="60" y="452" width="640" height="60" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="380" y="488" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13.5" font-weight="750" text-anchor="middle">Pick tldraw when the work must not leave the machine.</text><text class="svg-small" x="64" y="566">Unreleased roadmaps, salary bands, customer names — the material enterprise design actually runs on.</text></g>
-            <!-- DIAGRAM 4: RUNTIME DEPENDENCY -->
-            <g class="diagram-state" data-state="4"><text class="svg-kicker" x="64" y="56">The dependency</text><text class="svg-title" x="64" y="92">No app running, no drawing.</text><rect x="60" y="176" width="640" height="128" rx="16" fill="#3c301b" stroke="#e7b85c" stroke-width="2"/><text x="88" y="212" fill="#e7b85c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.2">THIS SKILL NEEDS SOMETHING RUNNING OUTSIDE COPILOT</text><text x="88" y="246" fill="#f4d89c" font-family="Inter, sans-serif" font-size="15" font-weight="700">The tldraw offline desktop app, on this machine,</text><text x="88" y="272" fill="#f4d89c" font-family="Inter, sans-serif" font-size="15" font-weight="700">exposing its local HTTP API. There is no hosted fallback.</text><path class="svg-line" d="M200 320 V356" marker-end="url(#arrow)"/><path class="svg-line" d="M560 320 V356" marker-end="url(#arrow)"/><rect x="60" y="364" width="280" height="92" rx="10" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="200.0" y="415.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><text x="200" y="398" fill="#ee795e" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">APP NOT RUNNING</text><text x="200" y="426" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Say so, and stop.</text><rect x="420" y="364" width="280" height="92" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/><text x="560.0" y="415.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><text x="560" y="398" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">APP RUNNING</text><text x="560" y="426" fill="#c9f1df" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Resolve tq, then draw.</text><text class="svg-small" x="64" y="512">The tempting failure is to draw somewhere else instead — an ASCII diagram, a Mermaid block, another canvas.</text><text class="svg-small" x="64" y="536">The user asked for a file on their disk. Substituting the deliverable is not a graceful degradation.</text></g>
-            <!-- DIAGRAM 5: ONE EXEC -->
-            <g class="diagram-state" data-state="5"><text class="svg-kicker" x="64" y="56">The economics</text><text class="svg-title" x="64" y="92">One exec. Return counts, not records.</text><rect x="60" y="168" width="640" height="210" rx="12" fill="#101713" stroke="#2f3c34" stroke-width="1.5"/><text x="80" y="198" fill="#6f7b72" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.2">ONE FILE. ONE POST. THE WHOLE DIAGRAM.</text><text x="80" y="222" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">editor.user.updateUserPreferences({ colorScheme: 'light' })</text><text x="80" y="244" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve"></text><text x="80" y="266" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">for (const n of nodes) createNode(n)      // 24 directions</text><text x="80" y="288" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">for (const e of edges) helpers.createArrowBetweenShapes(...)</text><text x="80" y="310" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve"></text><text x="80" y="332" fill="#dfd0fa" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">await helpers.saveDoc()</text><text x="80" y="354" fill="#f4d89c" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">return { nodes: 24, arrows: 31 }</text><rect x="60" y="396" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="78" y="422" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">Returning direction records</text><text x="78" y="442" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Live records serialise badly and fill the context</text><rect x="390" y="396" width="310" height="54" rx="12" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="408" y="422" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="750">One call per direction</text><text x="408" y="442" fill="#f7c9bd" opacity=".72" font-family="Inter, sans-serif" font-size="11" font-weight="600">Slow, and leaves the canvas half-built on failure</text><text class="svg-small" x="64" y="508">You write JavaScript, not per-element JSON, and only what you return comes back.</text><text class="svg-small" x="64" y="532">That single property is what makes a thirty-direction diagram cheap — so build in loops and echo counts.</text></g>
-            <!-- DIAGRAM 6: LAYOUT MATH -->
-            <g class="diagram-state" data-state="6"><text class="svg-kicker" x="64" y="56">Craft</text><text class="svg-title" x="64" y="92">Plan the coordinates before the canvas does.</text><rect x="72" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="138.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="240" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="306.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="408" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="474.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="576" y="200" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="642.0" y="243.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="72" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="138.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="240" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="306.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="408" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="474.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><rect x="576" y="312" width="132" height="76" rx="10" fill="#1b2720" stroke="#4b5a50" stroke-width="1.6"/><text x="642.0" y="355.0" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle"></text><text x="138" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Detect</text><text x="306" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Notify</text><text x="474" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Resolve</text><text x="642" y="244" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Verify</text><text x="138" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Queue</text><text x="306" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Retry</text><text x="474" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Escalate</text><text x="642" y="356" fill="#b7c0b8" font-family="Inter, sans-serif" font-size="11" font-weight="650" text-anchor="middle">Close</text><path d="M204 238 H240" class="svg-line" marker-end="url(#arrow)"/><path d="M372 238 H408" class="svg-line" marker-end="url(#arrow)"/><path d="M540 238 H576" class="svg-line" marker-end="url(#arrow)"/><path d="M72 176 H204" stroke="#e7b85c" stroke-width="1.6"/><path d="M240 176 H372" stroke="#e7b85c" stroke-width="1.6"/><text x="156" y="168" fill="#e7b85c" font-family="Inter, sans-serif" font-size="9.5" font-weight="800" text-anchor="middle" letter-spacing="1">168 COLUMN PITCH</text><path d="M44 200 V276" stroke="#ae8bf3" stroke-width="1.6"/><path d="M44 312 V388" stroke="#ae8bf3" stroke-width="1.6"/><text x="30" y="300" fill="#ae8bf3" font-family="Inter, sans-serif" font-size="9.5" font-weight="800" text-anchor="middle">112</text><text x="64" y="444" fill="#8f9a90" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">132 node + 36 gutter — enough for a labelled arrow to breathe</text><rect x="60" y="470" width="640" height="70" rx="14" fill="#1b2720" stroke="#4b5a50" stroke-width="1.5"/><text x="84" y="502" fill="#e9eee8" font-family="Inter, sans-serif" font-size="13" font-weight="750">A sticky note is a fixed 200 × 200 square — its width is not settable</text><text x="84" y="526" fill="#9aa69c" font-family="Inter, sans-serif" font-size="11" font-weight="600">A 480-wide frame around one column of stickies looks half-empty. That is the classic sticky-layout mistake.</text></g>
-            <!-- DIAGRAM 7: BOUND ARROWS -->
-            <g class="diagram-state" data-state="7"><text class="svg-kicker" x="64" y="56">Arrows</text><text class="svg-title" x="64" y="92">Bound, or it is a friendless arrow.</text><rect x="72" y="196" width="150" height="70" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><text x="147.0" y="236.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Detect</text><rect x="310" y="196" width="150" height="70" rx="10" fill="#1c2c43" stroke="#75a9ff" stroke-width="1.6"/><text x="385.0" y="236.0" fill="#c8dcff" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Resolve</text><path d="M222 231 H302" stroke="#63c99c" stroke-width="3" marker-end="url(#arrow)"/><text x="500" y="220" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">BOUND</text><text x="500" y="244" fill="#8fbfa8" font-family="Inter, sans-serif" font-size="12" font-weight="650">Move the node, the arrow follows.</text><rect x="72" y="324" width="150" height="70" rx="10" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="147.0" y="364.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Detect</text><rect x="370" y="324" width="150" height="70" rx="10" fill="#38241f" stroke="#ee795e" stroke-width="1.6"/><text x="445.0" y="364.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Resolve</text><path d="M222 359 H302" stroke="#ee795e" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#arrow)"/><circle cx="302" cy="359" r="6" fill="none" stroke="#ee795e" stroke-width="2.5"/><text x="560" y="348" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4">POINT TERMINALS</text><text x="560" y="372" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="650">Detaches the moment</text><text x="560" y="392" fill="#c08a7c" font-family="Inter, sans-serif" font-size="12" font-weight="650">anyone moves a node.</text><rect x="60" y="428" width="640" height="56" rx="12" fill="#101713" stroke="#2f3c34" stroke-width="1.5"/><text x="80" y="458" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">helpers.createArrowBetweenShapes(fromId, toId, { kind: 'elbow' })</text><text class="svg-small" x="64" y="540">The linter catches this one — but only after the diagram has already been handed over once.</text></g>
-            <!-- DIAGRAM 8: LINT, THEN LOOK -->
-            <g class="diagram-state" data-state="8"><text class="svg-kicker" x="64" y="56">The check</text><text class="svg-title" x="64" y="92">Lint has three rules. Your eyes have the rest.</text><rect x="60" y="172" width="300" height="240" rx="18" fill="#1b2720" stroke="#63c99c" stroke-width="1.8"/><text x="88" y="208" fill="#63c99c" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">THE LINTER CATCHES</text><rect x="88" y="226" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="106" y="251.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">growY-on-direction</text><rect x="88" y="278" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="106" y="303.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">overlapping-text</text><rect x="88" y="330" width="244" height="40" rx="9" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text x="106" y="355.0" fill="#c9f1df" font-family="Inter, sans-serif" font-size="12" font-weight="750">friendless-arrow</text><rect x="400" y="172" width="300" height="240" rx="18" fill="#1b2720" stroke="#ee795e" stroke-width="1.8"/><text x="428" y="208" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">IT DOES NOT</text><rect x="428" y="226" width="244" height="40" rx="9" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="446" y="251.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">Arrows crossing nodes</text><rect x="428" y="278" width="244" height="40" rx="9" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="446" y="303.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">Ragged, unaligned columns</text><rect x="428" y="330" width="244" height="40" rx="9" fill="#38241f" stroke="#ee795e" stroke-width="2"/><text x="446" y="355.0" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="12" font-weight="750">Labels too small to read</text><rect x="60" y="440" width="640" height="72" rx="14" fill="#3c301b" stroke="#e7b85c" stroke-width="1.8"/><text x="380" y="474" fill="#f4d89c" font-family="Inter, sans-serif" font-size="15" font-weight="750" text-anchor="middle">A clean lint is not a finished diagram</text><text x="380" y="500" fill="#c9a869" font-family="Inter, sans-serif" font-size="12" font-weight="650" text-anchor="middle">Take the screenshot. Look at it. Every time.</text><text class="svg-small" x="64" y="566">The structural check passes long before the pixels are right.</text></g>
-            <!-- DIAGRAM 9: SAVEDOC -->
-            <g class="diagram-state" data-state="9"><text class="svg-kicker" x="64" y="56">Hand off</text><text class="svg-title" x="64" y="92">Saved, or it never happened.</text><rect x="60" y="172" width="640" height="144" rx="12" fill="#101713" stroke="#2f3c34" stroke-width="1.5"/><text x="80" y="202" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">const fixed = editor.getCurrentPageShapes()</text><text x="80" y="224" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">  .filter(s => s.props?.growY > 0)          // autosize pass</text><text x="80" y="246" fill="#c8dcff" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">editor.updateShapes(fixed)</text><text x="80" y="268" fill="#f4d89c" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">return helpers.getLints()                   // expect { lints: [] }</text><text x="80" y="290" fill="#8fbfa8" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="500" xml:space="preserve">await helpers.saveDoc()                     // <- the file on disk</text><rect x="60" y="360" width="310" height="128" rx="16" fill="#38241f" stroke="#ee795e" stroke-width="1.8"/><text x="88" y="396" fill="#ee795e" font-family="Inter, sans-serif" font-size="11" font-weight="800" letter-spacing="1.3">WITHOUT saveDoc()</text><text x="88" y="426" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700">The canvas shows the work.</text><text x="88" y="450" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700">The file does not. And the user</text><text x="88" y="474" fill="#f7c9bd" font-family="Inter, sans-serif" font-size="13" font-weight="700">has been told it is saved.</text><rect x="390" y="360" width="310" height="128" rx="16" fill="#f4f1e8"/><text x="414" y="394" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">HAND-OFF</text><text x="414" y="424" fill="#2c332c" font-family="Inter, sans-serif" font-size="13" font-weight="750">~/Documents/blockers.tldraw</text><text x="414" y="450" fill="#667068" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Doc name · saved · lint clean</text><text x="414" y="472" fill="#667068" font-family="Inter, sans-serif" font-size="11.5" font-weight="650">Export to PNG or SVG is a UI action.</text><text class="svg-small" x="64" y="540">The screenshot is for your verification, not the deliverable. The deliverable is the file.</text></g>
+            <!-- DIAGRAM 1: THE ASK -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="40" y="58">The request</text>
+              <text class="svg-title" x="40" y="94">One ask, four holes.</text>
+              <g class="svg-line-muted">
+                <path d="M380 300 V232"/>
+                <path d="M380 356 V430"/>
+                <path d="M295 328 H250"/>
+                <path d="M465 328 H510"/>
+              </g>
+              <rect x="295" y="300" width="170" height="56" rx="14" fill="#1d2a22" stroke="#75a9ff" stroke-width="2"/>
+              <text class="svg-label" x="380" y="334" text-anchor="middle" fill="#bcd4ff">draw me a flow</text>
+              <rect x="290" y="186" width="180" height="46" rx="12" fill="#2a2519" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-small" x="380" y="214" text-anchor="middle" fill="#f0cf8f">which flow?</text>
+              <rect x="70" y="302" width="180" height="52" rx="12" fill="#2a2519" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-small" x="160" y="333" text-anchor="middle" fill="#f0cf8f">for whom?</text>
+              <rect x="510" y="302" width="180" height="52" rx="12" fill="#2a2519" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-small" x="600" y="333" text-anchor="middle" fill="#f0cf8f">covering what?</text>
+              <rect x="280" y="430" width="200" height="46" rx="12" fill="#2a2519" stroke="#e7b85c" stroke-width="1.5"/>
+              <text class="svg-small" x="380" y="458" text-anchor="middle" fill="#f0cf8f">at what fidelity?</text>
+              <text class="svg-small" x="380" y="548" text-anchor="middle" fill="#f2a793">Answer these first, or draw an idea nobody has decided.</text>
+            </g>
+
+            <!-- DIAGRAM 2: THE SPLIT -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="40" y="58">Two skills</text>
+              <text class="svg-title" x="40" y="94">One decides. One draws.</text>
+              <path class="svg-line-muted" d="M380 138 V518"/>
+              <text class="svg-tiny" x="56" y="162" fill="#c9b8f6">A DISCIPLINE SKILL DECIDES</text>
+              <g>
+                <rect x="56" y="176" width="252" height="40" rx="10" fill="#241d33" stroke="#ae8bf3" stroke-width="1.2"/><text class="svg-small" x="74" y="201" fill="#dcd0fa">intention</text>
+                <rect x="56" y="226" width="252" height="40" rx="10" fill="#241d33" stroke="#ae8bf3" stroke-width="1.2"/><text class="svg-small" x="74" y="251" fill="#dcd0fa">audience</text>
+                <rect x="56" y="276" width="252" height="40" rx="10" fill="#241d33" stroke="#ae8bf3" stroke-width="1.2"/><text class="svg-small" x="74" y="301" fill="#dcd0fa">artifact type</text>
+                <rect x="56" y="326" width="252" height="40" rx="10" fill="#241d33" stroke="#ae8bf3" stroke-width="1.2"/><text class="svg-small" x="74" y="351" fill="#dcd0fa">structure</text>
+                <rect x="56" y="376" width="252" height="40" rx="10" fill="#241d33" stroke="#ae8bf3" stroke-width="1.2"/><text class="svg-small" x="74" y="401" fill="#dcd0fa">fidelity</text>
+              </g>
+              <text class="svg-tiny" x="404" y="162" fill="#8fe3bf">THIS SKILL DOES</text>
+              <g>
+                <rect x="404" y="176" width="252" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.2"/><text class="svg-small" x="422" y="201" fill="#c9f1df">place the coordinates</text>
+                <rect x="404" y="226" width="252" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.2"/><text class="svg-small" x="422" y="251" fill="#c9f1df">bind the arrows</text>
+                <rect x="404" y="276" width="252" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.2"/><text class="svg-small" x="422" y="301" fill="#c9f1df">run the lint</text>
+                <rect x="404" y="326" width="252" height="40" rx="10" fill="#18342a" stroke="#63c99c" stroke-width="1.2"/><text class="svg-small" x="422" y="351" fill="#c9f1df">export the file</text>
+              </g>
+              <text class="svg-small" x="380" y="470" text-anchor="middle">Missing a decision, it asks — it does not invent one.</text>
+            </g>
+
+            <!-- DIAGRAM 3: IT HAS TO BE RUNNING -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="40" y="58">The dependency</text>
+              <text class="svg-title" x="40" y="94">It has to be running.</text>
+              <rect class="svg-node-light" x="70" y="250" width="210" height="110" rx="16"/>
+              <text class="svg-label" x="175" y="300" text-anchor="middle">Copilot</text>
+              <text class="svg-small" x="175" y="326" text-anchor="middle">the skill</text>
+              <rect class="svg-node" x="480" y="250" width="210" height="110" rx="16"/>
+              <text class="svg-label" x="585" y="298" text-anchor="middle" fill="#9aa39b">tldraw app</text>
+              <text class="svg-small" x="585" y="324" text-anchor="middle" fill="#f2a793">not running</text>
+              <text class="svg-tiny" x="380" y="284" text-anchor="middle" fill="#f2a793">LOCAL API · SAME MACHINE</text>
+              <path d="M280 305 H360" stroke="#ee795e" stroke-width="2.5" fill="none"/>
+              <path d="M400 305 H480" stroke="#ee795e" stroke-width="2.5" fill="none"/>
+              <path d="M372 293 L388 317 M388 293 L372 317" stroke="#ee795e" stroke-width="2.5"/>
+              <text class="svg-small" x="380" y="424" text-anchor="middle" fill="#f2a793">No hosted fallback.</text>
+              <text class="svg-small" x="380" y="450" text-anchor="middle" fill="#f2a793">If the app is not running, the skill stops and says so.</text>
+            </g>
+
+            <!-- DIAGRAM 4: YOURS, ON DISK -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="40" y="58">Where it lives</text>
+              <text class="svg-title" x="40" y="94">Yours, on disk.</text>
+              <rect x="70" y="190" width="280" height="190" rx="16" fill="#132720" stroke="#63c99c" stroke-width="1.8"/>
+              <text class="svg-tiny" x="94" y="220" fill="#c9f1df">YOUR MACHINE</text>
+              <rect x="130" y="238" width="110" height="112" rx="8" fill="#0f2019" stroke="#63c99c" stroke-width="1.5"/>
+              <path d="M215 238 V262 H240" fill="none" stroke="#63c99c" stroke-width="1.5"/>
+              <text class="svg-small" x="185" y="300" text-anchor="middle" fill="#c9f1df">.tldraw</text>
+              <text class="svg-tiny" x="292" y="300" text-anchor="middle" fill="#c9f1df">a real</text>
+              <text class="svg-tiny" x="292" y="316" text-anchor="middle" fill="#c9f1df">file you</text>
+              <text class="svg-tiny" x="292" y="332" text-anchor="middle" fill="#c9f1df">own</text>
+              <rect x="430" y="222" width="250" height="120" rx="24" fill="#33211d" stroke="#ee795e" stroke-width="1.8"/>
+              <circle cx="500" cy="252" r="18" fill="#3f2723"/><circle cx="528" cy="244" r="24" fill="#3f2723"/><circle cx="560" cy="252" r="18" fill="#3f2723"/>
+              <text class="svg-small" x="555" y="292" text-anchor="middle" fill="#f2a793">cloud workspace</text>
+              <text class="svg-tiny" x="555" y="314" text-anchor="middle" fill="#f2a793">log in to view</text>
+              <path d="M436 226 L676 338" stroke="#ee795e" stroke-width="3"/>
+              <text class="svg-small" x="380" y="430" text-anchor="middle">Fits unreleased roadmaps, salary bands, and org charts</text>
+              <text class="svg-small" x="380" y="452" text-anchor="middle">before anyone announces them.</text>
+            </g>
+
+            <!-- DIAGRAM 5: ONE CALL IN, COUNTS OUT -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="40" y="58">One exec</text>
+              <text class="svg-title" x="40" y="94">One call in, counts out.</text>
+              <g opacity=".34">
+                <text class="svg-tiny" x="40" y="150">THE SLOW WAY · JSON, ONE SHAPE AT A TIME</text>
+                <rect x="40" y="162" width="340" height="24" rx="6" fill="#1b2720" stroke="#3a463e"/>
+                <rect x="52" y="176" width="340" height="24" rx="6" fill="#1b2720" stroke="#3a463e"/>
+                <rect x="64" y="190" width="340" height="24" rx="6" fill="#1b2720" stroke="#3a463e"/>
+                <rect x="76" y="204" width="340" height="24" rx="6" fill="#1b2720" stroke="#3a463e"/>
+              </g>
+              <rect x="50" y="320" width="170" height="64" rx="14" fill="#1d2a22" stroke="#75a9ff" stroke-width="1.6"/>
+              <text class="svg-small" x="135" y="348" text-anchor="middle" fill="#bcd4ff">one JavaScript</text>
+              <text class="svg-small" x="135" y="368" text-anchor="middle" fill="#bcd4ff">payload</text>
+              <path class="svg-line" d="M220 352 H298" marker-end="url(#arrow)"/>
+              <rect class="svg-node-light" x="300" y="316" width="160" height="72" rx="14"/>
+              <text class="svg-label" x="380" y="348" text-anchor="middle">the canvas</text>
+              <text class="svg-tiny" x="380" y="370" text-anchor="middle">built in a loop</text>
+              <path d="M460 352 H518" stroke="#63c99c" stroke-width="2" fill="none" marker-end="url(#arrowGreen)"/>
+              <rect x="520" y="320" width="192" height="64" rx="14" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/>
+              <text class="svg-small" x="616" y="357" text-anchor="middle" fill="#c9f1df">{ nodes: 24, arrows: 31 }</text>
+              <text class="svg-small" x="380" y="470" text-anchor="middle">Build in loops, return numbers. Never drip-feed shapes across calls.</text>
+            </g>
+
+            <!-- DIAGRAM 6: PLAN THE GRID FIRST -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="40" y="58">The grid</text>
+              <text class="svg-title" x="40" y="94">Plan the grid first.</text>
+              <g stroke="#2a352d" stroke-width="1">
+                <path d="M70 170 H430 M70 260 H430 M70 350 H430 M70 440 H430"/>
+                <path d="M70 170 V440 M160 170 V440 M250 170 V440 M340 170 V440 M430 170 V440"/>
+              </g>
+              <path d="M70 158 H160" stroke="#e7b85c" stroke-width="1.5" fill="none" marker-start="url(#arrowAmberBoth)" marker-end="url(#arrowAmberBoth)"/>
+              <text class="svg-tiny" x="115" y="150" text-anchor="middle" fill="#f0cf8f">COLUMN PITCH</text>
+              <path d="M56 170 V260" stroke="#e7b85c" stroke-width="1.5" fill="none" marker-start="url(#arrowAmberBoth)" marker-end="url(#arrowAmberBoth)"/>
+              <text class="svg-tiny" x="40" y="218" text-anchor="middle" fill="#f0cf8f" transform="rotate(-90 40 218)">ROW PITCH</text>
+              <rect class="svg-node" x="172" y="272" width="66" height="56" rx="8"/>
+              <text class="svg-tiny" x="205" y="304" text-anchor="middle">node</text>
+              <text class="svg-tiny" x="205" y="352" text-anchor="middle" fill="#8fa398">NODE SIZE</text>
+              <rect x="500" y="180" width="170" height="120" rx="6" fill="#2a2519" stroke="#e7b85c" stroke-width="1.8"/>
+              <text class="svg-tiny" x="516" y="206" fill="#f0cf8f">STICKY NOTE</text>
+              <g stroke="#6b5b32" stroke-width="1.5"><path d="M516 226 H654 M516 244 H654 M516 262 H612"/></g>
+              <path d="M500 316 H670" stroke="#e7b85c" stroke-width="1.5" fill="none" marker-start="url(#arrowAmberBoth)" marker-end="url(#arrowAmberBoth)"/>
+              <text class="svg-tiny" x="585" y="334" text-anchor="middle" fill="#f0cf8f">200 WIDE · FIXED</text>
+              <path d="M686 180 V300" stroke="#e7b85c" stroke-width="1.5" fill="none" marker-end="url(#arrowAmber)"/>
+              <text class="svg-tiny" x="704" y="240" text-anchor="middle" fill="#f0cf8f" transform="rotate(90 704 240)">HEIGHT GROWS</text>
+              <text class="svg-small" x="380" y="500" text-anchor="middle">A canvas places things where they fit, not where they mean something.</text>
+            </g>
+
+            <!-- DIAGRAM 7: BIND THE ARROWS -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="40" y="58">Bound vs loose</text>
+              <text class="svg-title" x="40" y="94">Bind the arrows.</text>
+              <rect class="svg-node" x="90" y="170" width="170" height="76" rx="14"/>
+              <text class="svg-label" x="175" y="214" text-anchor="middle">Node A</text>
+              <rect x="90" y="340" width="170" height="76" rx="14" fill="none" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="6 6"/>
+              <text class="svg-small" x="175" y="383" text-anchor="middle" fill="#667269">B was here</text>
+              <rect class="svg-node-light" x="440" y="380" width="170" height="76" rx="14"/>
+              <text class="svg-label" x="525" y="416" text-anchor="middle">Node B</text>
+              <text class="svg-tiny" x="525" y="438" text-anchor="middle">just dragged</text>
+              <path d="M240 246 C320 320 380 380 445 412" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+              <path d="M150 246 V332" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="8 5" marker-end="url(#arrowCoral)"/>
+              <rect x="90" y="498" width="24" height="12" rx="3" fill="#63c99c"/>
+              <text class="svg-small" x="124" y="509" fill="#c9f1df">bound · follows the node</text>
+              <rect x="400" y="498" width="24" height="12" rx="3" fill="#ee795e"/>
+              <text class="svg-small" x="434" y="509" fill="#f2a793">loose · detaches and dangles</text>
+            </g>
+
+            <!-- DIAGRAM 8: ANNOTATE FROM THE NEAR GUTTER -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="40" y="58">The annotation layer</text>
+              <text class="svg-title" x="40" y="94">Notes in the near gutter.</text>
+              <rect class="svg-node-light" x="300" y="160" width="160" height="300" rx="10"/>
+              <rect x="316" y="176" width="128" height="22" rx="4" fill="#33413a"/>
+              <rect x="316" y="214" width="128" height="10" rx="3" fill="#2f3d35"/>
+              <rect x="316" y="234" width="90" height="10" rx="3" fill="#2f3d35"/>
+              <rect x="316" y="300" width="128" height="44" rx="4" fill="#2f3d35"/>
+              <rect x="316" y="360" width="72" height="20" rx="5" fill="#2f3d35"/>
+              <text class="svg-tiny" x="380" y="440" text-anchor="middle">THE DRAWING</text>
+              <rect x="70" y="222" width="180" height="64" rx="8" fill="#2a2519" stroke="#e7b85c" stroke-width="1.5"/>
+              <circle cx="92" cy="244" r="11" fill="#e7b85c"/><text class="svg-tiny" x="92" y="248" text-anchor="middle" fill="#1b1608">1</text>
+              <text class="svg-small" x="112" y="244" fill="#f0cf8f">label the primary</text>
+              <text class="svg-tiny" x="112" y="266" fill="#f0cf8f">action here</text>
+              <path d="M250 250 H305" stroke="#e7b85c" stroke-width="1.5" fill="none"/>
+              <circle cx="316" cy="250" r="11" fill="#e7b85c"/><text class="svg-tiny" x="316" y="254" text-anchor="middle" fill="#1b1608">1</text>
+              <circle cx="380" cy="320" r="11" fill="#e7b85c"/><text class="svg-tiny" x="380" y="324" text-anchor="middle" fill="#1b1608">2</text>
+              <rect x="510" y="300" width="180" height="64" rx="8" fill="#2a2519" stroke="#e7b85c" stroke-width="1.5"/>
+              <circle cx="532" cy="322" r="11" fill="#e7b85c"/><text class="svg-tiny" x="532" y="326" text-anchor="middle" fill="#1b1608">2</text>
+              <text class="svg-small" x="552" y="322" fill="#f0cf8f">explain the empty</text>
+              <text class="svg-tiny" x="552" y="344" fill="#f0cf8f">state</text>
+              <text class="svg-tiny" x="600" y="390" text-anchor="middle" fill="#949e96">no line — it would cross</text>
+              <text class="svg-small" x="380" y="510" text-anchor="middle">Same number both ends. Drop the connector when it would cross the drawing.</text>
+            </g>
+
+            <!-- DIAGRAM 9: DONE MEANS SAVED -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="40" y="58">Finishing</text>
+              <text class="svg-title" x="40" y="94">Done means saved.</text>
+              <rect class="svg-node-light" x="40" y="250" width="130" height="110" rx="12"/>
+              <rect x="60" y="272" width="40" height="26" rx="4" fill="#33413a"/>
+              <rect x="110" y="272" width="40" height="26" rx="4" fill="#33413a"/>
+              <path d="M80 320 H130" stroke="#4a5a50" stroke-width="2"/>
+              <text class="svg-small" x="105" y="346" text-anchor="middle">the canvas</text>
+              <path class="svg-line" d="M170 305 H206" marker-end="url(#arrow)"/>
+              <rect x="210" y="210" width="210" height="200" rx="14" fill="#14241d" stroke="#63c99c" stroke-width="1.6"/>
+              <text class="svg-tiny" x="230" y="238" fill="#c9f1df">LINT · 3 RULES</text>
+              <path d="M230 266 l6 8 l12 -16" fill="none" stroke="#63c99c" stroke-width="2.5"/>
+              <text class="svg-small" x="256" y="272" fill="#c9f1df">overflowing text</text>
+              <path d="M230 306 l6 8 l12 -16" fill="none" stroke="#63c99c" stroke-width="2.5"/>
+              <text class="svg-small" x="256" y="312" fill="#c9f1df">overlapping text</text>
+              <path d="M230 346 l6 8 l12 -16" fill="none" stroke="#63c99c" stroke-width="2.5"/>
+              <text class="svg-small" x="256" y="352" fill="#c9f1df">unbound arrows</text>
+              <text class="svg-tiny" x="230" y="392" fill="#e7c98d">CLEAN IS NOT DONE</text>
+              <path d="M420 305 H456" stroke="#63c99c" stroke-width="2" fill="none" marker-end="url(#arrowGreen)"/>
+              <rect x="460" y="252" width="120" height="96" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/>
+              <rect x="492" y="272" width="56" height="44" rx="4" fill="none" stroke="#63c99c" stroke-width="1.5"/>
+              <rect x="504" y="272" width="32" height="18" fill="#63c99c" opacity=".5"/>
+              <text class="svg-small" x="520" y="336" text-anchor="middle" fill="#c9f1df">saveDoc()</text>
+              <path d="M520 348 V400" stroke="#63c99c" stroke-width="2" fill="none" marker-end="url(#arrowGreen)"/>
+              <rect x="440" y="404" width="280" height="86" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="1.6"/>
+              <text class="svg-tiny" x="462" y="432" fill="#9fd9bf">THE HAND-OFF</text>
+              <text class="svg-small" x="462" y="458" fill="#c9f1df">~/Desktop/payroll.tldraw</text>
+              <text class="svg-tiny" x="462" y="478" fill="#9fd9bf">document: "Payroll blockers"</text>
+              <text class="svg-small" x="40" y="440">End with a screenshot and a look.</text>
+              <text class="svg-small" x="40" y="462" fill="#f2a793">Nothing reaches disk until saveDoc() runs.</text>
+            </g>
           </svg>
         </div>
       </div>
 
       <div class="steps">
-        <!-- SCENE 1: FOUR QUESTIONS INSIDE ONE SENTENCE. — edit scene copy here -->
+        <!-- SCENE 1 -->
         <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
           <div class="step-card">
-            <span class="scene-number">01 · The tension</span>
-            <h2 id="scene-1-title">Four questions inside one sentence.</h2>
-            <p>“Draw me a flow for the payroll blockers thing.” Which flow — a user flow, a task flow, a cross-actor service flow? Read by an engineer or a compliance reviewer? Happy path, or errors and recovery? At what fidelity? Draw first and you get a tidy picture of an undecided idea, which is the most expensive kind, because it looks finished.</p>
+            <span class="scene-number">01 · The ask</span>
+            <h2 id="scene-1-title">One ask, four holes.</h2>
+            <p>Someone asks for a flow for the payroll blockers. Which flow, a single user's path or a service flow across several actors? Read by an engineer or by a compliance reviewer, showing the happy path or the errors too? Draw before those are answered and you get a tidy picture of an idea nobody has decided.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>A renderer is a deliberately narrow skill.</strong> Narrowness is what lets it be good at the mechanics — and what stops it from confidently answering questions it has no basis to answer.</aside>
-
-        <!-- SCENE 2: DECIDE OVER HERE. DRAW OVER THERE. — edit scene copy here -->
+        <!-- SCENE 2 -->
         <section class="step" data-state="2" aria-labelledby="scene-2-title">
           <div class="step-card">
             <span class="scene-number">02 · The split</span>
-            <h2 id="scene-2-title">Decide over here. Draw over there.</h2>
-            <p>A discipline skill owns intention, audience, artifact type, structure, and fidelity. This one owns direction records, layout math, arrows and bindings, linting, screenshots, and export. When the decisions are missing, the correct move is to ask for them or route to the skill that owns them — not to fill them in while drawing.</p>
+            <h2 id="scene-2-title">Two skills share the work.</h2>
+            <p>Two skills share the work. A discipline skill decides intention, audience, artifact type, structure, and fidelity. This one places the coordinates, binds the arrows, runs the lint, and exports the file. When those decisions are missing it asks for them instead of inventing a plausible answer.</p>
           </div>
         </section>
 
-        <!-- SCENE 3: IT NEVER LEAVES YOUR DISK. — edit scene copy here -->
+        <!-- SCENE 3 -->
         <section class="step" data-state="3" aria-labelledby="scene-3-title">
           <div class="step-card">
-            <span class="scene-number">03 · Why this renderer</span>
-            <h2 id="scene-3-title">It never leaves your disk.</h2>
-            <p>Not a cloud workspace, not a shared team board, not a link that needs an account. tldraw offline writes a file you own. That is the reason to pick it: unreleased roadmaps, salary bands, customer names, org charts before they are announced — the material enterprise design actually runs on.</p>
+            <span class="scene-number">03 · The dependency</span>
+            <h2 id="scene-3-title">It has to be running.</h2>
+            <p>Here tldraw is the offline desktop app, and the skill talks to its local API on the same machine. There is no hosted fallback. If the app is not running, the skill says so and stops rather than drawing somewhere else.</p>
           </div>
         </section>
 
-        <!-- SCENE 4: NO APP RUNNING, NO DRAWING. — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>Installing and starting the app.</strong> The tldraw offline desktop app has to be downloaded and launched before the skill can reach it. The skill reads the app's port and token itself, so once it is running there is nothing to configure. When it cannot reach the app it stops and says so rather than drawing on another canvas. The same choice rules out collaboration: no sharing, no comments, no co-editing. A request for a collaborative canvas has no renderer in this plugin.
+        </aside>
+
+        <!-- SCENE 4 -->
         <section class="step" data-state="4" aria-labelledby="scene-4-title">
           <div class="step-card">
-            <span class="scene-number">04 · The catch</span>
-            <h2 id="scene-4-title">No app running, no drawing.</h2>
-            <p>This is the only skill in the library that depends on something running outside Copilot: the tldraw desktop app on this machine, exposing its local API. There is no hosted fallback. If it is not running, the skill says so and stops — quietly substituting an ASCII diagram or another canvas is not a graceful degradation, it is delivering something else.</p>
+            <span class="scene-number">04 · Local vs cloud</span>
+            <h2 id="scene-4-title">Yours, on disk.</h2>
+            <p>The reason to pick tldraw is that the work stays on the machine. It writes a real <code>.tldraw</code> file you own instead of a cloud workspace or a shared board behind a login. That fits unreleased roadmaps, salary bands, and org charts before anyone announces them.</p>
           </div>
         </section>
 
-        <!-- SCENE 5: ONE CALL. RETURN COUNTS. — edit scene copy here -->
+        <!-- SCENE 5 -->
         <section class="step" data-state="5" aria-labelledby="scene-5-title">
           <div class="step-card">
-            <span class="scene-number">05 · The economics</span>
-            <h2 id="scene-5-title">One call. Return counts.</h2>
-            <p>You send JavaScript, not per-element JSON, and only what you <code>return</code> comes back. That single property makes a thirty-direction diagram cheap: build the whole thing in loops in one file, post it once, and echo <code>{ nodes: 24, arrows: 31 }</code>. Returning live direction records instead fills the context with noise and buys nothing.</p>
+            <span class="scene-number">05 · One exec</span>
+            <h2 id="scene-5-title">One call in, counts out.</h2>
+            <p>You send JavaScript, not per-element JSON, and only what you return comes back. One call can build a thirty-shape diagram from a loop and echo back the counts. So the working style is to build in loops and return numbers, never to drip-feed shapes across separate calls.</p>
           </div>
         </section>
 
-        <!-- SCENE 6: PLAN THE COORDINATES ON PAPER FIRST. — edit scene copy here -->
+        <!-- SCENE 6 -->
         <section class="step" data-state="6" aria-labelledby="scene-6-title">
           <div class="step-card">
-            <span class="scene-number">06 · Craft</span>
-            <h2 id="scene-6-title">Plan the coordinates on paper first.</h2>
-            <p>Column pitch, row pitch, node size — decided before the canvas gets a say, because a canvas will happily place things where they fit rather than where they mean something. And some numbers are not yours to choose: a sticky note is a fixed 200 × 200 square, so a frame sized for a wider column will always look half-empty.</p>
+            <span class="scene-number">06 · The grid</span>
+            <h2 id="scene-6-title">Plan the grid first.</h2>
+            <p>The grid gets planned on paper before any shape exists. Column pitch, row pitch, and node size are set to real numbers, because a canvas places things where they fit rather than where they mean something. Some numbers are not yours to choose. A sticky note is 200 units wide and that width is fixed.</p>
           </div>
         </section>
 
-        <!-- SCENE 7: BIND THE ARROWS. ALWAYS. — edit scene copy here -->
+        <!-- SCENE 7 -->
         <section class="step" data-state="7" aria-labelledby="scene-7-title">
           <div class="step-card">
-            <span class="scene-number">07 · Craft</span>
-            <h2 id="scene-7-title">Bind the arrows. Always.</h2>
-            <p>An arrow built from two points looks identical to a bound one and detaches the instant anyone moves a node. Since the whole value of a canvas artifact is that the reader rearranges it while thinking, a diagram of friendless arrows falls apart on first contact with its audience.</p>
+            <span class="scene-number">07 · Bound vs loose</span>
+            <h2 id="scene-7-title">Bind the arrows.</h2>
+            <p>An arrow built from two loose points looks identical to a bound one on screen. The difference shows the moment someone drags a node, when the loose arrow detaches and the bound one follows. A canvas artifact exists to be rearranged while people think, so every arrow is bound to the shapes at its ends.</p>
           </div>
         </section>
 
-        <!-- SCENE 8: THREE RULES, THEN YOUR EYES. — edit scene copy here -->
+        <aside class="bridge-card">
+          <strong>The shapes worth knowing.</strong> Five cover almost everything: frames hold a screen, geo nodes are the boxes, sticky notes carry a thought, bound arrows connect two shapes, and text labels the rest. Some of their properties are the skill's to set and some are not. A sticky note is 200 units wide and grows in height as the text runs on; that width is fixed, not a number you pass.
+        </aside>
+
+        <!-- SCENE 8 -->
         <section class="step" data-state="8" aria-labelledby="scene-8-title">
           <div class="step-card">
-            <span class="scene-number">08 · The check</span>
-            <h2 id="scene-8-title">Three rules, then your eyes.</h2>
-            <p>The linter checks exactly three things: unsized directions, overlapping text, and unbound arrows. It says nothing about arrows crossing nodes, ragged columns, or labels too small to read at the zoom anyone will actually use. A clean lint is a starting condition, not a finish line — take the screenshot and look at it, every time.</p>
+            <span class="scene-number">08 · The annotation layer</span>
+            <h2 id="scene-8-title">Annotate from the near gutter.</h2>
+            <p>Notes about the drawing sit in the margin, each on the same side as the thing it describes. A number goes on the target and the same number opens its note, so the two read as a pair without a line between them. When a connector would cross the drawing to reach its note, it gets dropped. An arrow reaching over a wireframe ends up louder than the wireframe.</p>
           </div>
         </section>
 
-        <aside class="bridge-card"><strong>This is the anti-pattern that survives longest,</strong> because a green check is genuinely satisfying and a screenshot is genuinely work.</aside>
+        <aside class="bridge-card">
+          <strong>What it will not draw.</strong> This renderer draws an artifact someone has already decided on. It does not decide what a breadboard contains, and it does not choose what a diagram should show. When the thing you need is an argument that unfolds as you read, that is a scrollytelling article, and when it is a document someone signs off on, that is a proposal written in prose. Bring this skill a decision and it draws it.
+        </aside>
 
-        <!-- SCENE 9: SAVED, OR IT NEVER HAPPENED. — edit scene copy here -->
+        <!-- SCENE 9 -->
         <section class="step" data-state="9" aria-labelledby="scene-9-title">
           <div class="step-card">
-            <span class="scene-number">09 · Hand off</span>
-            <h2 id="scene-9-title">Saved, or it never happened.</h2>
-            <p>Nothing persists until <code>saveDoc()</code> runs. Skip it and the canvas shows the work while the file on disk stays stale — and the user has been told it is saved. The hand-off is the file path and the document name. The screenshot was for verification; the deliverable is the file, and PNG or SVG export is a UI action the user takes.</p>
+            <span class="scene-number">09 · Finishing</span>
+            <h2 id="scene-9-title">Done means saved.</h2>
+            <p>A clean lint is a starting condition, not the finish. It says nothing about arrows crossing nodes or labels too small to read, so the loop ends with a screenshot and a look. Nothing reaches disk until <code>saveDoc()</code> runs, and skipping it leaves the canvas updated while the file stays stale. The hand-off is the path to the <code>.tldraw</code> file and the name of the document.</p>
           </div>
         </section>
       </div>
-    </section>
-
-    <section class="next-moves-section" aria-labelledby="next-moves-title">
-      <div class="next-moves-inner">
-        <p class="eyebrow">Before you draw</p>
-        <h2 id="next-moves-title">What has to be decided somewhere else.</h2>
-        <p class="next-moves-lede">Each of these belongs to a discipline skill. When one is missing, the renderer asks rather than guesses — a guess made at drawing time becomes indistinguishable from a decision once it is on the canvas.</p>
-
-        <div class="next-moves-grid">
-          <article class="next-move-card"><h3>Intention</h3><p><strong>What is this diagram for?</strong> Aligning a team, exposing a fail point, and briefing an engineer produce three different drawings of the same system.</p></article>
-          <article class="next-move-card"><h3>Audience</h3><p><strong>Who reads it, and what do they already know?</strong> Notation an engineer skims is notation a stakeholder stalls on.</p></article>
-          <article class="next-move-card"><h3>Artifact type</h3><p><strong>Which diagram?</strong> A user flow, a service blueprint, a concept model and an ecosystem map answer different questions. Picking one is a decision, not a rendering preference.</p></article>
-          <article class="next-move-card"><h3>Scope and structure</h3><p><strong>Where does it start and stop?</strong> Happy path only, or errors, permissions, and recovery. This decides half the directions on the canvas.</p></article>
-          <article class="next-move-card"><h3>Fidelity</h3><p><strong>Zoning, lo-fi, or annotated?</strong> For wireframes especially, the rung is chosen before drawing — polish read as finality is how a sketch becomes a spec by accident.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="output-section" aria-label="The tldraw build loop">
-      <details>
-        <summary>Explore the complete build loop</summary>
-        <div class="output-grid">
-          <div class="output-item">Confirm the app is running</div><div class="output-item">Resolve the tq helper</div>
-          <div class="output-item">Target the right document</div><div class="output-item">Force light colour scheme</div>
-          <div class="output-item">Plan coordinates on paper</div><div class="output-item">Build in one exec</div>
-          <div class="output-item">Nodes from a data array</div><div class="output-item">Arrows bound between directions</div>
-          <div class="output-item">Group atoms and units</div><div class="output-item">Run the autosize pass</div>
-          <div class="output-item">Lint — expect zero</div><div class="output-item">Screenshot and critique</div>
-          <div class="output-item">Fix the visual problems</div><div class="output-item">Save the document</div>
-          <div class="output-item">Report the file path</div><div class="output-item">Export is a UI action</div>
-        </div>
-      </details>
     </section>
 
     <section class="closing" aria-labelledby="closing-title">
       <div class="closing-copy">
         <p class="eyebrow">The payoff</p>
-        <h2 id="closing-title">A drawing that survives being moved.</h2>
-        <p><strong>The point of a canvas is not the picture; it is that someone can rearrange it while they think.</strong> Bound arrows, grouped units, planned coordinates and a saved file are what make that possible — and each one is invisible in a screenshot, which is exactly why they get skipped. Keeping the decisions upstream and the mechanics here is what lets both be done properly: the discipline skill argues about what the diagram should say, and the renderer makes sure it still says it after the reader drags a box.</p>
-        <div class="final-equation"><span>A decided artifact</span><span aria-hidden="true">→</span><span>A file you own</span></div>
+        <h2 id="closing-title">The deliverable is the saved file.</h2>
+        <p><strong>A discipline skill decides what to draw; this one places it, binds it, checks it, and saves it.</strong> That split is the whole skill. Two facts decide whether it runs at all: the work stays on your machine in a <code>.tldraw</code> file you own, and the offline desktop app has to be running for the skill to reach it. Hand it a decision and it draws it. Hand it an undecided idea and it stops and asks.</p>
+        <div class="final-equation"><span>Decided upstream</span><span aria-hidden="true">→</span><span>Drawn, bound, saved</span></div>
       </div>
 
       <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
-        <title id="closing-diagram-title">A discipline skill deciding an artifact, the renderer drawing it, and a saved local file</title>
-        <desc id="closing-diagram-desc">Decisions about intention, audience and structure flow into the renderer, which handles layout, bindings and linting, and produces a saved tldraw file on the user's own disk.</desc>
-        <defs><marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker></defs>
-        <text x="118" y="106" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="1">DISCIPLINE DECIDES</text>
-        <g font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle">
-          <rect x="42" y="126" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="153" fill="#c8dcff">Intention</text>
-          <rect x="42" y="182" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="209" fill="#c8dcff">Audience</text>
-          <rect x="42" y="238" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="265" fill="#c8dcff">Artifact type</text>
-          <rect x="42" y="294" width="152" height="44" rx="9" fill="#1c2c43" stroke="#75a9ff" stroke-width="2"/><text x="118" y="321" fill="#c8dcff">Fidelity</text>
+        <title id="closing-diagram-title">A decision made upstream, drawn by this skill, and saved to a local file</title>
+        <desc id="closing-diagram-desc">The discipline decisions flow into the skill, which places, binds, checks, and saves; the output is a .tldraw file that stays on the machine, and the skill needs the offline app running.</desc>
+        <defs>
+          <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+        </defs>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <rect x="30" y="150" width="180" height="110" rx="16" fill="#f4f1e8"/>
+          <text x="54" y="186" font-size="11" fill="#6a5a8e" letter-spacing="1.2">DECIDED UPSTREAM</text>
+          <text x="54" y="214" font-size="14" fill="#151914">intention, audience,</text>
+          <text x="54" y="236" font-size="14" fill="#151914">structure, fidelity</text>
+          <path d="M210 205 H260" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)" fill="none"/>
+          <rect x="262" y="140" width="176" height="130" rx="16" fill="#efe9f7"/>
+          <text x="286" y="176" font-size="11" fill="#6a5a8e" letter-spacing="1.2">THIS SKILL</text>
+          <text x="286" y="206" font-size="15" fill="#151914">place · bind</text>
+          <text x="286" y="232" font-size="15" fill="#151914">check · save</text>
+          <path d="M438 205 H488" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)" fill="none"/>
+          <rect x="490" y="150" width="180" height="110" rx="16" fill="#eaf6ee" stroke="#63c99c" stroke-width="1.5"/>
+          <text x="514" y="186" font-size="11" fill="#2f7357" letter-spacing="1.2">SAVED</text>
+          <text x="514" y="214" font-size="14" fill="#14342a">.tldraw file</text>
+          <text x="514" y="236" font-size="14" fill="#14342a">you own</text>
+          <rect x="120" y="330" width="210" height="58" rx="12" fill="#eaf6ee" stroke="#63c99c" stroke-width="1.5"/>
+          <text x="142" y="358" font-size="12" fill="#2f7357" font-weight="800">STAYS ON THE MACHINE</text>
+          <text x="142" y="378" font-size="11" fill="#3f7a63">no cloud, no login</text>
+          <rect x="370" y="330" width="220" height="58" rx="12" fill="#faf0d8" stroke="#e7b85c" stroke-width="1.5"/>
+          <text x="392" y="358" font-size="12" fill="#8a6a1a" font-weight="800">NEEDS THE APP RUNNING</text>
+          <text x="392" y="378" font-size="11" fill="#8a6a1a">offline desktop app</text>
         </g>
-        <path d="M202 148 C238 148 240 232 268 232 M202 204 H268 M202 260 C238 260 240 232 268 232 M202 316 C238 316 240 232 268 232" fill="none" stroke="#526058" stroke-width="2"/>
-        <rect x="276" y="132" width="120" height="206" rx="16" fill="#1b2821" stroke="#63c99c" stroke-width="2"/>
-        <text x="336" y="216" fill="#fffdf7" font-family="Georgia, serif" font-size="18" text-anchor="middle">Render</text>
-        <text x="336" y="246" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">LAYOUT · BIND</text>
-        <text x="336" y="264" fill="#9cac9f" font-family="Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">LINT · SAVE</text>
-        <path d="M406 232 H460" fill="none" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)"/>
-        <rect x="476" y="140" width="184" height="190" rx="16" fill="#f4f1e8"/>
-        <text x="500" y="176" fill="#667068" font-family="Inter, sans-serif" font-size="10" font-weight="800" letter-spacing="1.3">ON YOUR DISK</text>
-        <g fill="#dceddf" stroke="#9dbfa9" stroke-width="1.5">
-          <rect x="500" y="196" width="62" height="38" rx="7"/><rect x="574" y="196" width="62" height="38" rx="7"/>
-          <rect x="500" y="252" width="62" height="38" rx="7"/><rect x="574" y="252" width="62" height="38" rx="7"/>
-        </g>
-        <g stroke="#63c99c" stroke-width="2.5" fill="none">
-          <path d="M562 215 H574"/><path d="M562 271 H574"/><path d="M531 234 V252"/>
-        </g>
-        <text x="568" y="316" fill="#667068" font-family="Inter, sans-serif" font-size="11" font-weight="750" text-anchor="middle">blockers.tldraw</text>
-        <text x="350" y="430" fill="#63c99c" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">MECHANICS HERE. MEANING UPSTREAM.</text>
+        <text x="350" y="446" fill="#3f7a63" font-family="Inter, sans-serif" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="1.2">A DECISION, DRAWN AND SAVED</text>
       </svg>
     </section>
 
     <section class="sources" aria-labelledby="sources-title">
       <div class="sources-inner">
         <p class="eyebrow">Method provenance</p>
-        <h2 id="sources-title">Where this one comes from.</h2>
-        <p class="sources-intro">This skill is vendored from a personal library and adapted to ship. The adaptation is most of the interesting part.</p>
+        <h2 id="sources-title">Where this comes from.</h2>
+        <p class="sources-intro">The canvas behaviour is tldraw's own. The build loop, the lint rules, and the annotation recipe are the skill's, with real links to each.</p>
         <div class="source-grid">
           <article class="source-card">
-            <h3>tldraw offline</h3>
-            <p>The desktop app, its local HTTP API, and the <code>.tldraw</code> file format. Version 1.12.0 is what the mechanics here are written against — including its quirks, like a screenshot <code>bounds</code> option that silently returns a window capture.</p>
-            <a href="https://tldraw.dev/">Read the tldraw docs</a>
+            <h3>tldraw</h3>
+            <p>The offline canvas, the arrow-binding behaviour, and the fixed sticky-note width quoted here.</p>
+            <a href="https://tldraw.dev/">Open tldraw.dev</a>
           </article>
           <article class="source-card">
-            <h3>What vendoring changed</h3>
-            <p>A hardcoded path to the helper script — the kind that stops existing the moment a skill ships — became a search. References to sibling skills this plugin does not include were removed, and the failure modes were rewritten as a real <strong>Anti-patterns</strong> section.</p>
-            <a href="https://github.com/rloureiro_paychex/design-skills">See the repository conventions</a>
+            <h3>The skill itself</h3>
+            <p>The golden rules, the build loop, and the anti-patterns.</p>
+            <a href="../../skills/renderers/tldraw-skill/SKILL.md">Read SKILL.md</a>
           </article>
           <article class="source-card">
-            <h3>Renderer, not discipline</h3>
-            <p>The split this article is built around. The library keeps deciding and drawing in separate skills so that neither quietly does the other’s job — the same reason <code>problem-framing</code>, <code>shaping</code> and <code>proposal</code> are three skills and not one.</p>
-            <a href="https://basecamp.com/shapeup">Read the method behind the split</a>
+            <h3>canvas-api.md</h3>
+            <p>The exec contract, the endpoints, the shape records, and the style enums.</p>
+            <a href="../../skills/renderers/tldraw-skill/references/canvas-api.md">Read the reference</a>
+          </article>
+          <article class="source-card">
+            <h3>craft.md</h3>
+            <p>The three lint rules, the layout constants, and the annotation-layer recipe (§10.2).</p>
+            <a href="../../skills/renderers/tldraw-skill/references/craft.md">Read the reference</a>
           </article>
         </div>
       </div>
     </section>
     </article>
   </main>
+
 
   <footer>Draw What Was Decided · An interactive explanation of the tldraw-skill renderer</footer>
 
@@ -1201,15 +1372,15 @@
       const label = document.getElementById('diagram-label');
       const progress = document.querySelector('.progress-bar');
       const labels = {
-        '1': 'The ambiguous ask',
-        '2': 'The boundary',
-        '3': 'Stays on the machine',
-        '4': 'Runtime dependency',
-        '5': 'One exec',
-        '6': 'Layout math',
-        '7': 'Bound arrows',
-        '8': 'Lint, then look',
-        '9': 'saveDoc'
+        1: 'The ask',
+        2: 'The split',
+        3: 'Must be running',
+        4: 'Yours on disk',
+        5: 'One exec call',
+        6: 'Plan the grid',
+        7: 'Bind the arrows',
+        8: 'Near-gutter notes',
+        9: 'Done means saved'
       };
       let activeState = 1;
 
