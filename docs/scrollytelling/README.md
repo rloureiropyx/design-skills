@@ -55,8 +55,12 @@ after the article exists means editing markup and re-running the viewport matrix
 implements the approved copy verbatim, so a later pass would change text you already signed off. The
 copy gets cleaned while it can still be argued with, and what changed is reported alongside the draft.
 
-The pattern list is condensed from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop)
-(MIT), with Spanish equivalents added and the list re-cut for scene text.
+The patterns live in the [`slop-check`](../slop-check/) utility, in English and Spanish, so
+`scrollytelling`, `proposal`, and anything added later edit against one list and one set of profile
+overrides. The skill keeps a short addendum of its own for what a script is stricter about — where
+each pattern lands hardest in a 2–4 sentence beat, and a lower em-dash tolerance than ordinary prose.
+One pass, not two. The list is condensed from Peter Yang's
+[`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT).
 
 ## Its own gate, applied to itself
 

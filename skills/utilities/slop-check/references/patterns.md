@@ -11,55 +11,58 @@ note you wrote at step 2 plays the same role.
 ## Named patterns
 
 Seventeen. Each one is a shape, not a word — which is why a banned-word list alone never catches
-them.
+them, and why they survive translation. A Spanish draft produces the same shapes with different
+words, so the common Spanish forms are listed alongside the English ones.
 
 ### 1. Binary contrast
 
-*"This isn't a reporting problem. It's a trust problem."* The setup exists to make the payoff sound
-earned. Say the payoff.
+*"This isn't a reporting problem. It's a trust problem."* *"No es un problema de reportes, es un
+problema de confianza."* The setup exists to make the payoff sound earned. Say the payoff.
 
 **Fix:** state the second half directly. Keep the contrast only when both halves carry information
 the reader needs.
 
 ### 2. Throat-clearing opener
 
-*"Here's the thing."* *"Let me be clear."* *"The short answer is this."* Words spent announcing that
-words are coming.
+*"Here's the thing."* *"Let me be clear."* *"Vamos por partes."* *"Empecemos por el principio."*
+Words spent announcing that words are coming.
 
 **Fix:** delete, and start at the next sentence.
 
 ### 3. Faux-insight setup
 
-*"What most people get wrong about X…"* *"Here's what nobody tells you."* It promises an insight
-before delivering one, and flatters the reader for reading on.
+*"What most people get wrong about X…"* *"Here's what nobody tells you."* *"Lo que casi nadie te
+cuenta."* It promises an insight before delivering one, and flatters the reader for reading on.
 
 **Fix:** delete the setup. If what follows is genuinely counter-intuitive, it does not need the
 announcement.
 
 ### 4. Colon reveal
 
-*"The best part: it learns."* The colon is doing the dramatic work the sentence could not.
+*"The best part: it learns."* *"Lo que nadie mira: el z-index."* The colon is doing the dramatic
+work the sentence could not.
 
 **Fix:** one plain sentence. Keep colons that introduce a list or a genuine definition.
 
 ### 5. Superficial `-ing` analysis
 
 Trailing clauses that assert significance without adding a fact: *"…highlighting the team's
-commitment"*, *"…underscoring the need for governance"*, *"…reflecting a broader shift"*.
+commitment"*, *"…underscoring the need for governance"*, *"…reflejando un cambio más amplio"*,
+*"…demostrando el compromiso con…"*.
 
 **Fix:** cut the clause. When the significance is real, state it as its own sentence with the evidence
 under it.
 
 ### 6. Importance puffery
 
-*"marks a pivotal moment"*, *"stands as a testament to"*, *"represents a fundamental shift"*. Weight
-asserted rather than shown.
+*"marks a pivotal moment"*, *"stands as a testament to"*, *"marca un antes y un después"*, *"juega un
+papel fundamental"*. Weight asserted rather than shown.
 
 **Fix:** cut, or replace with what actually happened.
 
 ### 7. Weasel attribution
 
-*"Experts agree."* *"Studies show."* *"It's widely believed."* An unnamed source cannot be checked, so
+*"Experts agree."* *"Studies show."* *"Está demostrado que."* An unnamed source cannot be checked, so
 it is not a source.
 
 **Fix:** name it, or cut the claim. In this repo's terms it is an assertion, and it belongs where
@@ -67,8 +70,8 @@ assertions belong.
 
 ### 8. Fake-strong verb
 
-*"serves as a centralized hub for"*, *"acts as a bridge between"*, *"functions as the primary
-mechanism"*. Three words doing the job of "is".
+*"serves as a centralized hub for"*, *"acts as a bridge between"*, *"funciona como un eje central"*.
+Three words doing the job of "is".
 
 **Fix:** `is`, `has`, `does`, `connects`, `stores`.
 
@@ -81,13 +84,14 @@ because repetition felt inelegant. In technical writing it costs the reader the 
 
 ### 10. Negative listing
 
-*"Not a dashboard. Not a report. A decision surface."* Two false starts to make the third land.
+*"Not a dashboard. Not a report. A decision surface."* *"No es un gráfico. No es un tablero."* Two
+false starts to make the third land.
 
 **Fix:** say the third thing.
 
 ### 11. Dramatic fragmentation
 
-*"That's it. That's the whole feature."* *"Simple. Powerful. Done."* Fragments used as percussion
+*"That's it. That's the whole feature."* *"Nada más. Eso es todo."* Fragments used as percussion
 rather than as emphasis.
 
 **Fix:** one complete sentence. Keep a single fragment where it genuinely emphasises; cut the stack.
@@ -102,8 +106,8 @@ everything else, because no single line is wrong.
 
 ### 13. Rhetorical setup
 
-*"What if I told you…"* *"Plot twist:"* *"Sound familiar?"* A question that expects no answer, staged
-to buy attention.
+*"What if I told you…"* *"Plot twist:"* *"¿Y si te dijera que…?"* A question that expects no answer,
+staged to buy attention.
 
 **Fix:** delete. Ask a real question or make the statement.
 
@@ -117,8 +121,8 @@ your voice to it. The piece ends on its last real sentence.
 
 ### 15. Summary-recap ending
 
-*"In conclusion,"* *"Ultimately,"* *"To sum up,"* followed by a restatement of what the reader just
-read.
+*"In conclusion,"* *"Ultimately,"* *"En resumen,"* *"A fin de cuentas,"* followed by a restatement of
+what the reader just read.
 
 **Fix:** cut. A short piece does not need a recap; a long one needs a section, not a sentence.
 
@@ -153,6 +157,9 @@ a suit.
 `beacon` · `multifaceted` · `meticulous` · `intricate` · `paramount` · `transformative` · `elevate` ·
 `embark` · `supercharge` · `harness` · `ever-evolving` · `seamless` · `unlock` · `deep dive`
 
+In Spanish: `potenciar` · `robusto` · `disruptivo` · `revolucionario` · `empoderar` · `ecosistema`
+(unless it is literally one) · `hoja de ruta` as decoration · `clave` as a modifier · `sinergia`
+
 **Fix:** the specific verb. `leverage` is almost always `use`. `utilize` is always `use`. `facilitate`
 is `run`, `host`, `let`, or `cause`. `robust` is a measurement the writer has not taken.
 
@@ -172,6 +179,9 @@ a real contrast: *"it actually shipped"* after a paragraph about it not shipping
 `at its core` · `in today's world` · `in the age of` · `in the world of` · `the reality is` ·
 `the truth is` · `in terms of` · `with regard to` · `going forward` · `in this article` ·
 `let's dive in` · `needless to say` · `that said` (as a paragraph opener, repeatedly)
+
+In Spanish: `cabe destacar` · `es importante mencionar` · `en el mundo actual` · `a fin de cuentas` ·
+`en términos de` · `en lo que respecta a` · `no está de más decir`
 
 **Fix:** delete and start at the content. *"It's worth noting that latency doubled"* is *"latency
 doubled"*, and it is a stronger sentence.

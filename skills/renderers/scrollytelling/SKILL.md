@@ -60,14 +60,14 @@ When a profile rule contradicts the chosen tone, name the conflict and pick one,
 
 **Immediately after the interview, write a complete first-draft scene script yourself and present it for reaction.** Do not ask the user to fill in a template. A concrete draft to argue with beats an empty table. Base it on the goal, the tone, the interview answers, and any material they shared; invent placeholder visuals where needed and mark them `[propuesta]`.
 
-Read `references/prose.md` before you write the TEXTO cells. A scene is 2–4 sentences, which is exactly the length at which a draft reaches for a dramatic reveal instead of a sentence — the scroll is already supplying the drama.
+Read `references/prose.md` before you write the TEXTO cells — where the slop patterns land hardest in a script, and what scene text is stricter about than ordinary prose.
 
 Use the scene table in `templates/script-template.md`. The goal and tone go at the top of it, because that is what the beats are judged against. Every scene has three columns:
 - **VISUAL** — what the sticky graphic shows in this scene (its *state*)
 - **TEXTO** — the prose the reader sees (2-4 short sentences max)
 - **TRANSICIÓN** — what changes visually when scrolling from the previous scene into this one
 
-**Run the `slop-check` edit pass over the TEXTO column before presenting the draft.** Only that column — VISUAL and TRANSICIÓN are direction notes, not prose a reader sees. Report what it changed in the same message as the draft, in one or two lines.
+**Run the `slop-check` edit pass once, over the TEXTO column, before presenting the draft.** Only that column — VISUAL and TRANSICIÓN are direction notes, not prose a reader sees. `slop-check` owns the pattern list and the voice-profile precedence; `references/prose.md` adds what is specific to scene text and the checklist to close on. One pass, both files. Report what it changed in the same message as the draft, in one or two lines.
 
 The pass belongs here and nowhere else in this skill. Phase 2 implements the approved copy verbatim, so editing after implementation would change text the user already signed off — which is the gate this skill exists to hold. Clean the copy while it can still be argued with.
 
@@ -80,7 +80,7 @@ These rules define a valid scene. Apply them to your own draft and to every user
 3. **Text is subordinate.** If a scene needs more than ~4 sentences, either split the concept or move the detail to a non-animated prose section between scrollytelling blocks (mixing static prose and scroll sequences is normal and good — see `references/patterns.md`).
 4. **The opening scene states the tension** (what question does this article answer?) and **the closing scene pays it off**. If the draft lacks either, say so and fix it.
 5. **The opening scene matches the goal.** An argument opens on a claim, a story opens on a moment, an orientation opens on a map. A draft that feels off is usually a goal mismatch in scene 1, not a writing problem.
-6. **No slop in the scene text.** Run the checklist at the end of `references/prose.md` over the table before presenting it, and again after any re-voicing — copy is cheap to fix in a table and expensive to fix in a built article. The pass removes patterns, not voice: T4 takes a side and T6 runs on restraint, and neither is slop.
+6. **No slop in the scene text.** The pass in step 2 closes on the checklist at the end of `references/prose.md`. Re-run that checklist after any re-voicing — copy is cheap to fix in a table and expensive to fix in a built article. It removes patterns, not voice: T4 takes a side, T6 runs on restraint, and anything the voice profile protects stays.
 
 Iterate the table with the user. Push back on weak beats; suggest stronger visual metaphors. When the user approves the script, restate the final scene table and confirm: this is what gets built.
 
@@ -245,7 +245,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   copy stands alone.
 - **Writing scene text in slop shapes.** Colon reveals, "no es X, es Y", stacked fragments, and a
   final metaphor kicker are what a 2–4 sentence beat degrades into. The scroll supplies the drama;
-  run `references/prose.md` over the table before presenting it.
+  run the step 2 pass over the table before presenting it.
 - **Using the prose pass to flatten the tone.** Restraint in T6 and a stated side in T4 are
   choices from the tone menu. Cut the pattern that stands in for work not done, not the voice.
 - **Fixing copy in the built HTML.** A wording change after Phase 2 means editing markup,
@@ -256,7 +256,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 ## Reference files
 
 - `references/tone-and-goal.md` — the goal and tone menus, what each choice changes, and the combinations that do not work. Read in Phase 1 step 1, before the interview.
-- `references/prose.md` — the AI-slop patterns that scene text degrades into, in English and Spanish, and the checklist to run before presenting the table. Read in Phase 1 step 2, before writing the TEXTO cells.
+- `references/prose.md` — what is specific to scene text: why a 2–4 sentence beat attracts these shapes, where each lands hardest in a script, and the checklist to run before presenting the table. The pattern list itself lives in `slop-check`. Read in Phase 1 step 2, before writing the TEXTO cells.
 - `references/patterns.md` — the scrollytelling patterns, when to use each, when to mix with static prose. Read in Phase 1 step 4.
 - `references/implementation.md` — HTML/CSS/JS skeleton, deterministic scene-state selection, reduced-motion and no-JS handling, mobile pitfalls, and the scrubbed-sequence recipe. Read at the start of Phase 2.
 - `templates/script-template.md` — the scene table format. Use in Phase 1 step 2.

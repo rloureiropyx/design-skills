@@ -48,6 +48,16 @@ to prevent.
 With no profile, say so in one line and fall back to the draft's own evidence — see below. Do not stop
 to run setup unless the user asks.
 
+## When a calling skill has its own addendum
+
+`scrollytelling` and `proposal` each keep a prose addendum in their own reference folder. Those files
+do not restate the patterns — they say where the patterns land hardest in that format and what the
+format is stricter about, and each ends in a checklist. When one of those skills invokes this pass,
+read its addendum too, apply the stricter of the two rules, and close on its checklist.
+
+Still one pass. Two files describing it is not two passes, and running the list twice is how a draft
+gets over-edited into the tidy prose this skill exists to prevent.
+
 ## Preserve the boundary
 
 **Owns**: sentences. Word choice, rhythm, openers, endings, punctuation density, and the named
@@ -172,6 +182,9 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   is for prose a reader sees.
 - **Applying it to already-approved copy.** Editing after sign-off changes something the user believed
   was settled. Run it before approval or not at all.
+- **Running the pass twice because two files describe it.** A calling skill's prose addendum is an
+  addendum, not a second pass. Two rounds over the same paragraph produce the tidy prose this skill
+  exists to prevent.
 - **Showing the voice-signal note to the user.** It is working memory for the pass, written fast and
   in shorthand. Presented, it reads as a verdict on how someone writes and invites them to argue with
   the description instead of the edit.

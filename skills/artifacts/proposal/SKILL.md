@@ -97,12 +97,12 @@ Completion criterion: nothing known to be uncertain is presented as settled.
 
 ### 7. Write and confirm
 
-Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document. Read `references/prose.md` as well: in this document the AI-slop patterns are a traceability problem, not a style one — puffery, unattributed claims, and invented consequences are exactly the sentences that trace back to nothing. Run its checklist over the draft before presenting.
+Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document. Read `references/prose.md` as well: here the AI-slop patterns are a traceability problem, not a style one — puffery, unattributed claims, and invented consequences are exactly the sentences that trace back to nothing.
 
 Before saving, run two passes over the prose:
 
 1. **Voice.** Load `WRITING_STYLE.md` if one exists — the project's documentation directory, then the root — and apply its observed rules to the sentences. If there is none, say so in one line and offer `writing-style`; do not block the proposal on it. The profile governs sentence-level voice only. It never changes a section, an order, or a claim. When a profile rule would make the document read as advocacy, the document wins: this one is supposed to be un-sold, and voice is the door selling comes back through.
-2. **Slop.** Run the `slop-check` edit pass. The slop taxonomy is a concrete version of what the anti-patterns below already forbid in the abstract — importance puffery, fake-strong verbs, faux-insight setups and unnamed attribution are what "selling" looks like sentence by sentence.
+2. **Slop.** Run the `slop-check` edit pass once, and close it on the checklist at the end of `references/prose.md`. `slop-check` owns the pattern list and the voice-profile precedence; `references/prose.md` adds what this document is stricter about — vague quantities, urgency language, unattributed claims, and vocabulary drift. One pass, both files. The taxonomy is a concrete version of what the anti-patterns below already forbid in the abstract: puffery, fake-strong verbs, faux-insight setups and unnamed attribution are what "selling" looks like sentence by sentence.
 
 Neither pass may add, remove, or soften a claim. If either wants to, that is a finding about the proposal, not about the prose — say so and leave the sentence.
 
@@ -161,13 +161,13 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 ## Reference files
 
 - `templates/proposal.md` — the required `PROPOSAL.md` structure and where to save it. Read at step 7.
-- `references/prose.md` — the AI-slop patterns that produce untraceable sentences, the words to cut, and the checklist to run before presenting. Read at step 7, with the template.
+- `references/prose.md` — why the slop patterns are a traceability problem here, what this document is stricter about than the shared list, and the checklist to run before presenting. The pattern list itself lives in `slop-check`. Read at step 7, with the template.
 
 ## Method sources
 
 - Ryan Singer, [*Shape Up*](https://basecamp.com/shapeup): the structure this document descends from — problem, appetite, solution, rabbit holes, no-gos — and the idea that time is fixed and scope moves.
 - Ryan Singer, [framing](https://www.ryansinger.co/framing/): the reason this is not called a pitch. In his current usage "pitch" is the raw request that arrives *before* framing. A pitch is something you win; this is something people read and decide on.
 - Ryan Singer, [`rjs/shaping-skills`](https://github.com/rjs/shaping-skills) — `framing-doc` and `kickoff-doc`: carrying the frame forward instead of re-deriving it, and the test that every sentence should be traceable to something someone actually said or decided.
-- Peter Yang, [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT): the pattern list behind `references/prose.md`, condensed and re-cut for a document that has to be traceable rather than persuasive.
+- Peter Yang, [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT): the pattern list behind `slop-check`, which `references/prose.md` re-cuts for a document that has to be traceable rather than persuasive.
 
 The enterprise sign-off, audit, and accessibility checks are additions, not Singer's.
