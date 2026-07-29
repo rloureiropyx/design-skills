@@ -98,6 +98,7 @@ Authored here under one of three groups, by what the skill owns:
 - `skills/process/<skill>/` — it decides something.
 - `skills/artifacts/<skill>/` — it produces the thing someone decides on.
 - `skills/renderers/<skill>/` — it materialises a decision made elsewhere.
+- `skills/utilities/<skill>/` — other skills call it while they draft.
 
 Inside the skill folder:
 

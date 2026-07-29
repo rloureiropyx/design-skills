@@ -44,6 +44,14 @@ All of it in one message. Four or five questions, then a draft — a long questi
 
 If the user picks a goal and tone that fight each other, say so and offer the nearest pair that works. Then do what they say.
 
+**Then load the voice profile.** Check for `WRITING_STYLE.md` — the project's documentation directory or root first, then `~/.copilot/writing-style/WRITING_STYLE.md`. If one exists, say so in one line and hold it while drafting.
+
+The tone menu and the profile answer different questions and neither replaces the other. The tone decides the register — how much this piece hedges, how long its sentences run, whether it is allowed to be funny. The profile decides what that register sounds like in this person's hands. `T1 Plain and direct` is a category; the profile is why this writer's plain and direct does not read like anyone else's.
+
+When a profile rule contradicts the chosen tone, name the conflict and pick one, in half a line. Do not average them.
+
+If no profile exists, draft without one. Mention once that `writing-style` can build one in about five minutes, and drop it if they do not take it up.
+
 ### 2. Propose a draft script — never a blank page
 
 **Immediately after the interview, write a complete first-draft scene script yourself and present it for reaction.** Do not ask the user to fill in a template. A concrete draft to argue with beats an empty table. Base it on the goal, the tone, the interview answers, and any material they shared; invent placeholder visuals where needed and mark them `[propuesta]`.
@@ -52,6 +60,10 @@ Use the scene table in `templates/script-template.md`. The goal and tone go at t
 - **VISUAL** — what the sticky graphic shows in this scene (its *state*)
 - **TEXTO** — the prose the reader sees (2-4 short sentences max)
 - **TRANSICIÓN** — what changes visually when scrolling from the previous scene into this one
+
+**Run the `slop-check` edit pass over the TEXTO column before presenting the draft.** Only that column — VISUAL and TRANSICIÓN are direction notes, not prose a reader sees. Report what it changed in the same message as the draft, in one or two lines.
+
+The pass belongs here and nowhere else in this skill. Phase 2 implements the approved copy verbatim, so editing after implementation would change text the user already signed off — which is the gate this skill exists to hold. Clean the copy while it can still be argued with.
 
 ### 3. Enforce the beat rules while iterating
 
@@ -64,6 +76,8 @@ These rules define a valid scene. Apply them to your own draft and to every user
 5. **The opening scene matches the goal.** An argument opens on a claim, a story opens on a moment, an orientation opens on a map. A draft that feels off is usually a goal mismatch in scene 1, not a writing problem.
 
 Iterate the table with the user. Push back on weak beats; suggest stronger visual metaphors. When the user approves the script, restate the final scene table and confirm: this is what gets built.
+
+Re-run the slop pass over any scene text **you** rewrite while iterating. Never re-run it over text the user wrote themselves — that is their voice arriving directly, and editing it is how the pass becomes an argument.
 
 ### 4. Pick the pattern
 
@@ -204,6 +218,16 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   each, get a pick, then write.
 - **Averaging the tone menu.** "A bit of all of them" is not a tone. Pick one, draft it, and
   offer to re-voice the scene text — tone is cheap to change after the structure is agreed.
+- **Editing the user's own scene text.** The slop pass runs over what you drafted. Text the user wrote
+  themselves is their voice arriving directly, and running a pass over it turns an edit into an
+  argument.
+- **Running the slop pass after implementation.** Phase 2 implements the approved copy verbatim.
+  Editing built HTML changes text the user already signed off, which is the gate. Clean the TEXTO
+  column while it can still be argued with.
+- **Letting the pass flatten a protected tic.** A pattern in the voice profile's overrides section is
+  this writer's voice, not a finding. The profile out-ranks the pattern list.
+- **Averaging the tone and the profile.** They answer different questions — register versus how that
+  register sounds. When they genuinely conflict, name it and pick one.
 - **Parking the mobile graphic behind the text cards.** `z-index: -1` looks elegant on a
   desktop preview and hides the graphic completely on a phone, where cards are far taller.
   The graphic pins above the text and the text scrolls underneath it.

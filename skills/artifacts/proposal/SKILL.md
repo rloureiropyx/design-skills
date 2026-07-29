@@ -10,9 +10,10 @@ description: >-
   document, writes `PROPOSAL.md`. Do NOT use it to decide which problem is worth
   solving or to challenge a frame — that is `problem-framing`. Do NOT use it to
   explore or compare solution options, run a fit check, or resolve unknowns —
-  that is `shaping`. Do NOT use it for a PRD, a requirements specification,
-  acceptance criteria, a roadmap, a status report, a retrospective, or slides
-  summarising work that is already approved.
+  that is `shaping`. Do NOT use it to re-voice, de-slop, or line-edit a proposal
+  that already exists — that is `slop-check`. Do NOT use it for a PRD, a
+  requirements specification, acceptance criteria, a roadmap, a status report, a
+  retrospective, or slides summarising work that is already approved.
 ---
 
 # Proposal
@@ -98,9 +99,16 @@ Completion criterion: nothing known to be uncertain is presented as settled.
 
 Write `PROPOSAL.md` using the structure in `templates/proposal.md`. Read that file before writing; it also says where to save the document.
 
+Before saving, run two passes over the prose:
+
+1. **Voice.** Load `WRITING_STYLE.md` if one exists — the project's documentation directory or root first, then `~/.copilot/writing-style/WRITING_STYLE.md` — and apply it to the sentences. The profile governs sentence-level voice only. It never changes a section, an order, or a claim. When a profile rule would make the document read as advocacy, the document wins: this one is supposed to be un-sold, and voice is the door selling comes back through.
+2. **Slop.** Run the `slop-check` edit pass. The slop taxonomy is a concrete version of what the anti-patterns below already forbid in the abstract — importance puffery, fake-strong verbs, faux-insight setups and unnamed attribution are what "selling" looks like sentence by sentence.
+
+Neither pass may add, remove, or soften a claim. If either wants to, that is a finding about the proposal, not about the prose — say so and leave the sentence.
+
 Present it and ask for one thing: the decision. Go ahead, do not go ahead, or send it back with a named reason.
 
-Completion criterion: the document is saved, and the decision asked for is explicit.
+Completion criterion: the document is saved, both passes have run, and the decision asked for is explicit.
 
 ## Enterprise constraints to surface
 
@@ -137,6 +145,9 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   "We are not doing that" ends the conversation and gets quietly reversed later without a record.
 - **Producing acceptance criteria or tickets.** They read as helpful and they commit the team to
   decisions this document was supposed to leave open.
+- **Letting the voice profile change what the document says.** It governs how a sentence sounds.
+  A rule that would make this read as advocacy loses to the document, and a pass that softens or
+  strengthens a claim has stopped editing and started deciding.
 
 ## Reference files
 

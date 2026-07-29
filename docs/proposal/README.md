@@ -48,6 +48,21 @@ The skill will not write a proposal when any of these is missing, and it says wh
 
 A document that looks decision-ready gets treated as decision-ready, which is why there is no partial version "just to react to".
 
+## Two passes before it saves
+
+Step 7 runs the voice profile and then the slop pass over the finished prose.
+
+The profile governs sentences only — never a section, an order, or a claim. When a profile rule would
+make the document read as advocacy, the document wins. This is the one artifact in the library whose
+job is to be un-sold, and voice is the door selling comes back through.
+
+The slop pass earns its place here for the same reason. Importance puffery, fake-strong verbs,
+faux-insight setups and unnamed attribution are what "selling" looks like sentence by sentence — a
+concrete version of what the skill's anti-patterns already forbid in the abstract.
+
+Neither pass may add, remove, or soften a claim. When one wants to, that is a finding about the
+proposal, not about the prose.
+
 ## Where it stops
 
 Inputs: `FRAMED_PROBLEM.md` and `DIRECTIONS.md`. Output: `PROPOSAL.md`.

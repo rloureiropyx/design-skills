@@ -6,7 +6,7 @@ Most of them follow one short recipe:
 
 **Work out what the problem actually is → try two or three directions and pick one → write it up so people can decide.**
 
-That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. Two more skills draw or publish the result once something has been decided.
+That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. Two more skills draw or publish the result once something has been decided, and two utilities the others call so what gets written sounds like you rather than like a model.
 
 The recipe is not new and it is not mine. It is mostly Ryan Singer's, with the bits added that enterprise B2B work needs and a small-team method does not cover: roles, permissions, audit, integrations, data volume, accessibility.
 
@@ -128,6 +128,38 @@ Draws a decided artifact — flow, journey map, service blueprint, concept model
 - Skill: [`skills/renderers/tldraw-skill/SKILL.md`](skills/renderers/tldraw-skill/SKILL.md)
 - Explainer: [`draw-what-was-decided.html`](docs/tldraw-skill/draw-what-was-decided.html) · [script](docs/tldraw-skill/draw-what-was-decided.script.md)
 
+### Utilities — serve whoever is drafting
+
+These two own neither a decision nor an artifact. They are called by the skills that write prose someone will read — `scrollytelling` today, `proposal` today, slides later — and they share one document between them.
+
+#### Writing Style
+
+Reads two or three things you have already written and turns them into `WRITING_STYLE.md`: voice in a paragraph, three to five signature moves each with a line quoted from a sample, measurable defaults you can check a draft against, and the list of tics an editing pass must not remove.
+
+It asks for real writing rather than adjectives, because self-description is the weakest input there is — personal style is mostly implicit and "difficult to specify through prompts". Prompted writing tasks are the fallback, since writing on request produces your careful register rather than your voice. The samples have to be about *different subjects*, not only from different places, or the profile learns the subject instead of the writer.
+
+Set up once. Saved to `~/.copilot/writing-style/WRITING_STYLE.md`, outside the plugin directory so `plugin update` cannot delete it. A project can override it with its own file, which wins on any rule it states.
+
+Capped at about 120 lines, because instruction files past roughly 200 lines measurably reduce adherence — a profile that grows every session produces *less* consistent voice.
+
+- Skill: [`skills/utilities/writing-style/SKILL.md`](skills/utilities/writing-style/SKILL.md)
+- Explainer: [`docs/writing-style/README.md`](docs/writing-style/README.md)
+
+#### Slop Check
+
+Edits a draft to remove seventeen named patterns — throat-clearing openers, binary contrasts, colon reveals, importance puffery, fake-profound endings — plus a banned-word list and an empty-phrase list. Or, asked what is wrong instead of asked for a fix, it names each pattern and quotes the line without rewriting anything.
+
+Detect mode will not score writing and will not claim a text was written by AI. Detectors guess; a named pattern with the line quoted is evidence you can check.
+
+One rule out-ranks everything else: **a pattern in your voice profile's overrides section is not a finding.** If your writing is em dashes and fragments, they stay. Without that precedence a generic pass converges on the same clean prose whoever wrote the draft, which is the failure the pair exists to prevent.
+
+It runs in `scrollytelling` Phase 1 over the scene text before approval — never over built HTML, because Phase 2 implements approved copy verbatim — and in `proposal` at step 7 before saving.
+
+The patterns are re-authored from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) (MIT), which is also where the minimum-effective-edit doctrine and the self-run eval come from. The profile-override precedence is an addition.
+
+- Skill: [`skills/utilities/slop-check/SKILL.md`](skills/utilities/slop-check/SKILL.md)
+- Explainer: [`docs/slop-check/README.md`](docs/slop-check/README.md)
+
 ## Repository layout
 
 ```
@@ -135,6 +167,7 @@ plugin.json                 the manifest — name, version, and what ships
 skills/process/<skill>/     skills that decide something
 skills/artifacts/<skill>/   skills that produce the thing people react to
 skills/renderers/<skill>/   skills that materialise a decision someone else made
+skills/utilities/<skill>/   skills the others call while drafting
 docs/index.html             the library index — a card grid linking every explainer
 docs/<skill>/               explainers: articles, scripts, notes — flat, never nested
 docs/the-chain/             the one explainer about the handoff rather than a single skill
@@ -144,7 +177,7 @@ scripts/check-skills.mjs    the structural check
 
 Skills sit in `skills/` at the root because that is where `copilot plugin install` reads them. That is deliberately **not** `.github/skills/`, which is where an installed skill lands in a *consuming* project. Authoring location and consumption location are different things.
 
-The three roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
+The four roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
 
 `docs/` stays **flat**: one folder per skill, named after the skill folder, whichever root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the grouping there would break it for no benefit. A folder there without a matching skill is a library-level explainer — currently only [`docs/the-chain/`](docs/the-chain/README.md). The check tolerates it: it asserts every skill has a folder, not that every folder is a skill.
 
@@ -156,11 +189,13 @@ Those sibling files are also why this ships as a plugin rather than as a link to
 
 Copilot picks a skill using the `name` and `description` in its YAML frontmatter. Those two fields decide whether a skill is ever used, and they are the most carefully written part of any skill here.
 
-Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed, and the `process` / `artifacts` / `renderers` grouping is invisible to the router. So every `description` ends by saying what must *not* route to it. A skill with no stated boundary claims prompts it should decline.
+Once installed, a skill competes in a **flat global namespace** with every other skill the user has — personal, project, and plugin. Names are not prefixed, and the `process` / `artifacts` / `renderers` / `utilities` grouping is invisible to the router. So every `description` ends by saying what must *not* route to it. A skill with no stated boundary claims prompts it should decline.
 
 `problem-framing`, `shaping`, and `proposal` are the sharpest case: all three talk about problems, requirements, and solutions, and each names the other two in its non-trigger clause. When one starts answering a prompt that belongs to another, that is the first place to look.
 
 `breadboarding`, `wireframes`, and `diagrams` are the second sharpest, because all three answer "draw me the thing." A breadboard is places and affordances in words, a wireframe is one screen, a diagram is a relationship between things — and each says so in the other two's terms.
+
+`writing-style` and `slop-check` both answer "fix how this reads", and each names the other. One builds a profile and never edits a draft; the other edits a draft and never builds a profile. `slop-check` is also the only skill here that refuses a whole category of request on principle: it will not guess whether a text was written by AI, in either mode.
 
 ## Working on the skills
 
@@ -188,7 +223,7 @@ There is no scenario suite. There was one and it was never run, which is worse t
 
 ## Adding a skill
 
-1. Copy [`templates/SKILL.template.md`](templates/SKILL.template.md) to `skills/<group>/<skill>/SKILL.md` — `process/` if it decides something, `artifacts/` if it produces the thing people react to, `renderers/` if it materialises a decision made elsewhere. Write it, including the `## Anti-patterns` section and the description's non-trigger clause.
+1. Copy [`templates/SKILL.template.md`](templates/SKILL.template.md) to `skills/<group>/<skill>/SKILL.md` — `process/` if it decides something, `artifacts/` if it produces the thing people react to, `renderers/` if it materialises a decision made elsewhere, `utilities/` if other skills call it while drafting. Write it, including the `## Anti-patterns` section and the description's non-trigger clause.
 2. Start the explainer in `docs/<skill>/` — flat, named after the skill folder, not the group.
 3. Add the skill to the list above.
 4. Add a new group to `plugin.json`'s `skills` array if you created one.

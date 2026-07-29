@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>design-skills — the library</title>
-  <meta name="description" content="Explainers for the eight skills in the design-skills plugin — problem framing, shaping, breadboarding, wireframes, diagrams, proposal, scrollytelling and tldraw — plus one on how they hand off to each other.">
+  <meta name="description" content="Explainers for the ten skills in the design-skills plugin — problem framing, shaping, breadboarding, wireframes, diagrams, proposal, scrollytelling, tldraw, writing style and slop check — plus one on how they hand off to each other.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
@@ -370,11 +370,12 @@
     <div class="wrap">
       <p class="eyebrow">GitHub Copilot plugin · design-skills</p>
       <h1>Work out the problem before you design the solution.</h1>
-      <p class="hero-deck"><strong>Eight skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. The rest draw, diagram or publish the result once something has been decided.</p>
+      <p class="hero-deck"><strong>Ten skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. The rest draw, diagram or publish the result once something has been decided — in your voice rather than a model's.</p>
       <ul class="hero-meta">
         <li>2 process skills</li>
         <li>4 artifact skills</li>
         <li>2 renderers</li>
+        <li>2 writing utilities</li>
         <li>6 articles, each checked across 9 viewports</li>
       </ul>
     </div>
@@ -521,6 +522,38 @@
               <li><a href="../skills/renderers/tldraw-skill/SKILL.md">SKILL.md</a></li>
             </ul>
             <p class="card-note">External runtime dependency — read the notes before installing.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="group" aria-labelledby="group-utilities">
+        <div class="group-head">
+          <h2 id="group-utilities">Utilities</h2>
+          <p>Skills the others call while they draft. They own neither a decision nor an artifact, and they share one document between them.</p>
+        </div>
+        <ul class="cards">
+          <li class="card" style="--accent: var(--green)">
+            <p class="card-tag">Utilities · 01</p>
+            <h3><a href="writing-style/README.md">Writing Style</a></h3>
+            <p class="card-name">writing-style</p>
+            <p class="card-deck">Reads two or three things you have already written and turns them into a profile every drafting skill loads first: voice in a paragraph, a few signature moves with the line quoted underneath each, defaults you can check a draft against, and the tics an editing pass must leave alone. It asks for writing rather than adjectives, because people describe the voice they want, not the one they have.</p>
+            <ul class="card-links">
+              <li><a href="writing-style/README.md">Explainer</a></li>
+              <li><a href="../skills/utilities/writing-style/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Set up once, in about five minutes. Saved outside the plugin so an update cannot delete it.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--amber)">
+            <p class="card-tag">Utilities · 02</p>
+            <h3><a href="slop-check/README.md">Slop Check</a></h3>
+            <p class="card-name">slop-check</p>
+            <p class="card-deck">Removes seventeen named patterns — throat-clearing openers, colon reveals, importance puffery, fake-profound endings — and nothing else. Asked what is wrong instead of asked for a fix, it names each pattern and quotes the line. It will not score writing and will not guess whether AI wrote it: detectors guess, a quoted line is evidence.</p>
+            <ul class="card-links">
+              <li><a href="slop-check/README.md">Explainer</a></li>
+              <li><a href="../skills/utilities/slop-check/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">A tic your profile protects is not a finding. That precedence is the whole point.</p>
           </li>
         </ul>
       </section>

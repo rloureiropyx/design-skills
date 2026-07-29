@@ -25,6 +25,25 @@ This was added because the alternative is worse: without a stated goal, a script
 
 The script header records both, and every scene is checked against them.
 
+## Voice, and the slop pass
+
+Two utilities hook into Phase 1, and neither touches Phase 2.
+
+**The voice profile** loads after the goal and tone are set. `WRITING_STYLE.md`, if one exists, from
+the project or from `~/.copilot/writing-style/`. Tone and profile answer different questions: the tone
+decides the register, the profile decides what that register sounds like in this person's hands.
+`T1 Plain and direct` is a category; the profile is why your plain and direct does not read like
+anyone else's. When they genuinely conflict, the skill names it and picks one rather than averaging.
+
+**The slop pass** runs over the TEXTO column of the draft script — the prose a reader sees — before
+the script is presented for approval. VISUAL and TRANSICIÓN are direction notes and are left alone,
+and so is any scene text you wrote yourself: the pass edits what the skill drafted, not what you
+contributed.
+
+That placement is the point. Phase 2 implements the approved copy verbatim, so an editing pass over
+built HTML would change text you already signed off, which is the gate this skill exists to hold. The
+copy gets cleaned while it can still be argued with, and what changed is reported alongside the draft.
+
 ## Its own gate, applied to itself
 
 The script for this article was written first and approved before a line of the article was built. See [`scroll-is-not-a-story.script.md`](scroll-is-not-a-story.script.md), then open [`scroll-is-not-a-story.html`](scroll-is-not-a-story.html).

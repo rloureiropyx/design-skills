@@ -1,7 +1,7 @@
 {
   "name": "design-skills",
-  "description": "Eight skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, wireframe the screens when layout turns out to be the real question, diagram what people are stuck on, then write it up as a proposal someone can approve or decline. Renderers turn the result into a scrollytelling explainer or a local tldraw canvas.",
-  "version": "2.3.0",
+  "description": "Ten skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, wireframe the screens when layout turns out to be the real question, diagram what people are stuck on, then write it up as a proposal someone can approve or decline. Renderers turn the result into a scrollytelling explainer or a local tldraw canvas. Utilities capture how you write and strip the AI tells out of anything drafted for a reader.",
+  "version": "2.4.0",
   "author": {
     "name": "Raul Loureiro"
   },
@@ -9,7 +9,8 @@
   "skills": [
     "skills/process",
     "skills/artifacts",
-    "skills/renderers"
+    "skills/renderers",
+    "skills/utilities"
   ],
   "keywords": [
     "product-design",
@@ -19,6 +20,7 @@
     "breadboarding",
     "wireframes",
     "proposal",
+    "writing-style",
     "enterprise",
     "b2b"
   ]
