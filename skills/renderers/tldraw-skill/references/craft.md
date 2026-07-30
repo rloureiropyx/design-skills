@@ -126,6 +126,8 @@ Use the **named tldraw colors**, never hex. They are theme-aware: the same artif
 
 **One hue = one meaning across the whole artifact.** If `red` means "fail point" in one lane it cannot mean "high priority" in another. Cap it at **5 hues plus grey**; more and the encoding stops reading as an encoding.
 
+**This table is the fallback, not an override.** When the discipline skill that decided the artifact ships its own encoding, use that one and ignore the rows above. `shaping` is the case that bites: its boards reserve `violet` for the decision and use `green`/`red` for supporting and costing notes, so applying the "insight, opportunity, hypothesis → violet" row to a positive note repaints the one mark the reader looks for first. Ask for the encoding before inventing one.
+
 `black` and `white` are text/stroke colors — avoid them as node fills except for deliberate contrast.
 
 ---

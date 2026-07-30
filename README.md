@@ -75,7 +75,7 @@ Framing buys time to explore solutions. It does not buy approval to build.
 
 Takes a framed problem and works out which solution direction to go with, inside a fixed time budget.
 
-Numbered requirements with statuses, two or three materially different directions, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until someone goes and finds out. Directions improve across versions (`A1 → A2 → A3`), each version says what changed and why, and discarded ones stay visible with the reason. When a direction does not fit the time budget, the scope moves, not the time. Output: `DIRECTIONS.md`.
+Numbered requirements with statuses, two or three materially different directions, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until someone goes and finds out. Directions improve across versions (`A1 → A2 → A3`), each version says what changed and why, and discarded ones stay visible with the reason. When a direction does not fit the time budget, the scope moves, not the time. It also fixes how all of this looks on a canvas — green for support, red for cost, violet only for the decision, and iterations closed left to right — so a renderer draws the record rather than reinterpreting it. Output: `DIRECTIONS.md`.
 
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
 - Explainer: [`pick-a-direction.html`](docs/shaping/pick-a-direction.html) · [script](docs/shaping/pick-a-direction.script.md)

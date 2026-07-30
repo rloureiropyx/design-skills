@@ -100,6 +100,8 @@ Reach for wireframes only when layout is genuinely the question the direction tu
 
 Keep the resolution low on purpose. Show the mechanism, the essential elements, how they relate, and the key moments. Stop before layout, copy, and component choices.
 
+If any of this gets drawn on a canvas — an options board, an alternatives table, the fit check — read `references/directions-board.md` first and hand the renderer that encoding. A renderer left to its own palette will invent one, and the mark that means "decided" stops meaning it.
+
 Completion criterion: at least two directions differ in mechanism, each has a breadboard or an explicit reason it does not need one, and every part is something a person could experience.
 
 ### 4. Flag what you do not know
@@ -132,6 +134,8 @@ Read `references/version-lineage.md` before the first version bump. The rules th
 - Discarding a whole direction is the same move at the letter level: strike it, say why, and say what would revive it.
 
 Iterating is normal and cheap. Three versions of `A` that each fix a named failure is a better record than one version that quietly absorbed all three.
+
+On a canvas the same rule is a timeline: close the finished iteration with a vertical rule, run the next one to its right, and keep the decisions inside the band they were taken in. `references/directions-board.md` has the layout.
 
 Completion criterion: every version has a reason and a diff from the version before it, and no version was silently overwritten.
 
@@ -229,6 +233,14 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   too rigid to survive its first contact with reality.
 - **Summarising tables.** Showing three of eleven requirements, or "the rest unchanged", breaks the user's
   ability to check the reasoning. Print the whole table, every time, with 🟡 on what moved.
+- **Letting the renderer pick the encoding.** A canvas skill's generic palette reads violet as "insight or
+  opportunity", so a supporting note lands in the colour this method reserves for the decision, and the
+  board stops saying which one was made. Hand over the encoding in `references/directions-board.md`.
+- **Redrawing the board each iteration.** A board that only shows its current state loses every reason it
+  got there. Close the finished iteration with a rule, run the next to its right, keep the old bands dimmed.
+- **Starring a winner per requirement.** On a fit check the best cell in each row assembles a direction
+  nobody has costed or can build. Per-row selection belongs to parts and their alternatives; the fit check
+  selects once, at the column level, on a whole direction.
 - **Skipping the enterprise classes because the frame did not mention them.** Permissions, audit, and data
   volume are exactly the requirements that arrive late and invalidate a direction after everyone agreed.
 
@@ -236,6 +248,7 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 
 - `references/fit-check.md` — the matrix format, the binary rule, and how to write failure notes. Read at step 5.
 - `references/version-lineage.md` — how versions are recorded, superseded, and discarded. Read at step 6, before the first version bump.
+- `references/directions-board.md` — the canvas encoding: note colours, row rules, the selection column, and iterations as a left-to-right timeline. Read at step 3, before anything here is drawn on a canvas.
 - `references/spikes.md` — the spike file format and the acceptance-criteria convention. Read at step 7, only when a flag blocks a contending direction.
 - `templates/directions-doc.md` — the required `DIRECTIONS.md` structure and where to save it. Read at step 8.
 
