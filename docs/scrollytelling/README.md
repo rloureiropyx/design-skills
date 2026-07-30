@@ -1,55 +1,80 @@
 # Notes — Scrollytelling
 
 ```
-scroll-is-not-a-story.script.md    the scene-by-scene script — approved
-scroll-is-not-a-story.html         the article — standalone, no build step
+how-a-scrollytelling-article-gets-made.script.md    the scene-by-scene script — approved
+how-a-scrollytelling-article-gets-made.html         the article — standalone, no build step
 ```
 
 ## What it does
 
 Builds a long-form web article whose diagram changes as the reader scrolls, as one standalone HTML file with no build step and no dependencies.
 
-The order is fixed: settle the goal and the tone, write a scene-by-scene script, get the script approved, then build. Nothing gets built from an unapproved script.
+The order is fixed: read the pitch, map its beats onto scenes, get the scene table approved, then build. Nothing gets built from an unapproved table.
 
 ## Who it is not for
 
 - A slide deck, a landing page, a dashboard, or a normal article. Scrolling has to be doing work for the piece, otherwise it is decoration with an accessibility cost.
 - A document where the reader needs to jump around or search. Scrollytelling is linear by construction.
-- Content that has not been decided yet. The renderer will happily produce a polished article about a confused idea.
+- Deciding what the piece says. That is [`pitch`](../pitch/) — audience, goal, tone, beats. This skill renders that decision.
 
-## Goal and tone come first
+## What moved out, and why
 
-Before the interview, the skill offers a menu: seven goals (explain a method, argue a position, report findings, teach a technique, tell what happened, compare options, orient a newcomer) and six tones (plain, practical, analytical, direct, reflective, instructional). You pick one of each, or say your own.
+Phase 1 used to do two unrelated jobs. It settled the goal and tone, interviewed, drafted the
+narrative, loaded the voice profile and ran the prose pass — and then, separately, worked out how that
+narrative became a scroll. Only the second half is about scroll.
 
-This was added because the alternative is worse: without a stated goal, a script drifts into whatever the writer found most interesting, and the tone lands somewhere between a whitepaper and a blog post. Both are visible only after the article is built, which is the most expensive moment to notice.
+So the first half became [`pitch`](../pitch/), and this skill kept the mapping. The goal and tone
+menus, the voice profile, and the slop pass all live there now, one layer up, where a deck can use
+them too.
 
-The script header records both, and every scene is checked against them.
+Nobody has to run two skills to get one article. Asked for a scrollytelling piece in a project with no
+`PITCH.md`, this skill runs `pitch` inline — one exchange, one draft, one approval — and offers to save
+the file afterwards in a single line. Two gates only when you asked for two.
 
-## The prose pass
+## A beat is not a scene
 
-Before the draft table is presented, the scene text goes through an AI-slop pass: colon reveals,
-"it's not X, it's Y", faux-insight setups, stacked fragments, and the closing metaphor that
-substitutes for a payoff. A scene is 2–4 sentences, which is the length at which a draft reaches
-for a dramatic reveal instead of a sentence. The scroll is already the drama.
+The mapping is now this phase's actual work, and it is not one-to-one in either direction.
 
-The pass removes patterns, not voice. Restraint in a dry piece and a stated side in an
-opinionated one are tone choices, not slop. It runs on the table rather than the built HTML,
-because a wording change after the article exists means editing markup and re-running the
-viewport matrix.
+**Two beats become one scene** when the graphic does not change state between them. A scene without a
+visual state change is a paragraph that made you scroll for it. This is the merge rule, and it is the
+oldest rule in the skill.
 
-The pattern list is condensed from Peter Yang's [`no-ai-slop`](https://github.com/petergyang/no-ai-slop)
-(MIT), with Spanish equivalents added and the list re-cut for scene text.
+**One beat becomes two scenes** when its SHOW field describes something that builds. One state per
+scene, in the order the reader needs them.
+
+Every beat is accounted for in the table — rendered, merged, or dropped with a stated reason. A beat
+that silently stops appearing turns an approved narrative into a different one nobody signed off.
+
+The scene text compresses the approved claim rather than rewriting it. If a claim genuinely does not
+survive the scroll medium, that goes back to `pitch`; it is not a licence to rephrase. The slop pass
+already ran there, before approval, so it does not run again here — only a genuinely new sentence
+written while compressing gets one.
+
+## Visual style, with a default
+
+The article resolves [`VISUAL_STYLE.md`](../visual-style/) into CSS custom properties at the top of the
+file and uses the token roles — `--surface`, `--ink`, `--accent-*` — rather than hex values, so the
+piece can be re-themed without touching the markup.
+
+If the project has no profile, the skill asks in one line, names the three presets, and proceeds on
+**Paper** if you skip. Paper is the style these explainers are written in.
+
+The accessibility contract out-ranks every token. All five Paper accents fail 4.5:1 as text on the warm
+surface — which is exactly why the house style puts diagrams on a dark panel — so where a token cannot
+satisfy a floor, the renderer substitutes the profile's stated accessible variant and says it did in
+one line.
 
 ## Its own gate, applied to itself
 
-The script for this article was written first and approved before a line of the article was built. See [`scroll-is-not-a-story.script.md`](scroll-is-not-a-story.script.md), then open [`scroll-is-not-a-story.html`](scroll-is-not-a-story.html).
+The script for this article was written first and approved before a line of the article was built. See [`how-a-scrollytelling-article-gets-made.script.md`](how-a-scrollytelling-article-gets-made.script.md), then open [`how-a-scrollytelling-article-gets-made.html`](how-a-scrollytelling-article-gets-made.html).
 
 ## Where it stops
 
-It renders a decision someone else made. It does not decide what to say.
+It renders a decision someone else made. It does not decide what to say — [`pitch`](../pitch/) does —
+and it does not decide what it looks like — [`visual-style`](../visual-style/) does.
 
 - Skill: [`skills/renderers/scrollytelling/SKILL.md`](../../skills/renderers/scrollytelling/SKILL.md)
 
 ---
 
-**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 47px at 667×375.
+**Rendering.** Checked at nine viewports from 320×568 to 1280×800, plus reduced motion and JavaScript disabled. Least clearance: 24px at 812×375.

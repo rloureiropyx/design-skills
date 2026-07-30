@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>design-skills — the library</title>
-  <meta name="description" content="Explainers for the eight skills in the design-skills plugin — problem framing, shaping, breadboarding, wireframes, diagrams, proposal, scrollytelling and tldraw — plus one on how they hand off to each other.">
+  <meta name="description" content="Explainers for the fourteen skills in the design-skills plugin — problem framing, shaping, context intake, breadboarding, wireframes, diagrams, proposal, pitch, scrollytelling, slides, tldraw, writing style, visual style and slop check — plus one on how they hand off to each other.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
@@ -370,11 +370,12 @@
     <div class="wrap">
       <p class="eyebrow">GitHub Copilot plugin · design-skills</p>
       <h1>Work out the problem before you design the solution.</h1>
-      <p class="hero-deck"><strong>Eight skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. The rest draw, diagram or publish the result once something has been decided.</p>
+      <p class="hero-deck"><strong>Fourteen skills for one short recipe:</strong> work out what the problem actually is, try two or three directions and pick one, then write it up so people can decide. One more works out how to explain it afterwards, and the rest draw, diagram or publish the result — in your voice rather than a model's, and looking like one coherent thing.</p>
       <ul class="hero-meta">
         <li>2 process skills</li>
         <li>4 artifact skills</li>
         <li>2 renderers</li>
+        <li>2 writing utilities</li>
         <li>6 articles, each checked across 9 viewports</li>
       </ul>
     </div>
@@ -430,6 +431,18 @@
             </ul>
             <p class="card-note">Stops at one selected direction with no unresolved <span aria-hidden="true">⚠️</span> flags.</p>
           </li>
+
+          <li class="card" style="--accent: var(--violet)">
+            <p class="card-tag">Process · 03</p>
+            <h3><a href="context-intake/README.md">Context intake</a></h3>
+            <p class="card-name">context-intake</p>
+            <p class="card-deck">A transcript pasted into a repo is not context — it is the same raw material, now diluting every retrieval made against it. This splits what was said from what is true, files each part in the container that owns it, and keeps the map current. One question routes everything: is this true because of this project, or regardless of it?</p>
+            <ul class="card-links">
+              <li><a href="context-intake/README.md">Explainer</a></li>
+              <li><a href="../skills/process/context-intake/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Never commits the raw source, and never writes to <code>design/</code>.</p>
+          </li>
         </ul>
       </section>
 
@@ -441,26 +454,28 @@
         <ul class="cards">
           <li class="card" style="--accent: var(--teal)">
             <p class="card-tag">Artifacts · 01</p>
-            <h3><a href="breadboarding/README.md">Breadboarding</a></h3>
+            <h3><a href="breadboarding/breadboard-before-you-draw-it.html">Breadboard before you draw it</a></h3>
             <p class="card-name">breadboarding</p>
             <p class="card-deck">Sketches a solution in words instead of pixels: the places a person can be, what they can do or see in each one, and which action takes them where. Too coarse to express layout, which is what lets people argue about the mechanism first. Shaping uses it to make each direction concrete.</p>
             <ul class="card-links">
               <li><a href="breadboarding/README.md">Explainer</a></li>
+              <li><a href="breadboarding/breadboard-before-you-draw-it.script.md">Scene script</a></li>
               <li><a href="../skills/artifacts/breadboarding/SKILL.md">SKILL.md</a></li>
             </ul>
-            <p class="card-note">No article yet — the explainer is the write-up.</p>
+            <p class="card-note">Nine scenes on arguing about the mechanism before anyone opens a canvas.</p>
           </li>
 
           <li class="card" style="--accent: var(--rose)">
             <p class="card-tag">Artifacts · 02</p>
-            <h3><a href="wireframes/README.md">Wireframes</a></h3>
+            <h3><a href="wireframes/what-a-wireframe-settles-before-drawing.html">The drawing is the last decision</a></h3>
             <p class="card-name">wireframes</p>
             <p class="card-deck">Decides what a screen must do, what goes on it, and how priority reads, then hands that to a renderer. Scale, fidelity, annotation weight and abstraction are four separate axes, so "more detail" adds content, states and rules before it adds polish. Colour means something or it is not there, and one screen shows one real moment.</p>
             <ul class="card-links">
               <li><a href="wireframes/README.md">Explainer</a></li>
+              <li><a href="wireframes/what-a-wireframe-settles-before-drawing.script.md">Scene script</a></li>
               <li><a href="../skills/artifacts/wireframes/SKILL.md">SKILL.md</a></li>
             </ul>
-            <p class="card-note">No article yet — the explainer is the write-up.</p>
+            <p class="card-note">Nine scenes on the four axes that "make it higher fidelity" hides.</p>
           </li>
 
           <li class="card" style="--accent: var(--olive)">
@@ -488,6 +503,18 @@
             </ul>
             <p class="card-note">Decidable in one read, or it is not finished.</p>
           </li>
+
+          <li class="card" style="--accent: var(--blue)">
+            <p class="card-tag">Artifacts · 05</p>
+            <h3><a href="pitch/README.md">Pitch</a></h3>
+            <p class="card-name">pitch</p>
+            <p class="card-deck">What you are going to say when you explain a decision to people who were not in the room, and in what order. Audience, goal, tone, a spine, and beats — each one a claim written as a complete sentence, the evidence behind it, what must be visible for it to land, and what breaks if it is cut. It renders nothing, so the same narrative can become an article, a deck, or both.</p>
+            <ul class="card-links">
+              <li><a href="pitch/README.md">Explainer</a></li>
+              <li><a href="../skills/artifacts/pitch/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">A claim is a sentence. &ldquo;Results&rdquo; is a heading.</p>
+          </li>
         </ul>
       </section>
 
@@ -499,19 +526,31 @@
         <ul class="cards">
           <li class="card" style="--accent: var(--violet)">
             <p class="card-tag">Renderers · 01</p>
-            <h3><a href="scrollytelling/scroll-is-not-a-story.html">Scroll is not a story</a></h3>
+            <h3><a href="scrollytelling/how-a-scrollytelling-article-gets-made.html">How a scrollytelling article gets made</a></h3>
             <p class="card-name">scrollytelling</p>
-            <p class="card-deck">Long-form web articles whose diagrams change as you scroll. Goal and tone get chosen from a short menu first, then a scene-by-scene script, then approval, then the build — and the result is checked across a device matrix rather than admired on a laptop.</p>
+            <p class="card-deck">Long-form web articles whose diagrams change as you scroll. It reads the pitch and maps its beats onto scenes — merging two when the graphic does not change between them — then approval, then the build, and the result is checked across a device matrix rather than admired on a laptop.</p>
             <ul class="card-links">
               <li><a href="scrollytelling/README.md">Explainer</a></li>
-              <li><a href="scrollytelling/scroll-is-not-a-story.script.md">Scene script</a></li>
+              <li><a href="scrollytelling/how-a-scrollytelling-article-gets-made.script.md">Scene script</a></li>
               <li><a href="../skills/renderers/scrollytelling/SKILL.md">SKILL.md</a></li>
             </ul>
             <p class="card-note">Every article on this page was produced by this skill.</p>
           </li>
 
-          <li class="card" style="--accent: var(--coral)">
+          <li class="card" style="--accent: var(--amber)">
             <p class="card-tag">Renderers · 02</p>
+            <h3><a href="slides/README.md">Slides</a></h3>
+            <p class="card-name">slides</p>
+            <p class="card-deck">The same pitch, as a deck. It splits where scrollytelling merges, because a fresh surface costs nothing and lets the presenter control when each piece lands. Every slide title is the beat&rsquo;s claim as a complete sentence — read the titles alone and the deck should tell the whole story. Renders through Figma Slides.</p>
+            <ul class="card-links">
+              <li><a href="slides/README.md">Explainer</a></li>
+              <li><a href="../skills/renderers/slides/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">External dependency. Without Figma it hands back an approved deck spec and stops.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--coral)">
+            <p class="card-tag">Renderers · 03</p>
             <h3><a href="tldraw-skill/draw-what-was-decided.html">Draw what was decided</a></h3>
             <p class="card-name">tldraw-skill</p>
             <p class="card-deck">Draws flows, journey maps, service blueprints, concept models, sitemaps, breadboards and wireframes on a local canvas. It owns coordinates, connectors, contrast and legibility — never the content. Needs the tldraw offline app running on the same machine.</p>
@@ -521,6 +560,50 @@
               <li><a href="../skills/renderers/tldraw-skill/SKILL.md">SKILL.md</a></li>
             </ul>
             <p class="card-note">External runtime dependency — read the notes before installing.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="group" aria-labelledby="group-utilities">
+        <div class="group-head">
+          <h2 id="group-utilities">Utilities</h2>
+          <p>Skills the others call while they draft. They own neither a decision nor an artifact, and they hold the profiles the rest of the library reads.</p>
+        </div>
+        <ul class="cards">
+          <li class="card" style="--accent: var(--green)">
+            <p class="card-tag">Utilities · 01</p>
+            <h3><a href="writing-style/README.md">Writing Style</a></h3>
+            <p class="card-name">writing-style</p>
+            <p class="card-deck">Turns evidence of how you write into a profile every drafting skill loads first: voice in a paragraph, a few signature moves with the line quoted underneath each, defaults you can check a draft against, and the tics an editing pass must leave alone. It records what you do and what you are going for separately, and when they disagree you decide once instead of getting the average. Three ways in: samples you already have, a two-prompt exercise, or a voice note if you would rather talk than type.</p>
+            <ul class="card-links">
+              <li><a href="writing-style/README.md">Explainer</a></li>
+              <li><a href="../skills/utilities/writing-style/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">For explaining and proposing. Product copy comes from the design system.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--teal)">
+            <p class="card-tag">Utilities · 02</p>
+            <h3><a href="visual-style/README.md">Visual Style</a></h3>
+            <p class="card-name">visual-style</p>
+            <p class="card-deck">What writing-style does for how things read, for what they look like. A palette with named roles, a type pair and scale, density, radius, stroke weight, illustration idiom — tokens a renderer can consume rather than adjectives it has to interpret. Three presets on one axis, what carries the meaning: Paper for prose, Whiteboard for the sketch, Blueprint for the data. Pick one and move.</p>
+            <ul class="card-links">
+              <li><a href="visual-style/README.md">Explainer</a></li>
+              <li><a href="../skills/utilities/visual-style/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">Accessibility floors are not stylable. The contract out-ranks every token.</p>
+          </li>
+
+          <li class="card" style="--accent: var(--amber)">
+            <p class="card-tag">Utilities · 03</p>
+            <h3><a href="slop-check/README.md">Slop Check</a></h3>
+            <p class="card-name">slop-check</p>
+            <p class="card-deck">Removes seventeen named patterns — throat-clearing openers, colon reveals, importance puffery, fake-profound endings — and nothing else. Asked what is wrong instead of asked for a fix, it names each pattern and quotes the line. It will not score writing and will not guess whether AI wrote it: detectors guess, a quoted line is evidence.</p>
+            <ul class="card-links">
+              <li><a href="slop-check/README.md">Explainer</a></li>
+              <li><a href="../skills/utilities/slop-check/SKILL.md">SKILL.md</a></li>
+            </ul>
+            <p class="card-note">A tic your profile protects is not a finding. That precedence is the whole point.</p>
           </li>
         </ul>
       </section>

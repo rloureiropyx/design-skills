@@ -1,0 +1,1733 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive explanation of how the scrollytelling skill turns an approved script into one standalone HTML article: two phases, a gate, a prose pass, and a viewport matrix the built file has to pass.">
+  <link rel="icon" href="data:,">
+  <title>How a Scrollytelling Article Gets Made — How the scrollytelling skill works</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --paper-2: #ebe6da;
+      --ink: #171914;
+      --muted: #61655c;
+      --panel: #fcfaf4;
+      --diagram: #111814;
+      --diagram-2: #1a241e;
+      --line: #c9c5ba;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --violet: #ae8bf3;
+      --coral: #ee795e;
+      --white: #fffdf7;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--coral);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(2rem, 5vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background:
+        radial-gradient(circle at 76% 42%, rgba(99, 201, 156, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 8vw, 8.6rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      color: #cbd3cb;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      color: #d9dfd8;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--green);
+      border-bottom: 2px solid var(--green);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-diagram {
+      width: min(100%, 650px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .28));
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: clamp(6rem, 14vw, 11rem) 1.5rem;
+    }
+
+    .intro h2,
+    .closing h2 {
+      margin-bottom: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .intro p {
+      color: #343830;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+    }
+
+    .definition {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .definition code,
+    .step code,
+    details code {
+      padding: .1em .38em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .87em;
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(117, 169, 255, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      left: 1.2rem;
+      right: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--green); }
+
+    .graphic-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-state { opacity: 0; visibility: hidden; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: #fffdf7; font-size: 25px; font-weight: 700; }
+    .svg-kicker { fill: #9ea99f; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+    .svg-label { fill: #e9eee8; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #949e96; font-size: 9px; font-weight: 650; letter-spacing: .5px; }
+    .svg-node { fill: #1b2720; stroke: #3e4c42; stroke-width: 1.5; }
+    .svg-node-light { fill: #243229; stroke: #526257; stroke-width: 1.5; }
+    .svg-line { fill: none; stroke: #667269; stroke-width: 2; }
+    .svg-line-muted { fill: none; stroke: #3a463e; stroke-width: 1.5; stroke-dasharray: 5 7; }
+    .svg-green { fill: var(--green); }
+    .svg-blue { fill: var(--blue); }
+    .svg-amber { fill: var(--amber); }
+    .svg-violet { fill: var(--violet); }
+    .svg-coral { fill: var(--coral); }
+
+    .steps { padding-bottom: 8vh; }
+
+    .step {
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: center;
+      opacity: .38;
+      transition: opacity .25s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card {
+      width: 100%;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      border: 1px solid rgba(23, 25, 20, .12);
+      border-radius: 18px;
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 18px 45px rgba(39, 39, 31, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: 1.1rem;
+      color: var(--coral);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3.5vw, 3.35rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+    }
+
+    .step p { margin-bottom: 0; color: #393d35; }
+
+    .bridge-card {
+      margin: 1.5rem 0 10vh;
+      padding: 1.4rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #4e534a;
+      font-size: .92rem;
+    }
+
+    .bridge-card strong { color: var(--ink); }
+
+    .boundary-example {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .55rem 1rem;
+      margin: 1rem 0 0;
+    }
+
+    .boundary-example dt {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .boundary-example dd { margin: 0; }
+
+    .case-study {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .case-box {
+      min-height: 106px;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .case-box span {
+      display: block;
+      margin-bottom: .45rem;
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .case-arrow { color: var(--coral); font-size: 1.5rem; }
+
+    .output-section {
+      max-width: 920px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem 10rem;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 1.3rem 1.5rem;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    summary:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: .7rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .output-item {
+      padding: .8rem 1rem;
+      border-left: 3px solid var(--green);
+      background: var(--paper);
+      font-size: .82rem;
+    }
+
+    .framed-example-section {
+      padding: 0 1.5rem 10rem;
+      background: var(--paper);
+    }
+
+    .framed-example-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .framed-example-intro {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .framed-example-intro h2 {
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .framed-example-intro p { color: #4c5149; }
+
+    .framed-document {
+      padding: clamp(1.5rem, 4vw, 3.2rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: var(--shadow);
+    }
+
+    .document-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-document h3 {
+      margin-bottom: 1.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.05;
+    }
+
+    .framed-field {
+      padding: 1.1rem 0;
+      border-top: 1px solid #e5e0d5;
+    }
+
+    .framed-field:first-of-type { border-top: 0; }
+
+    .framed-field dt {
+      margin-bottom: .4rem;
+      color: #697168;
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .framed-field dd { margin: 0; color: #292d27; }
+    .framed-field code { font-size: .84em; }
+    .framed-field ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+    .framed-field li + li { margin-top: .35rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #dceddf;
+      color: #244135;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .closing {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      background: var(--diagram);
+      color: var(--white);
+    }
+
+    .closing-copy { max-width: 650px; }
+    .closing p { max-width: 590px; color: #cbd3cb; font-size: clamp(1.05rem, 1.7vw, 1.3rem); }
+    .closing strong { color: var(--white); }
+    .closing-diagram { width: min(100%, 700px); justify-self: center; }
+
+    .whole-picture {
+      padding: clamp(6rem, 10vw, 10rem) 1.5rem;
+      background: #e9e6dc;
+    }
+
+    .whole-picture-inner {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+    }
+
+    .whole-picture h2 {
+      max-width: 760px;
+      margin-bottom: 1.2rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    .whole-picture-lede {
+      max-width: 700px;
+      margin-bottom: 4rem;
+      color: #4c5149;
+      font-size: 1.15rem;
+    }
+
+    .direction-band {
+      margin-bottom: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--coral);
+      background: rgba(255, 253, 247, .58);
+      color: #3f443d;
+      font-weight: 650;
+    }
+
+    .direction-zone {
+      padding: 1.25rem;
+      border: 1px dashed #a8aaa1;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, .38);
+    }
+
+    .direction-zone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 1.1rem;
+    }
+
+    .direction-zone-header strong {
+      color: #2d4138;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .direction-zone-header span { color: #62675f; font-size: .88rem; }
+
+    .workflow-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      padding: 1.4rem;
+      border: 1px solid rgba(23, 25, 20, .14);
+      border-radius: 16px;
+      background: #fffdf7;
+      box-shadow: 0 12px 32px rgba(39, 39, 31, .07);
+    }
+
+    .workflow-card .phase {
+      display: block;
+      margin-bottom: .8rem;
+      color: var(--coral);
+      font-size: .67rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .workflow-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+    }
+
+    .workflow-card p { margin: 0; color: #4b5048; font-size: .9rem; }
+
+    .workflow-output {
+      display: block;
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px solid #e1ddd2;
+      color: #254438;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .proposal-card { border-top: 4px solid var(--green); }
+
+    .design-bridge {
+      display: grid;
+      justify-items: center;
+      gap: .15rem;
+      padding: .9rem 0;
+      color: #587066;
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .design-bridge b { font-size: 1.8rem; line-height: 1; }
+
+    .design-card {
+      display: grid;
+      grid-template-columns: minmax(150px, .35fr) minmax(0, 1fr) minmax(170px, .45fr);
+      gap: 1.5rem;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+    }
+
+    .design-card h3,
+    .design-card .phase,
+    .design-card .workflow-output { margin: 0; }
+
+    .design-card .workflow-output { padding: 0; border: 0; }
+
+    .next-moves-section {
+      padding: clamp(5rem, 9vw, 8rem) 1.5rem;
+      background: #171f1a;
+      color: var(--white);
+    }
+
+    .next-moves-inner { width: min(100%, 1100px); margin: 0 auto; }
+
+    .next-moves-section h2 {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: .98;
+    }
+
+    .next-moves-lede { max-width: 680px; margin-bottom: 3rem; color: #bec8bf; }
+
+    .next-moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 1rem;
+    }
+
+    .next-move-card {
+      padding: 1.25rem;
+      border: 1px solid #3b493f;
+      border-radius: 14px;
+      background: #202a23;
+    }
+
+    .next-move-card h3 { margin-bottom: .55rem; font-size: 1rem; color: #dce9df; }
+    .next-move-card p { margin: 0; color: #b7c2b9; font-size: .9rem; }
+    .next-move-card strong { color: var(--green); }
+
+    .final-equation {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--green);
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: clamp(5rem, 10vw, 9rem) 1.5rem;
+      background: var(--paper);
+    }
+
+    .sources-inner {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .sources h2 {
+      margin-bottom: 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+
+    .sources-intro { max-width: 680px; color: var(--muted); }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .source-card {
+      min-height: 245px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .source-card h3 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .source-card p { color: var(--muted); font-size: .88rem; }
+
+    .source-card a {
+      margin-top: auto;
+      color: #315f4d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2.4rem 1.5rem;
+      background: #0b100d;
+      color: #8f9a91;
+      text-align: center;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .closing { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 6rem; }
+      .hero-diagram { width: min(100%, 560px); }
+
+      /* Height reserved at the top of the viewport for the pinned graphic. */
+      .scrolly {
+        --band: clamp(196px, 38svh, 330px);
+        width: min(calc(100% - 1.4rem), 720px);
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The graphic stays above the cards: text scrolls beneath it, never over it. */
+      .graphic-wrap {
+        z-index: 3;
+        height: var(--band);
+        align-items: stretch;
+        padding: .5rem 0 .75rem;
+        background: var(--paper);
+        pointer-events: none;
+      }
+
+      .graphic-shell {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: 16px;
+      }
+
+      .steps { position: relative; z-index: 1; margin-top: 0; }
+
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding-bottom: 4svh;
+        opacity: 1;
+      }
+
+      .step-card { background: rgba(252, 250, 244, .97); }
+
+      .bridge-card {
+        margin: 0 0 6vh;
+        border-radius: 14px;
+        background: rgba(244, 241, 232, .96);
+      }
+
+      .closing { padding-top: 7rem; }
+      .framed-example-inner { grid-template-columns: 1fr; }
+      .framed-example-intro { position: static; }
+      .direction-zone-header { display: block; }
+      .direction-zone-header span { display: block; margin-top: .35rem; }
+      .design-card { grid-template-columns: 1fr; gap: .8rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3.4rem, 18vw, 5.5rem); }
+      .hero { padding-inline: 1.3rem; }
+      .hero-diagram { margin-top: 1rem; }
+      .intro { padding-block: 6rem; }
+      .graphic-meta { font-size: .56rem; }
+      .graphic-shell { padding: .35rem; }
+      .step-card { padding: 1.15rem 1.2rem; }
+      .step h2 { font-size: clamp(1.65rem, 6.6vw, 2.15rem); margin-bottom: .85rem; }
+      .step p { font-size: .97rem; }
+      .scene-number { margin-bottom: .8rem; }
+      .case-study { grid-template-columns: 1fr; }
+      .boundary-example { grid-template-columns: 1fr; gap: .15rem; }
+      .boundary-example dd { margin-bottom: .7rem; }
+      .case-arrow { transform: rotate(90deg); justify-self: center; }
+      .closing { grid-template-columns: 1fr; padding-inline: 1.3rem; }
+      summary { padding: 1.1rem 1.15rem; }
+      .output-grid { padding-inline: 1.15rem; }
+    }
+
+    /* Very short viewports: shrink the pinned band and the card type together so
+       the tallest scene still fits in the readable zone. */
+    @media (max-width: 900px) and (max-height: 640px) {
+      .scrolly { --band: clamp(158px, 34svh, 230px); }
+      .step-card { padding: .95rem 1.05rem; }
+      .step h2 { font-size: clamp(1.4rem, 5.4vw, 1.75rem); margin-bottom: .6rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .scene-number { font-size: .62rem; margin-bottom: .55rem; }
+      /* The band is too short to overlay a caption without colliding with the
+         diagram's own title; the scene number in the card carries the same cue. */
+      .graphic-meta { display: none; }
+      .graphic-shell { padding: .25rem; }
+    }
+
+    /* Landscape phones: wide but short. Stacking wastes the width and pinning a top
+       band leaves no room to read, so restore the two-column layout at a compact scale. */
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), 1100px);
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 1.5rem;
+      }
+
+      .graphic-wrap {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        z-index: 1;
+        align-items: center;
+        padding: 0;
+        background: none;
+      }
+
+      .graphic-shell { height: auto; max-height: 88svh; aspect-ratio: 1.16 / 1; }
+
+      .steps { margin-top: 0; }
+
+      .step {
+        min-height: 100svh;
+        align-items: center;
+        padding-bottom: 0;
+      }
+
+      .bridge-card { margin: 0 0 6vh; }
+    }
+
+    /* Narrow and short at once: no layout works pinned, so stack everything inline. */
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 66svh;
+        padding: 0;
+        background: none;
+      }
+
+      .steps { margin-top: 1.5rem; }
+
+      .step {
+        min-height: 0;
+        align-items: flex-start;
+        padding-bottom: 2.5rem;
+      }
+
+      .bridge-card { margin-bottom: 2.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* Short viewports: the tallest scene cards have to clear the pinned
+       graphic. The copy is fixed by the script, so the card gives ground
+       instead - chrome and leading only, never the copy itself. */
+    @media (max-height: 720px) {
+      .step-card { padding: clamp(1rem, 2.4vw, 1.55rem); }
+      .scene-number { margin-bottom: .55rem; }
+      .step h2 { margin-bottom: .55rem; }
+      .step p { line-height: 1.4; }
+    }
+
+    @media (max-height: 560px) {
+      .step-card { padding: .85rem 1rem; }
+      .step h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .45rem; }
+      .scene-number { margin-bottom: .4rem; font-size: .62rem; }
+      .step p { font-size: .84rem; line-height: 1.3; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">The library · How the scrollytelling skill works</p>
+        <h1>How a scrollytelling article gets made.</h1>
+        <p class="hero-deck"><strong>A scrollytelling article can move a great deal and explain nothing.</strong> How do you make one that actually explains? By treating the writing as the work and the motion as the last step.</p>
+        <span class="scroll-cue">Scroll to see how it is built</span>
+      </div>
+
+      <svg class="hero-diagram" viewBox="0 0 620 560" role="img" aria-labelledby="hero-title hero-desc">
+        <title id="hero-title">An over-animated article where everything moves and nothing reads</title>
+        <desc id="hero-desc">A mock article page with a skewed headline, drifting particles, and a redrawing chart all in motion at once, captioned to ask whether it still explains anything.</desc>
+        <defs>
+          <filter id="heroShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity=".26"/>
+          </filter>
+        </defs>
+        <g filter="url(#heroShadow)">
+          <rect x="70" y="70" width="480" height="380" rx="18" fill="#f9f8f1"/>
+        </g>
+        <g transform="rotate(-7 250 150)">
+          <rect x="120" y="126" width="270" height="34" rx="8" fill="#ee795e" opacity=".9"/>
+        </g>
+        <rect x="120" y="128" width="230" height="30" rx="8" fill="#ae8bf3" opacity=".28"/>
+        <polyline points="120,330 170,270 220,320 270,240 320,300 370,230 420,290 470,210" fill="none" stroke="#75a9ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="120,340 170,300 220,350 270,280 320,340 370,290 420,330" fill="none" stroke="#75a9ff" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+        <g fill="#e7b85c">
+          <circle cx="160" cy="200" r="7"/><circle cx="300" cy="185" r="6"/><circle cx="430" cy="210" r="8"/>
+          <circle cx="250" cy="240" r="5"/><circle cx="380" cy="255" r="6"/><circle cx="470" cy="180" r="5"/>
+        </g>
+        <g fill="#ee795e">
+          <circle cx="210" cy="215" r="6"/><circle cx="350" cy="230" r="7"/><circle cx="180" cy="260" r="5"/><circle cx="420" cy="240" r="6"/>
+        </g>
+        <rect x="120" y="392" width="360" height="14" rx="7" fill="#c9c5ba"/>
+        <text x="310" y="506" fill="#ee795e" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="1.5">MOVES A LOT. EXPLAINS NOTHING?</text>
+      </svg>
+    </header>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <p class="eyebrow">The method</p>
+      <h2 id="intro-title">A scrolling article, and the skill that builds it.</h2>
+      <p>A scrollytelling article is a long web page where a graphic stays fixed on one side while short blocks of text scroll past on the other. Each block changes the graphic to one new state, so the picture and the words advance together. You have read them in the New York Times and on The Pudding.</p>
+      <p>An agent skill is a folder of instructions an AI coding agent loads on demand. It carries the steps, the rules, and the checks for one kind of task, so the agent does that task the same way each time.</p>
+      <p class="definition"><strong>scrollytelling</strong> is one of eight product design skills in this library. It turns a decision that already exists into a single standalone HTML article, and this page is one it produced about itself.</p>
+    </section>
+
+    <section class="scrolly" aria-label="How a scrollytelling article gets made">
+      <div class="graphic-wrap">
+        <div class="graphic-shell" aria-hidden="true">
+          <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">Article in motion</span></div>
+          <svg viewBox="0 0 760 620" focusable="false">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#667269"/>
+              </marker>
+              <marker id="arrowCoral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#ee795e"/>
+              </marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/>
+              </marker>
+              <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#e7b85c"/>
+              </marker>
+              <marker id="arrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#ae8bf3"/>
+              </marker>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M32 0 H0 V32" fill="none" stroke="#223027" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="760" height="620" fill="url(#grid)" opacity=".52"/>
+
+            <!-- DIAGRAM 1: ARTICLE IN MOTION -->
+            <g class="diagram-state is-active" data-state="1">
+              <text class="svg-kicker" x="40" y="60">Scene zero</text>
+              <text class="svg-title" x="40" y="96">An article that moves.</text>
+              <rect class="svg-node" x="110" y="140" width="540" height="360" rx="16"/>
+              <g transform="rotate(-6 300 210)">
+                <rect x="170" y="188" width="300" height="40" rx="9" fill="#ee795e" opacity=".85"/>
+              </g>
+              <rect x="170" y="192" width="250" height="34" rx="9" fill="#ae8bf3" opacity=".25"/>
+              <polyline points="170,390 230,330 290,380 350,300 410,360 470,296 530,352 590,286" fill="none" stroke="#75a9ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <g fill="#e7b85c">
+                <circle cx="220" cy="270" r="8"/><circle cx="360" cy="256" r="7"/><circle cx="520" cy="280" r="9"/><circle cx="470" cy="250" r="6"/>
+              </g>
+              <g fill="#ee795e">
+                <circle cx="290" cy="285" r="7"/><circle cx="430" cy="272" r="8"/><circle cx="560" cy="252" r="6"/>
+              </g>
+              <rect x="170" y="430" width="360" height="14" rx="7" fill="#3e4c42"/>
+              <text class="svg-small" x="110" y="540" fill="#f2a793">Everything is in motion and the states behind it are unreadable.</text>
+            </g>
+
+            <!-- DIAGRAM 2: TWO PHASES AND A GATE -->
+            <g class="diagram-state" data-state="2">
+              <text class="svg-kicker" x="40" y="60">The method</text>
+              <text class="svg-title" x="40" y="96">Two phases, one gate.</text>
+              <rect class="svg-node" x="66" y="250" width="214" height="126" rx="16"/>
+              <text class="svg-tiny" x="88" y="284" fill="#bcd4ff">PHASE ONE</text>
+              <text class="svg-label" x="88" y="312">Script</text>
+              <text class="svg-small" x="88" y="340">scene-by-scene, in words</text>
+              <rect x="88" y="352" width="120" height="8" rx="4" fill="#75a9ff" opacity=".7"/>
+              <rect class="svg-node" x="480" y="250" width="214" height="126" rx="16"/>
+              <text class="svg-tiny" x="502" y="284">PHASE TWO</text>
+              <text class="svg-label" x="502" y="312">Implementation</text>
+              <text class="svg-small" x="502" y="340">one standalone HTML file</text>
+              <rect x="502" y="352" width="120" height="8" rx="4" fill="#667269"/>
+              <rect x="346" y="238" width="68" height="150" rx="10" fill="#251d33" stroke="#ae8bf3" stroke-width="2"/>
+              <line x1="380" y1="248" x2="380" y2="378" stroke="#ae8bf3" stroke-width="3"/>
+              <line x1="360" y1="272" x2="400" y2="272" stroke="#ae8bf3" stroke-width="3"/>
+              <line x1="360" y1="313" x2="400" y2="313" stroke="#ae8bf3" stroke-width="3"/>
+              <line x1="360" y1="354" x2="400" y2="354" stroke="#ae8bf3" stroke-width="3"/>
+              <path class="svg-line" d="M282 313 H342" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M416 313 H476" marker-end="url(#arrow)"/>
+              <path d="M560 250 C560 168 200 168 200 248" fill="none" stroke="#ee795e" stroke-width="2.5" stroke-dasharray="8 5" marker-end="url(#arrowCoral)"/>
+              <line x1="368" y1="150" x2="392" y2="174" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+              <line x1="392" y1="150" x2="368" y2="174" stroke="#ee795e" stroke-width="4" stroke-linecap="round"/>
+              <text class="svg-small" x="380" y="430" text-anchor="middle" fill="#dfd0fa">Only your approval opens the gate.</text>
+              <text class="svg-small" x="380" y="200" text-anchor="middle" fill="#f2a793">No going back to rewrite once building starts.</text>
+            </g>
+
+            <!-- DIAGRAM 3: GOAL AND TONE MENUS -->
+            <g class="diagram-state" data-state="3">
+              <text class="svg-kicker" x="40" y="60">Before drafting</text>
+              <text class="svg-title" x="40" y="96">Pick one goal, one tone.</text>
+              <text class="svg-tiny" x="70" y="150" fill="#bcd4ff">GOAL — 7 OPTIONS</text>
+              <g>
+                <rect x="70" y="162" width="270" height="40" rx="10" fill="#1d3350" stroke="#75a9ff" stroke-width="2"/>
+                <text class="svg-small" x="88" y="187" fill="#e9eee8">Explain a method</text>
+                <rect x="266" y="170" width="66" height="24" rx="8" fill="#75a9ff"/>
+                <text x="299" y="187" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#0e1a2c" text-anchor="middle">PICKED</text>
+              </g>
+              <g opacity=".5">
+                <rect class="svg-node" x="70" y="210" width="270" height="40" rx="10"/><text class="svg-small" x="88" y="235">Argue a position</text>
+                <rect class="svg-node" x="70" y="258" width="270" height="40" rx="10"/><text class="svg-small" x="88" y="283">Report findings</text>
+                <rect class="svg-node" x="70" y="306" width="270" height="40" rx="10"/><text class="svg-small" x="88" y="331">Teach a technique</text>
+                <rect class="svg-node" x="70" y="354" width="270" height="40" rx="10"/><text class="svg-small" x="88" y="379">Tell what happened</text>
+                <rect class="svg-node" x="70" y="402" width="270" height="40" rx="10"/><text class="svg-small" x="88" y="427">Compare options</text>
+                <rect class="svg-node" x="70" y="450" width="270" height="40" rx="10"/><text class="svg-small" x="88" y="475">Orient a newcomer</text>
+              </g>
+              <text class="svg-tiny" x="420" y="150" fill="#bcd4ff">TONE — 6 OPTIONS</text>
+              <g>
+                <rect x="420" y="162" width="270" height="40" rx="10" fill="#1d3350" stroke="#75a9ff" stroke-width="2"/>
+                <text class="svg-small" x="438" y="187" fill="#e9eee8">Plain and direct</text>
+                <rect x="616" y="170" width="66" height="24" rx="8" fill="#75a9ff"/>
+                <text x="649" y="187" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#0e1a2c" text-anchor="middle">PICKED</text>
+              </g>
+              <g opacity=".5">
+                <rect class="svg-node" x="420" y="210" width="270" height="40" rx="10"/><text class="svg-small" x="438" y="235">Practical</text>
+                <rect class="svg-node" x="420" y="258" width="270" height="40" rx="10"/><text class="svg-small" x="438" y="283">Analytical</text>
+                <rect class="svg-node" x="420" y="306" width="270" height="40" rx="10"/><text class="svg-small" x="438" y="331">Direct</text>
+                <rect class="svg-node" x="420" y="354" width="270" height="40" rx="10"/><text class="svg-small" x="438" y="379">Reflective</text>
+                <rect class="svg-node" x="420" y="402" width="270" height="40" rx="10"/><text class="svg-small" x="438" y="427">Instructional</text>
+              </g>
+              <text class="svg-small" x="420" y="478">The skill lists the options and recommends one of each.</text>
+            </g>
+
+            <!-- DIAGRAM 4: FIRST DRAFT WRITTEN -->
+            <g class="diagram-state" data-state="4">
+              <text class="svg-kicker" x="40" y="60">The first draft</text>
+              <text class="svg-title" x="40" y="96">The skill drafts it.</text>
+              <text class="svg-tiny" x="50" y="140" fill="#bcd4ff">FOUR OR FIVE QUESTIONS</text>
+              <g>
+                <rect class="svg-node" x="50" y="150" width="170" height="46" rx="12"/><text class="svg-small" x="70" y="178">Goal and tone?</text>
+                <rect class="svg-node" x="50" y="212" width="170" height="46" rx="12"/><text class="svg-small" x="70" y="240">Audience?</text>
+                <rect class="svg-node" x="50" y="274" width="170" height="46" rx="12"/><text class="svg-small" x="70" y="302">Key beats?</text>
+                <rect class="svg-node" x="50" y="336" width="170" height="46" rx="12"/><text class="svg-small" x="70" y="364">Reading time?</text>
+              </g>
+              <path class="svg-line" d="M220 173 C280 173 280 250 336 250" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M220 235 C282 235 300 270 336 270" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M220 297 C282 297 300 290 336 290" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M220 359 C280 359 300 310 336 310" marker-end="url(#arrow)"/>
+              <rect class="svg-node-light" x="340" y="150" width="360" height="330" rx="16"/>
+              <text class="svg-label" x="362" y="184">First draft · full scene table</text>
+              <rect x="362" y="204" width="316" height="34" rx="8" fill="#1b2720" stroke="#3e4c42"/><text class="svg-small" x="378" y="226">Scene 0 · article in motion</text>
+              <rect x="362" y="244" width="316" height="34" rx="8" fill="#1b2720" stroke="#3e4c42"/><text class="svg-small" x="378" y="266">Scene 1 · two phases and a gate</text>
+              <rect x="362" y="284" width="316" height="34" rx="8" fill="#2c2413" stroke="#e7b85c"/><text class="svg-small" x="378" y="306" fill="#e7c98d">Scene 2 · goal and tone menus</text>
+              <rect x="606" y="290" width="66" height="22" rx="7" fill="#e7b85c"/><text x="639" y="306" font-family="Inter, sans-serif" font-size="9" font-weight="800" fill="#2a1e07" text-anchor="middle">PROPOSAL</text>
+              <rect x="362" y="324" width="316" height="34" rx="8" fill="#2c2413" stroke="#e7b85c"/><text class="svg-small" x="378" y="346" fill="#e7c98d">Scene 3 · interview to draft</text>
+              <rect x="606" y="330" width="66" height="22" rx="7" fill="#e7b85c"/><text x="639" y="346" font-family="Inter, sans-serif" font-size="9" font-weight="800" fill="#2a1e07" text-anchor="middle">PROPOSAL</text>
+              <rect x="362" y="364" width="316" height="34" rx="8" fill="#1b2720" stroke="#3e4c42"/><text class="svg-small" x="378" y="386">Scene 4 · anatomy of a scene</text>
+              <text class="svg-tiny" x="362" y="428" fill="#e7c98d">AMBER = INVENTED VISUAL, MARKED AS A GUESS</text>
+              <rect x="50" y="410" width="170" height="70" rx="12" fill="none" stroke="#ee795e" stroke-width="2" stroke-dasharray="7 5" opacity=".85"/>
+              <text class="svg-small" x="70" y="440" fill="#f2a793">Empty table</text>
+              <text class="svg-small" x="70" y="462" fill="#f2a793">handed back — no</text>
+              <line x1="60" y1="420" x2="210" y2="470" stroke="#ee795e" stroke-width="2"/>
+            </g>
+
+            <!-- DIAGRAM 5: ANATOMY OF A SCENE -->
+            <g class="diagram-state" data-state="5">
+              <text class="svg-kicker" x="40" y="60">Scene anatomy</text>
+              <text class="svg-title" x="40" y="96">Three parts to a scene.</text>
+              <rect class="svg-node" x="150" y="140" width="460" height="52" rx="12"/>
+              <text class="svg-label" x="172" y="172">One scene row</text>
+              <path class="svg-line" d="M240 192 V236" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M380 192 V236" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M520 192 V236" marker-end="url(#arrow)"/>
+              <rect x="66" y="250" width="196" height="250" rx="16" fill="#16283f" stroke="#75a9ff" stroke-width="2"/>
+              <text class="svg-tiny" x="88" y="286" fill="#bcd4ff">PART ONE</text>
+              <text class="svg-label" x="88" y="312" fill="#dbe7ff">VISUAL</text>
+              <text class="svg-small" x="88" y="340" fill="#bcd4ff">the graphic state</text>
+              <rect x="88" y="360" width="150" height="110" rx="10" fill="#0f1d2e" stroke="#3a5578"/>
+              <rect x="282" y="250" width="196" height="250" rx="16" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+              <text class="svg-tiny" x="304" y="286" fill="#c9f1df">PART TWO</text>
+              <text class="svg-label" x="304" y="312" fill="#d4f5e6">COPY</text>
+              <text class="svg-small" x="304" y="340" fill="#c9f1df">2 to 4 sentences</text>
+              <rect x="304" y="362" width="150" height="9" rx="4" fill="#63c99c" opacity=".6"/>
+              <rect x="304" y="382" width="150" height="9" rx="4" fill="#63c99c" opacity=".6"/>
+              <rect x="304" y="402" width="110" height="9" rx="4" fill="#63c99c" opacity=".6"/>
+              <rect x="498" y="250" width="196" height="250" rx="16" fill="#33290f" stroke="#e7b85c" stroke-width="3"/>
+              <text class="svg-tiny" x="520" y="286" fill="#e7c98d">PART THREE</text>
+              <text class="svg-label" x="520" y="312" fill="#f2dca0">TRANSITION</text>
+              <text class="svg-small" x="520" y="340" fill="#e7c98d">what changes on entry</text>
+              <path d="M520 372 C560 372 560 430 620 430" fill="none" stroke="#e7b85c" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+              <text class="svg-small" x="520" y="474" fill="#e7c98d">The one people skip.</text>
+              <text class="svg-small" x="150" y="536">The transition is where the explanation actually moves.</text>
+            </g>
+
+            <!-- DIAGRAM 6: MERGE AND REDUCE -->
+            <g class="diagram-state" data-state="6">
+              <text class="svg-kicker" x="40" y="60">Trimming</text>
+              <text class="svg-title" x="40" y="96">Merge, then reduce.</text>
+              <line x1="380" y1="130" x2="380" y2="560" stroke="#3a463e" stroke-width="1.5" stroke-dasharray="5 7"/>
+              <text class="svg-tiny" x="60" y="150" fill="#9ea99f">RULE ONE · MERGE</text>
+              <rect class="svg-node" x="60" y="164" width="130" height="72" rx="12"/>
+              <rect x="80" y="184" width="90" height="30" rx="6" fill="#75a9ff" opacity=".7"/>
+              <text class="svg-tiny" x="82" y="230">SCENE A</text>
+              <rect class="svg-node" x="210" y="164" width="130" height="72" rx="12"/>
+              <rect x="230" y="184" width="90" height="30" rx="6" fill="#75a9ff" opacity=".7"/>
+              <text class="svg-tiny" x="232" y="230">SCENE B · SAME STATE</text>
+              <path class="svg-line" d="M125 236 C125 280 200 280 200 316" marker-end="url(#arrow)"/>
+              <path class="svg-line" d="M275 236 C275 280 200 280 200 316" marker-end="url(#arrow)"/>
+              <rect x="110" y="322" width="180" height="72" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+              <rect x="130" y="342" width="90" height="30" rx="6" fill="#63c99c" opacity=".8"/>
+              <text class="svg-tiny" x="132" y="388" fill="#c9f1df">ONE SCENE</text>
+              <text class="svg-small" x="60" y="440">No state change between two</text>
+              <text class="svg-small" x="60" y="460">scenes means they are one.</text>
+              <text class="svg-tiny" x="410" y="150" fill="#9ea99f">RULE TWO · REDUCE</text>
+              <rect class="svg-node" x="410" y="164" width="290" height="90" rx="12"/>
+              <g fill="#e7b85c">
+                <circle cx="450" cy="210" r="12"/><circle cx="500" cy="200" r="10"/><circle cx="550" cy="216" r="13"/><circle cx="610" cy="198" r="9"/><circle cx="660" cy="214" r="11"/>
+              </g>
+              <text class="svg-tiny" x="430" y="240">GRAPHIC SHOWS FIVE THINGS</text>
+              <path class="svg-line" d="M555 254 V308" marker-end="url(#arrow)"/>
+              <rect x="470" y="314" width="170" height="80" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/>
+              <circle cx="555" cy="354" r="13" fill="#63c99c"/>
+              <text class="svg-tiny" x="490" y="386" fill="#c9f1df">ONLY WHAT THE TEXT DISCUSSES</text>
+              <path d="M420 430 C470 410 520 450 560 430 C600 410 650 450 690 430" fill="none" stroke="#ee795e" stroke-width="2" opacity=".5"/>
+              <path d="M420 470 H690" fill="none" stroke="#63c99c" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+              <text class="svg-small" x="410" y="504" fill="#c9f1df">The reader keeps reading instead of studying the graphic.</text>
+            </g>
+
+            <!-- DIAGRAM 7: THE PROSE PASS -->
+            <g class="diagram-state" data-state="7">
+              <text class="svg-kicker" x="40" y="60">The prose pass</text>
+              <text class="svg-title" x="40" y="96">Cut patterns, keep voice.</text>
+              <text class="svg-tiny" x="60" y="146" fill="#f2a793">REMOVED — PATTERNS</text>
+              <rect x="60" y="158" width="420" height="44" rx="10" fill="#33211d" stroke="#ee795e"/>
+              <text class="svg-small" x="78" y="185" fill="#e0a99b">The scroll is not decoration: it is the argument.</text>
+              <line x1="78" y1="180" x2="430" y2="180" stroke="#ee795e" stroke-width="2"/>
+              <text class="svg-tiny" x="386" y="176" fill="#f2a793">COLON REVEAL</text>
+              <rect x="60" y="212" width="420" height="44" rx="10" fill="#33211d" stroke="#ee795e"/>
+              <text class="svg-small" x="78" y="239" fill="#e0a99b">It is not a slideshow, it is a story.</text>
+              <line x1="78" y1="234" x2="360" y2="234" stroke="#ee795e" stroke-width="2"/>
+              <text class="svg-tiny" x="368" y="230" fill="#f2a793">BINARY CONTRAST</text>
+              <rect x="60" y="266" width="420" height="44" rx="10" fill="#33211d" stroke="#ee795e"/>
+              <text class="svg-small" x="78" y="293" fill="#e0a99b">And that is what turns motion into meaning.</text>
+              <line x1="78" y1="288" x2="392" y2="288" stroke="#ee795e" stroke-width="2"/>
+              <text class="svg-tiny" x="356" y="284" fill="#f2a793">CLOSING METAPHOR</text>
+              <path class="svg-line" d="M270 310 V344" marker-end="url(#arrowGreen)"/>
+              <text class="svg-tiny" x="60" y="342" fill="#c9f1df">REWRITTEN — PLAIN SENTENCES</text>
+              <rect x="60" y="352" width="420" height="40" rx="10" fill="#18342a" stroke="#63c99c"/>
+              <text class="svg-small" x="78" y="377" fill="#c9f1df">The scroll carries the argument.</text>
+              <rect x="60" y="398" width="420" height="40" rx="10" fill="#18342a" stroke="#63c99c"/>
+              <text class="svg-small" x="78" y="423" fill="#c9f1df">It is a sequence of states.</text>
+              <rect x="60" y="444" width="420" height="40" rx="10" fill="#18342a" stroke="#63c99c"/>
+              <text class="svg-small" x="78" y="469" fill="#c9f1df">Each state adds one idea.</text>
+              <rect x="504" y="158" width="200" height="326" rx="14" fill="#1b2720" stroke="#3e4c42"/>
+              <text class="svg-tiny" x="524" y="190" fill="#9ea99f">PASSES UNTOUCHED</text>
+              <path d="M524 224 l10 10 l18 -22" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+              <text class="svg-small" x="558" y="230" fill="#c9f1df">A dry line stays.</text>
+              <path d="M524 288 l10 10 l18 -22" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+              <text class="svg-small" x="558" y="294" fill="#c9f1df">A stated side stays.</text>
+              <text class="svg-small" x="524" y="352" fill="#b7c0b8">Voice is a tone</text>
+              <text class="svg-small" x="524" y="374" fill="#b7c0b8">choice, not slop.</text>
+            </g>
+
+            <!-- DIAGRAM 8: GRAPHIC ON A PHONE -->
+            <g class="diagram-state" data-state="8">
+              <text class="svg-kicker" x="40" y="60">On a phone</text>
+              <text class="svg-title" x="40" y="96">Pin the graphic on top.</text>
+              <rect class="svg-node" x="56" y="150" width="176" height="330" rx="22"/>
+              <rect x="76" y="176" width="136" height="120" rx="10" fill="#16283f" stroke="#3a5578" opacity=".4"/>
+              <text class="svg-tiny" x="96" y="242" fill="#7f93b3" opacity=".7">graphic behind</text>
+              <rect x="76" y="188" width="136" height="270" rx="10" fill="#243229" stroke="#526257"/>
+              <rect x="92" y="210" width="104" height="9" rx="4" fill="#667269"/>
+              <rect x="92" y="230" width="104" height="9" rx="4" fill="#667269"/>
+              <rect x="92" y="250" width="80" height="9" rx="4" fill="#667269"/>
+              <text class="svg-tiny" x="144" y="474" text-anchor="middle" fill="#f2a793">① HIDDEN BEHIND CARDS</text>
+              <rect class="svg-node" x="256" y="150" width="176" height="330" rx="22"/>
+              <rect x="266" y="160" width="156" height="96" rx="10" fill="#251d33" stroke="#ae8bf3" stroke-width="2"/>
+              <rect x="286" y="188" width="116" height="40" rx="6" fill="#ae8bf3" opacity=".55"/>
+              <text class="svg-tiny" x="286" y="248" fill="#dfd0fa">PINNED BAND</text>
+              <rect x="266" y="268" width="156" height="200" rx="10" fill="#243229" stroke="#526257"/>
+              <rect x="282" y="288" width="124" height="9" rx="4" fill="#667269"/>
+              <rect x="282" y="308" width="124" height="9" rx="4" fill="#667269"/>
+              <rect x="282" y="328" width="96" height="9" rx="4" fill="#667269"/>
+              <text class="svg-tiny" x="344" y="500" text-anchor="middle" fill="#dfd0fa">② PINNED ON TOP, TEXT UNDER</text>
+              <rect class="svg-node" x="470" y="200" width="234" height="150" rx="18"/>
+              <rect x="486" y="216" width="96" height="118" rx="8" fill="#251d33" stroke="#ae8bf3" stroke-width="1.5"/>
+              <text class="svg-tiny" x="498" y="280" fill="#dfd0fa">GRAPHIC</text>
+              <rect x="594" y="216" width="96" height="118" rx="8" fill="#243229" stroke="#526257"/>
+              <rect x="608" y="236" width="68" height="8" rx="4" fill="#667269"/>
+              <rect x="608" y="254" width="68" height="8" rx="4" fill="#667269"/>
+              <rect x="608" y="272" width="50" height="8" rx="4" fill="#667269"/>
+              <text class="svg-small" x="470" y="392" fill="#b7c0b8">③ A wide, short screen goes</text>
+              <text class="svg-small" x="470" y="414" fill="#b7c0b8">back to two columns, not a</text>
+              <text class="svg-small" x="470" y="436" fill="#b7c0b8">smaller band.</text>
+            </g>
+
+            <!-- DIAGRAM 9: THREE FALLBACKS -->
+            <g class="diagram-state" data-state="9">
+              <text class="svg-kicker" x="40" y="60">Without the scroll</text>
+              <text class="svg-title" x="40" y="96">Three ways to read it.</text>
+              <rect class="svg-node" x="52" y="150" width="204" height="320" rx="16"/>
+              <text class="svg-tiny" x="74" y="184" fill="#bcd4ff">JAVASCRIPT OFF</text>
+              <rect x="74" y="200" width="160" height="12" rx="4" fill="#e9eee8" opacity=".85"/>
+              <rect x="74" y="224" width="160" height="8" rx="4" fill="#667269"/>
+              <rect x="74" y="242" width="160" height="8" rx="4" fill="#667269"/>
+              <rect x="74" y="264" width="120" height="10" rx="4" fill="#75a9ff" opacity=".8"/>
+              <rect x="74" y="286" width="160" height="8" rx="4" fill="#667269"/>
+              <rect x="74" y="304" width="140" height="8" rx="4" fill="#667269"/>
+              <text class="svg-small" x="74" y="360" fill="#b7c0b8">Reads top to</text>
+              <text class="svg-small" x="74" y="382" fill="#b7c0b8">bottom, in order.</text>
+              <rect class="svg-node" x="278" y="150" width="204" height="320" rx="16"/>
+              <text class="svg-tiny" x="300" y="184" fill="#dfd0fa">REDUCED MOTION</text>
+              <rect x="300" y="204" width="70" height="70" rx="10" fill="#251d33" stroke="#ae8bf3"/>
+              <text class="svg-tiny" x="322" y="244" fill="#dfd0fa">STATE 3</text>
+              <path d="M380 239 H408" stroke="#ae8bf3" stroke-width="3" marker-end="url(#arrowViolet)" fill="none"/>
+              <rect x="410" y="204" width="60" height="70" rx="10" fill="#251d33" stroke="#ae8bf3"/>
+              <text class="svg-tiny" x="424" y="244" fill="#dfd0fa">STATE 4</text>
+              <text class="svg-small" x="300" y="330" fill="#b7c0b8">States still</text>
+              <text class="svg-small" x="300" y="352" fill="#b7c0b8">change, they</text>
+              <text class="svg-small" x="300" y="374" fill="#b7c0b8">just stop moving.</text>
+              <rect class="svg-node" x="504" y="150" width="204" height="320" rx="16"/>
+              <text class="svg-tiny" x="526" y="184" fill="#c9f1df">SCREEN READER</text>
+              <path class="svg-line-muted" d="M540 208 V300"/>
+              <circle cx="540" cy="212" r="4" fill="#63c99c"/><text class="svg-small" x="556" y="217" fill="#c9f1df">Heading</text>
+              <circle cx="558" cy="244" r="4" fill="#63c99c"/><text class="svg-small" x="574" y="249" fill="#c9f1df">Scene text</text>
+              <circle cx="558" cy="276" r="4" fill="#63c99c"/><text class="svg-small" x="574" y="281" fill="#c9f1df">Graphic: a phase map</text>
+              <circle cx="540" cy="300" r="4" fill="#63c99c"/><text class="svg-small" x="556" y="305" fill="#c9f1df">Next scene</text>
+              <text class="svg-small" x="526" y="352" fill="#b7c0b8">A text equivalent</text>
+              <text class="svg-small" x="526" y="374" fill="#b7c0b8">for each graphic.</text>
+              <text class="svg-small" x="52" y="506">Nothing depends on an animation a reader may never see.</text>
+            </g>
+
+            <!-- DIAGRAM 10: VIEWPORT MATRIX -->
+            <g class="diagram-state" data-state="10">
+              <text class="svg-kicker" x="40" y="60">Verified</text>
+              <text class="svg-title" x="40" y="96">Nine viewports, four checks.</text>
+              <g>
+                <rect class="svg-node" x="60" y="140" width="200" height="112" rx="12"/><text class="svg-small" x="80" y="170">320 × 568</text>
+                <path d="M80 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M118 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M156 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M194 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="80" y="238" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="280" y="140" width="200" height="112" rx="12"/><text class="svg-small" x="300" y="170">375 × 667</text>
+                <path d="M300 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M338 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M376 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M414 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="300" y="238" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="500" y="140" width="200" height="112" rx="12"/><text class="svg-small" x="520" y="170">375 × 812</text>
+                <path d="M520 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M558 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M596 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M634 196 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="520" y="238" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="60" y="266" width="200" height="112" rx="12"/><text class="svg-small" x="80" y="296">414 × 896</text>
+                <path d="M80 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M118 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M156 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M194 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="80" y="364" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="280" y="266" width="200" height="112" rx="12"/><text class="svg-small" x="300" y="296">768 × 1024</text>
+                <path d="M300 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M338 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M376 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M414 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="300" y="364" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="500" y="266" width="200" height="112" rx="12"/><text class="svg-small" x="520" y="296">812 × 375</text>
+                <path d="M520 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M558 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M596 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M634 322 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="520" y="364" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="60" y="392" width="200" height="112" rx="12"/><text class="svg-small" x="80" y="422">667 × 375</text>
+                <path d="M80 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M118 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M156 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M194 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="80" y="490" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect class="svg-node" x="280" y="392" width="200" height="112" rx="12"/><text class="svg-small" x="300" y="422">1024 × 600</text>
+                <path d="M300 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M338 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M376 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M414 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="300" y="490" fill="#c9f1df">4 CHECKS PASS</text>
+              </g>
+              <g>
+                <rect x="500" y="392" width="200" height="112" rx="12" fill="#18342a" stroke="#63c99c" stroke-width="2"/><text class="svg-small" x="520" y="422" fill="#d4f5e6">1280 × 800</text>
+                <path d="M520 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M558 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M596 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M634 448 l8 8 l14 -18" fill="none" stroke="#63c99c" stroke-width="3" stroke-linecap="round"/>
+                <text class="svg-tiny" x="520" y="490" fill="#c9f1df">DONE WHEN GREEN</text>
+              </g>
+              <text class="svg-small" x="60" y="546" fill="#c9f1df">The article is done when those checks pass, not when it looks good on a laptop.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- SCENE 0 -->
+        <section class="step is-active" data-state="1" aria-labelledby="scene-1-title">
+          <div class="step-card">
+            <span class="scene-number">00 · An article that moves</span>
+            <h2 id="scene-1-title">An article that moves.</h2>
+            <p>A scrollytelling article can move a great deal and still explain nothing. This skill treats the writing as the work and the motion as the last step. It runs in two phases, and it builds nothing until the script is approved.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 1 -->
+        <section class="step" data-state="2" aria-labelledby="scene-2-title">
+          <div class="step-card">
+            <span class="scene-number">01 · Two phases and a gate</span>
+            <h2 id="scene-2-title">Two phases and a gate.</h2>
+            <p>The skill runs in two phases in a fixed order. Phase one writes a scene-by-scene script. Phase two builds a single standalone HTML file. A gate sits between them, and only your approval opens it.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 2 -->
+        <section class="step" data-state="3" aria-labelledby="scene-3-title">
+          <div class="step-card">
+            <span class="scene-number">02 · Goal and tone first</span>
+            <h2 id="scene-3-title">Goal and tone first.</h2>
+            <p>Before any drafting, you pick one goal and one tone from a menu. The goal decides what the reader can do at the end. The tone decides how it sounds. Asked as open questions these get vague answers, so the skill lists the options and recommends one of each.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>A goal and a tone can fight each other.</strong> Explaining a mechanism while arguing about it, or writing a tutorial in a reflective voice, leaves the reader unsure which parts are fact and which are opinion. The skill flags the clash and offers the nearest pair that works, then does what you ask.
+        </aside>
+
+        <!-- SCENE 3 -->
+        <section class="step" data-state="4" aria-labelledby="scene-4-title">
+          <div class="step-card">
+            <span class="scene-number">03 · The first draft</span>
+            <h2 id="scene-4-title">The skill writes the first draft.</h2>
+            <p>After four or five questions in one message, the skill writes the whole first draft itself. It does not hand back an empty table for you to fill in. A concrete draft is something you can react to, and any invented visual is marked as a proposal so you know what is still a guess.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 4 -->
+        <section class="step" data-state="5" aria-labelledby="scene-5-title">
+          <div class="step-card">
+            <span class="scene-number">04 · The three parts of a scene</span>
+            <h2 id="scene-5-title">The three parts of a scene.</h2>
+            <p>Every scene in the script has three parts. The first two are what the graphic shows and the two to four sentences the reader sees. The third is the transition, the change that happens when the reader scrolls in. People skip that one, and it is where the explanation moves.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 5 -->
+        <section class="step" data-state="6" aria-labelledby="scene-6-title">
+          <div class="step-card">
+            <span class="scene-number">05 · Two rules that trim the draft</span>
+            <h2 id="scene-6-title">Two rules that trim the draft.</h2>
+            <p>Two rules cut a first draft down. If the graphic does not change between two scenes, they merge, because a scene with no state change is a paragraph. Each scene shows only what its text is discussing, so the reader keeps reading instead of studying the graphic.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>The beat rule has no diagram state of its own — text is subordinate.</strong> If a scene needs more than about four sentences, split the concept or move the detail into a static prose section like this one. Mixing plain prose with scroll sequences is the normal shape of these pieces; the scroll blocks are the highlights of a page, not the whole page.
+        </aside>
+
+        <!-- SCENE 6 -->
+        <section class="step" data-state="7" aria-labelledby="scene-7-title">
+          <div class="step-card">
+            <span class="scene-number">06 · The prose pass</span>
+            <h2 id="scene-7-title">The prose pass.</h2>
+            <p>Each scene runs two to four sentences, which is the length where a draft reaches for a dramatic reveal instead of a sentence. A prose pass removes those shapes before the table is shown, among them colon reveals, binary contrasts, faux-insight openers, and a closing metaphor that stands in for a payoff. It keeps your voice and cuts only the patterns. A dry tone or a stated side comes from the menu, and both survive the pass.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 7 -->
+        <section class="step" data-state="8" aria-labelledby="scene-8-title">
+          <div class="step-card">
+            <span class="scene-number">07 · The graphic on a phone</span>
+            <h2 id="scene-8-title">The graphic on a phone.</h2>
+            <p>A desktop layout does not survive a phone by reflowing. The graphic pins to the top of the screen, above the text, and the text scrolls underneath it. Parked behind the cards it disappears, because phone cards are tall enough to cover it. A wide, short screen needs a different layout again, not a smaller band.</p>
+          </div>
+        </section>
+
+        <aside class="bridge-card">
+          <strong>The escalation rule.</strong> The default output is one standalone HTML file with no build step. React comes in only when the approved script has stateful widgets the reader manipulates, such as filters or a data explorer, and the skill tells you before it makes that call.
+        </aside>
+
+        <!-- SCENE 8 -->
+        <section class="step" data-state="9" aria-labelledby="scene-9-title">
+          <div class="step-card">
+            <span class="scene-number">08 · Reading it without the scroll</span>
+            <h2 id="scene-9-title">Reading it without the scroll.</h2>
+            <p>The scroll effects are an enhancement, so the article has to work without them. With JavaScript off it reads top to bottom in order. With reduced motion the states still change, they just stop moving. Every meaning lives in the text as well as the graphic, so nothing depends on an animation a reader may never see.</p>
+          </div>
+        </section>
+
+        <!-- SCENE 9 -->
+        <section class="step" data-state="10" aria-labelledby="scene-10-title">
+          <div class="step-card">
+            <span class="scene-number">09 · Verified across viewports</span>
+            <h2 id="scene-10-title">Verified across viewports.</h2>
+            <p>The last step drives the built file through a headless browser. It loads the article at nine viewport sizes and asserts the behaviour at each one. It checks for no horizontal overflow, every scene reachable scrolling down and up, and the card sitting clear of the graphic where it settles. The article is done when those checks pass.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="next-moves-section" aria-labelledby="artifact-title">
+      <div class="next-moves-inner">
+        <p class="eyebrow">The artifact</p>
+        <h2 id="artifact-title">One row of the script, in full.</h2>
+        <p class="next-moves-lede">One complete scene-table row, shown in full, so you see the artifact the method produces before reading how it gets verified. This is scene one of the script for this very article.</p>
+
+        <div class="next-moves-grid">
+          <article class="next-move-card"><h3>VISUAL — diagram state</h3><p>Phase map. Two labelled blocks, <code>Script</code> and <code>Implementation</code>, left to right, with a closed violet gate between them. A return arrow from Implementation back to Script is crossed out.</p></article>
+          <article class="next-move-card"><h3>COPY — 2 to 4 sentences</h3><p>The skill runs in two phases in a fixed order. Phase one writes a scene-by-scene script. Phase two builds a single standalone HTML file. A gate sits between them, and only your approval opens it.</p></article>
+          <article class="next-move-card"><h3>TRANSITION — on entry</h3><p>The hero's motion settles into two blocks; the gate snaps shut between them.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-copy">
+        <p class="eyebrow">The payoff</p>
+        <h2 id="closing-title">The reader can describe the method.</h2>
+        <p><strong>The reader can describe the method.</strong> Two phases in a fixed order with a gate between them. A script written and approved before any code. Scenes trimmed by the merge and one-concept rules. A prose pass that removes patterns without flattening the voice. A responsive contract that pins the graphic above the text on a phone. And a viewport matrix the built file has to pass. The article is done when those checks pass, not when it looks good on a laptop.</p>
+        <div class="final-equation"><span>Script approved</span><span aria-hidden="true">→</span><span>Built</span><span aria-hidden="true">→</span><span>Verified</span></div>
+      </div>
+
+      <svg class="closing-diagram" viewBox="0 0 700 520" role="img" aria-labelledby="closing-diagram-title closing-diagram-desc">
+        <title id="closing-diagram-title">The gate open, the script built, and the viewport matrix passing</title>
+        <desc id="closing-diagram-desc">The approved script passes through an open violet gate to a single HTML file, which then clears nine green viewport checks.</desc>
+        <defs>
+          <marker id="closingArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#63c99c"/></marker>
+        </defs>
+        <g font-family="Inter, sans-serif" font-weight="700">
+          <rect x="40" y="70" width="250" height="92" rx="16" fill="#eaf6ef" stroke="#63c99c" stroke-width="2"/>
+          <text x="62" y="102" font-size="11" fill="#3f7a63" letter-spacing="1.3">APPROVED</text>
+          <text x="62" y="130" font-size="15" fill="#151914">Scene-by-scene script</text>
+          <text x="62" y="150" font-size="12" fill="#61655c">goal, tone, ten scenes</text>
+          <path d="M290 116 H322" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)" fill="none"/>
+          <rect x="326" y="76" width="52" height="80" rx="10" fill="#f0e9fb" stroke="#ae8bf3" stroke-width="2"/>
+          <text x="352" y="112" font-size="10" fill="#7a5bc4" font-weight="800" text-anchor="middle">GATE</text>
+          <text x="352" y="132" font-size="10" fill="#7a5bc4" text-anchor="middle">OPEN</text>
+          <path d="M378 116 H408" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)" fill="none"/>
+          <rect x="412" y="70" width="248" height="92" rx="16" fill="#f4f1e8" stroke="#c9c5ba" stroke-width="1.5"/>
+          <text x="434" y="102" font-size="11" fill="#61655c" letter-spacing="1.3">BUILT</text>
+          <text x="434" y="130" font-size="15" fill="#151914">One standalone HTML file</text>
+          <text x="434" y="150" font-size="12" fill="#61655c">no build step, no dependencies</text>
+          <path d="M536 162 V196" stroke="#63c99c" stroke-width="4" marker-end="url(#closingArrow)" fill="none"/>
+          <text x="536" y="222" font-size="11" fill="#3f7a63" letter-spacing="1.2" text-anchor="middle" font-weight="800">NINE VIEWPORTS, FOUR CHECKS EACH</text>
+        </g>
+        <rect x="118" y="240" width="464" height="150" rx="16" fill="#eaf6ef" stroke="#63c99c" stroke-width="2"/>
+        <g font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1f5d45">
+          <rect x="140" y="262" width="130" height="42" rx="8" fill="#ffffff" stroke="#9bd9bd"/><text x="160" y="288">320 × 568 ✓</text>
+          <rect x="285" y="262" width="130" height="42" rx="8" fill="#ffffff" stroke="#9bd9bd"/><text x="305" y="288">768 × 1024 ✓</text>
+          <rect x="430" y="262" width="130" height="42" rx="8" fill="#ffffff" stroke="#9bd9bd"/><text x="450" y="288">1280 × 800 ✓</text>
+          <rect x="140" y="320" width="130" height="42" rx="8" fill="#ffffff" stroke="#9bd9bd"/><text x="160" y="346">375 × 812 ✓</text>
+          <rect x="285" y="320" width="130" height="42" rx="8" fill="#ffffff" stroke="#9bd9bd"/><text x="305" y="346">812 × 375 ✓</text>
+          <rect x="430" y="320" width="130" height="42" rx="8" fill="#ffffff" stroke="#9bd9bd"/><text x="450" y="346">1024 × 600 ✓</text>
+        </g>
+        <text x="350" y="440" fill="#3f7a63" font-family="Inter, sans-serif" font-size="13" font-weight="800" text-anchor="middle" letter-spacing="1">DONE WHEN THE CHECKS PASS</text>
+      </svg>
+    </section>
+
+    <section class="sources" aria-labelledby="siblings-title">
+      <div class="sources-inner">
+        <p class="eyebrow">The whole picture</p>
+        <h2 id="siblings-title">The renderer sits at the end of a chain.</h2>
+        <p class="sources-intro">scrollytelling is one of two renderers. It draws a decision the process skills already made. Here is where it sits and where to read the rest.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>How the chain fits</h3>
+            <p><strong>The library.</strong> Three process stages write the decision, three artifact detours support them, two renderers draw the result. scrollytelling is a renderer and never decides what to say.</p>
+            <a href="../the-chain/the-handoff-is-the-interface.html">Read the chain explainer</a>
+          </article>
+          <article class="source-card">
+            <h3>problem-framing to proposal</h3>
+            <p><strong>The decision upstream.</strong> A renderer needs a settled decision to draw. It comes out of <code>FRAMED_PROBLEM.md</code>, <code>DIRECTIONS.md</code>, and <code>PROPOSAL.md</code>.</p>
+            <a href="../proposal/one-read-one-decision.html">Read the proposal explainer</a>
+          </article>
+          <article class="source-card">
+            <h3>tldraw-skill</h3>
+            <p><strong>The other renderer.</strong> Draws a decided artifact on a local canvas you own, on a machine the work never leaves. Same rule: it renders, it does not decide.</p>
+            <a href="../tldraw-skill/draw-what-was-decided.html">Read the explainer</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title" style="background: var(--paper-2);">
+      <div class="sources-inner">
+        <p class="eyebrow">Method provenance</p>
+        <h2 id="sources-title">Where the method comes from.</h2>
+        <p class="sources-intro">The patterns and the accessibility floor are borrowed, with real links. The prose pass is condensed from one named source.</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>The New York Times · The Pudding</h3>
+            <p>Sticky-graphic and step patterns as practised by these publications, where scroll sequences are the highlights of a page, not the whole page.</p>
+            <a href="https://www.nytimes.com/">The New York Times</a>
+            <a href="https://pudding.cool/">The Pudding</a>
+          </article>
+          <article class="source-card">
+            <h3>GSAP ScrollTrigger</h3>
+            <p>The mechanism behind scrubbed sequences, loaded only when a script needs one. This article uses discrete steps, so it is not loaded here.</p>
+            <a href="https://gsap.com/docs/v3/Plugins/ScrollTrigger/">Read the ScrollTrigger docs</a>
+          </article>
+          <article class="source-card">
+            <h3>WCAG 2.2</h3>
+            <p>The accessibility floor the output must clear, including <code>prefers-reduced-motion</code> and information not conveyed by animation alone.</p>
+            <a href="https://www.w3.org/TR/WCAG22/">Read WCAG 2.2</a>
+          </article>
+          <article class="source-card">
+            <h3>no-ai-slop</h3>
+            <p>Peter Yang's <code>no-ai-slop</code> (MIT), the source the prose pass in scene six is condensed from, adapted to scene text.</p>
+            <a href="https://github.com/petergyang/no-ai-slop">View no-ai-slop</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </article>
+  </main>
+
+
+  <footer>How a Scrollytelling Article Gets Made · An interactive explanation of the scrollytelling skill</footer>
+
+  <noscript>
+    <style>
+      .progress-track, .graphic-wrap { display: none !important; }
+      .scrolly { display: block; max-width: 760px; }
+      .step { min-height: 0; opacity: 1; padding: 1rem 0 3rem; }
+      .bridge-card { margin-bottom: 3rem; }
+    </style>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      const labels = {
+        1: 'Article in motion',
+        2: 'Two phases, one gate',
+        3: 'Goal and tone menus',
+        4: 'First draft written',
+        5: 'Anatomy of a scene',
+        6: 'Merge and reduce',
+        7: 'The prose pass',
+        8: 'Graphic on a phone',
+        9: 'Three fallbacks',
+        10: 'Viewport matrix'
+      };
+      let activeState = 1;
+
+      function updateMeta(n) {
+        count.textContent = `Diagram ${String(n).padStart(2, '0')} / 10`;
+        label.textContent = labels[n];
+        steps.forEach(step => step.classList.toggle('is-active', Number(step.dataset.state) === n));
+      }
+
+      function setState(n) {
+        if (!Number.isFinite(n) || n < 1 || n > states.length) return;
+        activeState = n;
+        updateMeta(n);
+
+        if (window.gsap) {
+          states.forEach(group => {
+            window.gsap.killTweensOf(group);
+            const active = Number(group.dataset.state) === n;
+            group.style.visibility = 'visible';
+            window.gsap.to(group, {
+              opacity: active ? 1 : 0,
+              y: active ? 0 : 8,
+              duration: reducedMotion ? 0 : .55,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onComplete: () => {
+                group.classList.toggle('is-active', active);
+                group.style.visibility = active ? 'visible' : 'hidden';
+              }
+            });
+          });
+        } else {
+          states.forEach(group => group.classList.toggle('is-active', Number(group.dataset.state) === n));
+        }
+      }
+
+      function initScrollScenes() {
+        // Deterministic scene selection: pick the card occupying most of the
+        // readable zone. Per-step enter/leave triggers overlap when a card is much
+        // shorter than its scene block, which silently skips scenes on tablets.
+        const graphicWrap = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        const cards = steps.map(step => ({ step, card: step.querySelector('.step-card') || step }));
+
+        function readingZoneTop() {
+          // The graphic only obstructs reading when it is stacked above the text
+          // (small screens). Side by side, the whole viewport height is readable.
+          if (!graphicWrap || !stepsEl) return 0;
+          if (window.getComputedStyle(graphicWrap).position !== 'sticky') return 0;
+          const rect = graphicWrap.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(rect.right, stepsRect.right) - Math.max(rect.left, stepsRect.left) > 0;
+          const pinnedToTop = rect.top <= 1 && rect.bottom > 0;
+          return stacked && pinnedToTop ? Math.min(rect.bottom, window.innerHeight * 0.7) : 0;
+        }
+
+        function pickState() {
+          const zoneTop = readingZoneTop();
+          const zoneBottom = window.innerHeight;
+          let best = null;
+          let bestArea = 0;
+          cards.forEach(({ step, card }) => {
+            const rect = card.getBoundingClientRect();
+            const area = Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop);
+            if (area >= bestArea) {
+              bestArea = area;
+              best = step;
+            }
+          });
+          if (bestArea > 0 && best) {
+            const next = Number(best.dataset.state);
+            if (next !== activeState) setState(next);
+          }
+        }
+
+        let scheduled = false;
+        function schedule() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(() => {
+            scheduled = false;
+            pickState();
+          });
+        }
+
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        window.addEventListener('orientationchange', schedule);
+        schedule();
+      }
+
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      setState(activeState);
+      initScrollScenes();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

@@ -5,84 +5,141 @@ description: >-
   story unfolds as the reader scrolls, with a sticky graphic that changes state
   per scene. Use this skill whenever the user wants an "interactive article",
   "scrollytelling", "artículo interactivo", "scroll-triggered animations", an
-  explainer where things "se van revelando con el scroll", or wants help
-  writing the narrative script (guion) for one. Two phases — first act as a
-  script/art director to co-write the scene-by-scene script, then implement it
-  as a standalone HTML file with GSAP. Trigger it even if the
-  user only asks for the script or only for the implementation. Produces a
-  scroll-driven article or its scene script. Do NOT use it for adding a
-  scroll-to-top button or scroll progress bar, for a hover or entrance
+  explainer where things "se van revelando con el scroll", or a scene-by-scene
+  script (guion) for one. Two phases —
+  first map the beats onto scenes and get the scene table approved, then
+  implement it as a standalone HTML file with GSAP. Trigger it even if the
+  user only asks for the script or only for the implementation. Do NOT use it for
+  adding a scroll-to-top button or scroll progress bar, for a hover or entrance
   animation on an existing page, or for a plain blog post, document, or
-  presentation with no scroll-driven visual states.
+  presentation with no scroll-driven visual states. Do NOT use it to decide what
+  the piece says, its audience, goal or tone — that is `pitch`. Do NOT use it to
+  build a slide deck — that is `slides`.
 ---
 
 # Scrollytelling
 
-Build scroll-driven interactive articles in two phases: **Script** (narrative direction) then **Implementation** (standalone HTML). The phases are sequential and gated.
+Build scroll-driven interactive articles in two phases: **Script** (map beats onto scenes) then
+**Implementation** (standalone HTML). The phases are sequential and gated.
 
-**THE GATE: never write implementation code until the user explicitly approves the script.** The scene script is the contract; code is just its rendering. If the user asks to "just build it" without a script, do a fast version of Phase 1 first (propose a draft script in the same reply, ask for a quick thumbs-up).
+**THE GATE: never write implementation code until the user explicitly approves the scene table.** The
+scene script is the contract; code is just its rendering. If the user asks to "just build it" without
+a script, do a fast version of Phase 1 first (propose a draft table in the same reply, ask for a quick
+thumbs-up).
+
+This skill does not decide what the article says. `pitch` owns audience, goal, tone and the beats;
+this skill owns how a beat becomes a scroll beat, and everything after that.
 
 Conduct the conversation, the script, and all article copy in the user's language.
 
 ---
 
-## Phase 1 — Script (act as script + art director)
+## Phase 1 — Script (map beats onto scenes)
 
-Your role here is a **director de guion y arte**: you actively shape the story, you don't just take dictation. The user brings the idea; you bring structure, pacing, and visual thinking.
+### 1. Load what has already been decided
 
-### 1. Set the goal and the tone, then interview
+Run this before asking anything.
 
-Two things decide the draft, and asked open they get useless answers. Ask them as a menu instead.
+**The pitch.** `PITCH.md` in the documentation directory, then the project root. It carries audience,
+goal, tone, the spine, the beats, and what is deliberately out. Say in one line that you found it and
+what the goal and tone are.
 
-Read `references/tone-and-goal.md` before this step. Present both menus — seven goals, six tones — recommend one of each based on what the user has already said, and say why in half a line. Then ask what you cannot infer:
+**If there is none, run `pitch` inline — the fast path.** Do not interview the user twice and do not
+invent a narrative yourself. One exchange, one draft of the beats, one approval, then continue here.
+Offer to save `PITCH.md` in a single line at the end; take no for an answer.
 
-- Who is the reader and what do they already know?
-- What raw material exists? (docs, code, diagrams, screenshots, a talk)
-- Rough length target (a 6-scene piece reads in ~3 min; 12+ scenes is a long feature)
+**The visual style.** `VISUAL_STYLE.md`, same locations. If there is none, ask once, in one line, and
+give a default:
 
-All of it in one message. Four or five questions, then a draft — a long questionnaire is a way of avoiding the first draft.
+> No visual style set for this project. Three presets: **Paper** (warm, prose-led — the default),
+> **Whiteboard** (hand-drawn, deliberately unfinished), **Blueprint** (mono, gridded, for data-heavy
+> material). Say one, or say "Paper" and I'll go.
 
-If the user picks a goal and tone that fight each other, say so and offer the nearest pair that works. Then do what they say.
+Run `visual-style` if they want to set one up properly. Use Paper if they skip, say so, and do not ask
+again this session.
 
-### 2. Propose a draft script — never a blank page
+**Never re-derive the frame.** Facts come from `PITCH.md` and the documents it carries from. If a beat
+turns out not to survive the scroll medium, that goes back to `pitch` rather than being quietly
+rewritten here.
 
-**Immediately after the interview, write a complete first-draft scene script yourself and present it for reaction.** Do not ask the user to fill in a template. A concrete draft to argue with beats an empty table. Base it on the goal, the tone, the interview answers, and any material they shared; invent placeholder visuals where needed and mark them `[propuesta]`.
+### 2. Map the beats onto scenes — never a blank page
 
-Read `references/prose.md` before you write the TEXTO cells. A scene is 2–4 sentences, which is exactly the length at which a draft reaches for a dramatic reveal instead of a sentence — the scroll is already supplying the drama.
+**Write the complete scene table yourself and present it for reaction.** A beat is not a scene: one
+beat may earn one scene, or two when the visual builds, and two beats may merge into one when the
+graphic does not change between them. That mapping is this skill's whole contribution to Phase 1.
 
-Use the scene table in `templates/script-template.md`. The goal and tone go at the top of it, because that is what the beats are judged against. Every scene has three columns:
+Use the scene table in `templates/script-template.md`. The goal, tone and source beat go at the top of
+it, because that is what the scenes are judged against. Every scene has three columns:
+
 - **VISUAL** — what the sticky graphic shows in this scene (its *state*)
-- **TEXTO** — the prose the reader sees (2-4 short sentences max)
+- **TEXTO** — the prose the reader sees (2–4 short sentences max)
 - **TRANSICIÓN** — what changes visually when scrolling from the previous scene into this one
 
-### 3. Enforce the beat rules while iterating
+**TEXTO is a compression of the approved claim, not new writing.** The claim and its evidence were
+approved in `pitch` and already passed the slop pass there; carry the wording. Where compressing to
+2–4 sentences genuinely requires a new sentence, run `slop-check` over that sentence alone and say you
+did. Do not re-run a pass over text the user already approved — that is the gate this skill exists to
+hold.
 
-These rules define a valid scene. Apply them to your own draft and to every user edit:
+State the beat-to-scene mapping explicitly in the table (`B3 → S4, S5`), so a later reader can see
+what was split, what was merged, and what was dropped.
 
-1. **One concept per scene.** What appears on screen accompanies exactly what the text is saying at that moment. If the visual shows things the current text isn't talking about, the reader reads the screen instead of the story. Cut or defer.
-2. **Merge rule:** if the graphic does not change state between scene N and N+1, merge them. A scene without a visual state change is just a paragraph — it doesn't earn a scroll beat.
-3. **Text is subordinate.** If a scene needs more than ~4 sentences, either split the concept or move the detail to a non-animated prose section between scrollytelling blocks (mixing static prose and scroll sequences is normal and good — see `references/patterns.md`).
-4. **The opening scene states the tension** (what question does this article answer?) and **the closing scene pays it off**. If the draft lacks either, say so and fix it.
-5. **The opening scene matches the goal.** An argument opens on a claim, a story opens on a moment, an orientation opens on a map. A draft that feels off is usually a goal mismatch in scene 1, not a writing problem.
-6. **No slop in the scene text.** Run the checklist at the end of `references/prose.md` over the table before presenting it, and again after any re-voicing — copy is cheap to fix in a table and expensive to fix in a built article. The pass removes patterns, not voice: T4 takes a side and T6 runs on restraint, and neither is slop.
+### 3. Enforce the scroll rules while iterating
 
-Iterate the table with the user. Push back on weak beats; suggest stronger visual metaphors. When the user approves the script, restate the final scene table and confirm: this is what gets built.
+These rules define a valid *scene*, as distinct from a valid beat. They are medium rules and they are
+why the mapping is not mechanical.
+
+1. **One concept per scene.** What appears on screen accompanies exactly what the text is saying at
+   that moment. If the visual shows things the current text isn't talking about, the reader reads the
+   screen instead of the story. Cut or defer.
+2. **Merge rule:** if the graphic does not change state between scene N and N+1, merge them. A scene
+   without a visual state change is just a paragraph — it doesn't earn a scroll beat. This is the rule
+   that most often collapses two beats into one scene.
+3. **Split rule:** a beat whose SHOW field describes something that *builds* earns more than one
+   scene. One state per scene, in the order the reader needs them.
+4. **Text is subordinate.** If a scene needs more than ~4 sentences, either split the concept or move
+   the detail to a non-animated prose section between scrollytelling blocks (mixing static prose and
+   scroll sequences is normal and good — see `references/patterns.md`).
+5. **The opening scene states the tension** and **the closing scene pays it off.** Those are the
+   pitch's first and last beats; if the mapping lost either, the mapping is wrong, not the pitch.
+6. **Every beat is accounted for.** Rendered, merged, or explicitly dropped with a reason. A beat that
+   vanishes silently is how an approved narrative quietly becomes a different one.
+
+Iterate the table with the user. Push back on weak mappings; suggest stronger visual metaphors. When
+the user approves the script, restate the final scene table and confirm: this is what gets built.
 
 ### 4. Pick the pattern
 
-Before implementation, read `references/patterns.md` and choose the pattern(s) per scroll sequence (sticky graphic + steps is the default). State the choice and why in one sentence.
+Before implementation, read `references/patterns.md` and choose the pattern(s) per scroll sequence
+(sticky graphic + steps is the default). State the choice and why in one sentence.
 
 ---
 
 ## Phase 2 — Implementation
 
-**Default output: one standalone, self-contained HTML file** (inline CSS + JS, GSAP from CDN). No build step — the file must work opened directly and dropped into a static site.
+**Default output: one standalone, self-contained HTML file** (inline CSS + JS, GSAP from CDN). No
+build step — the file must work opened directly and dropped into a static site.
 
-Load ScrollTrigger **only** when the approved script contains a scrubbed sequence. Discrete scenes must not use per-step `ScrollTrigger` ranges: they overlap when a card is shorter than its scene block, and callback order silently decides which scene wins. Select the active scene deterministically from scroll position instead — `references/implementation.md` has the tested version.
+**Resolve `VISUAL_STYLE.md` into CSS custom properties** at the top of the file, using the token roles
+verbatim — `--surface`, `--ink`, `--accent-*`. Never hardcode a hex value that the profile names, or
+the article cannot be re-themed and the profile was pointless.
 
-Escalate to React **only** if the approved script contains stateful widgets the reader manipulates (filters, data explorers, inputs). If so, tell the user before building and confirm.
+**The accessibility requirements below out-rank every style token.** When a token cannot satisfy one —
+an accent that fails 4.5:1 as text on the surface, for instance, which is true of every Paper accent —
+substitute the profile's stated darkened variant and report the substitution in one line. Do not ship
+the failing pair and do not invent a different hue.
 
-Read `references/implementation.md` before writing code — it has the tested layout structure, the deterministic scene-state selection, and the pitfalls (mobile viewport units, pinning inside containers).
+Load ScrollTrigger **only** when the approved script contains a scrubbed sequence. Discrete scenes must
+not use per-step `ScrollTrigger` ranges: they overlap when a card is shorter than its scene block, and
+callback order silently decides which scene wins. Select the active scene deterministically from
+scroll position instead — `references/implementation.md` has the tested version.
+
+Escalate to React **only** if the approved script contains stateful widgets the reader manipulates
+(filters, data explorers, inputs). If so, tell the user before building and confirm.
+
+Read `references/implementation.md` before writing code — it has the tested layout structure, the
+deterministic scene-state selection, and the pitfalls (mobile viewport units, pinning inside
+containers).
 
 ### Non-negotiable requirements for the output
 
@@ -186,27 +243,42 @@ Deliver the HTML file and a short note listing: pattern used, how to swap the gr
 
 Failure modes this skill has to actively resist. Do not let a future revision reintroduce them.
 
-- **Writing code before the script is approved.** "Just build it, I trust you" is the exact
-  pressure the gate exists for. Answer it with a complete draft script and a request for a
+- **Writing code before the scene table is approved.** "Just build it, I trust you" is the exact
+  pressure the gate exists for. Answer it with a complete draft table and a request for a
   thumbs-up, not with HTML.
 - **Handing back an empty template.** A blank scene table asks the user to do the directing.
-  Write the first draft yourself, mark invented visuals `[propuesta]`, and let them argue with
+  Write the mapping yourself, mark invented visuals `[propuesta]`, and let them argue with
   something concrete.
+- **Re-interviewing what `pitch` already settled.** Audience, goal and tone are in `PITCH.md`. Read
+  it, say what you found, and map. Asking again produces a second set of answers that quietly
+  contradicts the first.
+- **Inventing a narrative because there is no `PITCH.md`.** Run `pitch` inline instead — one
+  exchange, one draft, one approval. The fast path exists so the absence of a file never turns into
+  a made-up story.
 - **Presenting invented visuals as decided.** When raw material is thin, proposals are fine —
   unmarked proposals are not.
+- **Turning one beat into one scene mechanically.** The mapping is this phase's actual work. A beat
+  whose graphic builds earns two scenes; two beats over an unchanging graphic earn one.
+- **Dropping a beat silently.** Merged or cut is fine and says so in the table. A beat that just
+  stops appearing turns an approved narrative into a different one nobody signed off.
+- **Rewriting an approved claim while compressing it.** TEXTO carries the pitch's wording. If the
+  claim does not survive the scroll medium, that is a finding to send back, not a licence to
+  rephrase.
 - **Padding the scene count to look thorough.** Six strong scenes beat twelve weak ones. If a
   scene's graphic does not change state, it is a paragraph; merge it.
 - **Switching to the user's language only for the article.** If they wrote in Spanish, the
-  interview, the script, the pushback, and the delivery note are in Spanish too.
+  mapping, the pushback, and the delivery note are in Spanish too.
 - **Continuing into implementation after script approval when only a script was requested.**
   Approval of the script is not approval to build.
-- **Interviewing past the point of usefulness.** Four or five questions in one message, then a
-  draft. A long questionnaire is a way of avoiding the first draft.
-- **Drafting before the goal and tone are set.** "Informative and engaging" is what an open
-  question gets you, and it produces a draft with no spine. Present the menus, recommend one of
-  each, get a pick, then write.
-- **Averaging the tone menu.** "A bit of all of them" is not a tone. Pick one, draft it, and
-  offer to re-voice the scene text — tone is cheap to change after the structure is agreed.
+- **Re-running the slop pass over approved text.** It ran once in `pitch`, before approval. Running
+  it again here edits copy the user already signed off, which is the gate. Only a genuinely new
+  sentence written while compressing gets a pass.
+- **Blocking on a missing visual style.** One line, three presets, a stated default. Someone who
+  wants an article in ten minutes should never be asked to run a second skill first.
+- **Hardcoding a hex the profile names.** Resolve `VISUAL_STYLE.md` into custom properties and use
+  the roles. A literal `#f4f1e8` in the markup means the piece can never be re-themed.
+- **Shipping a style token that fails contrast.** The accessibility contract out-ranks every token.
+  Substitute the profile's stated accessible variant and report it in one line.
 - **Parking the mobile graphic behind the text cards.** `z-index: -1` looks elegant on a
   desktop preview and hides the graphic completely on a phone, where cards are far taller.
   The graphic pins above the text and the text scrolls underneath it.
@@ -215,11 +287,6 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - **Letting the diagram carry meaning the text does not.** If a label renders at six effective
   pixels on a phone, the graphic is atmosphere. Mark it `aria-hidden` and make sure the scene
   copy stands alone.
-- **Writing scene text in slop shapes.** Colon reveals, "no es X, es Y", stacked fragments, and a
-  final metaphor kicker are what a 2–4 sentence beat degrades into. The scroll supplies the drama;
-  run `references/prose.md` over the table before presenting it.
-- **Using the prose pass to flatten the tone.** Restraint in T6 and a stated side in T4 are
-  choices from the tone menu. Cut the pattern that stands in for work not done, not the voice.
 - **Fixing copy in the built HTML.** A wording change after Phase 2 means editing markup,
   re-running the viewport matrix, and re-checking the no-JS reading order. Fix it in the table.
 
@@ -227,8 +294,6 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 
 ## Reference files
 
-- `references/tone-and-goal.md` — the goal and tone menus, what each choice changes, and the combinations that do not work. Read in Phase 1 step 1, before the interview.
-- `references/prose.md` — the AI-slop patterns that scene text degrades into, in English and Spanish, and the checklist to run before presenting the table. Read in Phase 1 step 2, before writing the TEXTO cells.
 - `references/patterns.md` — the scrollytelling patterns, when to use each, when to mix with static prose. Read in Phase 1 step 4.
 - `references/implementation.md` — HTML/CSS/JS skeleton, deterministic scene-state selection, reduced-motion and no-JS handling, mobile pitfalls, and the scrubbed-sequence recipe. Read at the start of Phase 2.
 - `templates/script-template.md` — the scene table format. Use in Phase 1 step 2.
