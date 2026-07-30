@@ -1,7 +1,7 @@
 {
   "name": "design-skills",
-  "description": "Thirteen skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, wireframe the screens when layout turns out to be the real question, diagram what people are stuck on, then write it up as a proposal someone can approve or decline. A pitch skill works out how to explain a decision that has already been made — audience, goal, tone and an ordered list of claims — and renderers turn that into a scrollytelling explainer, a Figma Slides deck or a local tldraw canvas. Utilities capture how you write and what your work looks like, and strip the AI tells out of anything drafted for a reader.",
-  "version": "3.0.0",
+  "description": "Fourteen skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions and pick one with a binary fit check inside a fixed time budget, wireframe the screens when layout turns out to be the real question, diagram what people are stuck on, then write it up as a proposal someone can approve or decline. A context-intake skill distils raw material — transcripts, emails, documents — into the context repository the others read from, and promotes what outlives the project to a durable hub. A pitch skill works out how to explain a decision that has already been made, and renderers turn that into a scrollytelling explainer, a Figma Slides deck or a local tldraw canvas. Utilities capture how you write and what your work looks like, and strip the AI tells out of anything drafted for a reader.",
+  "version": "3.1.0",
   "author": {
     "name": "Raul Loureiro"
   },
@@ -17,6 +17,7 @@
     "ux",
     "problem-framing",
     "shaping",
+    "context-intake",
     "breadboarding",
     "wireframes",
     "proposal",
@@ -25,6 +26,7 @@
     "writing-style",
     "visual-style",
     "enterprise",
-    "b2b"
+    "b2b",
+    "knowledge-management"
   ]
 }

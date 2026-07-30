@@ -70,6 +70,19 @@ Numbered requirements with statuses, two or three materially different direction
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
 - Explainer: [`pick-a-direction.html`](docs/shaping/pick-a-direction.html) · [script](docs/shaping/pick-a-direction.script.md)
 
+#### Context Intake
+
+Turns raw project material — a meeting transcript, an email, a document, "this happened" — into context a repository can hold and the other skills can retrieve.
+
+It splits the material into observations, interpretations, assumptions, commitments, preferences and open questions, then files each one in the container that owns it. It never commits the raw source, never writes to `design/`, and stops when new material contradicts something already recorded. Everything it writes carries provenance, and the repository's map is regenerated in the same pass.
+
+One question routes every item: **is this true because of this project, or true regardless of it?** The second kind belongs in a durable hub rather than a project repo, and writing there is deliberate — confirm, then PR. A closeout mode runs the same judgment across a finishing project and proposes what promotes.
+
+The repository declares its own containers; the skill obeys the declaration and falls back to defaults only when there is none.
+
+- Skill: [`skills/process/context-intake/SKILL.md`](skills/process/context-intake/SKILL.md)
+- Explainer: [notes](docs/context-intake/README.md)
+
 ### Artifacts — produce the thing people react to
 
 #### Breadboarding
