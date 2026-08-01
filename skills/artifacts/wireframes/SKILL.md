@@ -43,7 +43,7 @@ Read `references/method.md` for the full discipline (axes, three-layer anatomy, 
 If this project already has upstream documents, read them before asking anything:
 
 - `FRAMED_PROBLEM.md` — the problem this screen serves, and the evidence under it.
-- `DIRECTIONS.md` — the selected direction, its requirements, and its time budget.
+- `DIRECTIONS.md` — the selected direction, its requirements, and its time budget. Its `## Product surface` section says which viewports to draw at and what design system applies; its `## Fixed surfaces` section says what must appear unchanged. A wireframe that redraws a `Fixed` surface is proposing something the team is not allowed to do.
 - A **breadboard** — a place's affordances *are* the page-contents inventory, and the connection lines *are* the screen's exits. Take them; do not invent a second set.
 
 A wireframe elaborates a decision someone already made. When the screen you are drawing contradicts the frame or the selected direction, say so and send it back — do not quietly restate the problem in layout.
@@ -202,7 +202,8 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - **All annotations in one column down one side.** Half of them then point across the UI, and the pointers become the loudest thing in the artifact. Annotate from the near side and let the numbers carry the link.
 - Regenerating the whole artifact to make a small change (make targeted edits).
 - Presenting a wireframe you haven't visually verified (or, if you couldn't, without saying so).
-- **Wireframing before the direction is decided.** A wireframe elaborates a choice; it is not a way to make one. If nobody has picked a direction, that is `shaping`'s job, and drawing first buys a layout argument instead of a solution.
+- **Wireframing before the direction is decided — outside `shaping`.** A wireframe elaborates a choice; on its own it is not a way to make one. If nobody has picked a direction and nobody is running `shaping`, drawing first buys a layout argument instead of a solution. **The exception is `shaping` itself**, which asks for one lo-fi wireframe per candidate direction so the options can be compared. Those carry a hard L1/L2 cap — no real copy, no component names, no data values — and the cap is what keeps them a comparison rather than a design. Honour the cap when `shaping` calls; raising fidelity there is the failure, not the drawing.
+- **Redrawing chrome the direction is not about.** When a `DIRECTIONS.md` records fixed surfaces, every difference from the current product must be a deliberate one. A restyled navigation slipped into a wireframe about an entry point makes the proposal unreadable.
 - **Re-deriving upstream work.** Inventing page contents when a breadboard already lists the affordances, or restating the problem in layout when `FRAMED_PROBLEM.md` says something different. Carry it, or send the contradiction back.
 
 ## Source boundary

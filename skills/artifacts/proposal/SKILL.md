@@ -33,6 +33,8 @@ Conduct the conversation and the written document in the user's language.
 
 Everything here is **carried, never re-derived**. The problem and outcome come from the frame. The direction, requirements, and cuts come from the directions document. The work is selection, compression, and honesty about what is not settled.
 
+Carry the directions document's `## Fixed surfaces` too. A reader who does not know what was never in play will ask why an obvious alternative was ignored, and the answer — the team does not own that surface — belongs in the proposal rather than in the meeting. Where the selected direction moves a `Preferred` surface, state the cost and who has to agree; that is a decision the reader is being asked to make, not a detail.
+
 The project context library named in the frame's `## Context use` section is a third input, read-only. Use it to check that what the proposal says about the product is still true, and to cite something a reader can verify. Do not use it to add a fact the frame and the directions document do not already carry.
 
 Stop before detailed interaction design, wireframes, visual design, acceptance criteria, implementation planning, or tickets. Those come after the decision.
