@@ -21,8 +21,8 @@ If no `FRAMED_PROBLEM.md` exists, the skill says so before starting and offers t
 
 | # | Step | Input | Question it answers | Output | Completion criterion | Reference |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Load the frame | `FRAMED_PROBLEM.md` | What was already decided about the problem? | Frame carried forward, quoted | The frame is quoted not paraphrased, and the time budget is stated or explicitly undefined | — |
-| 2 | Load the product surface | Context library, screenshots, the frame's boundaries, a constraint registry if one exists | Where does this live, and what is not up for change? | `## Product surface`, `## Fixed surfaces` | Seven topics recorded or marked unknown; every source cited; no `Fixed` surface without an owner and a reason | `references/ui-context.md` |
+| 1 | Load the frame | `FRAMED_PROBLEM.md` | What was already decided about the problem? | Frame carried forward, quoted, constraint registry intact | The frame is quoted not paraphrased, the registry keeps its `C##` / `P##` IDs, and the time budget is stated or explicitly undefined | — |
+| 2 | Load the product surface | The frame's constraint registry and boundaries, context library, screenshots | Where does this live, and what is not up for change? | `## Product surface`, `## Fixed surfaces` | Every registry row naming a surface is in the ledger with its ID; seven topics recorded or marked unknown; every source cited; no `Fixed` surface without an owner and a reason | `references/ui-context.md` |
 | 3 | Populate the requirements | The frame, the fixed surfaces, the enterprise classes | What must be true of any acceptable solution? | `## Requirements`, stamped `R-set v1` | Capabilities or constraints only, each with a status, ≤9 at the top level; one constraint requirement per `Fixed` surface; every enterprise class written or marked N/A | — |
 | 4 | Sketch the directions | The requirements, the product surface | What are two or three genuinely different ways of doing this? | Directions with parts, a breadboard each, a wireframe each | ≥2 differ in mechanism; every part is something a person could experience; every direction has a breadboard **and** an L1/L2 wireframe | `references/directions-board.md`, `references/ui-context.md` |
 | 5 | Flag what you do not know | The directions | Which parts can we name but not describe? | `⚠️` on parts | Every part is either understood well enough to build or flagged | — |
@@ -77,7 +77,7 @@ Nothing in `references/` is loaded speculatively. Each one has a step and a reas
 
 | Against | The line |
 | --- | --- |
-| `problem-framing` | It decides which problem is worth solving and what the evidence is. Shaping carries that unchanged; contradicting evidence goes back rather than being fixed here |
+| `problem-framing` | It decides which problem is worth solving, what the evidence is, and which constraints are hard (`C`) versus preferences (`P`). Shaping carries all of that unchanged — the fixed-surfaces ledger converts the registry, it does not re-derive it. A `C` that looks like a `P` is a finding to send back, not an edit to make here |
 | `breadboarding` | It makes a mechanism legible in words. Shaping calls it once per direction and decides between the results; breadboarding never decides |
 | `wireframes` | It owns the wireframing discipline. Shaping calls it at a hard L1/L2 cap, for comparison. Detailed interaction design, states, and copy come after the decision |
 | `proposal` | It writes the document people sign off on. Shaping stops at the selected direction and the record of why |

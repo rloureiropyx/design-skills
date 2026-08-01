@@ -84,13 +84,34 @@ quietly removes the directions worth having before anyone sees them.
 
 ### Where the entries come from
 
-- **The frame.** `FRAMED_PROBLEM.md` boundaries and exclusions are surface constraints when they name
-  a part of the product. Carry them quoted, do not restate them in new words.
-- **A constraint registry**, when `problem-framing` wrote one. Carry it whole. It is not re-derived,
-  re-litigated, or improved here; a constraint that looks wrong is a finding to send back.
+In this order. The first source is a document that already exists, and going to the user before reading it wastes their time on a question that was answered in the previous step.
+
+- **The constraint registry in `FRAMED_PROBLEM.md`.** `problem-framing` already sorted what the work
+  must respect and how firmly, with an owner, an authority source, and a reversibility for each row.
+  Convert every row that names an interface surface:
+
+  | Registry row | Ledger tier | Why |
+  | --- | --- | --- |
+  | `C` — regulatory, contractual, technical, capacity | `Fixed` | The team cannot change it on its own, which is exactly what `Fixed` means |
+  | `P` — preference or team tenet | `Preferred` | Changeable by the people in the room, at a cost somebody names |
+
+  Carry the `C##` / `P##` ID into the `Source` column. That ID is how the authority source and the
+  reversibility stay attached — a ledger row reading "vendor-owned" with no ID is a rumour, and the
+  registry exists so that "legal said no" and "someone thought legal would say no" stop looking alike.
+
+  The registry is carried, never re-derived. A `C` that looks like it should be a `P` is a finding for
+  `problem-framing`, not an edit to make here. Reclassifying it during shaping is how a direction ends
+  up justified by a constraint the frame never agreed to drop.
+
+  Not every registry row is a surface. *"Two weeks of build time"* is a `C` and belongs nowhere in this
+  ledger. Convert the ones that name a part of the product; leave the rest in the frame.
+
+- **The frame's boundaries and exclusions**, when they name a part of the product. Carry them quoted,
+  do not restate them in new words.
 - **The seven topics above.** A vendor UI the team does not control is `Fixed` the moment it is named.
-- **The user.** One question, asked once: *what in this product is not up for change, and what would
-  you rather we did not touch?* The two halves of that question are the two tiers.
+- **The user.** One question, asked once, and only about what the sources above left open: *what in
+  this product is not up for change, and what would you rather we did not touch?* The two halves of
+  that question are the two tiers.
 
 ### How it bites
 
@@ -108,6 +129,8 @@ quietly removes the directions worth having before anyone sees them.
 ## Before leaving this step
 
 - Each of the seven topics is recorded or explicitly marked unknown.
+- Every constraint-registry row that names an interface surface is in the ledger, with its `C##` /
+  `P##` ID in the `Source` column, and no registry row was reclassified here.
 - Every screenshot, file, or URL used is cited.
 - The ledger has at least the vendor and platform surfaces in it, each with an owner and a reason.
 - No surface is marked `Fixed` without an owner — an unowned constraint cannot be challenged, and one

@@ -25,7 +25,7 @@ What is not up for change, and what somebody would rather we did not touch.
 | Surface | Tier | Owner | Why | Source |
 | --- | --- | --- | --- | --- |
 
-Tier is `Fixed`, `Preferred`, or `Open`. `Open` is the default; `Fixed` and `Preferred` need an owner and a reason or they cannot be challenged. Every `Fixed` surface has a matching constraint requirement below. If a tier changed during this work, say which, when, and who reopened it.
+Tier is `Fixed`, `Preferred`, or `Open`. `Open` is the default; `Fixed` and `Preferred` need an owner and a reason or they cannot be challenged. `Source` carries the `C##` / `P##` ID from the frame's constraint registry where the row came from one, so the authority source and reversibility stay attached; otherwise it names the screenshot, file, or person. Every `Fixed` surface has a matching constraint requirement below. If a tier changed during this work, say which, when, and who reopened it.
 
 ## Requirements
 **R-set v1**

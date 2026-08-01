@@ -62,7 +62,9 @@ Each one reads what the last one wrote and does not re-decide it. When a later s
 
 Turns a fuzzy request — or a project already underway — into a written problem, with the evidence it rests on.
 
-It keeps what people actually said as quotes, and keeps that separate from interpretations and assumptions. It compares a few different explanations of the same behaviour rather than taking the first one. It records what was set aside, so it can be reconsidered. It asks for research or metrics only when the answer could change the decision. Output: `FRAMED_PROBLEM.md`, which the rest of the project keeps referring back to.
+It keeps what people actually said as quotes with stable IDs and a pointer back to the source, and keeps that separate from interpretations and assumptions. It compares a few different explanations of the same behaviour rather than taking the first one. It records constraints with who owns them and whether they can move, so a preference stops being enforced as though it were policy. It records what was set aside, so it can be reconsidered. It treats "I don't know" as a valid answer and turns the unanswered questions into risks somebody accepted by name rather than risks nobody noticed. It asks for research or metrics only when the answer could change the decision. Output: `FRAMED_PROBLEM.md`, which the rest of the project keeps referring back to.
+
+It runs in English regardless of the language you use with it, since the document outlives the conversation.
 
 There is a **quick mode** for small solo work — five questions, one page — with a written rule for when the small version stops being honest and the full pass is needed.
 
@@ -70,12 +72,15 @@ Framing buys time to explore solutions. It does not buy approval to build.
 
 - Skill: [`skills/process/problem-framing/SKILL.md`](skills/process/problem-framing/SKILL.md)
 - Explainer: [`frame-before-you-design.html`](docs/problem-framing/frame-before-you-design.html) · [script](docs/problem-framing/frame-before-you-design.script.md)
+- Blueprint: [`blueprint.md`](docs/problem-framing/blueprint.md) — the steps, registers, statuses and boundaries in one place
 
 #### Shaping
 
 Takes a framed problem and works out which solution direction to go with, inside a fixed time budget.
 
-It starts by finding out where the thing lives — host shell, how it opens, viewports, navigation, design system, vendor UI — and records what is not up for change in three tiers: `Fixed`, `Preferred`, `Open`. A direction that changes a `Fixed` surface fails the fit check outright, the same way a part nobody can describe does. Then numbered requirements with statuses, two or three materially different directions with a breadboard and a lo-fi wireframe each, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Directions improve across versions (`A1 → A2 → A3`), and so does the requirement list itself: `R-set v1 → v2`, each change recording what exposed it, with every fit check stamped so a stale one cannot pass as current. When a direction does not fit the time budget, the scope moves, not the time. It also fixes how all of this looks on a canvas — the evidence row, row bands per decision, verdicts in the frame titles, green for support, red for cost, violet only for the decision — so a renderer draws the record rather than reinterpreting it. The last step asks where to put it. Output: `DIRECTIONS.md`.
+It starts by finding out where the thing lives — host shell, how it opens, viewports, navigation, design system, vendor UI — and records what is not up for change in three tiers: `Fixed`, `Preferred`, `Open`. Most of that converts straight from the frame's constraint registry (`C` becomes `Fixed`, `P` becomes `Preferred`, IDs intact), so it asks only about what framing left open. A direction that changes a `Fixed` surface fails the fit check outright, the same way a part nobody can describe does. Then numbered requirements with statuses, two or three materially different directions with a breadboard and a lo-fi wireframe each, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Directions improve across versions (`A1 → A2 → A3`), and so does the requirement list itself: `R-set v1 → v2`, each change recording what exposed it, with every fit check stamped so a stale one cannot pass as current. When a direction does not fit the time budget, the scope moves, not the time. It also fixes how all of this looks on a canvas — the evidence row, row bands per decision, verdicts in the frame titles, green for support, red for cost, violet only for the decision — so a renderer draws the record rather than reinterpreting it. The last step asks where to put it. Output: `DIRECTIONS.md`.
+
+It runs in English regardless of the language you use with it, for the same reason framing does.
 
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
 - Blueprint: [`blueprint.md`](docs/shaping/blueprint.md)
@@ -100,7 +105,7 @@ The repository declares its own containers; the skill obeys the declaration and 
 
 Sketches a solution in words instead of pixels: the places a person can be, what they can do or see in each one, and which action takes them where.
 
-It is deliberately too coarse to express layout, which is what makes it useful — the mechanism can be argued about before the visual design is. Shaping calls it to make each direction concrete; wireframes come later, if layout turns out to be the real question.
+It is deliberately too coarse to express layout, which is what makes it useful — the mechanism can be argued about before the visual design is. Shaping calls it once per direction, and the wireframe that follows takes its page contents from here rather than inventing a second inventory.
 
 - Skill: [`skills/artifacts/breadboarding/SKILL.md`](skills/artifacts/breadboarding/SKILL.md)
 - Explainer: [`breadboard-before-you-draw-it.html`](docs/breadboarding/breadboard-before-you-draw-it.html) · [script](docs/breadboarding/breadboard-before-you-draw-it.script.md) · [notes](docs/breadboarding/README.md)
@@ -111,7 +116,7 @@ Decides what a screen must do, what goes on it, and how priority reads — then 
 
 Scale, fidelity, annotation weight and abstraction are set as four independent axes rather than one ladder, so asking for "more detail" adds content, states and rules before it adds polish. Colour is functional only: red means error, blue means link, and reviewer marks go outside the screen boundary so the two reds never collide. One realistic scenario per screen, never a composite showing every state at once. Page contents and exits are carried from the breadboard rather than invented again.
 
-Most projects never need this step. It is for when layout is the real question.
+Shaping calls it once per direction, capped at lo-fi, so the options can be compared. Outside that, most projects never need this step — it is for when layout is the real question.
 
 - Skill: [`skills/artifacts/wireframes/SKILL.md`](skills/artifacts/wireframes/SKILL.md)
 - Explainer: [`what-a-wireframe-settles-before-drawing.html`](docs/wireframes/what-a-wireframe-settles-before-drawing.html) · [script](docs/wireframes/what-a-wireframe-settles-before-drawing.script.md) · [notes](docs/wireframes/README.md)

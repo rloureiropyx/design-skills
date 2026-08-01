@@ -24,7 +24,7 @@ This is not solution design. The goal is not the best possible solution; it is c
 
 Work out loud. Ask one question at a time. Show the full tables every time they change — never summarise a table you have already shown, and mark changed rows with 🟡 so the user can see what moved.
 
-Conduct the conversation and the written document in the user's language.
+Conduct the conversation, the recommendations, and the written document **in English**, always — including when the user writes in Spanish, Spanglish, or a mix. Understand them in whatever language they use; answer in English. `DIRECTIONS.md` is read by `proposal` and by people who were not in the room, and it sits beside `FRAMED_PROBLEM.md`, which is written under the same rule. Say this once, the first time the user writes in another language, then stop mentioning it.
 
 ## How it runs
 
@@ -94,13 +94,17 @@ The actions below are a repertoire, not a sequence. Pick the one that reduces th
 
 ### 1. Load the frame
 
-Read `FRAMED_PROBLEM.md` and carry forward, unchanged: the problem, the desired outcome, the primary user, the boundaries and exclusions, any `Less about / More about` guardrail, the major risks, and the time budget. Carry the open assumptions too — an assumption the frame left open is a candidate requirement or a candidate spike.
+Read `FRAMED_PROBLEM.md` and carry forward, unchanged: the problem, the desired outcome, the primary user, the boundaries and exclusions, the **constraint registry**, any `Less about / More about` guardrail, the major risks, and the time budget. Carry the open assumptions and the accepted risks from the open-questions register too — each one is a candidate requirement or a candidate spike.
 
-Completion criterion: the frame is loaded and quoted, not paraphrased into something new, and the time budget is either stated or explicitly recorded as undefined.
+The constraint registry arrives already classified: `C` rows are constraints the team cannot change on its own, `P` rows are preferences and tenets it can. Keep the IDs. That distinction is the frame's work and step 2 depends on it, so do not re-litigate it here — a `C` argued down to a `P` during shaping is a change to the frame, and goes back.
+
+Completion criterion: the frame is loaded and quoted, not paraphrased into something new, the constraint registry is carried with its IDs intact, and the time budget is either stated or explicitly recorded as undefined.
 
 ### 2. Load the product surface
 
 A direction is a proposal about a product that already exists. Find out where it lives, then record what is not up for change.
+
+**Start from the constraint registry, not from a blank ledger.** The frame already classified what the work must respect and how firmly. Convert the rows that name an interface surface before asking anything: a `C` row becomes `Fixed`, a `P` row becomes `Preferred`, and the ledger carries the original `C##` / `P##` ID so the authority source travels with it. Only the surfaces the registry does not cover are open questions for this step. Asking the user to re-state a constraint the frame already recorded is the failure this ordering exists to prevent.
 
 Read `references/ui-context.md` before this step. It holds the seven intake topics — host and shell, arrival, viewport targets, navigation model, design system, third-party surfaces, existing screens — the library-first ordering, and the three-tier fixed-surfaces ledger (`Fixed` / `Preferred` / `Open`).
 
@@ -111,7 +115,7 @@ Two rules from that file decide what happens later:
 
 Unknown is a legal answer to any of the seven. Record it as unknown; do not guess.
 
-Completion criterion: each of the seven topics is recorded or explicitly marked unknown, every screenshot and file used is cited by path or URL, and no surface is marked `Fixed` without an owner and a reason.
+Completion criterion: every constraint-registry row naming an interface surface is in the ledger with its `C##` / `P##` ID, each of the seven topics is recorded or explicitly marked unknown, every screenshot and file used is cited by path or URL, and no surface is marked `Fixed` without an owner and a reason.
 
 ### 3. Populate the requirements
 
@@ -343,6 +347,13 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   the default; `Fixed` needs an owner and a reason.
 - **A `Fixed` surface with no owner.** An unowned constraint cannot be challenged, and one that cannot
   be challenged is indistinguishable from a habit somebody once had.
+- **Re-litigating the constraint registry.** Downgrading a `C` to a `P` because it blocks a direction
+  you like is a change to the frame, made in the one place nobody will look for it. The registry
+  carries an owner and an authority source precisely so that argument happens with the owner. Send it
+  back to `problem-framing`.
+- **Asking the user to re-state a constraint the frame already recorded.** The registry is read before
+  the intake question, not after it. Asking again wastes their time and produces a second answer that
+  will not match the first.
 - **Editing a requirement in place.** Changing `R4` to match a direction you like, or deleting a
   requirement that turned out inconvenient, destroys the only record of what the solution was being
   judged against. Retire it, struck through, with the reason and the trigger.

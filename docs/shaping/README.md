@@ -29,6 +29,8 @@ The skill is called `shaping` for routing reasons — renaming it would risk bre
 
 **Some of the interface is not up for change, and saying so is cheap.** Before any direction is sketched, the skill records where this lives — host application, how it opens, viewports, navigation, design system, vendor UI — and then a ledger of surfaces in three tiers: `Fixed`, `Preferred`, `Open`.
 
+Most of that ledger is not new information. `problem-framing` already sorted constraints into `C` (the team cannot change it) and `P` (the team chose it and can unchoose it), each with an owner and an authority source. The ones that name an interface surface convert directly: `C` becomes `Fixed`, `P` becomes `Preferred`, and the row keeps its ID so the authority travels with it. Shaping asks the user only about what the frame left open.
+
 A direction that changes a `Fixed` surface is an automatic failure in the fit check, in the same way a part nobody can describe is. That is the only thing that makes the ledger matter; a paragraph about constraints gets read once and then a direction proposes restyling the vendor's navigation anyway.
 
 `Open` is the default, on purpose. Assuming the existing interface is off-limits because nobody said otherwise removes the directions worth having before anyone sees them, and it is the more expensive of the two mistakes.
@@ -75,7 +77,9 @@ The fixed-surfaces ledger, the requirement-set versioning, the mandatory wirefra
 
 Input: `FRAMED_PROBLEM.md`. Output: `DIRECTIONS.md` — the product surface and what is fixed in it, requirements and how they changed, directions and their versions, the fit check, one selection, the cuts.
 
-Contradicting evidence goes back to `problem-framing` rather than getting fixed here. The write-up for other people is `proposal`.
+Contradicting evidence goes back to `problem-framing` rather than getting fixed here. So does a constraint that looks misclassified: the `C`/`P` split is the frame's work, and reopening it during shaping is how a direction ends up justified by a constraint nobody agreed to drop. The write-up for other people is `proposal`.
+
+It runs in English regardless of the language you use with it, since `DIRECTIONS.md` outlives the conversation and sits beside a frame written under the same rule.
 
 - Skill: [`skills/process/shaping/SKILL.md`](../../skills/process/shaping/SKILL.md)
 - Blueprint: [`blueprint.md`](blueprint.md) — the step table, reference load order, status map, and boundaries.
