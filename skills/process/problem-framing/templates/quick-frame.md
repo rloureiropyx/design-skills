@@ -4,7 +4,7 @@ Read this at the end of the quick branch, when writing it out.
 
 Save it as `FRAMED_PROBLEM.md`, in the same place a full frame would go: the project's documentation directory when one exists, the project root otherwise. Same filename on purpose — `shaping` reads it without needing to know which branch produced it, and a quick frame that gets upgraded is grown rather than replaced.
 
-Write in the user's language.
+Write in English, always — including when the interview ran in another language.
 
 ```markdown
 # Framed Problem: <working title>
@@ -32,7 +32,8 @@ What is in, and the nearest adjacent thing that is deliberately out. Two lines.
 Time budget, if there is one.
 
 ## The assumption
-The one thing that, if wrong, makes this pointless. Whether it was checked, or accepted as risk.
+The one thing that, if wrong, makes this pointless. Whether it was checked, accepted as risk —
+with who accepted it — or left open because nobody could answer it.
 
 ## Set aside
 Anything that came up and is not being done, with *why not now*. One line each.

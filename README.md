@@ -62,7 +62,9 @@ Each one reads what the last one wrote and does not re-decide it. When a later s
 
 Turns a fuzzy request — or a project already underway — into a written problem, with the evidence it rests on.
 
-It keeps what people actually said as quotes, and keeps that separate from interpretations and assumptions. It compares a few different explanations of the same behaviour rather than taking the first one. It records what was set aside, so it can be reconsidered. It asks for research or metrics only when the answer could change the decision. Output: `FRAMED_PROBLEM.md`, which the rest of the project keeps referring back to.
+It keeps what people actually said as quotes with stable IDs and a pointer back to the source, and keeps that separate from interpretations and assumptions. It compares a few different explanations of the same behaviour rather than taking the first one. It records constraints with who owns them and whether they can move, so a preference stops being enforced as though it were policy. It records what was set aside, so it can be reconsidered. It treats "I don't know" as a valid answer and turns the unanswered questions into risks somebody accepted by name rather than risks nobody noticed. It asks for research or metrics only when the answer could change the decision. Output: `FRAMED_PROBLEM.md`, which the rest of the project keeps referring back to.
+
+It runs in English regardless of the language you use with it, since the document outlives the conversation.
 
 There is a **quick mode** for small solo work — five questions, one page — with a written rule for when the small version stops being honest and the full pass is needed.
 
@@ -70,6 +72,7 @@ Framing buys time to explore solutions. It does not buy approval to build.
 
 - Skill: [`skills/process/problem-framing/SKILL.md`](skills/process/problem-framing/SKILL.md)
 - Explainer: [`frame-before-you-design.html`](docs/problem-framing/frame-before-you-design.html) · [script](docs/problem-framing/frame-before-you-design.script.md)
+- Blueprint: [`blueprint.md`](docs/problem-framing/blueprint.md) — the steps, registers, statuses and boundaries in one place
 
 #### Shaping
 
