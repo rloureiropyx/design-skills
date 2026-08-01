@@ -75,9 +75,10 @@ Framing buys time to explore solutions. It does not buy approval to build.
 
 Takes a framed problem and works out which solution direction to go with, inside a fixed time budget.
 
-Numbered requirements with statuses, two or three materially different directions, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Parts nobody can describe carry a `⚠️` and count as failures until someone goes and finds out. Directions improve across versions (`A1 → A2 → A3`), each version says what changed and why, and discarded ones stay visible with the reason. When a direction does not fit the time budget, the scope moves, not the time. It also fixes how all of this looks on a canvas — green for support, red for cost, violet only for the decision, and iterations closed left to right — so a renderer draws the record rather than reinterpreting it. Output: `DIRECTIONS.md`.
+It starts by finding out where the thing lives — host shell, how it opens, viewports, navigation, design system, vendor UI — and records what is not up for change in three tiers: `Fixed`, `Preferred`, `Open`. A direction that changes a `Fixed` surface fails the fit check outright, the same way a part nobody can describe does. Then numbered requirements with statuses, two or three materially different directions with a breadboard and a lo-fi wireframe each, and a fit check that is deliberately **binary** — `✅` or `❌`, never "partially". Directions improve across versions (`A1 → A2 → A3`), and so does the requirement list itself: `R-set v1 → v2`, each change recording what exposed it, with every fit check stamped so a stale one cannot pass as current. When a direction does not fit the time budget, the scope moves, not the time. It also fixes how all of this looks on a canvas — the evidence row, row bands per decision, verdicts in the frame titles, green for support, red for cost, violet only for the decision — so a renderer draws the record rather than reinterpreting it. The last step asks where to put it. Output: `DIRECTIONS.md`.
 
 - Skill: [`skills/process/shaping/SKILL.md`](skills/process/shaping/SKILL.md)
+- Blueprint: [`blueprint.md`](docs/shaping/blueprint.md)
 - Explainer: [`pick-a-direction.html`](docs/shaping/pick-a-direction.html) · [script](docs/shaping/pick-a-direction.script.md)
 
 #### Context Intake

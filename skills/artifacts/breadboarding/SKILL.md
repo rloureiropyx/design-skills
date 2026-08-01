@@ -139,8 +139,10 @@ Failure modes this skill has to actively resist. Do not let a future revision re
   converts an open question into a decision nobody made.
 - **Skipping the failure and permission paths.** That is where the missing places are. A breadboard of
   only the happy path is a slide, not a sketch.
-- **Breadboarding a direction nobody will pick.** Time spent making a losing option legible is time not
-  spent on the one that has to be right. Breadboard the contenders.
+- **Working a breadboard for a direction that has already lost.** `shaping` breadboards every direction
+  it is comparing — that is how you find out two of them are the same mechanism. What wastes time is
+  continuing to elaborate one after the fit check ruled it out. Breadboard all the contenders once;
+  stop the moment one stops contending.
 - **Turning it into a flowchart.** Connection lines join affordances to places. Decision diamonds, swim
   lanes, and process steps are a different artifact for a different question.
 - **Deciding while breadboarding.** "This one is obviously better" is `shaping`'s call, made against

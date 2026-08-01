@@ -1,6 +1,6 @@
 # Spikes
 
-Read this at step 7, when a `⚠️` blocks a direction that is still in contention.
+Read this at step 9, when a `⚠️` blocks a direction that is still in contention.
 
 A spike is a bounded investigation that converts *"we cannot describe how this works"* into *"we can"*. It is not a prototype, not a proof of concept, and not a decision.
 
