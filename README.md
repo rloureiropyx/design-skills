@@ -20,10 +20,12 @@ Both have to exist. All the explainers are indexed in [`docs/index.html`](docs/i
 
 ## Install
 
+The repo is private, so both routes below need read access to `rloureiro_paychex/design-skills` and a GitHub login that has it.
+
 ### Copilot CLI
 
 ```sh
-copilot plugin marketplace add rloureiropyx/design-skills
+copilot plugin marketplace add rloureiro_paychex/design-skills
 copilot plugin install design-skills@rolo
 ```
 
@@ -36,7 +38,7 @@ copilot plugin update design-skills   # pull a newer version later
 
 Agent plugins in VS Code are in preview and the `chat.plugins.enabled` setting has to be on; it can be locked by an organisation.
 
-Command Palette → **Chat: Install Plugin From Source** → `https://github.com/rloureiropyx/design-skills`
+Command Palette → **Chat: Install Plugin From Source** → `https://github.com/rloureiro_paychex/design-skills`
 
 The skills then appear under **Chat: Configure Skills**. VS Code also picks up anything installed with the CLI above, from `~/.copilot/installed-plugins/`, so the two routes do not need to be repeated.
 

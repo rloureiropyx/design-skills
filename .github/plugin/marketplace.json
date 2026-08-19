@@ -2,7 +2,7 @@
   "name": "rolo",
   "metadata": {
     "description": "Product design skills by Raul Loureiro",
-    "version": "3.4.0"
+    "version": "3.4.1"
   },
   "owner": {
     "name": "Raul Loureiro"
@@ -11,11 +11,11 @@
     {
       "name": "design-skills",
       "description": "Fourteen skills for enterprise product design work. Work out what the problem actually is, sketch it as a breadboard, try two or three solution directions — each as a breadboard and a lo-fi wireframe — and pick one with a binary fit check inside a fixed time budget, wireframe the chosen screens in detail, diagram what people are stuck on, then write it up as a proposal someone can approve or decline. A context-intake skill distils raw material — transcripts, emails, documents — into the context repository the others read from, and promotes what outlives the project to a durable hub. A pitch skill works out how to explain a decision that has already been made, and renderers turn that into a scrollytelling explainer, a Figma Slides deck or a local tldraw canvas. Utilities capture how you write and what your work looks like, and strip the AI tells out of anything drafted for a reader.",
-      "version": "3.4.0",
+      "version": "3.4.1",
       "author": {
         "name": "Raul Loureiro"
       },
-      "repository": "https://github.com/rloureiropyx/design-skills",
+      "repository": "https://github.com/rloureiro_paychex/design-skills",
       "keywords": [
         "product-design",
         "ux",
@@ -35,7 +35,7 @@
       ],
       "source": {
         "source": "github",
-        "repo": "rloureiropyx/design-skills"
+        "repo": "rloureiro_paychex/design-skills"
       }
     }
   ]
