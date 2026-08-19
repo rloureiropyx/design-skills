@@ -92,6 +92,7 @@ If `tq` cannot be found, fall back to raw curl — see `references/canvas-api.md
 | **sitemaps** | `geo` rectangles in tiers + elbow arrows; `frame` per section |
 | **wireframes** | Lo-fi mode — **keep** the sketchy `draw` defaults, greyscale + one accent, one `frame` per screen at a real viewport size, elements `parentId`-ed to it. Pick the rung (zoning / lo-fi / mid-fi) before drawing. Full recipe: `references/craft.md` §10 |
 | **annotations on any artifact** | `note` sticky in the gutter **on the target's own side**, a numbered `56 × 56` badge on the target, and a hairline connector only when it crosses nothing. Recipe: `references/craft.md` §10.2 |
+| **shaping boards** (options, alternatives, fit check) | Rows as full-width bands split by a hairline `line`; option columns as `geo` rectangles; gutter `note`s in `green` for support and `red` for cost; a `★` selection in `violet`, all selections in one fixed column; each iteration closed by a full-height vertical `line` and the next drawn to its right. The encoding is `shaping`'s call — read the directions-board reference in that skill, do not apply §3's palette |
 | **zones / grouping** | `frame` (its name renders in the header — no overlapping-label trap) or `helpers.boxShapes(ids, {text, color})` |
 
 ## Verify & hand off
@@ -118,6 +119,10 @@ Failure modes this skill has to actively resist. Do not let a future revision re
 - **Annotation arrows that cross the artifact.** A single note column down one side means half the pointers
   reach across the UI, and a full-weight arrow over a wireframe is louder than the wireframe. Put the note
   on its target's side, number both ends, and drop any pointer that would cross something.
+- **Applying the house palette over a discipline's own encoding.** §3 is a fallback for artifacts that
+  arrive without one. When the deciding skill ships an encoding, overriding it silently changes what the
+  artifact claims — a `shaping` board drawn from §3 paints supporting notes violet, which is that method's
+  colour for the decision.
 - **Rebuilding on top of the old build.** `selectAll()` is a no-op unless the select tool is active.
   Delete unconditionally, or the second version stacks invisibly on the first.
 - **Forgetting `saveDoc()`.** The canvas shows the edit, the file on disk does not, and the user is

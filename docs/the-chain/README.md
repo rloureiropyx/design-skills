@@ -48,7 +48,7 @@ Downstream use is asymmetric on purpose: `shaping` may take constraints from the
 | Skill | Refuses when |
 | --- | --- |
 | `problem-framing` | The evidence does not support a problem statement yet. |
-| `shaping` | An unknown is still flagged `⚠️`. |
+| `shaping` | An unknown is still flagged `⚠️`, or the fit check ran against a superseded requirement set. |
 | `breadboarding` | There is no user and no problem to breadboard against. |
 | `proposal` | The frame, the direction, or the time budget is missing. |
 | renderers | There is no decision to render. |

@@ -18,6 +18,8 @@ If you are unsure, run quick. The upgrade conditions below will catch it, and th
 
 ## The short loop
 
+Ask in English, even when the user answers in another language.
+
 Five questions. Ask them one at a time, recommend an answer from what you can already see, and stop as soon as the frame holds together.
 
 ### 1. What happened?
@@ -48,6 +50,8 @@ The one thing that, if wrong, makes this work pointless. Name it, say whether it
 
 One assumption. If there are three, this is not a small problem, and that is an upgrade condition.
 
+If the answer is "I don't know", that is fine and it is the answer. Record it as accepted risk with who accepted it, in one line. More than one unanswerable question in a quick pass means the problem is not as small as it looked — treat it like the other upgrade conditions.
+
 ## The output
 
 One page. Use `templates/quick-frame.md`. It goes in the same place a full `FRAMED_PROBLEM.md` would, under the same name, so `shaping` reads it without knowing which branch produced it — and so it can be grown into a full frame later rather than replaced.
@@ -77,7 +81,9 @@ The reductions are in breadth, not honesty. Even in a quick pass:
 - the observable outcome is still required;
 - what was set aside is still written down, so it can be reconsidered.
 
-What quick actually drops: the full ledger of observations and interpretations, the three-to-five candidate frames, the options landscape table, the formal evidence gate, and the long boundary section. Those are the parts whose value scales with the size of the commitment.
+What quick actually drops: the full ledger of observations and interpretations, the three-to-five candidate frames, the options landscape table, the business frame and hypothesis, the systems lens beyond a one-line note of who else is involved, the constraint registry, the formal evidence gate, and the long boundary section. Those are the parts whose value scales with the size of the commitment.
+
+What it keeps from the additions: source attribution on the episode, and "I don't know" as a valid answer recorded as accepted risk.
 
 ## What to say at the end
 

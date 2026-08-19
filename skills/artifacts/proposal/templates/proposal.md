@@ -34,6 +34,8 @@ Each known way this could overrun, and the decision that contains it. Resolved o
 ## Not this time
 What is explicitly out, each with its reason. Phrased "not this time, because …" — never "not ever".
 
+Separate from those, list what was **never in play**: surfaces the directions document marks `Fixed`, with who owns each. "Not chosen" and "not ours to change" are different answers, and a reader who cannot tell them apart will re-propose the second one. Where the direction moves a `Preferred` surface, say what that costs and who has to agree.
+
 ## Still open
 Risks carried from the frame, assumptions not yet verified, and the decisions deliberately left to Design. Nothing known to be uncertain may appear as settled anywhere above.
 
