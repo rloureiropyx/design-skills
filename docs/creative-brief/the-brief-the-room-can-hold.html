@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How the creative-brief skill turns project context and previous research into a short meeting brief with a separate evidence companion.">
+  <link rel="icon" href="data:,">
+  <title>The Brief the Room Can Hold - How creative-brief works</title>
+  <script>document.documentElement.classList.remove('no-js');</script>
+  <style>
+    :root {
+      --surface: #f4f1e8;
+      --surface-2: #ebe6da;
+      --panel: #fcfaf4;
+      --ink: #171914;
+      --muted: #61655c;
+      --line: #c9c5ba;
+      --diagram: #111814;
+      --diagram-2: #1b2720;
+      --white: #fffdf7;
+      --green: #63c99c;
+      --blue: #75a9ff;
+      --amber: #e7b85c;
+      --coral: #ee795e;
+      --violet: #ae8bf3;
+      --rose: #e08fb4;
+      --max: 1240px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(30, 32, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html { color-scheme: light; scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-underline-offset: .18em; }
+    h1, h2, h3, p { margin-top: 0; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 1rem;
+      left: 1rem;
+      padding: .65rem 1rem;
+      border-radius: 999px;
+      background: var(--white);
+      transform: translateY(-180%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress-track {
+      position: fixed;
+      z-index: 90;
+      inset: 0 0 auto;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--rose);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(420px, 1.05fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+      padding: clamp(2rem, 5vw, 5rem);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 76% 42%, rgba(224, 143, 180, .12), transparent 34%),
+        var(--diagram);
+      color: var(--white);
+    }
+
+    .hero-copy { max-width: 650px; }
+
+    .eyebrow {
+      margin-bottom: 1rem;
+      color: var(--rose);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 1.5rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.5rem, 8vw, 8rem);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .9;
+    }
+
+    .hero-deck {
+      max-width: 600px;
+      margin-bottom: 2.2rem;
+      color: #d1d7d1;
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      color: #d9dfd8;
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--rose);
+      border-bottom: 2px solid var(--rose);
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .hero-art {
+      width: min(100%, 620px);
+      justify-self: center;
+      filter: drop-shadow(0 32px 50px rgba(0, 0, 0, .3));
+    }
+
+    .hero-sheet {
+      padding: clamp(1rem, 3vw, 2rem);
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 24px;
+      background: #1a241e;
+      transform: rotate(1.5deg);
+    }
+
+    .hero-sheet header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      color: #b9c1ba;
+      font-size: .7rem;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hero-row {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 1rem;
+      padding: .9rem 0;
+      border-top: 1px solid #3c4940;
+    }
+
+    .hero-row b { color: var(--rose); font-size: .78rem; }
+    .hero-row span { color: #eef2ed; font-size: .88rem; line-height: 1.45; }
+
+    .intro, .closing, .source-section {
+      width: min(calc(100% - 3rem), 820px);
+      margin: 0 auto;
+      padding: clamp(5rem, 12vw, 9rem) 0;
+    }
+
+    .intro h2, .closing h2 {
+      margin-bottom: 1.3rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: 1.02;
+    }
+
+    .intro p, .closing > p {
+      color: #343830;
+      font-size: clamp(1.12rem, 2vw, 1.42rem);
+    }
+
+    .definition {
+      margin-top: 2rem;
+      padding: 1.2rem 1.4rem;
+      border-left: 4px solid var(--rose);
+      background: rgba(255, 255, 255, .44);
+    }
+
+    .scrolly {
+      width: min(calc(100% - 3rem), var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(350px, .84fr);
+      gap: clamp(2rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .graphic-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+
+    .graphic-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.16 / 1;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(224, 143, 180, .08), transparent 30%),
+        var(--diagram);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .graphic-meta {
+      position: absolute;
+      z-index: 3;
+      top: 1rem;
+      right: 1.2rem;
+      left: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .2rem 1rem;
+      color: #b8c1b8;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .graphic-label { color: var(--rose); }
+    .graphic-shell svg { display: block; width: 100%; height: 100%; }
+    .diagram-state { opacity: 0; visibility: hidden; transition: opacity .42s ease; }
+    .diagram-state.is-active { opacity: 1; visibility: visible; }
+
+    .svg-title { fill: var(--white); font-size: 25px; font-weight: 750; }
+    .svg-kicker { fill: #aab4ac; font-size: 11px; font-weight: 750; letter-spacing: 1.2px; }
+    .svg-label { fill: #edf1ec; font-size: 14px; font-weight: 650; }
+    .svg-small { fill: #b7c0b8; font-size: 11px; font-weight: 600; }
+    .svg-tiny { fill: #9ba59d; font-size: 9px; font-weight: 650; }
+    .node { fill: var(--diagram-2); stroke: #46544a; stroke-width: 1.5; }
+    .node-soft { fill: #243229; stroke: #58675c; stroke-width: 1.5; }
+    .line { fill: none; stroke: #68746b; stroke-width: 2; }
+    .line-dash { fill: none; stroke: #4a574e; stroke-width: 1.5; stroke-dasharray: 6 7; }
+    .green { fill: var(--green); }
+    .blue { fill: var(--blue); }
+    .amber { fill: var(--amber); }
+    .coral { fill: var(--coral); }
+    .violet { fill: var(--violet); }
+    .rose { fill: var(--rose); }
+    .stroke-green { stroke: var(--green); }
+    .stroke-blue { stroke: var(--blue); }
+    .stroke-amber { stroke: var(--amber); }
+    .stroke-coral { stroke: var(--coral); }
+    .stroke-violet { stroke: var(--violet); }
+    .stroke-rose { stroke: var(--rose); }
+
+    .steps { position: relative; z-index: 1; }
+
+    .step {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding: 8vh 0;
+      opacity: .52;
+      transition: opacity .28s ease;
+    }
+
+    .step.is-active { opacity: 1; }
+
+    .step-card, .bridge {
+      width: 100%;
+      padding: clamp(1.25rem, 3vw, 1.8rem);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(252, 250, 244, .94);
+      box-shadow: 0 14px 34px rgba(30, 32, 25, .08);
+    }
+
+    .scene-number {
+      display: block;
+      margin-bottom: .7rem;
+      color: #7a5467;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      margin-bottom: .75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.75rem, 3vw, 2.45rem);
+      font-weight: 500;
+      letter-spacing: -.025em;
+      line-height: 1.08;
+    }
+
+    .step p { margin-bottom: 0; color: #393d36; }
+    .step code, .bridge code, .closing code {
+      padding: .08em .34em;
+      border-radius: 5px;
+      background: rgba(23, 25, 20, .08);
+      font-size: .86em;
+    }
+
+    .bridge {
+      margin: 1.5rem 0 5rem;
+      border-left: 4px solid var(--blue);
+      background: var(--panel);
+    }
+
+    .bridge h3 { margin-bottom: .8rem; font-size: 1.05rem; }
+    .bridge p:last-child { margin-bottom: 0; }
+
+    .mini-brief {
+      margin-top: 1rem;
+      display: grid;
+      gap: .65rem;
+    }
+
+    .mini-brief div {
+      padding: .8rem .9rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fffdf8;
+    }
+
+    .mini-brief b {
+      display: block;
+      margin-bottom: .15rem;
+      color: #784e65;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .7rem;
+      margin-top: 1rem;
+    }
+
+    .evidence-card {
+      padding: .8rem;
+      border-radius: 12px;
+      background: var(--surface-2);
+      font-size: .84rem;
+    }
+
+    .evidence-card strong { display: block; margin-bottom: .25rem; }
+
+    .status {
+      display: inline-block;
+      margin-bottom: .35rem;
+      padding: .16rem .5rem;
+      border-radius: 999px;
+      font-size: .66rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .status.supported { background: #d7efe4; color: #20553e; }
+    .status.assumption { background: #f4e6bd; color: #654b0f; }
+    .status.unknown { background: #dfe3df; color: #37423a; }
+    .status.commitment { background: #e7dcf7; color: #563e78; }
+
+    .table-wrap { margin-top: 1rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+    th, td { padding: .55rem; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: var(--surface-2); }
+
+    .final-brief {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fffdf8;
+      font-size: .84rem;
+    }
+
+    .final-brief h4 {
+      margin: .8rem 0 .2rem;
+      color: #784e65;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .final-brief h4:first-child { margin-top: 0; }
+    .final-brief p, .final-brief ol { margin: 0; }
+    .final-brief ol { padding-left: 1.2rem; }
+
+    .closing {
+      width: min(calc(100% - 3rem), 980px);
+      padding-bottom: 5rem;
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 2.2rem;
+    }
+
+    .compare article {
+      padding: 1.35rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .compare h3 { margin-bottom: .45rem; }
+    .compare p { margin-bottom: 0; color: var(--muted); }
+
+    .source-section {
+      padding-top: 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .source-section h2 { color: var(--ink); font-size: 1.25rem; }
+    .source-section li { margin-bottom: .55rem; }
+
+    footer {
+      padding: 2.5rem 1.5rem;
+      background: var(--diagram);
+      color: #bfc7bf;
+      text-align: center;
+      font-size: .82rem;
+    }
+
+    .no-js .progress-track,
+    .no-js .graphic-wrap { display: none; }
+
+    .no-js .scrolly { display: block; max-width: 760px; }
+    .no-js .steps { padding: 0 1.5rem; }
+    .no-js .step { min-height: 0; opacity: 1; padding: 1rem 0 2.5rem; }
+
+    @media (max-width: 900px) {
+      .hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        padding: 5rem 1.4rem 4rem;
+      }
+
+      .hero-art { width: min(100%, 560px); }
+
+      .scrolly {
+        --band: clamp(220px, 40svh, 330px);
+        width: 100%;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+      }
+
+      .graphic-wrap {
+        z-index: 3;
+        min-width: 0;
+        width: 100%;
+        height: var(--band);
+        padding: .7rem 1rem 0;
+        background: var(--surface);
+      }
+
+      .graphic-shell {
+        width: min(100%, 680px);
+        height: 100%;
+        margin: 0 auto;
+        aspect-ratio: auto;
+        border-radius: 18px;
+      }
+
+      .steps { min-width: 0; width: 100%; padding: 0 1rem; }
+      .step {
+        min-height: calc(100svh - var(--band));
+        align-items: flex-end;
+        padding: 2rem 0 4svh;
+      }
+
+      .bridge { margin-bottom: 3rem; }
+      .graphic-shell svg { transform: scale(.88); transform-origin: center; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      h1 { font-size: clamp(3rem, 17vw, 5.6rem); }
+      .hero-row { grid-template-columns: 88px 1fr; gap: .7rem; }
+      .evidence-grid, .compare { grid-template-columns: 1fr; }
+      .graphic-meta { top: .65rem; right: .8rem; left: .8rem; font-size: .58rem; }
+      .graphic-shell svg { transform: scale(.8); }
+    }
+
+    @media (max-height: 640px) and (max-width: 639px) {
+      .scrolly { --band: 210px; }
+      .step-card, .bridge { padding: 1rem; }
+      .step h2 { font-size: 1.5rem; }
+      .step p { font-size: .92rem; line-height: 1.48; }
+    }
+
+    @media (min-width: 640px) and (max-height: 560px) {
+      .scrolly {
+        width: min(calc(100% - 2rem), var(--max));
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+        gap: 1.4rem;
+      }
+
+      .graphic-wrap { height: 100svh; padding: .6rem 0; }
+      .graphic-shell { height: calc(100svh - 1.2rem); aspect-ratio: auto; }
+      .steps { padding: 0; }
+      .step { min-height: 100svh; align-items: center; padding: 1rem 0; }
+      .step-card { padding: 1rem; }
+      .step h2 { font-size: 1.55rem; }
+      .step p { font-size: .88rem; line-height: 1.45; }
+      .graphic-shell svg { transform: scale(.83); }
+    }
+
+    @media (max-width: 639px) and (max-height: 520px) {
+      .graphic-wrap {
+        position: static;
+        height: 72svh;
+        padding: .7rem 1rem;
+      }
+
+      .step { min-height: 0; align-items: flex-start; padding: 1rem 0 2.5rem; opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the article</a>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+
+  <main id="main">
+    <article>
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Product design skill - creative-brief</p>
+          <h1>The brief the room can hold.</h1>
+          <p class="hero-deck">Four fields stay short enough to read at every design meeting. A second
+            file keeps the evidence, assumptions, and previous research that made those four choices
+            defensible.</p>
+          <span class="scroll-cue">Scroll through the mechanism</span>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-sheet">
+            <header><span>Creative brief</span><span>Ready - v1</span></header>
+            <div class="hero-row"><b>Objective</b><span>Design the off-cycle correction flow for retroactive employee changes.</span></div>
+            <div class="hero-row"><b>Persona</b><span>Multi-state payroll specialist responsible for final validation.</span></div>
+            <div class="hero-row"><b>Scenario</b><span>A termination arrives after payroll close and changes the result.</span></div>
+            <div class="hero-row"><b>Principle</b><span>Audit trail over invisible automation.</span></div>
+          </div>
+        </div>
+      </header>
+
+      <section class="intro" aria-labelledby="intro-title">
+        <p class="eyebrow">One selection, two records</p>
+        <h2 id="intro-title">A meeting brief is not a research repository.</h2>
+        <p>Jared M. Spool described a client team that began design meetings by reading a short
+          creative brief aloud. The brief aligned the room on the objective, the people, the situations,
+          and the principles before anyone argued about the design.</p>
+        <p class="definition"><strong><code>creative-brief</code> keeps that ritual and adds an evidence
+          companion.</strong> The short file is what the room reads. The companion is what an agent
+          reads before it changes the short file.</p>
+      </section>
+
+      <section class="scrolly" aria-label="How the creative-brief skill works">
+        <div class="graphic-wrap">
+          <div class="graphic-shell" aria-hidden="true">
+            <div class="graphic-meta"><span id="diagram-count">Diagram 01 / 10</span><span class="graphic-label" id="diagram-label">Different briefs</span></div>
+            <svg viewBox="0 0 760 620">
+              <g class="diagram-state is-active" data-state="1">
+                <text class="svg-kicker" x="62" y="84">DESIGN MEETING</text>
+                <text class="svg-title" x="62" y="118">One project, four mental models</text>
+                <rect class="node" x="70" y="170" width="205" height="92" rx="16"/>
+                <circle class="rose" cx="100" cy="201" r="9"/>
+                <text class="svg-label" x="122" y="206">Product</text>
+                <text class="svg-small" x="100" y="235">Fast correction</text>
+                <rect class="node" x="485" y="170" width="205" height="92" rx="16"/>
+                <circle class="blue" cx="515" cy="201" r="9"/>
+                <text class="svg-label" x="537" y="206">Research</text>
+                <text class="svg-small" x="515" y="235">Payroll specialist</text>
+                <rect class="node" x="70" y="385" width="205" height="92" rx="16"/>
+                <circle class="amber" cx="100" cy="416" r="9"/>
+                <text class="svg-label" x="122" y="421">Operations</text>
+                <text class="svg-small" x="100" y="450">Manager approval</text>
+                <rect class="node" x="485" y="385" width="205" height="92" rx="16"/>
+                <circle class="green" cx="515" cy="416" r="9"/>
+                <text class="svg-label" x="537" y="421">Compliance</text>
+                <text class="svg-small" x="515" y="450">Audit trail</text>
+                <rect class="line-dash" x="301" y="260" width="158" height="120" rx="22"/>
+                <text class="svg-small" x="336" y="318">Shared brief?</text>
+                <text class="svg-title coral" x="365" y="350">No</text>
+              </g>
+
+              <g class="diagram-state" data-state="2">
+                <text class="svg-kicker" x="62" y="84">TWO FILES</text>
+                <text class="svg-title" x="62" y="118">One for the room, one for the record</text>
+                <rect class="node-soft stroke-rose" x="120" y="165" width="520" height="225" rx="20"/>
+                <text class="svg-label" x="155" y="205">CREATIVE_BRIEF.md</text>
+                <rect class="rose" x="515" y="184" width="88" height="26" rx="13"/>
+                <text x="536" y="201" fill="#301d27" font-size="10" font-weight="800">2 MINUTES</text>
+                <line class="line" x1="155" y1="235" x2="605" y2="235"/>
+                <text class="svg-small" x="155" y="268">Project Objective</text>
+                <text class="svg-small" x="155" y="298">Key Personas</text>
+                <text class="svg-small" x="155" y="328">Key Scenarios</text>
+                <text class="svg-small" x="155" y="358">Key Principles</text>
+                <rect class="node stroke-blue" x="155" y="430" width="450" height="110" rx="18"/>
+                <text class="svg-label" x="185" y="470">CREATIVE_BRIEF_EVIDENCE.md</text>
+                <text class="svg-small" x="185" y="500">Sources - assumptions - candidates - history</text>
+              </g>
+
+              <g class="diagram-state" data-state="3">
+                <text class="svg-kicker" x="62" y="84">THE SHORT FORM</text>
+                <text class="svg-title" x="62" y="118">Four fields. Hard caps.</text>
+                <rect class="node-soft" x="95" y="160" width="570" height="360" rx="20"/>
+                <g>
+                  <rect class="rose" x="120" y="190" width="52" height="28" rx="14"/>
+                  <text x="139" y="209" fill="#301d27" font-size="11" font-weight="800">1</text>
+                  <text class="svg-label" x="195" y="209">Project Objective</text>
+                  <text class="svg-small" x="195" y="230">2-3 sentences</text>
+                </g>
+                <g>
+                  <rect class="blue" x="120" y="270" width="52" height="28" rx="14"/>
+                  <text x="136" y="289" fill="#15233b" font-size="11" font-weight="800">1-2</text>
+                  <text class="svg-label" x="195" y="289">Key Personas</text>
+                </g>
+                <g>
+                  <rect class="amber" x="120" y="350" width="52" height="28" rx="14"/>
+                  <text x="136" y="369" fill="#34260a" font-size="11" font-weight="800">1-3</text>
+                  <text class="svg-label" x="195" y="369">Key Scenarios</text>
+                </g>
+                <g>
+                  <rect class="violet" x="120" y="430" width="52" height="28" rx="14"/>
+                  <text x="136" y="449" fill="#251839" font-size="11" font-weight="800">1-2</text>
+                  <text class="svg-label" x="195" y="449">Key Principles</text>
+                </g>
+                <path class="line-dash stroke-coral" d="M555 275 C695 275 695 445 610 445"/>
+                <text class="svg-small coral" x="520" y="255">Overflow moves out</text>
+              </g>
+
+              <g class="diagram-state" data-state="4">
+                <text class="svg-kicker" x="62" y="84">READ BEFORE ASKING</text>
+                <text class="svg-title" x="62" y="118">Give every source a way back</text>
+                <g>
+                  <rect class="node" x="70" y="175" width="175" height="62" rx="12"/>
+                  <text class="svg-small" x="95" y="202">Research report</text>
+                  <text class="svg-tiny green" x="95" y="221">CB-S01</text>
+                  <rect class="node" x="70" y="260" width="175" height="62" rx="12"/>
+                  <text class="svg-small" x="95" y="287">Support cases</text>
+                  <text class="svg-tiny green" x="95" y="306">CB-S02</text>
+                  <rect class="node" x="70" y="345" width="175" height="62" rx="12"/>
+                  <text class="svg-small" x="95" y="372">Role matrix</text>
+                  <text class="svg-tiny green" x="95" y="391">CB-S03</text>
+                  <rect class="node" x="70" y="430" width="175" height="62" rx="12"/>
+                  <text class="svg-small" x="95" y="457">Audit policy</text>
+                  <text class="svg-tiny green" x="95" y="476">CB-S04</text>
+                </g>
+                <path class="line stroke-blue" d="M270 205 H390 M270 290 H390 M270 375 H390 M270 460 H390"/>
+                <rect class="node-soft stroke-blue" x="390" y="165" width="300" height="340" rx="20"/>
+                <text class="svg-label" x="425" y="205">Candidate context</text>
+                <text class="svg-small" x="425" y="250">Objective and adjacent work</text>
+                <text class="svg-small" x="425" y="300">Researched roles</text>
+                <text class="svg-small" x="425" y="350">Concrete situations</text>
+                <text class="svg-small" x="425" y="400">Decision principles</text>
+                <text class="svg-small" x="425" y="450">Enterprise boundaries</text>
+              </g>
+
+              <g class="diagram-state" data-state="5">
+                <text class="svg-kicker" x="62" y="84">DRAFT, THEN ASK</text>
+                <text class="svg-title" x="62" y="118">A selection is easier to challenge</text>
+                <rect class="node" x="65" y="165" width="255" height="350" rx="20"/>
+                <text class="svg-label" x="95" y="205">Candidate set</text>
+                <g class="svg-small">
+                  <rect class="node-soft" x="95" y="235" width="195" height="46" rx="10"/>
+                  <text x="115" y="263">Payroll specialist</text>
+                  <rect class="node-soft" x="95" y="295" width="195" height="46" rx="10"/>
+                  <text x="115" y="323">Service partner</text>
+                  <rect class="node-soft" x="95" y="355" width="195" height="46" rx="10"/>
+                  <text x="115" y="383">Client approver</text>
+                  <rect class="node-soft" x="95" y="415" width="195" height="46" rx="10"/>
+                  <text x="115" y="443">Tax specialist</text>
+                </g>
+                <path class="line stroke-violet" d="M330 258 C390 258 390 305 440 305"/>
+                <rect class="node-soft stroke-violet" x="440" y="215" width="250" height="200" rx="20"/>
+                <text class="svg-label" x="475" y="255">Recommended brief</text>
+                <rect class="violet" x="475" y="285" width="180" height="48" rx="12"/>
+                <text x="500" y="315" fill="#241738" font-size="12" font-weight="800">Payroll specialist</text>
+                <text class="svg-small amber" x="475" y="370">1 unresolved choice</text>
+              </g>
+
+              <g class="diagram-state" data-state="6">
+                <text class="svg-kicker" x="62" y="84">EVIDENCE STATES</text>
+                <text class="svg-title" x="62" y="118">Confidence stays behind the sentence</text>
+                <rect class="node-soft" x="95" y="165" width="570" height="330" rx="20"/>
+                <g>
+                  <rect class="green" x="125" y="210" width="118" height="30" rx="15"/>
+                  <text x="149" y="230" fill="#163426" font-size="10" font-weight="800">SUPPORTED</text>
+                  <text class="svg-small" x="270" y="230">Final validation is owned by payroll specialists</text>
+                </g>
+                <g>
+                  <rect class="amber" x="125" y="280" width="118" height="30" rx="15"/>
+                  <text x="147" y="300" fill="#3b2c0d" font-size="10" font-weight="800">ASSUMPTION</text>
+                  <text class="svg-small" x="270" y="300">Off-cycle cases share one correction pattern</text>
+                </g>
+                <g>
+                  <rect class="coral" x="125" y="350" width="118" height="30" rx="15"/>
+                  <text x="145" y="370" fill="#3a1710" font-size="10" font-weight="800">UNKNOWN</text>
+                  <text class="svg-small" x="270" y="370">Which change type causes the most rework</text>
+                </g>
+                <g>
+                  <rect class="violet" x="125" y="420" width="118" height="30" rx="15"/>
+                  <text x="141" y="440" fill="#27193b" font-size="10" font-weight="800">COMMITMENT</text>
+                  <text class="svg-small" x="270" y="440">Every recalculation keeps an audit trail</text>
+                </g>
+              </g>
+
+              <g class="diagram-state" data-state="7">
+                <text class="svg-kicker" x="62" y="84">THE RESEARCH GATE</text>
+                <text class="svg-title" x="62" y="118">Only questions that can change the brief</text>
+                <rect class="node stroke-amber" x="70" y="200" width="190" height="90" rx="16"/>
+                <text class="svg-small" x="100" y="235">Could internal research</text>
+                <text class="svg-small" x="100" y="255">answer this?</text>
+                <circle class="green" cx="235" cy="265" r="9"/>
+                <path class="line stroke-amber" d="M270 245 H315"/>
+                <rect class="node stroke-amber" x="315" y="200" width="190" height="90" rx="16"/>
+                <text class="svg-small" x="345" y="235">Would the answer</text>
+                <text class="svg-small" x="345" y="255">change a field?</text>
+                <circle class="green" cx="480" cy="265" r="9"/>
+                <path class="line stroke-violet" d="M515 245 H555 V340"/>
+                <rect class="node-soft stroke-violet" x="445" y="340" width="245" height="155" rx="18"/>
+                <text class="svg-label" x="475" y="380">One analyst prompt</text>
+                <text class="svg-small" x="475" y="418">RQ01 - scenario evidence</text>
+                <text class="svg-small" x="475" y="448">RQ02 - persona difference</text>
+                <text class="svg-tiny" x="475" y="475">Internal sources + locators required</text>
+                <path class="line-dash" d="M165 300 V445 H350"/>
+                <text class="svg-small" x="95" y="475">Other gaps stay visible</text>
+              </g>
+
+              <g class="diagram-state" data-state="8">
+                <text class="svg-kicker" x="62" y="84">HUMAN COPY-PASTE</text>
+                <text class="svg-title" x="62" y="118">The skill waits between agents</text>
+                <rect class="node-soft stroke-rose" x="65" y="205" width="185" height="115" rx="18"/>
+                <text class="svg-label" x="100" y="245">creative-brief</text>
+                <text class="svg-small amber" x="100" y="278">awaiting-research</text>
+                <rect class="node-soft stroke-blue" x="290" y="205" width="180" height="115" rx="18"/>
+                <text class="svg-label" x="350" y="245">Human</text>
+                <text class="svg-small" x="330" y="278">copies and returns</text>
+                <rect class="node-soft stroke-violet" x="510" y="205" width="185" height="115" rx="18"/>
+                <text class="svg-label" x="535" y="245">Research Analyst</text>
+                <text class="svg-small" x="555" y="278">internal sources</text>
+                <path class="line stroke-blue" d="M250 240 H285 M470 240 H505"/>
+                <path class="line stroke-green" d="M510 300 H475 M290 300 H255"/>
+                <rect class="node" x="245" y="390" width="270" height="100" rx="16"/>
+                <text class="svg-label" x="285" y="430">Cited response or</text>
+                <text class="svg-label green" x="285" y="458">No evidence found</text>
+              </g>
+
+              <g class="diagram-state" data-state="9">
+                <text class="svg-kicker" x="62" y="84">SELECTIVE REVISION</text>
+                <text class="svg-title" x="62" y="118">Research reopens one field, not all four</text>
+                <rect class="node-soft" x="100" y="170" width="560" height="330" rx="20"/>
+                <g>
+                  <rect class="node" x="130" y="205" width="500" height="52" rx="10"/>
+                  <circle class="green" cx="160" cy="231" r="8"/>
+                  <text class="svg-label" x="185" y="237">Project Objective - unchanged</text>
+                  <rect class="node" x="130" y="275" width="500" height="52" rx="10"/>
+                  <circle class="green" cx="160" cy="301" r="8"/>
+                  <text class="svg-label" x="185" y="307">Key Persona - unchanged</text>
+                  <rect class="node stroke-violet" x="130" y="345" width="500" height="72" rx="10"/>
+                  <circle class="violet" cx="160" cy="381" r="8"/>
+                  <text class="svg-label" x="185" y="377">Key Scenario - revised from RQ01</text>
+                  <text class="svg-tiny" x="185" y="399">Previous assumption preserved in history</text>
+                  <rect class="node" x="130" y="435" width="500" height="52" rx="10"/>
+                  <circle class="green" cx="160" cy="461" r="8"/>
+                  <text class="svg-label" x="185" y="467">Key Principle - unchanged</text>
+                </g>
+              </g>
+
+              <g class="diagram-state" data-state="10">
+                <text class="svg-kicker" x="62" y="84">READ, AGREE, REVIEW</text>
+                <text class="svg-title" x="62" y="118">The room now holds the same brief</text>
+                <rect class="node-soft stroke-green" x="225" y="185" width="310" height="250" rx="22"/>
+                <rect class="green" x="420" y="205" width="80" height="26" rx="13"/>
+                <text x="442" y="223" fill="#173526" font-size="10" font-weight="800">READY V1</text>
+                <text class="svg-label" x="260" y="230">CREATIVE_BRIEF.md</text>
+                <text class="svg-small" x="260" y="285">Objective</text>
+                <text class="svg-small" x="260" y="325">Personas</text>
+                <text class="svg-small" x="260" y="365">Scenarios</text>
+                <text class="svg-small" x="260" y="405">Principles</text>
+                <path class="line stroke-violet" d="M535 305 C675 305 675 500 520 500"/>
+                <text class="svg-small violet" x="565" y="455">Review changed field</text>
+                <rect class="violet" x="455" y="482" width="80" height="28" rx="14"/>
+                <text x="477" y="501" fill="#27193b" font-size="10" font-weight="800">READY V2</text>
+                <circle class="rose" cx="135" cy="270" r="22"/>
+                <circle class="blue" cx="135" cy="350" r="22"/>
+                <circle class="amber" cx="625" cy="270" r="22"/>
+                <circle class="green" cx="625" cy="350" r="22"/>
+                <path class="line stroke-green" d="M160 270 H215 M160 350 H215 M545 270 H600 M545 350 H600"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="steps">
+          <section class="step is-active" data-state="1" data-label="Different briefs" aria-labelledby="scene-1-title">
+            <div class="step-card">
+              <span class="scene-number">01 - Different briefs</span>
+              <h2 id="scene-1-title">The project name is shared. The design intent is not.</h2>
+              <p>The meeting is called "off-cycle payroll correction," but the name is the only shared
+                part. One person is designing for speed, another for approval, and another for audit.
+                The team can discuss the same project while making different designs.</p>
+            </div>
+          </section>
+
+          <section class="step" data-state="2" data-label="Two files" aria-labelledby="scene-2-title">
+            <div class="step-card">
+              <span class="scene-number">02 - Two files</span>
+              <h2 id="scene-2-title">One file for the room. One for the record.</h2>
+              <p>The skill creates two files because one document cannot stay short and hold the whole
+                record. <code>CREATIVE_BRIEF.md</code> is read aloud in about two minutes. Its evidence
+                companion carries the sources, assumptions, candidate sets, and history an agent needs.</p>
+            </div>
+          </section>
+
+          <aside class="bridge" aria-labelledby="example-title">
+            <h3 id="example-title">The example carried through this article</h3>
+            <div class="mini-brief">
+              <div><b>Objective</b>Design a guided off-cycle correction flow that helps payroll
+                specialists resolve a retroactive employee change before corrected payroll is submitted.</div>
+              <div><b>Persona</b>A multi-state payroll specialist responsible for final validation and
+                audit response.</div>
+              <div><b>Scenarios</b>A termination arrives after close; a corrected tax setup changes the
+                recalculation; an approver asks why a prior result changed.</div>
+              <div><b>Principle</b>Audit trail over invisible automation.</div>
+            </div>
+          </aside>
+
+          <section class="step" data-state="3" data-label="Four fields" aria-labelledby="scene-3-title">
+            <div class="step-card">
+              <span class="scene-number">03 - Four fields</span>
+              <h2 id="scene-3-title">The caps force a selection.</h2>
+              <p>The short brief has four fields and no fifth one. One objective says what this design
+                round will accomplish. One or two personas, up to three scenarios, and one or two
+                principles select what matters now; everything else stays outside the meeting brief.</p>
+            </div>
+          </section>
+
+          <section class="step" data-state="4" data-label="Read context" aria-labelledby="scene-4-title">
+            <div class="step-card">
+              <span class="scene-number">04 - Read context</span>
+              <h2 id="scene-4-title">Read what the project already knows.</h2>
+              <p>Before asking the designer for facts, the skill reads what the project already holds.
+                It looks for the objective, researched roles, concrete situations, design principles,
+                and the enterprise constraints that affect the selection. Each usable source gets an
+                ID and a locator back to the exact record.</p>
+            </div>
+          </section>
+
+          <aside class="bridge" aria-labelledby="enterprise-title">
+            <h3 id="enterprise-title">Enterprise detail stays available without becoming a fifth field</h3>
+            <p>Roles, permissions, policy, auditability, integrations, data volume, operational
+              failures, and accessibility can all change the selected persona, scenario, or principle.
+              Their full detail stays in <code>CREATIVE_BRIEF_EVIDENCE.md</code>.</p>
+          </aside>
+
+          <section class="step" data-state="5" data-label="Draft first" aria-labelledby="scene-5-title">
+            <div class="step-card">
+              <span class="scene-number">05 - Draft first</span>
+              <h2 id="scene-5-title">Give the designer a selection to challenge.</h2>
+              <p>The skill writes a complete first draft instead of returning a template. It recommends
+                the objective, personas, scenarios, and principles the current record supports, then
+                asks one decision at a time. The designer reacts to a selection rather than doing the
+                sorting alone.</p>
+            </div>
+          </section>
+
+          <section class="step" data-state="6" data-label="Evidence states" aria-labelledby="scene-6-title">
+            <div class="step-card">
+              <span class="scene-number">06 - Evidence states</span>
+              <h2 id="scene-6-title">Confidence belongs behind the sentence.</h2>
+              <p>A short sentence can hide a weak basis. The companion keeps supported findings
+                separate from assumptions, unknowns, commitments, and preferences. A persona does not
+                become researched because the brief describes it confidently.</p>
+            </div>
+          </section>
+
+          <aside class="bridge" aria-labelledby="evidence-title">
+            <h3 id="evidence-title">What the companion preserves</h3>
+            <div class="evidence-grid">
+              <div class="evidence-card"><span class="status supported">Supported</span><strong>Scenario
+                SC01</strong>Retroactive changes caused 14 of 22 reviewed correction cases. Source
+                <code>CB-S04</code>.</div>
+              <div class="evidence-card"><span class="status assumption">Assumption</span><strong>Persona
+                P01</strong>Multi-state specialists own every final correction review. Source incomplete.</div>
+              <div class="evidence-card"><span class="status commitment">Commitment</span><strong>Principle
+                PR01</strong>Every recalculation must preserve a visible audit trail. Owner: Compliance.</div>
+              <div class="evidence-card"><span class="status unknown">Unknown</span><strong>Question
+                A03</strong>Which employee change type creates the most rework?</div>
+            </div>
+          </aside>
+
+          <section class="step" data-state="7" data-label="One prompt" aria-labelledby="scene-7-title">
+            <div class="step-card">
+              <span class="scene-number">07 - One prompt</span>
+              <h2 id="scene-7-title">Research only the gaps that can change the brief.</h2>
+              <p>Not every gap earns more research. The skill includes a question only when previous
+                internal research could answer it and the result could change one of the four fields.
+                All qualifying gaps become one Product Research Analyst prompt, with the source and
+                locator required for every answer.</p>
+            </div>
+          </section>
+
+          <section class="step" data-state="8" data-label="Human handoff" aria-labelledby="scene-8-title">
+            <div class="step-card">
+              <span class="scene-number">08 - Human handoff</span>
+              <h2 id="scene-8-title">The human carries the prompt, and the skill waits.</h2>
+              <p>The skill never calls the analyst. The designer copies the prompt, pastes the cited
+                response back, and the skill waits in between. <code>No evidence found</code> is a
+                useful answer; an unsourced summary remains an assumption.</p>
+            </div>
+          </section>
+
+          <aside class="bridge" aria-labelledby="response-title">
+            <h3 id="response-title">The analyst response has a fixed shape</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Question</th><th>Answer</th><th>Source</th><th>Locator</th><th>Limit</th></tr></thead>
+                <tbody>
+                  <tr><td>RQ01</td><td>Retroactive terminations appear in 9 of 14 reviewed cases.</td><td>Correction study, 2025</td><td>p. 18, cases 3-11</td><td>Enterprise segment only</td></tr>
+                  <tr><td>RQ02</td><td>No evidence found</td><td>-</td><td>-</td><td>Role ownership remains an assumption</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </aside>
+
+          <section class="step" data-state="9" data-label="Selective revision" aria-labelledby="scene-9-title">
+            <div class="step-card">
+              <span class="scene-number">09 - Selective revision</span>
+              <h2 id="scene-9-title">New evidence reopens one field, not the interview.</h2>
+              <p>Returned research does not restart the interview. Each finding maps to the question it
+                answers, and only the affected brief field reopens. The previous assumption stays in
+                the change history instead of disappearing.</p>
+            </div>
+          </section>
+
+          <aside class="bridge" aria-labelledby="final-title">
+            <h3 id="final-title">The file read at the meeting</h3>
+            <div class="final-brief">
+              <h4>Project Objective</h4>
+              <p>Design a guided off-cycle correction flow that helps payroll specialists resolve a
+                retroactive employee change before corrected payroll is submitted.</p>
+              <h4>Key Persona</h4>
+              <p>A multi-state payroll specialist responsible for final validation and audit response.</p>
+              <h4>Key Scenarios</h4>
+              <ol>
+                <li>A retroactive termination arrives after payroll close.</li>
+                <li>A corrected tax setup changes the recalculation.</li>
+                <li>An approver asks why a prior result changed.</li>
+              </ol>
+              <h4>Key Principle</h4>
+              <p><strong>Audit trail over invisible automation.</strong> When speed and explainability
+                conflict, preserve a visible account of what changed and why.</p>
+            </div>
+          </aside>
+
+          <section class="step" data-state="10" data-label="Read and review" aria-labelledby="scene-10-title">
+            <div class="step-card">
+              <span class="scene-number">10 - Read and review</span>
+              <h2 id="scene-10-title">Agreement makes it ready for the meeting.</h2>
+              <p>The team reads the completed brief and asks whether it still describes what they are
+                designing today. Agreement makes it ready for the meeting, not approval to build. At
+                the next review, no change keeps the version; a confirmed field change updates both
+                files together.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="closing" aria-labelledby="closing-title">
+        <p class="eyebrow">Two different starts</p>
+        <h2 id="closing-title">The short brief sits beside problem framing, not inside its chain.</h2>
+        <p><code>creative-brief</code> aligns a design round that may already name what is being
+          designed. <code>problem-framing</code> establishes an evidence-backed, solution-open problem
+          and hands that problem to later skills. Choosing the smaller artifact is useful only when the
+          smaller decision is the one the team needs.</p>
+        <div class="compare">
+          <article>
+            <h3>creative-brief</h3>
+            <p>Objective, selected personas, scenarios, and principles. Two files. Read aloud and
+              reviewed as the design round changes.</p>
+          </article>
+          <article>
+            <h3>problem-framing</h3>
+            <p>User, tension, evidence, alternatives, boundaries, and risks. One problem north star
+              that feeds <code>shaping</code> and <code>proposal</code>.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="source-section" aria-labelledby="sources-title">
+        <h2 id="sources-title">Method sources</h2>
+        <ul>
+          <li>Jared M. Spool, <a href="https://jmspool.medium.com/the-magical-short-form-creative-brief-61fb58e1dfa2">The Magical Short-Form Creative Brief</a>: four fields, brevity, read-aloud agreement, and revision when the project changes.</li>
+          <li>Matt Pocock, <a href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md">grill-with-docs</a>: inspect the project before asking, recommend answers, and persist resolved context.</li>
+          <li>Nielsen Norman Group, <a href="https://www.nngroup.com/articles/tracking-questions-assumptions-facts-agile/">Tracking Questions, Assumptions, Research, and Facts in Agile</a>: keep assumptions and evidence visibly distinct.</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <footer>The Brief the Room Can Hold - an interactive explanation of the creative-brief skill</footer>
+
+  <script>
+    (() => {
+      const states = [...document.querySelectorAll('.diagram-state')];
+      const steps = [...document.querySelectorAll('.step[data-state]')];
+      const count = document.getElementById('diagram-count');
+      const label = document.getElementById('diagram-label');
+      const progress = document.querySelector('.progress-bar');
+      let active = 1;
+      let scheduled = false;
+
+      function setActive(next) {
+        if (next === active) return;
+        active = next;
+        states.forEach((state) => state.classList.toggle('is-active', Number(state.dataset.state) === next));
+        steps.forEach((step) => step.classList.toggle('is-active', Number(step.dataset.state) === next));
+        const current = steps.find((step) => Number(step.dataset.state) === next);
+        count.textContent = `Diagram ${String(next).padStart(2, '0')} / ${String(states.length).padStart(2, '0')}`;
+        label.textContent = current?.dataset.label ?? '';
+      }
+
+      function pickState() {
+        const graphic = document.querySelector('.graphic-wrap');
+        const stepsEl = document.querySelector('.steps');
+        let zoneTop = 0;
+        if (graphic && stepsEl && getComputedStyle(graphic).position === 'sticky') {
+          const graphicRect = graphic.getBoundingClientRect();
+          const stepsRect = stepsEl.getBoundingClientRect();
+          const stacked = Math.min(graphicRect.right, stepsRect.right) - Math.max(graphicRect.left, stepsRect.left) > 0;
+          const pinned = graphicRect.top <= 1 && graphicRect.bottom > 0;
+          if (stacked && pinned) zoneTop = Math.min(graphicRect.bottom, window.innerHeight * .7);
+        }
+        let nearest = null;
+        let visibleArea = 0;
+        for (const step of steps) {
+          const card = step.querySelector('.step-card') ?? step;
+          const rect = card.getBoundingClientRect();
+          const currentArea = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, zoneTop);
+          if (currentArea >= visibleArea) {
+            nearest = step;
+            visibleArea = currentArea;
+          }
+        }
+        if (nearest && visibleArea > 0) setActive(Number(nearest.dataset.state));
+      }
+
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+      }
+
+      function schedule() {
+        if (scheduled) return;
+        scheduled = true;
+        window.requestAnimationFrame(() => {
+          scheduled = false;
+          pickState();
+          updateProgress();
+        });
+      }
+
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      window.addEventListener('orientationchange', schedule);
+      pickState();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
