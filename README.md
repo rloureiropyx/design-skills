@@ -10,6 +10,10 @@ That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.
 
 The recipe is not new and it is not mine. It is mostly Ryan Singer's, with the bits added that enterprise B2B work needs and a small-team method does not cover: roles, permissions, audit, integrations, data volume, accessibility.
 
+`creative-brief` is an alternative start, not another link in that chain. It writes a short artifact a
+team can read at design meetings and keeps the research behind it in a separate agent-readable
+companion.
+
 Every skill has two parts:
 
 | The skill | The explainer |
@@ -73,6 +77,27 @@ Framing buys time to explore solutions. It does not buy approval to build.
 - Skill: [`skills/process/problem-framing/SKILL.md`](skills/process/problem-framing/SKILL.md)
 - Explainer: [`frame-before-you-design.html`](docs/problem-framing/frame-before-you-design.html) · [script](docs/problem-framing/frame-before-you-design.script.md)
 - Blueprint: [`blueprint.md`](docs/problem-framing/blueprint.md) — the steps, registers, statuses and boundaries in one place
+
+#### Creative Brief
+
+Creates the short-form creative brief Jared M. Spool describes: a Project Objective, one or two Key
+Personas, up to three Key Scenarios, and one or two Key Principles. The caps are hard because the team
+reads this file aloud before design discussion.
+
+It writes two files. `CREATIVE_BRIEF.md` is the current brief, under a page. The longer
+`CREATIVE_BRIEF_EVIDENCE.md` holds sources, assumptions, the complete candidate sets, enterprise
+boundaries, and change history so an agent can understand why those four selections were made.
+
+When previous internal research could change a field, the skill generates one consolidated prompt for
+Product Research Analyst and waits. The designer carries the prompt and pastes the cited response
+back; the skill never invokes the analyst itself. Review mode reopens only the fields that changed.
+
+This is an alternative project-start artifact beside `problem-framing`. It does not produce
+`FRAMED_PROBLEM.md` and does not feed `shaping` or `proposal`.
+
+- Skill: [`skills/process/creative-brief/SKILL.md`](skills/process/creative-brief/SKILL.md)
+- Explainer: [`the-brief-the-room-can-hold.html`](docs/creative-brief/the-brief-the-room-can-hold.html) · [script](docs/creative-brief/the-brief-the-room-can-hold.script.md)
+- Blueprint: [`blueprint.md`](docs/creative-brief/blueprint.md)
 
 #### Shaping
 
