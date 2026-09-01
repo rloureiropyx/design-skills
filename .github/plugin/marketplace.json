@@ -2,7 +2,7 @@
   "name": "rolo",
   "metadata": {
     "description": "Product design skills by Raul Loureiro",
-    "version": "3.5.0"
+    "version": "3.6.0"
   },
   "owner": {
     "name": "Raul Loureiro"
@@ -11,7 +11,7 @@
     {
       "name": "design-skills",
       "description": "Fifteen skills for enterprise product design work. Start with either an evidence-backed problem frame or a short creative brief for aligning design meetings, explore two or three solution directions inside a fixed time budget, wireframe the chosen screens, diagram what people are stuck on, then write a proposal someone can approve or decline. A context-intake skill turns raw material into durable project context. A pitch skill works out how to explain a decision already made, and renderers turn it into a scrollytelling explainer, a Figma Slides deck or a local tldraw canvas. Utilities capture writing and visual style and strip AI tells from prose.",
-      "version": "3.5.0",
+      "version": "3.6.0",
       "author": {
         "name": "Raul Loureiro"
       },

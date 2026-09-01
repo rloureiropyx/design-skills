@@ -17,21 +17,24 @@ The metadata does not count as a content section. Keep the four headings exactly
 
 ## Project Objective
 
-Two or three sentences describing what this part of the project will accomplish relative to the
-larger effort.
+Two or three sentences naming the business problem or opportunity, the outcome the organization needs,
+and why this work matters now. Do not describe a feature or design deliverable unless it is a fixed
+constraint.
 
 ## Key Personas
 
 ### <Persona name>
-One or two sentences containing only the researched characteristics that affect this design round.
+One or two sentences containing only the research-backed characteristics that affect this work. Add
+`(proposed variant)` after the name when the evidence companion documents why an existing persona
+falls short.
 
 ### <Optional second persona>
 One or two sentences. Omit the heading when there is only one.
 
 ## Key Scenarios
 
-1. **<Scenario name>.** Two or three sentences naming the trigger, goal, and context the design must
-   support.
+1. **<Need name>.** `<Persona> needs to <goal> when <context> so <meaningful outcome or avoided
+   consequence>.`
 2. **<Optional second scenario>.** ...
 3. **<Optional third scenario>.** ...
 
@@ -44,9 +47,9 @@ One or two sentences. Omit the heading when there is only one.
 
 ## Hard caps
 
-- One Project Objective, two or three sentences.
+- One business/problem-focused Project Objective, two or three sentences.
 - One or two Key Personas.
-- One to three Key Scenarios.
+- One to three Key Scenarios written as user needs.
 - One or two Key Principles.
 - No fifth content section.
 
