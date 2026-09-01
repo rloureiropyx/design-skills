@@ -88,12 +88,13 @@ It writes two files. `CREATIVE_BRIEF.md` is the current brief, under a page. The
 `CREATIVE_BRIEF_EVIDENCE.md` holds sources, assumptions, the complete candidate sets, enterprise
 boundaries, and change history so an agent can understand why those four selections were made.
 
-When previous internal research could change a field, the skill generates one consolidated prompt for
-Product Research Analyst and waits. The designer carries the prompt and pastes the cited response
-back; the skill never invokes the analyst itself. Review mode reopens only the fields that changed.
+Every create and review pass starts with the operator's account of the project, then generates one
+consolidated prompt for Product Research Analyst to retrieve previous internal research. The designer
+carries the prompt and pastes the cited response back; the skill never invokes the analyst itself.
 
-This is an alternative project-start artifact beside `problem-framing`. It does not produce
-`FRAMED_PROBLEM.md` and does not feed `shaping` or `proposal`.
+Existing researched personas are preferred. When they fall short, the skill creates the minimum
+necessary proposed variant and records why. Project Objectives center the business problem and
+outcome; Key Scenarios are written as user needs.
 
 - Skill: [`skills/process/creative-brief/SKILL.md`](skills/process/creative-brief/SKILL.md)
 - Explainer: [`the-brief-the-room-can-hold.html`](docs/creative-brief/the-brief-the-room-can-hold.html) · [script](docs/creative-brief/the-brief-the-room-can-hold.script.md)

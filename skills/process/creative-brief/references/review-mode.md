@@ -6,9 +6,15 @@ Read this before reviewing an existing creative brief.
 
 Find `CREATIVE_BRIEF.md` and `CREATIVE_BRIEF_EVIDENCE.md` in the project's documentation directory,
 then the project root. If only one exists, report the mismatch and reconstruct the missing file only
-from traceable content after the user confirms.
+from traceable content after the operator confirms.
 
-Read both before asking anything. Then inspect project sources added or changed since `Last reviewed`.
+Ask the operator:
+
+> Tell me about the project as it stands today: what is happening, why the business cares, which people
+> are affected, and what has changed or become uncertain since this brief was last reviewed.
+
+Record the answer, then read both files and inspect project sources added or changed since
+`Last reviewed`.
 
 ## Reconfirm the brief
 
@@ -26,12 +32,12 @@ If the answer is yes and no current evidence contradicts a field:
 If the answer is no, or current evidence contradicts a field, set status to `review-needed` and test
 one field at a time:
 
-1. **Project Objective**: Did the part of the project under design change?
-2. **Key Personas**: Did the design round shift to another researched role or population?
-3. **Key Scenarios**: Did the triggering situation, goal, or context change?
+1. **Project Objective**: Did the business problem, intended outcome, or urgency change?
+2. **Key Personas**: Does previous research still support the selected persona or proposed variant?
+3. **Key Scenarios**: Did the person's need, context, or consequence change?
 4. **Key Principles**: Did a new trade-off become decisive, or did an old one stop mattering?
 
-Give a recommended revision before asking the user to decide.
+Give a recommended revision before asking the operator to decide.
 
 ## Material change
 
@@ -50,11 +56,11 @@ When a field changes:
 Use whole-number versions (`v1`, `v2`, `v3`). Do not keep dated copies of the short brief; the change
 history preserves lineage.
 
-## Research during review
+## Previous research during review
 
-Use the same two-question gate as create mode. If existing internal research could answer a gap and
-the answer could change a field, generate one consolidated prompt from every qualifying review gap,
-set `awaiting-research`, and pause for the human copy/paste round-trip.
+Every review creates a fresh consolidated Product Research Analyst prompt using the operator's current
+account, the current brief, and changes since `Last reviewed`. Ask for previous internal research that
+supports or challenges the objective, persona fit, user needs, and principles. Set
+`awaiting-research` and pause for the human copy/paste round-trip.
 
 Do not reopen unaffected fields after research returns.
-
