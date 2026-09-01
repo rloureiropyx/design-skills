@@ -581,9 +581,9 @@
         <div class="hero-art" aria-hidden="true">
           <div class="hero-sheet">
             <header><span>Creative brief</span><span>Ready - v1</span></header>
-            <div class="hero-row"><b>Objective</b><span>Design the off-cycle correction flow for retroactive employee changes.</span></div>
+            <div class="hero-row"><b>Objective</b><span>Reduce the business risk created by retroactive changes after payroll close.</span></div>
             <div class="hero-row"><b>Persona</b><span>Multi-state payroll specialist responsible for final validation.</span></div>
-            <div class="hero-row"><b>Scenario</b><span>A termination arrives after payroll close and changes the result.</span></div>
+            <div class="hero-row"><b>Scenario</b><span>A specialist needs to understand what changed so they can submit a defensible correction.</span></div>
             <div class="hero-row"><b>Principle</b><span>Audit trail over invisible automation.</span></div>
           </div>
         </div>
@@ -676,12 +676,12 @@
               </g>
 
               <g class="diagram-state" data-state="4">
-                <text class="svg-kicker" x="62" y="84">READ BEFORE ASKING</text>
-                <text class="svg-title" x="62" y="118">Give every source a way back</text>
+                <text class="svg-kicker" x="62" y="84">ASK, THEN INSPECT</text>
+                <text class="svg-title" x="62" y="118">Start with the operator, then test the record</text>
                 <g>
                   <rect class="node" x="70" y="175" width="175" height="62" rx="12"/>
-                  <text class="svg-small" x="95" y="202">Research report</text>
-                  <text class="svg-tiny green" x="95" y="221">CB-S01</text>
+                  <text class="svg-small" x="95" y="202">Operator account</text>
+                  <text class="svg-tiny blue" x="95" y="221">CURRENT VIEW</text>
                   <rect class="node" x="70" y="260" width="175" height="62" rx="12"/>
                   <text class="svg-small" x="95" y="287">Support cases</text>
                   <text class="svg-tiny green" x="95" y="306">CB-S02</text>
@@ -697,7 +697,7 @@
                 <text class="svg-label" x="425" y="205">Candidate context</text>
                 <text class="svg-small" x="425" y="250">Objective and adjacent work</text>
                 <text class="svg-small" x="425" y="300">Researched roles</text>
-                <text class="svg-small" x="425" y="350">Concrete situations</text>
+                <text class="svg-small" x="425" y="350">Observed user needs</text>
                 <text class="svg-small" x="425" y="400">Decision principles</text>
                 <text class="svg-small" x="425" y="450">Enterprise boundaries</text>
               </g>
@@ -752,25 +752,25 @@
               </g>
 
               <g class="diagram-state" data-state="7">
-                <text class="svg-kicker" x="62" y="84">THE RESEARCH GATE</text>
-                <text class="svg-title" x="62" y="118">Only questions that can change the brief</text>
+                <text class="svg-kicker" x="62" y="84">PREVIOUS RESEARCH</text>
+                <text class="svg-title" x="62" y="118">Every pass asks the internal record</text>
                 <rect class="node stroke-amber" x="70" y="200" width="190" height="90" rx="16"/>
-                <text class="svg-small" x="100" y="235">Could internal research</text>
-                <text class="svg-small" x="100" y="255">answer this?</text>
+                <text class="svg-small" x="100" y="235">Business problem</text>
+                <text class="svg-small" x="100" y="255">and outcome</text>
                 <circle class="green" cx="235" cy="265" r="9"/>
                 <path class="line stroke-amber" d="M270 245 H315"/>
                 <rect class="node stroke-amber" x="315" y="200" width="190" height="90" rx="16"/>
-                <text class="svg-small" x="345" y="235">Would the answer</text>
-                <text class="svg-small" x="345" y="255">change a field?</text>
+                <text class="svg-small" x="345" y="235">Persona fit and</text>
+                <text class="svg-small" x="345" y="255">observed user needs</text>
                 <circle class="green" cx="480" cy="265" r="9"/>
                 <path class="line stroke-violet" d="M515 245 H555 V340"/>
                 <rect class="node-soft stroke-violet" x="445" y="340" width="245" height="155" rx="18"/>
                 <text class="svg-label" x="475" y="380">One analyst prompt</text>
-                <text class="svg-small" x="475" y="418">RQ01 - scenario evidence</text>
-                <text class="svg-small" x="475" y="448">RQ02 - persona difference</text>
+                <text class="svg-small" x="475" y="418">RQ01-RQ04 - all four fields</text>
+                <text class="svg-small" x="475" y="448">Fit, shortcomings, and gaps</text>
                 <text class="svg-tiny" x="475" y="475">Internal sources + locators required</text>
                 <path class="line-dash" d="M165 300 V445 H350"/>
-                <text class="svg-small" x="95" y="475">Other gaps stay visible</text>
+                <text class="svg-small" x="95" y="475">Trade-offs and limits included</text>
               </g>
 
               <g class="diagram-state" data-state="8">
@@ -862,12 +862,13 @@
           <aside class="bridge" aria-labelledby="example-title">
             <h3 id="example-title">The example carried through this article</h3>
             <div class="mini-brief">
-              <div><b>Objective</b>Design a guided off-cycle correction flow that helps payroll
-                specialists resolve a retroactive employee change before corrected payroll is submitted.</div>
+              <div><b>Objective</b>Retroactive employee changes create correction risk after payroll
+                close. The business needs defensible corrections completed before submission.</div>
               <div><b>Persona</b>A multi-state payroll specialist responsible for final validation and
                 audit response.</div>
-              <div><b>Scenarios</b>A termination arrives after close; a corrected tax setup changes the
-                recalculation; an approver asks why a prior result changed.</div>
+              <div><b>Scenarios</b>A specialist needs to understand what changed after a retroactive
+                termination so they can submit a defensible correction; an approver needs to trace why
+                a recalculation changed so they can approve it confidently.</div>
               <div><b>Principle</b>Audit trail over invisible automation.</div>
             </div>
           </aside>
@@ -876,20 +877,20 @@
             <div class="step-card">
               <span class="scene-number">03 - Four fields</span>
               <h2 id="scene-3-title">The caps force a selection.</h2>
-              <p>The short brief has four fields and no fifth one. One objective says what this design
-                round will accomplish. One or two personas, up to three scenarios, and one or two
-                principles select what matters now; everything else stays outside the meeting brief.</p>
+              <p>The short brief has four fields and no fifth one. The objective centers the business
+                problem and outcome. One or two research-backed personas, up to three user needs, and
+                one or two principles select what matters now.</p>
             </div>
           </section>
 
           <section class="step" data-state="4" data-label="Read context" aria-labelledby="scene-4-title">
             <div class="step-card">
-              <span class="scene-number">04 - Read context</span>
-              <h2 id="scene-4-title">Read what the project already knows.</h2>
-              <p>Before asking the designer for facts, the skill reads what the project already holds.
-                It looks for the objective, researched roles, concrete situations, design principles,
-                and the enterprise constraints that affect the selection. Each usable source gets an
-                ID and a locator back to the exact record.</p>
+              <span class="scene-number">04 - Ask, then inspect</span>
+              <h2 id="scene-4-title">Start with the operator's view, then test it.</h2>
+              <p>The skill always asks what is happening, why the business cares, who is affected, and
+                what needs clarification. It then reads the project record for existing personas,
+                observed user needs, principles, and constraints. Traceable sources get IDs and
+                locators; the operator's account keeps its stated basis.</p>
             </div>
           </section>
 
@@ -903,11 +904,11 @@
           <section class="step" data-state="5" data-label="Draft first" aria-labelledby="scene-5-title">
             <div class="step-card">
               <span class="scene-number">05 - Draft first</span>
-              <h2 id="scene-5-title">Give the designer a selection to challenge.</h2>
-              <p>The skill writes a complete first draft instead of returning a template. It recommends
-                the objective, personas, scenarios, and principles the current record supports, then
-                asks one decision at a time. The designer reacts to a selection rather than doing the
-                sorting alone.</p>
+              <h2 id="scene-5-title">Give the operator a selection to challenge.</h2>
+              <p>The skill writes a provisional draft instead of returning a template. That draft makes
+                the research request specific. After previous research returns, the skill prefers
+                existing personas, explains any necessary proposed variant, and asks one remaining
+                decision at a time.</p>
             </div>
           </section>
 
@@ -938,12 +939,12 @@
 
           <section class="step" data-state="7" data-label="One prompt" aria-labelledby="scene-7-title">
             <div class="step-card">
-              <span class="scene-number">07 - One prompt</span>
-              <h2 id="scene-7-title">Research only the gaps that can change the brief.</h2>
-              <p>Not every gap earns more research. The skill includes a question only when previous
-                internal research could answer it and the result could change one of the four fields.
-                All qualifying gaps become one Product Research Analyst prompt, with the source and
-                locator required for every answer.</p>
+              <span class="scene-number">07 - One required prompt</span>
+              <h2 id="scene-7-title">Every pass retrieves previous research.</h2>
+              <p>One Product Research Analyst prompt asks for evidence about the business problem,
+                existing persona fit and shortcomings, observed user needs, and recurring trade-offs.
+                Every answer needs an internal source and locator; <code>No evidence found</code>
+                remains a valid result.</p>
             </div>
           </section>
 
@@ -951,7 +952,7 @@
             <div class="step-card">
               <span class="scene-number">08 - Human handoff</span>
               <h2 id="scene-8-title">The human carries the prompt, and the skill waits.</h2>
-              <p>The skill never calls the analyst. The designer copies the prompt, pastes the cited
+              <p>The skill never calls the analyst. The operator copies the prompt, pastes the cited
                 response back, and the skill waits in between. <code>No evidence found</code> is a
                 useful answer; an unsourced summary remains an assumption.</p>
             </div>
@@ -984,15 +985,17 @@
             <h3 id="final-title">The file read at the meeting</h3>
             <div class="final-brief">
               <h4>Project Objective</h4>
-              <p>Design a guided off-cycle correction flow that helps payroll specialists resolve a
-                retroactive employee change before corrected payroll is submitted.</p>
+              <p>Retroactive employee changes create correction risk after payroll close. The business
+                needs corrections completed before submission without losing confidence in the
+                result.</p>
               <h4>Key Persona</h4>
               <p>A multi-state payroll specialist responsible for final validation and audit response.</p>
               <h4>Key Scenarios</h4>
               <ol>
-                <li>A retroactive termination arrives after payroll close.</li>
-                <li>A corrected tax setup changes the recalculation.</li>
-                <li>An approver asks why a prior result changed.</li>
+                <li>A payroll specialist needs to understand what changed after a retroactive
+                  termination so they can submit a defensible correction.</li>
+                <li>An approver needs to trace why a recalculation changed so they can approve it
+                  confidently.</li>
               </ol>
               <h4>Key Principle</h4>
               <p><strong>Audit trail over invisible automation.</strong> When speed and explainability
@@ -1014,22 +1017,21 @@
       </section>
 
       <section class="closing" aria-labelledby="closing-title">
-        <p class="eyebrow">Two different starts</p>
-        <h2 id="closing-title">The short brief sits beside problem framing, not inside its chain.</h2>
-        <p><code>creative-brief</code> aligns a design round that may already name what is being
-          designed. <code>problem-framing</code> establishes an evidence-backed, solution-open problem
-          and hands that problem to later skills. Choosing the smaller artifact is useful only when the
-          smaller decision is the one the team needs.</p>
+        <p class="eyebrow">Independent by design</p>
+        <h2 id="closing-title">The skill owns one alignment artifact and its evidence.</h2>
+        <p><code>creative-brief</code> begins with the operator's current account, tests it against
+          previous internal research, and ends with a confirmed short brief plus its evidence
+          companion. It requires no upstream document and implies no downstream workflow.</p>
         <div class="compare">
           <article>
-            <h3>creative-brief</h3>
-            <p>Objective, selected personas, scenarios, and principles. Two files. Read aloud and
-              reviewed as the design round changes.</p>
+            <h3>It begins with</h3>
+            <p>The business problem and outcome, the operator's current view, available project
+              context, and a required previous-research prompt.</p>
           </article>
           <article>
-            <h3>problem-framing</h3>
-            <p>User, tension, evidence, alternatives, boundaries, and risks. One problem north star
-              that feeds <code>shaping</code> and <code>proposal</code>.</p>
+            <h3>It ends with</h3>
+            <p>Research-backed personas or explained variants, user needs, decision principles, and
+              two synchronized files ready for the next design discussion.</p>
           </article>
         </div>
       </section>

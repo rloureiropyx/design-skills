@@ -37,37 +37,54 @@ remembers as research.
 
 ## How a create pass works
 
-The skill reads the project before asking anything. It looks for existing briefs, research, personas,
-journeys, principles, decisions, and enterprise constraints. If the accessible context does not say
-whether previous research exists elsewhere, it asks once.
+The skill always begins by asking the operator to describe the project in their own words: what is
+happening, why the business cares, who is affected, and what the design work needs to clarify. It
+records that account without treating it as research evidence.
 
-Then it drafts the four fields itself. The designer reacts to something concrete instead of filling
-an empty template. Questions are asked one at a time, with a recommended answer and the decision that
-answer changes.
+It then reads the available project context and drafts the four fields. The Project Objective centers
+the business problem, intended outcome, and urgency. Personas begin with the personas or segments
+already available in research. Key Scenarios are concise user needs: who needs what, in which context,
+and why the outcome matters.
+
+The provisional draft makes the mandatory Product Research Analyst prompt specific. Once previous
+research returns, the operator reacts to concrete selections rather than filling an empty template.
+Remaining decisions are asked one at a time, with a recommendation and the decision that answer
+changes.
 
 The short form is a selection:
 
 - not every persona, only the one or two that affect this design round;
-- not every workflow, only the one to three scenarios being designed now;
+- not every workflow, only the one to three user needs that matter now;
 - not every design value, only the one or two principles that settle a likely trade-off.
 
 Everything considered but not selected stays in the evidence companion.
 
 ## The Product Research Analyst round-trip
 
-The skill does not call Product Research Analyst. It identifies the gaps that could change one of the
-four fields, combines them into one prompt, saves that prompt in the evidence companion, and waits.
+Every create and review pass generates a Product Research Analyst prompt after the operator's account
+and accessible context have been inspected. The skill does not call the analyst. It saves the prompt
+in the evidence companion and waits.
 
-The designer copies the prompt to the analyst and pastes the response back. The prompt searches
-internal previous research only and asks for a source, date, relevant participant or segment, and an
-exact locator for every finding. `No evidence found` is a valid answer.
+The operator copies the prompt to the analyst and pastes the response back. The prompt searches
+internal previous research for evidence about the business problem, existing persona fit, observed
+user needs, and recurring trade-offs. It asks for a source, date, relevant participant or segment,
+and exact locator for every finding. `No evidence found` is a valid answer.
 
 When the response returns, the skill maps each finding to the question it answers. A confident
-summary without traceable internal evidence remains an assumption. Confirmed fields that the findings
-do not affect are not reopened.
+summary without traceable internal evidence remains an assumption.
 
 This is evidence retrieval, not a research plan. The analyst is not asked to recruit participants,
-choose a method, or conduct a new study.
+choose a method, conduct a new study, select the final persona, or create a persona variant.
+
+## Persona variants
+
+Existing researched personas are the starting point. The evidence companion records how each persona
+fits the project and where it falls short.
+
+If existing personas are absent, too broad, stale, or miss a material role or context, the skill may
+create the minimum necessary proposed variant. The variant names the persona or researched segment it
+extends, the exact shortcoming it addresses, which traits are supported, which are assumptions, and
+what future evidence would validate or retire it. It does not invent biography or decorative detail.
 
 ## Review mode
 
@@ -99,35 +116,26 @@ without being read aloud at every design review.
 
 ## What it costs
 
-A create pass takes one focused conversation plus whatever time is needed for the optional research
-copy/paste round-trip. Review mode should take a few minutes when nothing changed.
+A create pass takes one focused conversation plus the mandatory research copy/paste round-trip.
+Review mode repeats that retrieval so the brief is tested against the current internal record.
 
 The method costs more than writing four plausible paragraphs because it keeps source quality and
-selection visible. It costs less than full problem framing because it does not compare causal frames,
-establish a solution-open problem, or prepare the existing delivery chain.
+selection visible.
 
 ## Who it is not for
 
-- Deeply deciding which problem is worth solving. Use [`problem-framing`](../problem-framing/).
 - Conducting research or writing a research plan. This skill searches previous internal research for
-  named gaps.
+  project-relevant evidence.
 - A PRD, requirements list, roadmap, solution specification, or implementation plan.
-- Comparing solution mechanisms. Use [`shaping`](../shaping/).
-- Writing the document a decision-maker approves or declines. Use [`proposal`](../proposal/).
+- Choosing a solution mechanism or authorizing delivery.
 - A general meeting agenda. The four fields align a design discussion; they do not organize every
   project meeting.
 
-## Where it sits
+## Independent by design
 
-`creative-brief` is listed beside `problem-framing` because both can start design work, but they do
-different jobs.
-
-| `creative-brief` | `problem-framing` |
-| --- | --- |
-| Aligns a design meeting around a selected objective, personas, scenarios, and principles | Establishes an evidence-backed, bounded problem |
-| May name what the team intends to design | Keeps the frame solution-open |
-| Writes `CREATIVE_BRIEF.md` and its evidence companion | Writes `FRAMED_PROBLEM.md` |
-| Remains isolated | Feeds `shaping` and `proposal` |
+`creative-brief` creates and maintains its own two-file artifact. It can use any project context the
+operator provides, but no upstream document is required and no downstream workflow is implied. Its
+job ends when the short brief and evidence companion are current, traceable, and confirmed.
 
 - Skill: [`skills/process/creative-brief/SKILL.md`](../../skills/process/creative-brief/SKILL.md)
 - Blueprint: [`blueprint.md`](blueprint.md)

@@ -10,20 +10,19 @@ flowchart TD
   ASK[Creative brief request] --> MODE{Current brief?}
   MODE -->|No| CREATE[Create mode]
   MODE -->|Yes| REVIEW[Review mode]
-  CREATE --> READ[1. Read before asking]
-  READ --> DRAFT[2. Draft four fields]
-  DRAFT --> GRILL[3. Resolve decisions]
-  GRILL --> GATE{4. Decision-changing research gap?}
-  GATE -->|No| CAP[6. Enforce short form]
-  GATE -->|Yes| PROMPT[Write one analyst prompt]
+  CREATE --> ASK[1. Ask operator about project]
+  ASK --> READ[2. Inspect project context]
+  READ --> DRAFT[3. Draft provisional fields]
+  DRAFT --> PROMPT[4. Always write one analyst prompt]
   PROMPT --> WAIT[5. Human copy/paste pause]
   WAIT --> RETURN[Map returned findings]
-  RETURN --> CAP
-  CAP --> CONFIRM[7. Read aloud and confirm]
+  RETURN --> PERSONA[6. Select personas or variants]
+  PERSONA --> CAP[7. Resolve decisions and enforce caps]
+  CAP --> CONFIRM[8. Read aloud and confirm]
   CONFIRM --> FILES[(CREATIVE_BRIEF.md<br/>CREATIVE_BRIEF_EVIDENCE.md)]
   REVIEW --> TEST[Test four current fields]
   TEST -->|No material change| RECORD[Record review, keep version]
-  TEST -->|Field changed| GATE
+  TEST --> PROMPT
   RECORD --> FILES
 ```
 
@@ -31,21 +30,22 @@ flowchart TD
 
 | Step | Input | Question | Output | Done when | Reference |
 | --- | --- | --- | --- | --- | --- |
-| 1. Read before asking | Project files, internal research, prior decisions | What is already known or decided? | Source register, candidate fields, enterprise boundaries | Every accessible source that could change a field was read; claims have a source or evidence state | - |
-| 2. Draft four fields | Current context | What should the team react to? | Complete provisional short brief | All four fields exist and every item maps to the companion | Templates |
-| 3. Grill decisions | Draft and candidate sets | Which objective, personas, scenarios, and principles belong now? | Selected fields, assumptions, unknowns | Every currently answerable decision is settled or attached to a named gap | - |
-| 4. Gate research | Unsupported and contradictory candidates | Could prior internal research answer this, and would it change the brief? | Dispositions or one consolidated prompt | Every qualifying gap is in the prompt; all others have a disposition | `research-roundtrip.md` |
-| 5. Pause and resume | Analyst response pasted by the user | What does traceable internal evidence support or challenge? | Mapped findings and field revisions | Every finding has a question ID, source, locator, and effect | `research-roundtrip.md` |
-| 6. Enforce short form | Revised draft | Can this be read in about two minutes? | Four capped fields; overflow in companion | Every cap passes and there is no fifth section | Templates |
-| 7. Confirm and save | Short brief and strongest limitation | Does this describe the current design work? | Matching current files | The user confirmed it or both files are clearly marked draft | Templates |
+| 1. Ask operator | Operator's account | What is happening, why does the business care, who is affected, and what needs clarification? | Classified project account | Everything the operator can answer or leaves uncertain is recorded | - |
+| 2. Inspect context | Project files and available research | What does the accessible record support or challenge? | Source register, candidates, boundaries | Every relevant source was read; claims have a source or evidence state | - |
+| 3. Draft provisional fields | Operator account and context | What should the research retrieval test? | Complete provisional brief | All four fields exist and every item maps to the companion | Templates |
+| 4. Retrieve previous research | Provisional brief and gaps | What does prior internal evidence say about the problem, personas, needs, and trade-offs? | One consolidated prompt | The project-specific prompt covers all four fields and requires provenance | `research-roundtrip.md` |
+| 5. Pause and resume | Analyst response pasted by the operator | What does traceable internal evidence support or challenge? | Mapped findings and candidate revisions | Every finding has a question ID, source, locator, and effect | `research-roundtrip.md` |
+| 6. Select personas | Existing personas and research segments | Do existing personas fit, or is a proposed variant necessary? | Selected personas or documented variants | Every variant names its parent, shortcoming, evidence, assumptions, and validation need | - |
+| 7. Resolve and cap | Revised candidate sets | Which objective, personas, needs, and principles belong now? | Four capped fields | All field tests and hard caps pass | Templates |
+| 8. Confirm and save | Short brief and strongest limitation | Does this capture the problem, people, needs, and principles? | Matching current files | The operator confirmed it or both files are clearly marked draft | Templates |
 
 ## The four-field contract
 
 | Field | Minimum | Maximum | Selection test |
 | --- | --- | --- | --- |
-| Project Objective | One objective, two sentences | One objective, three sentences | Names the part of the project being designed now |
+| Project Objective | One objective, two sentences | One objective, three sentences | Centers the business problem, intended outcome, and why now |
 | Key Personas | One persona | Two personas | A different choice would change a design decision |
-| Key Scenarios | One scenario | Three scenarios | Names a trigger, goal, and context |
+| Key Scenarios | One user need | Three user needs | Names the person, goal, context, and consequence |
 | Key Principles | One principle | Two principles | Resolves a trade-off likely in this design round |
 
 These are hard caps. More content goes to the evidence companion. Combining several personas or
@@ -69,10 +69,10 @@ No evidence tables, constraints section, requirements, risks, research findings,
 
 The extended agent context:
 
-- orientation for an agent joining the project;
+- orientation and the operator's account of the project;
 - context inspected and source register;
 - objective context;
-- complete persona, scenario, and principle candidate sets;
+- persona fit, proposed variants, user-need candidates, and principle candidates;
 - enterprise boundaries;
 - assumptions and unknowns;
 - exact Product Research Analyst prompt;
@@ -91,8 +91,8 @@ Candidate personas and scenarios use four states:
 | --- | --- | --- |
 | `supported` | Traceable internal evidence directly supports it | May be selected |
 | `assumption` | A plausible answer has a stated basis but insufficient proof | May be selected only with the limitation visible in the companion |
-| `unknown` | The available record cannot answer it | Research gate or explicit unresolved gap |
-| `contradicted` | Current evidence materially conflicts with it | Do not select without an explicit user decision and recorded reason |
+| `unknown` | The available record cannot answer it | Preserve as an explicit unresolved gap after the analyst round-trip |
+| `contradicted` | Current evidence materially conflicts with it | Do not select without an explicit operator decision and recorded reason |
 
 Principles are different. They are usually commitments or preferences rather than facts. The
 companion records the owner, basis, and trade-off instead of pretending research proves a value
@@ -100,14 +100,15 @@ choice.
 
 ## Product Research Analyst handoff
 
-The skill writes one prompt after the initial pass. It does not invoke the analyst.
+The skill writes one prompt during every create and review pass. It does not invoke the analyst.
 
 ```mermaid
 sequenceDiagram
   participant S as creative-brief
   participant H as Human
   participant A as Product Research Analyst
-  S->>S: Consolidate decision-changing gaps
+  S->>H: Ask for the current project account
+  S->>S: Inspect context and draft provisional fields
   S->>H: Present exact internal-research prompt
   H->>A: Copy prompt
   A->>H: Return cited findings or no evidence found
@@ -116,15 +117,12 @@ sequenceDiagram
   S->>H: Recommend only affected field revisions
 ```
 
-Each question names:
+The prompt always covers the business problem and outcome, existing persona fit and shortcomings,
+observed user needs, recurring trade-offs, and research limitations. Project-specific questions name
+the current assumption, affected field, and required evidence.
 
-- the current assumption;
-- the brief decision affected;
-- the finding that would change the brief; and
-- the evidence and locator required.
-
-The analyst searches internal previous research only. It does not choose the final brief content and
-does not recommend a solution.
+The analyst searches internal previous research only. It does not choose final content, create persona
+variants, or recommend a solution.
 
 ## Review mode
 
@@ -149,18 +147,12 @@ copies.
 
 ## Where it stops
 
-| Neighbor | Boundary |
-| --- | --- |
-| `problem-framing` | Establishes which problem is worth solving and writes `FRAMED_PROBLEM.md`. `creative-brief` may start from a selected design objective and does not feed the main chain |
-| Research | The skill retrieves previous internal evidence through a human-run prompt. It does not plan or conduct a study |
-| `shaping` | Compares solution directions against a frame. This skill selects no mechanism beyond what the existing Project Objective already names |
-| `proposal` | Writes the document a decision-maker approves or declines. A creative brief aligns a design meeting |
-| PRD or specification | Requirements, acceptance criteria, states, implementation, and delivery planning stay out of both creative-brief files |
+The skill retrieves previous internal evidence through a human-run prompt; it does not plan or conduct
+a study. Requirements, acceptance criteria, solution selection, implementation, delivery planning,
+and authorization stay out of both creative-brief files.
 
 ## Cost
 
-A create pass is one focused interview plus an optional analyst round-trip. The short brief is cheap to
-review because the evidence work stays in its companion. If the team needs causal comparison,
-solution-open framing, or a downstream delivery contract, the smaller artifact is the wrong one and
-`problem-framing` should run instead.
-
+A create pass is one focused interview plus a mandatory analyst round-trip. Review repeats the
+retrieval so the brief is tested against current previous research. The short brief remains cheap to
+read because the evidence work stays in its companion.
