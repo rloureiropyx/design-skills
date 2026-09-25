@@ -84,6 +84,9 @@ destroys the only thing the colour encodes.
 `tldraw-skill` has a fixed constrained palette and does not read this file. That is a gap, not a
 principle, and worth revisiting.
 
+`concept-animation` reads the palette roles only. Its grid, frame and type scale belong to the
+technical-drawing idiom and stay.
+
 And the largest exclusion: **this is not the product's design system.** The interface being explained
 has one, with owners and review. This file is the surface of the *explanation*. Confusing the two is
 the same category of error as applying a personal writing profile to an error message.

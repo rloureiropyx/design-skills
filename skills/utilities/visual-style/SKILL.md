@@ -47,6 +47,9 @@ what a slide claims.
 
 `tldraw-skill` has a fixed constrained palette and does not read this file yet.
 
+`concept-animation` maps the palette roles onto its canvas theme and keeps its own grid, frame and
+type scale, which are part of the technical-drawing idiom.
+
 ## Accessibility floors are not stylable
 
 The renderer's accessibility contract out-ranks every token in this document, always, and the profile
