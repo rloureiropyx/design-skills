@@ -1,0 +1,15 @@
+{
+  "name": "concept-deck-tools",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only tools for the animated deck: beat snapshots, single frames, smoke test, contrast check, optional MP4 export.",
+  "scripts": {
+    "smoke": "node smoke.mjs",
+    "snapshots": "node snapshots.mjs",
+    "contrast": "node contrast.mjs",
+    "export": "node export.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.55.0"
+  }
+}
