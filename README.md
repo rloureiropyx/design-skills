@@ -6,7 +6,7 @@ Most of them follow one short recipe:
 
 **Work out what the problem actually is → try two or three directions and pick one → write it up so people can decide.**
 
-That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. A fourth, `PITCH.md`, takes a decision that has already been made and works out how to explain it to everyone who was not in the room. Three renderers draw or publish the result, and three utilities the others call so what gets written sounds like you rather than like a model, and looks like one coherent thing rather than whatever the renderer felt like that day.
+That is it. Three documents — `FRAMED_PROBLEM.md`, `DIRECTIONS.md`, `PROPOSAL.md` — each one written by a skill that reads the one before it. A fourth, `PITCH.md`, takes a decision that has already been made and works out how to explain it to everyone who was not in the room. Four renderers draw, animate or publish the result, and three utilities the others call so what gets written sounds like you rather than like a model, and looks like one coherent thing rather than whatever the renderer felt like that day.
 
 The recipe is not new and it is not mine. It is mostly Ryan Singer's, with the bits added that enterprise B2B work needs and a small-team method does not cover: roles, permissions, audit, integrations, data volume, accessibility.
 
@@ -211,6 +211,17 @@ Draws a decided artifact — flow, journey map, service blueprint, concept model
 - Skill: [`skills/renderers/tldraw-skill/SKILL.md`](skills/renderers/tldraw-skill/SKILL.md)
 - Explainer: [`draw-what-was-decided.html`](docs/tldraw-skill/draw-what-was-decided.html) · [script](docs/tldraw-skill/draw-what-was-decided.script.md)
 
+#### Concept Animation
+
+Builds a click-driven animated explainer for a concept that has already been worked out: a technical drawing on a canvas that gains one idea per click. It pins the source, writes a beat table — one idea per row, in causal order, each with a caption that doubles as the screen-reader text — gets it approved, then scaffolds a deck from a bundled zero-dependency engine and lays out each beat's end state before adding motion.
+
+Two drawing rules do most of the work: draw each concept as the object it is (a page, a folder, a chat window, a stamp), and put actions on the connectors as verbs, with the tool that performs them mid-wire. It is not done until the middle and end frame of every beat have been viewed and the bundled smoke test passes. Decks open from `file://`, with static and reduced-motion modes and a notes panel listing every beat. MP4 export is in the tools but optional.
+
+> **Local tooling.** The deck itself has no dependencies. The verify tools need Node and Google Chrome (driven through `playwright-core`); `ffmpeg` only for contact sheets and video.
+
+- Skill: [`skills/renderers/concept-animation/SKILL.md`](skills/renderers/concept-animation/SKILL.md)
+- Explainer: [`one-idea-per-click.html`](docs/concept-animation/one-idea-per-click.html) · [beat table](docs/concept-animation/one-idea-per-click.script.md) · [notes](docs/concept-animation/README.md). Built with the skill's own engine.
+
 ### Utilities — serve whoever is drafting
 
 These three own neither a decision nor an artifact. They are called by the skills that write prose someone will read and by the renderers that put it on a screen, and they hold the two profiles the rest of the library reads.
@@ -308,6 +319,8 @@ The cleanest discriminator is **latitude**. A proposal, given a frame and a chos
 The situational version says the same thing: a proposal has **one reader and one decision**, and is deliberately un-sold — written to be declined. A pitch has **many readers and no decision left to make**, and is written to be understood and remembered. Each names the other; watch for `pitch` stealing proposal prompts.
 
 `scrollytelling` and `slides` both render a `PITCH.md` and both answer "make me something to show people." Scrolling has to be doing work for the piece, or it is decoration with an accessibility cost; if someone is standing up in a room, it is a deck. Neither decides what the thing says.
+
+`concept-animation` answers "animate this" and "explain how it works", which also reaches `scrollytelling`, `slides` and `diagrams`. A click-driven canvas deck with one idea per click is this skill; scrolling is `scrollytelling`, Figma is `slides`, a picture that does not move is `diagrams`. Motion inside a product interface belongs to a UI animation skill outside this plugin, and the description says so.
 
 `breadboarding`, `wireframes`, and `diagrams` are the third sharpest, because all three answer "draw me the thing." A breadboard is places and affordances in words, a wireframe is one screen, a diagram is a relationship between things — and each says so in the other two's terms.
 
