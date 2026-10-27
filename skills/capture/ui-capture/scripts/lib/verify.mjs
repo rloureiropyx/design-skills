@@ -63,7 +63,8 @@ export async function verifyRun(runDir, { strict = false } = {}) {
     try {
       const flow = JSON.parse(await readFile(path.join(runDir, "flow.yaml"), "utf8"));
       for (const edge of map.edges.filter((item) => item.locator?.role && item.locator?.name)) {
-        if (!(flow.steps || []).some((step) => step.edge === edge.id && step.locator?.role && step.locator?.name)) {
+        const steps = flow.branches ? flow.branches.flatMap((branch) => branch.steps) : (flow.steps || []);
+        if (!steps.some((step) => step.edge === edge.id && step.locator?.role && step.locator?.name)) {
           failures.push(`Replay path is missing semantic step for edge ${edge.id}.`);
         }
       }
@@ -71,6 +72,26 @@ export async function verifyRun(runDir, { strict = false } = {}) {
       failures.push(`flow.yaml is missing or invalid: ${error.message}`);
     }
   }
+  // Opinionated naming: every screen needs a human name, and names must tell screens apart.
+  const generic = /^(before interaction|as found|unassigned|start page|screen|page|state)$/i;
+  const titles = new Map();
+  for (const node of map.nodes || []) {
+    if (!node.title || generic.test(node.title) || /^https?:\/\//.test(node.title) || (node.page_title && node.title === node.page_title && !node.named)) {
+      warnings.push(`Screen ${node.id} has no human name ("${node.title}"). Run label --node ${node.id} --title "<Screen> · <state>".`);
+    }
+    titles.set(node.title, (titles.get(node.title) || 0) + 1);
+  }
+  const autoNamed = (map.nodes || []).filter((node) => node.auto_named);
+  if (autoNamed.length) warnings.push(`${autoNamed.length} screens still have automatic names (e.g. "${autoNamed[0].title}"). Rename them with label --node ID --title "<Screen> · <state>".`);
+  for (const [title, count] of titles) if (count > 1) warnings.push(`${count} screens share the name "${title}"; add the state that tells them apart.`);
+  try {
+    const flow = JSON.parse(await readFile(path.join(runDir, "flow.yaml"), "utf8"));
+    for (const branch of flow.branches || []) {
+      if (branch.kind === "auto" && /^Explore: /.test(branch.name)) warnings.push(`Branch ${branch.id} still has an automatic name ("${branch.name.slice(0, 60)}"). Rename it with label --branch ${branch.id} --name "<Verb> <object>".`);
+      if (branch.kind !== "auto" && branch.steps?.length && !Object.keys(branch.videos || {}).length) warnings.push(`Branch "${branch.name}" has no video yet. Run replay.`);
+      for (const [width, reason] of Object.entries(branch.breaks || {})) warnings.push(`Branch "${branch.name}" at ${width}px: ${reason}`);
+    }
+  } catch { /* flow.yaml is optional for area crawls */ }
   if (strict && warnings.length) failures.push(...warnings);
   if (!(await accessible(path.join(runDir, "map.mmd")))) warnings.push("map.mmd has not been generated.");
   if (!(await accessible(path.join(runDir, "viewer.html")))) warnings.push("viewer.html has not been generated.");

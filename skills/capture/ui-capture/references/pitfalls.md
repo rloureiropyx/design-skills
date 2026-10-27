@@ -14,3 +14,8 @@
 - Buttons can open another host in a new tab (report viewers, PDF downloads). The step stops and captures nothing until the brief is re-confirmed with that host in scope and on the allowlist.
 - Replay video records the original tab only. A step that opens a new tab shows the click but not the result; the clean still from exploration is the evidence for that state.
 - Query parameters that look like tokens, keys, signatures or sessions are stored as `REDACTED` in `map.json`, but screenshots and traces can still show them.
+- agent-browser's `find role … --name` matches substrings by default ("Payroll Journal" also hits "Payroll Journal Run on …"). The CLI always passes `--exact`.
+- Reopening a session immediately after `close` can race agent-browser's daemon (EOF). The CLI retries the launch with a short pause.
+- Saved logins expire. If the start page lands on the sign-in host, rerun `auth`; never let a sign-in page be captured under the start page's name.
+- Test environments fail intermittently ("this info didn't load"). Save the screen with `quick --state "<Screen> · Load error (intermittent)"`, wait a few minutes, and retry the fork. Do not report it as a finding.
+- Each replay pass is a fresh login session; shared test accounts may show "N other users are also logged in" toasts in screenshots and video.

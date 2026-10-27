@@ -21,24 +21,31 @@ Produce a Capture Brief, Expected States when supplied, a Flow Map, a manifest, 
 
 ## Run the loop
 
-1. **Check the toolchain** — run `node <skill-path>/scripts/ui-capture.mjs doctor`. Stop unless Node, the exact `agent-browser` version and `ffmpeg` pass.
-2. **Confirm scope before opening the app** — inspect project stories, acceptance criteria, source, Figma context and `.ui-capture/` first. Prepare the Capture Brief, then have the user confirm it. Read `references/capture-brief.md` before this step.
-3. **Choose safe access** — full exploration requires an exact host entry in the consuming project's `.ui-capture/config`. Without one, allow navigation and reversible open/cancel actions only. Read `references/pitfalls.md` before interacting.
-4. **Capture states** — `area` uses a deterministic breadth-first crawl within URL scope and node budget; `flow` selects from numbered, pre-filtered semantic candidates; `quick` saves an Orphan Node. The model labels evidence only, never writes selectors. Read `references/exploration.md` and `references/flow-map-format.md`.
-5. **Add requested evidence** — default to one desktop viewport and as-found state. Take clean stills outside recording; crop changed regions, transient UI and user targets. Read `references/presets.md` only when variants or simulated conditions are requested.
-6. **Replay and render** — replay `flow.yaml` with semantic locators; stop and flag an ambiguous locator, do not re-explore. Read `references/video.md` before recording. Generate the local viewer and run `verify`.
-7. **Publish only if asked** — FigJam publishing is optional. Read `references/figjam-publish.md` and follow its steps; publish human labels, never URLs. Warn that v1 does not mask PII before any sharing.
-8. **Hand off** — report reached and unreached Expected States, the node budget and any remaining queue, simulated states, and blocked replay steps.
+1. **Check the toolchain** — `node <skill-path>/scripts/ui-capture.mjs doctor`. Stop unless Node, the exact `agent-browser` version and `ffmpeg` pass.
+2. **Confirm the brief before opening the app** — read `references/capture-brief.md` and `references/naming.md`. Start every flow at sign-in: `--signin-url` plus `--url` for the first signed-in page and `--start-name`. Name the goal and the main path. Have the user confirm, then `brief --confirm`.
+3. **Choose safe access** — full exploration needs an exact host in `.ui-capture/config`; otherwise only navigation and open/cancel. Read `references/pitfalls.md`.
+4. **Capture the main path** — `explore step`, then `explore step --pick N --name "<Screen> · <state>"`. Every screen gets a human name. Read `references/exploration.md`.
+5. **Explore the branches** — `explore status` lists unexplored actions ranked by closeness to the goal. For each alternative that serves the goal (create, manage, filter, details…), `explore branch --at NODE --name "<Verb> <object>"` and continue with `explore step`. Fill fields with `--fill`; tag created data (`UXA-<date> <purpose>`); never confirm destructive actions. Stop at the node budget and report what is left.
+6. **Replay at every viewport** — `replay` records one cursor video per branch at 1440, 1024, 768 and 360 and stills at 320. Breaks at a width are evidence; never work around them. Read `references/video.md`.
+7. **Render and verify** — `render` builds `viewer.html` (Pele diagram, Copy flow map, viewport switcher, a section per branch with named screens and its video at the end). `verify` must pass; fix every naming warning.
+8. **Publish only if asked** — FigJam: follow `references/figjam-publish.md`, human labels only. Warn that v1 does not mask PII.
+9. **Hand off** — list branches, screens per branch, breaks per viewport, data created (with tags), unreached Expected States and unexplored actions.
 
-The CLI returns one compact JSON object per command: `{ok, progress, node, candidates?, next}`. Never infer success from a command starting; confirm it with `verify`.
+The CLI returns one compact JSON object per command: `{ok, progress, node, candidates?, next}`. Follow `next`. Never infer success from a command starting; confirm with `verify`.
 
 ## Output
 
-Save each run in the consuming project at `captures/<flow>/<YYYY-MM-DD-HHmm>/` with a `latest` link. The required outputs are `capture-brief.json`, `map.json`, `map.mmd`, `manifest` data in the map, accessibility snapshots, evidence assets and `viewer.html`; flow runs also save replayable `flow.yaml`. The Flow Map JSON is the source of truth. No run output or authentication state belongs in the installed plugin directory.
+Each run lives in the consuming project at `captures/<flow>/<YYYY-MM-DD-HHmm>/` with a `latest` link: `capture-brief.json`, `map.json` (canonical), `map.mmd`, `flow.yaml` (branches), `assets/` (screens named `NN-<screen>.png`, other widths under `assets/w<width>/`), `video/w<width>/` and `viewer.html`. No run output or login state belongs in the installed plugin directory.
 
 ## Anti-patterns
 
 - Exploring before the user confirms the Capture Brief.
+- Starting a flow mid-app instead of at sign-in, or recording the human login.
+- Leaving screens with generic names ("Before interaction", page titles, client numbers) or naming branches after the control instead of the intent.
+- Mapping only the main path when the screen offers other ways to reach or extend the goal.
+- Clicking run/submit/create with an empty name field; creating untagged data on a shared account.
+- Repeating data-creating steps in replay across viewports.
+- Treating a replay break at a narrow viewport as a bug to work around instead of evidence.
 - Treating a node budget as proof of coverage or silently dropping the remaining queue.
 - Letting the model write CSS selectors, invent states, or claim an Expected State was reached without evidence.
 - Interacting with a non-allowlisted host beyond safe navigation and reversible open/cancel controls.
@@ -52,4 +59,4 @@ Save each run in the consuming project at `captures/<flow>/<YYYY-MM-DD-HHmm>/` w
 
 ## Sources
 
-`vercel-labs/agent-browser` provides browser sessions, semantic locators, state, cursor recording and diffs. `ref-skills/ui-sweep` informs the inventory and manifest fields. Figma's video-interaction-mapper informs normalized annotation coordinates and storyboard fallback. This skill adds the Capture Brief, Flow Map and deterministic low-cost orchestration.
+`vercel-labs/agent-browser` provides browser sessions, semantic locators, state, cursor recording and diffs. `ref-skills/ui-sweep` informs the inventory and manifest fields. Figma's video-interaction-mapper informs normalized annotation coordinates and storyboard fallback. Pele (pele.run, Obsidian) renders the Flow Map in the viewer. The viewport set follows uxagent ADR 0006. This skill adds the Capture Brief, branching Flow Map and deterministic low-cost orchestration.

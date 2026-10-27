@@ -102,15 +102,16 @@ export function addVariant(node, { preset, viewport, state, reachability = "live
 }
 
 export function emitMermaid(map) {
-  const lines = ["flowchart TD"];
+  const clean = (value) => String(value ?? "").replace(/["\n\r]/g, "'").replace(/[<>]/g, "");
+  const lines = ["flowchart LR"];
   for (const node of map.nodes) {
-    const title = `${node.title || node.state || node.id}`.replace(/["\n\r]/g, "'");
-    const note = `${node.area || ""} · ${node.state || ""}`.replace(/["\n\r]/g, "'");
-    lines.push(`  ${node.id}["${title}<br/>${note}"]`);
+    const label = clean(node.title || node.state || node.id);
+    lines.push(node.kind === "signin" ? `  ${node.id}(["${label}"])` : `  ${node.id}["${label}"]`);
   }
   for (const edge of map.edges) {
     if (map.nodes.some((node) => node.id === edge.from) && map.nodes.some((node) => node.id === edge.to)) {
-      lines.push(`  ${edge.from} -->|"${String(edge.action).replace(/["\n\r]/g, "'")}"| ${edge.to}`);
+      const arrow = edge.reachability === "manual" ? "-.->" : "-->";
+      lines.push(`  ${edge.from} ${arrow}|"${clean(edge.action)}"| ${edge.to}`);
     }
   }
   return `${lines.join("\n")}\n`;
@@ -145,7 +146,10 @@ export async function captureCurrentNode({ runDir, session, map, brief, label, s
   const variant = addVariant(node, { preset: brief.active_preset, viewport: brief.viewport, state: captureState, reachability });
   const assetDir = path.join(runDir, "assets");
   await mkdir(assetDir, { recursive: true });
-  const suffix = brief.active_preset ? `.${brief.active_preset}` : state && state !== "As found" ? `.${state.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}` : "";
+  // Files are named for people: discovery order plus the screen name, e.g. 03-payroll-journal-report-history.png.
+  const ordinal = String(map.nodes.indexOf(node) + 1).padStart(2, "0");
+  const slug = String(captureState || node.title || node.id).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || node.id;
+  const suffix = brief.active_preset ? `.${brief.active_preset}` : "";
   const existing = new Set([
     ...map.assets.map((asset) => asset.file),
     ...map.nodes.flatMap((item) => [item.evidence?.snapshot, ...(item.evidence?.snapshots || [])].filter(Boolean)),
@@ -160,7 +164,7 @@ export async function captureCurrentNode({ runDir, session, map, brief, label, s
     existing.add(candidate);
     return candidate;
   };
-  const snapshotFile = uniquePath(`assets/${node.id}${suffix}.a11y.txt`);
+  const snapshotFile = uniquePath(`assets/${ordinal}-${slug}${suffix}.a11y.txt`);
   await writeFile(path.join(runDir, snapshotFile), `${snapshot}\n`);
   node.evidence.snapshot = snapshotFile;
   node.evidence.snapshots ||= [];
@@ -168,7 +172,7 @@ export async function captureCurrentNode({ runDir, session, map, brief, label, s
   node.evidence.console = parseBrowserJson(agentBrowser(["console", "--json"], { session }));
   node.evidence.page_errors = parseBrowserJson(agentBrowser(["errors"], { session }));
   node.evidence.network_requests = parseBrowserJson(agentBrowser(["network", "requests"], { session }));
-  const screenshotFile = uniquePath(`assets/${node.id}${fullPage ? ".full" : ""}${suffix}.png`);
+  const screenshotFile = uniquePath(`assets/${ordinal}-${slug}${fullPage ? ".full" : ""}${suffix}.png`);
   agentBrowser(["screenshot", path.join(runDir, screenshotFile), ...(fullPage ? ["--full"] : [])], { session });
   addAsset(map, {
     file: screenshotFile,

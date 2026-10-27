@@ -1,6 +1,6 @@
 # UI Capture
 
-UI Capture records what a live web interface shows and how a person moves through it. It produces a state map, screenshots and, when requested, a cursor-visible replay video.
+UI Capture records what a live web interface shows and how a person moves through it, starting at sign-in. It produces a branching flow map, a named screenshot of every screen at each viewport, and a cursor-visible video for every branch.
 
 ## What it produces
 
@@ -9,8 +9,9 @@ Each run is saved under `captures/<flow>/<YYYY-MM-DD-HHmm>/` in the consuming pr
 - A confirmed Capture Brief with the start URL, scope, strategy, role and state budget.
 - `map.json` and generated `map.mmd`. The JSON Flow Map is canonical; its nodes are observed interface states and its edges are captured interactions.
 - Accessibility snapshots and screenshots connected to nodes or edges by a manifest.
-- A `flow.yaml` replay path when the flow strategy is used, plus optional cursor-visible video, trace and edge timestamps.
-- A self-contained local HTML viewer.
+- A `flow.yaml` with the main path and each branch, replayable from the start page.
+- Screens at 1440, 1024, 768, 360 and 320 px, and a cursor-visible video per branch at every width except 320 (stills only, for reflow).
+- A self-contained HTML viewer: the flow map rendered with Pele (with a Copy flow map button that copies the Mermaid source), a viewport switcher, and one section per branch with its named screens and its video at the end.
 
 Expected States can be seeded from acceptance criteria, a story, a design file or a user-provided list. The run marks each expected state reached, simulated or not reached; it does not invent an absent screen.
 
@@ -18,9 +19,9 @@ Expected States can be seeded from acceptance criteria, a story, a design file o
 
 The skill is a thin orchestrator for `agent-browser` 0.39.4. Run `doctor` first; it checks Node, the exact browser CLI version and `ffmpeg`. The browser CLI is the only module that talks to the external browser process. The rest of the scripts handle brief validation, identity, manifest, map rendering and verification with Node's built-ins.
 
-`area` performs a deterministic breadth-first crawl within explicit URL prefixes and a node budget. `flow` offers a numbered list of accessible controls; the model chooses a number, while the script uses its semantic role and accessible name. `quick` saves an unconnected state as an Orphan Node. The model labels evidence but never invents selectors or decides whether something was reached.
+`area` performs a deterministic breadth-first crawl within explicit URL prefixes and a node budget. `flow` offers a numbered list of accessible controls; the model chooses a number and names the screen it leads to, while the script uses the control's exact role and accessible name. After the main path, `explore status` ranks screens by unexplored actions and `explore branch` replays to a screen and forks from there, so the map covers alternatives such as creating, managing or filtering, not just the shortest path. `quick` saves an unconnected state as an Orphan Node. The model labels evidence but never invents selectors or decides whether something was reached.
 
-The workflow has a runtime cost: Node and the pinned browser tool are required for all captures, while `ffmpeg` is required for video and crop exports. FigJam publishing is optional. Its image-placement approach still needs a live verification; the local viewer remains the fallback.
+The workflow has a runtime cost: Node and the pinned browser tool are required for all captures, `ffmpeg` for video, and Pele 1.12.0 is downloaded once to `~/.cache/ui-capture/` and included in each viewer so it works offline. Replay is slow on enterprise apps: every branch is walked once per viewport in a fresh session. Steps that create data are not repeated in replay. FigJam publishing is optional and verified: the diagram plus a screenshot under each screen.
 
 ## Safety and evidence limits
 

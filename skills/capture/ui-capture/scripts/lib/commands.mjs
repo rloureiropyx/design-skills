@@ -8,28 +8,36 @@ import { addEdge, captureCurrentNode, readMap, writeMap, writeReplayFlow } from 
 import { renderRun } from "./render.mjs";
 import { ensureRunDir, isAllowlisted, loadBrief, parseArgs, readProjectConfig, resolveRun, safeName, createRun, SKILL_DIR } from "./project.mjs";
 import { verifyRun } from "./verify.mjs";
+import { publishPrep as preparePublish, publishUpload } from "./publish.mjs";
+import { nodeId } from "./identity.mjs";
 
 const HELP = `ui-capture — record live web interfaces as a Flow Map, screenshots and replayable video
 
 Usage:
   node <skill>/scripts/ui-capture.mjs doctor
-  node <skill>/scripts/ui-capture.mjs brief --url URL --strategy area|flow --goal TEXT --scope URL_PREFIX --role ROLE [--budget 40] [--must-see STATE] [--expected JSON] [--app APP]
+  node <skill>/scripts/ui-capture.mjs brief --url URL --strategy area|flow --goal TEXT --scope URL_PREFIX[,URL_PREFIX] --role ROLE [--signin-url URL] [--start-name NAME] [--main-branch NAME] [--budget 40] [--must-see STATE] [--expected JSON] [--app APP]
   node <skill>/scripts/ui-capture.mjs brief --confirm
   node <skill>/scripts/ui-capture.mjs auth APP --url URL
   node <skill>/scripts/ui-capture.mjs auth-save APP
   node <skill>/scripts/ui-capture.mjs explore crawl [--run PATH]
-  node <skill>/scripts/ui-capture.mjs explore step --pick N [--run PATH]
+  node <skill>/scripts/ui-capture.mjs explore step [--pick N --name "<Screen> · <state>"] [--allow-destructive] [--run PATH]
+  node <skill>/scripts/ui-capture.mjs explore branch --at NODE --name "<Verb> <object>" [--run PATH]
+  node <skill>/scripts/ui-capture.mjs explore status [--run PATH]
+  node <skill>/scripts/ui-capture.mjs explore deep --at NODE [--depth 3] [--per-screen 12] [--run PATH]
+  node <skill>/scripts/ui-capture.mjs explore resume --branch ID [--run PATH]
   node <skill>/scripts/ui-capture.mjs shot [--label AREA] [--state STATE] [--full] [--run PATH]
   node <skill>/scripts/ui-capture.mjs crop --ref @eN [--run PATH]
   node <skill>/scripts/ui-capture.mjs simulate --url URL --body JSON [--state STATE]
   node <skill>/scripts/ui-capture.mjs evidence axe|har|har-stop
   node <skill>/scripts/ui-capture.mjs quick [--label AREA] [--state STATE] [--run PATH]
-  node <skill>/scripts/ui-capture.mjs replay [--run PATH]
+  node <skill>/scripts/ui-capture.mjs replay [--branch ID] [--viewports 1440,1024,768,360,320] [--run PATH]
   node <skill>/scripts/ui-capture.mjs render [--run PATH]
   node <skill>/scripts/ui-capture.mjs annotate --asset FILE --x 0.5 --y 0.5 --label TEXT [--confidence 0.8]
   node <skill>/scripts/ui-capture.mjs label --node ID [--title TEXT] [--area TEXT] [--state TEXT] [--description TEXT]
   node <skill>/scripts/ui-capture.mjs label --edge ID --action TEXT
+  node <skill>/scripts/ui-capture.mjs label --branch ID --name "<Verb> <object>" [--promote]
   node <skill>/scripts/ui-capture.mjs publish-prep [--run PATH]
+  node <skill>/scripts/ui-capture.mjs publish-upload --targets FILE --urls FILE [--run PATH]
   node <skill>/scripts/ui-capture.mjs preset dark|light|viewport --run PATH
   node <skill>/scripts/ui-capture.mjs verify [--strict] [--run PATH]
 
@@ -72,6 +80,15 @@ function parseCandidates(snapshot, allowed = true) {
     const safeAction = role === "link" || role === "tab"
       || /^(open|close|cancel|back|menu|more|details|view|next|previous|continue reading)$/i.test(name);
     candidates.push({ number: candidates.length + 1, role, name, ref: match[3] ? `@${match[3]}` : null, enabled: true, safe: allowed || safeAction });
+  }
+  // Enterprise navigation often renders menu entries as plain list text instead of links or buttons.
+  // Offer them as `text` candidates (clicked by exact visible text) so the main path can use global navigation.
+  const lines = snapshot.split("\n");
+  for (let index = 0; index < lines.length - 1 && candidates.length < 70; index += 1) {
+    if (!/-\s*listitem\b/.test(lines[index])) continue;
+    const text = /^\s*-\s*StaticText\s+"([^"]{2,60})"\s*$/.exec(lines[index + 1]);
+    if (!text || candidates.some((item) => item.name === text[1].trim())) continue;
+    candidates.push({ number: candidates.length + 1, role: "text", name: text[1].trim(), ref: null, enabled: true, safe: allowed, note: "not exposed as a link or button" });
   }
   return candidates;
 }
@@ -178,7 +195,7 @@ async function briefCommand(positionals, options) {
   for (const prefix of scope) {
     let parsed;
     try { parsed = new URL(prefix); } catch { throw new Error(`Invalid URL scope prefix: ${prefix}`); }
-    if (parsed.origin !== start.origin) throw new Error("Every URL scope prefix must use the start URL's origin.");
+    if (parsed.origin !== start.origin && !(await isAllowlisted(parsed.href))) throw new Error(`Scope prefix ${prefix} uses another origin; add its exact host to .ui-capture/config first.`);
   }
   const mustSee = options["must-see"] ? (Array.isArray(options["must-see"]) ? options["must-see"] : [options["must-see"]]) : [];
   const expectedStates = options.expected ? await readExpected(options.expected) : [];
@@ -186,10 +203,13 @@ async function briefCommand(positionals, options) {
     start_url: start.href,
     strategy: options.strategy,
     goal: String(options.goal),
-    scope: { url_prefixes: scope, node_budget: Math.max(1, Math.min(200, Number(options.budget) || 40)) },
+    scope: { url_prefixes: scope, node_budget: Math.max(1, Math.min(200, Number(options.budget) || (options.strategy === "flow" ? 60 : 40))) },
     must_see: [...mustSee, ...expectedStates.map((item) => item.state)],
     expected_states: expectedStates,
     role: options.role || "Unspecified",
+    signin_url: options["signin-url"] ? new URL(options["signin-url"]).href : null,
+    start_name: options["start-name"] || null,
+    main_branch: options["main-branch"] || null,
     auth_app: options.app || null,
     viewport: { width: Number(options.width) || 1440, height: Number(options.height) || 900 },
     confirmed: false,
@@ -251,14 +271,25 @@ function settle(session, { maxMs = 60_000 } = {}) {
   return previous;
 }
 
-async function startBrowser({ brief, session }) {
+async function startBrowser({ brief, session }, viewportOverride = null, launch = {}) {
   const allowed = await isAllowlisted(brief.start_url);
   const authState = brief.auth_app ? path.join(process.cwd(), ".ui-capture", `${safeName(brief.auth_app)}.json`) : null;
   if (authState) {
     try { await readFile(authState); } catch { throw new Error(`Authentication state not found for ${brief.auth_app} at .ui-capture/. Complete auth first.`); }
   }
-  agentBrowser([...(allowed ? [] : ["--headed"]), ...(authState ? ["--state", authState] : []), "open", brief.start_url], { session });
-  const viewport = viewportFromBrief(brief);
+  // Capture browsers never save or check passwords: Chrome's leak warning blocks all page input after a demo login.
+  const chromeArgs = ["--args", "--password-store=basic,--disable-features=PasswordLeakDetection,PasswordManagerOnboarding,AutofillServerCommunication,Translate"];
+  const inputMode = launch.smooth ? ["--input-mode", "smooth"] : [];
+  const openArgs = [...(allowed ? [] : ["--headed"]), ...chromeArgs, ...inputMode, ...(authState ? ["--state", authState] : []), "open", brief.start_url];
+  // Launch options such as --state only apply to a fresh browser, and reopening right after close can race the daemon.
+  for (let attempt = 1; ; attempt += 1) {
+    try { agentBrowser(openArgs, { session }); break; } catch (error) {
+      if (attempt >= 3) throw error;
+      try { agentBrowser(["close"], { session }); } catch { /* not open */ }
+      spawnSync("sleep", [String(attempt * 2)]);
+    }
+  }
+  const viewport = viewportOverride || viewportFromBrief(brief);
   agentBrowser(["set", "viewport", String(viewport.width), String(viewport.height)], { session });
   settle(session);
   return allowed;
@@ -290,51 +321,655 @@ async function shotCommand(options, orphan = false) {
   await assertCurrentScope(context);
   const captured = await captureIntoMap(context, { state: options.state || "As found", area: options.label || "Unassigned", orphan, fullPage: Boolean(options.full) });
   if (orphan) captured.node.orphan = true;
+  if (options.state) nameNode(captured.node, String(options.state), options.label || areaFromName(options.state));
   await writeMap(context.runDir, context.map);
   jsonResult({ node: { id: captured.node.id, url: captured.url, orphan: captured.node.orphan }, next: "Continue exploration or run render, then verify." });
+}
+
+// ---- Flow v2: a main path plus named branches, each replayable from the start node ----
+
+const GENERIC_NAMES = /^(before interaction|as found|unassigned|start page|screen|page|state)$/i;
+const DESTRUCTIVE = /\b(delete|remove|rename|archive|deactivate|terminate|void|reverse|unenroll|discard|reset|revoke|cancel (?:payroll|run|check))\b/i;
+const MUTATING = /^(run|submit|save|create|add|send|publish|post|approve|apply|confirm|finish|done|update|import|upload)\b/i;
+const FILLABLE = new Set(["textbox", "searchbox", "combobox"]);
+// Links and tabs navigate; only controls that act (buttons, menu items, options) can create or destroy data.
+const isMutating = (item) => !["link", "tab"].includes(item.role) && MUTATING.test(item.name.replace(/^[^\p{L}\p{N}]+/u, ""));
+const isDestructive = (item) => !["link", "tab"].includes(item.role) && DESTRUCTIVE.test(item.name);
+
+// Exact accessible-name matching: agent-browser's default is substring, which hits "Payroll Journal Run on …" for "Payroll Journal".
+// Slow SPAs render controls late; wait for the target instead of failing on the first miss.
+function findWithRetry(session, args, attempts = 6) {
+  for (let attempt = 1; ; attempt += 1) {
+    try { return agentBrowser(args, { session }); } catch (error) {
+      if (attempt >= attempts || !/No element found|Names seen/i.test(error.message)) throw error;
+      // Lazy-loaded dashboards only render tiles near the viewport: scroll down, then back to the top once.
+      agentBrowser(attempt === attempts - 1 ? ["scroll", "up", "10000"] : ["scroll", "down", "800"], { session });
+      agentBrowser(["wait", "2000"], { session });
+    }
+  }
+}
+function clickExact(session, locator) {
+  if (locator.role !== "text") {
+    findWithRetry(session, ["find", "role", locator.role, "click", "--name", locator.name, "--exact"]);
+    return;
+  }
+  // Non-semantic items (e.g. <a role="listitem"> with a delegated handler): hover so the video cursor moves there,
+  // then click the nearest clickable ancestor of the element whose own text matches exactly.
+  try { findWithRetry(session, ["find", "text", locator.name, "hover", "--exact"]); } catch { /* hover is cosmetic */ }
+  const script = `(()=>{const name=${JSON.stringify(locator.name)};const hit=[...document.querySelectorAll('body *')].filter(e=>e.childElementCount<=3&&e.textContent.trim()===name&&e.getClientRects().length);if(!hit.length)return 'missing';const sel='a,button,[onclick],[ng-click],[role=button],[role=link],[role=menuitem],[role=tab],[role=listitem],[tabindex]';const real=hit.map(e=>e.closest(sel)).filter(t=>t&&/^(A|BUTTON)$/.test(t.tagName));const target=real[0]||hit[hit.length-1].closest(sel)||hit[hit.length-1];target.click();return 'clicked'})()`;
+  const result = agentBrowser(["eval", script], { session });
+  if (/missing/.test(result)) throw new Error(`No element found with the exact text "${locator.name}".`);
+}
+// Pointer clicks can be swallowed by browser UI (e.g. a password-breach bubble). Fall back to keyboard activation.
+function activateByKeyboard(session, locator) {
+  const line = agentBrowser(["snapshot"], { session }).split("\n").find((text) => text.includes(`${locator.role} "${locator.name}"`) && /ref=e\d+/.test(text));
+  if (!line) return false;
+  const ref = /ref=(e\d+)/.exec(line)[1];
+  agentBrowser(["focus", `@${ref}`], { session });
+  agentBrowser(["press", "Enter"], { session });
+  return true;
+}
+
+function clickWithFallback(context, locator, beforeId) {
+  clickExact(context.session, locator);
+  settle(context.session, { maxMs: 30_000 });
+  if (locator.role === "text") return "pointer";
+  const now = nodeId(agentBrowser(["get", "url"], { session: context.session }), jsonSnapshot(context.session));
+  if (now !== beforeId) return "pointer";
+  if (activateByKeyboard(context.session, locator)) { settle(context.session, { maxMs: 30_000 }); return "keyboard"; }
+  return "pointer";
+}
+
+function performStep(session, step) {
+  if (step.activation === "keyboard" && activateByKeyboard(session, step.locator)) return;
+  clickExact(session, step.locator);
+}
+
+function applyInputs(session, inputs = []) {
+  for (const input of inputs) findWithRetry(session, ["find", "role", input.role, "fill", input.value, "--name", input.name, "--exact"]);
+}
+
+async function loadFlow(context) {
+  const flowPath = path.join(context.runDir, "flow.yaml");
+  let flow = null;
+  try { flow = JSON.parse(await readFile(flowPath, "utf8")); } catch { /* new run */ }
+  if (flow && flow.schema_version >= 2) return flow;
+  const mainName = context.brief.main_branch || context.brief.goal;
+  const migrated = { schema_version: 2, start_node: flow?.start_node || null, signin_node: null, current_branch: "b-1", current_node: null, branches: [{ id: "b-1", name: mainName, kind: "main", parent: null, fork_node: null, steps: [] }] };
+  for (const step of flow?.steps || []) {
+    const edge = context.map.edges.find((item) => item.id === step.edge);
+    migrated.branches[0].steps.push({ ...step, from: edge?.from || null, to: edge?.to || null });
+  }
+  migrated.current_node = migrated.branches[0].steps.at(-1)?.to || migrated.start_node;
+  return migrated;
+}
+
+const saveFlow = (context, flow) => writeReplayFlow(context.runDir, flow);
+const branchById = (flow, id) => flow.branches.find((item) => item.id === id);
+const nodeTitle = (map, id) => map.nodes.find((item) => item.id === id)?.title || id;
+
+function nameNode(node, name, area) {
+  if (!name) return;
+  if (!node.named || GENERIC_NAMES.test(node.title || "")) {
+    node.page_title ||= node.title;
+    node.title = name;
+    node.state = name;
+    node.named = true;
+  }
+  if (area && (!node.area || node.area === "Unassigned")) node.area = area;
+}
+
+function areaFromName(name) {
+  return String(name || "").split(/\s+[·|-]\s+/)[0].trim() || "Unassigned";
+}
+
+// Begin every run at sign-in (captured empty, logged out) and then the authenticated start page.
+async function beginRun(context, flow, options) {
+  const { brief, map, session } = context;
+  let signinNode = null;
+  signinNode = map.nodes.find((item) => item.kind === "signin") || null;
+  if (brief.signin_url && !signinNode) {
+    const signinSession = `${session}-signin`.slice(0, 60);
+    try {
+      agentBrowser(["open", brief.signin_url], { session: signinSession });
+      const viewport = viewportFromBrief(brief);
+      agentBrowser(["set", "viewport", String(viewport.width), String(viewport.height)], { session: signinSession });
+      settle(signinSession);
+      const captured = await captureCurrentNode({ runDir: context.runDir, session: signinSession, map, brief: { ...brief, viewport }, label: "Sign in", state: "Sign in" });
+      signinNode = captured.node;
+      signinNode.kind = "signin";
+      nameNode(signinNode, brief.signin_name || "Sign in", "Sign in");
+    } finally {
+      try { agentBrowser(["close"], { session: signinSession }); } catch { /* already closed */ }
+    }
+  }
+  await startBrowser(context);
+  const landed = agentBrowser(["get", "url"], { session });
+  const pagePath = (raw) => { const url = new URL(raw); return `${url.origin}${url.pathname}`; };
+  const onSignin = brief.signin_url && pagePath(landed) === pagePath(brief.signin_url) && pagePath(landed) !== pagePath(brief.start_url);
+  if (onSignin || !brief.scope.url_prefixes.some((prefix) => isWithinPrefix(landed, prefix))) {
+    try { agentBrowser(["close"], { session }); } catch { /* closed */ }
+    map.nodes = map.nodes.filter((item) => item.kind === "signin");
+    await writeMap(context.runDir, map);
+    throw new Error(brief.auth_app
+      ? `The saved login for ${brief.auth_app} has expired (the start page redirected to ${new URL(landed).host}). Run auth ${brief.auth_app} --url <sign-in URL>, have the human log in, run auth-save ${brief.auth_app}, then explore step again.`
+      : `The start page redirected to ${new URL(landed).host}, outside the brief's scope. Check --url, or authenticate with auth APP.`);
+  }
+  const startName = brief.start_name || options.name || "Start page";
+  const start = (await captureIntoMap(context, { state: startName, area: areaFromName(startName) })).node;
+  nameNode(start, startName, areaFromName(startName));
+  if (signinNode) {
+    addEdge(map, { from: signinNode.id, to: start.id, action: "Sign in (human login, not recorded)", reachability: "manual" });
+    flow.signin_node = signinNode.id;
+  }
+  flow.start_node = start.id;
+  flow.current_node = start.id;
+  await writeMap(context.runDir, map);
+  await saveFlow(context, flow);
+  return start;
+}
+
+function candidateKey(candidate) { return `${candidate.role}:${candidate.name}`; }
+
+// Controls present on every captured screen (app header, profile menu) are global chrome, not branches.
+async function globalCandidateKeys(context) {
+  const sets = [];
+  for (const node of context.map.nodes.filter((item) => item.kind !== "signin" && item.evidence?.snapshot)) {
+    try {
+      const snapshot = await readFile(path.join(context.runDir, node.evidence.snapshot), "utf8");
+      sets.push(new Set(parseCandidates(snapshot).map(candidateKey)));
+    } catch { /* missing evidence is reported by verify */ }
+  }
+  if (sets.length < 2) return new Set();
+  const counts = new Map();
+  for (const set of sets) for (const key of set) counts.set(key, (counts.get(key) || 0) + 1);
+  const threshold = Math.max(2, Math.ceil(sets.length * 0.6));
+  return new Set([...counts].filter(([, count]) => count >= threshold).map(([key]) => key));
+}
+
+function describeCandidates(context, flow, candidates, globalKeys) {
+  const outgoing = context.map.edges.filter((edge) => edge.from === flow.current_node);
+  return candidates.map(({ number, role, name, safe }) => {
+    const edge = outgoing.find((item) => item.action === name);
+    const item = { number, role, name };
+    if (!safe) item.safe = false;
+    if (isDestructive({ role, name })) item.destructive = true;
+    if (globalKeys.has(`${role}:${name}`)) item.global = true;
+    if (edge) item.explored = nodeTitle(context.map, edge.to);
+    if (role === "text") item.note = "not exposed as a link or button";
+    return item;
+  });
+}
+
+async function listHere(context, flow, allowed, extra = {}) {
+  const snapshot = jsonSnapshot(context.session);
+  const candidates = parseCandidates(snapshot, allowed).filter((candidate) => candidate.safe);
+  const globalKeys = await globalCandidateKeys(context);
+  const described = describeCandidates(context, flow, candidates, globalKeys);
+  const open = described.filter((item) => !item.explored && !item.global).length;
+  const branch = branchById(flow, flow.current_branch);
+  jsonResult({
+    progress: "choose-candidate",
+    node: { screen: nodeTitle(context.map, flow.current_node), id: flow.current_node, branch: branch?.name, unexplored: open, ...extra },
+    candidates: described,
+    next: open
+      ? "Continue this branch: explore step --pick N --name \"<Screen> · <state>\". Fork another option later with explore branch --at NODE --name \"<Verb> <object>\". Skip items marked global or destructive unless the brief asks for them."
+      : "Nothing unexplored here. Run explore status to find the next fork, or replay when every branch is done.",
+  });
 }
 
 async function exploreStep(options) {
   const context = await currentRun(options);
   if (!context.brief.confirmed) throw new Error("Capture Brief is not confirmed.");
   const allowed = await checkHost(context.brief.start_url, { allowSafe: true });
-  if (!context.map.nodes.length) await startBrowser(context);
+  const flow = await loadFlow(context);
+  if (!context.map.nodes.length || !flow.start_node) await beginRun(context, flow, options);
   await assertCurrentScope(context);
+  if (!options.pick) return listHere(context, flow, allowed);
   const snapshot = jsonSnapshot(context.session);
   const candidates = parseCandidates(snapshot, allowed).filter((candidate) => candidate.safe);
-  if (!options.pick) {
-    const publicCandidates = candidates.map(({ number, role, name, safe }) => ({ number, role, name, safe }));
-    jsonResult({ progress: "choose-candidate", node: { url: agentBrowser(["get", "url"], { session: context.session }) }, candidates: publicCandidates, next: "Choose a numbered candidate with --pick N; never write a selector." });
-    return;
-  }
   const selected = candidates.find((candidate) => candidate.number === Number(options.pick));
-  if (!selected) throw new Error(`Candidate ${options.pick} is not in the current snapshot.`);
-  if (!allowed && !selected.safe) throw new Error("Safe mode permits only reversible open/cancel actions.");
-  if (selected.role === "link" && !selected.ref) throw new Error("This link has no current ref for URL scope validation; refresh the candidate list.");
+  if (!selected) throw new Error(`Candidate ${options.pick} is not in the current snapshot. Run explore step to refresh the list.`);
+  if (!allowed && !selected.safe) throw new Error("Safe mode permits only navigation and reversible open/cancel actions.");
+  if (isDestructive(selected) && !options["allow-destructive"]) {
+    throw new Error(`"${selected.name}" looks destructive. Open its dialog with another candidate and capture the confirmation without confirming, or rerun with --allow-destructive only if the brief explicitly allows it.`);
+  }
   if (selected.role === "link" && selected.ref) {
     const target = agentBrowser(["get", "attr", selected.ref, "href"], { session: context.session });
-    const resolved = new URL(target, context.brief.start_url);
-    if (!context.brief.scope.url_prefixes.some((prefix) => isWithinPrefix(resolved.href, prefix))) {
-      throw new Error(`Link target is outside the confirmed URL scope: ${resolved.origin}${resolved.pathname}`);
+    if (target && !/^(javascript:|#)/i.test(target)) {
+      const resolved = new URL(target, agentBrowser(["get", "url"], { session: context.session }));
+      if (!context.brief.scope.url_prefixes.some((prefix) => isWithinPrefix(resolved.href, prefix))) {
+        throw new Error(`Link target is outside the confirmed URL scope: ${resolved.origin}${resolved.pathname}`);
+      }
     }
   }
-  const from = (await captureIntoMap(context, { state: "Before interaction", area: options.area || "Unassigned" })).node;
-  agentBrowser(["find", "role", selected.role, "click", "--name", selected.name], { session: context.session });
-  settle(context.session);
+  if (options.fill !== undefined) {
+    if (!FILLABLE.has(selected.role)) throw new Error(`--fill needs a textbox, searchbox or combobox; "${selected.name}" is a ${selected.role}.`);
+    const input = { role: selected.role, name: selected.name, value: String(options.fill) };
+    applyInputs(context.session, [input]);
+    flow.pending_inputs = [...(flow.pending_inputs || []).filter((item) => item.name !== input.name), input];
+    await saveFlow(context, flow);
+    jsonResult({ progress: "filled", node: { screen: nodeTitle(context.map, flow.current_node), filled: input.name, value: input.value }, next: "Pick the control that submits or continues (--pick N --name ...). The typed value is replayed with that step. Tag data you create, e.g. UXA-<run date>." });
+    return;
+  }
+  const nameField = candidates.find((item) => FILLABLE.has(item.role) && /^(name|title|report name)$/i.test(item.name));
+  if (isMutating(selected) && nameField && !(flow.pending_inputs || []).length && !options.untagged) {
+    throw new Error(`"${selected.name}" creates data and the "${nameField.name}" field is empty. Tag it first: explore step --pick ${nameField.number} --fill "UXA-<date> <purpose>", then pick "${selected.name}" again. Pass --untagged only if the brief allows untagged data.`);
+  }
+  const name = options.name || options.state;
+  if (!name || GENERIC_NAMES.test(String(name))) {
+    throw new Error("Name the screen this click leads to: --name \"<Screen> · <state>\", e.g. \"Payroll Journal · Report history\". Read references/naming.md.");
+  }
+  const from = flow.current_node;
+  const activation = clickWithFallback(context, selected, from);
   // Buttons can navigate or open tabs on other hosts; check scope before capturing anything.
-  try { await assertCurrentScope(context); } catch (error) {
+  try { await assertCurrentScope(context); } catch {
     const landed = agentBrowser(["get", "url"], { session: context.session });
     throw new Error(`"${selected.name}" left the confirmed scope (${new URL(landed).hostname}). Nothing was captured. Re-confirm the brief with that host in scope, or pick another candidate.`);
   }
-  const captured = await captureIntoMap(context, { state: options.state || selected.name, area: options.area || "Unassigned" });
-  const edge = addEdge(context.map, { from: from.id, to: captured.node.id, action: selected.name, locator: { role: selected.role, name: selected.name } });
-  const flowPath = path.join(context.runDir, "flow.yaml");
-  let flow = { schema_version: 1, start_node: from.id, steps: [] };
-  try { flow = JSON.parse(await readFile(flowPath, "utf8")); } catch { /* Start a fresh replay path. */ }
-  flow.steps.push({ edge: edge.id, action: selected.name, locator: { role: selected.role, name: selected.name }, caption: selected.name, explored_in: allowed ? "full" : "safe" });
-  await writeReplayFlow(context.runDir, flow);
+  const area = options.area || areaFromName(name);
+  // A click that leaves the accessibility structure unchanged did nothing visible; never record it as a new screen.
+  const after = nodeId(agentBrowser(["get", "url"], { session: context.session }), jsonSnapshot(context.session));
+  if (after === from && !options["same-screen"]) {
+    throw new Error(`Clicking "${selected.name}" did not change the screen, so nothing was recorded. Pick another candidate, or pass --same-screen if an in-place change (e.g. a toggle) is the point.`);
+  }
+  const captured = await captureIntoMap(context, { state: String(name), area });
+  nameNode(captured.node, String(name), area);
+  const edge = addEdge(context.map, { from, to: captured.node.id, action: selected.name, locator: { role: selected.role, name: selected.name } });
+  const branch = branchById(flow, flow.current_branch);
+  const inputs = flow.pending_inputs || [];
+  const mutates = Boolean(options.mutates) || isMutating(selected);
+  branch.steps.push({ edge: edge.id, from, to: captured.node.id, action: selected.name, locator: { role: selected.role, name: selected.name }, caption: `Click "${selected.name}"`, inputs, mutates, activation, explored_in: allowed ? "full" : "safe" });
+  delete flow.pending_inputs;
+  flow.current_node = captured.node.id;
   await writeMap(context.runDir, context.map);
-  jsonResult({ node: { id: captured.node.id, edge: edge.id, action: selected.name }, next: "Inspect candidates again or render and verify." });
+  await saveFlow(context, flow);
+  jsonResult({ node: { screen: captured.node.title, id: captured.node.id, branch: branch.name, steps: branch.steps.length }, next: "Run explore step to see this screen's actions, or explore branch --at NODE --name \"<Verb> <object>\" to fork from an earlier screen." });
+}
+
+function pathTo(flow, nodeId) {
+  if (nodeId === flow.start_node) return { branch: branchById(flow, "b-1"), steps: [] };
+  for (const branch of flow.branches) {
+    const index = branch.steps.findIndex((step) => step.to === nodeId);
+    if (index >= 0) return { branch, steps: branch.steps.slice(0, index + 1) };
+  }
+  return null;
+}
+
+async function replaySteps(context, steps) {
+  for (const step of steps) {
+    applyInputs(context.session, step.inputs);
+    performStep(context.session, step);
+    settle(context.session);
+  }
+}
+
+async function exploreBranch(options) {
+  const context = await currentRun(options);
+  if (!context.brief.confirmed) throw new Error("Capture Brief is not confirmed.");
+  const allowed = await checkHost(context.brief.start_url, { allowSafe: true });
+  const flow = await loadFlow(context);
+  if (!flow.start_node) throw new Error("Run explore step first; a branch forks from a captured screen.");
+  if (!options.at || !options.name) throw new Error("explore branch needs --at NODE and --name \"<Verb> <object>\", e.g. --name \"Create a new Payroll Journal\".");
+  const route = pathTo(flow, String(options.at));
+  if (!route) throw new Error(`Screen ${options.at} is not on any recorded path. Run explore status for screen IDs.`);
+  if (route.steps.some((step) => step.mutates)) throw new Error(`Reaching ${options.at} repeats a step that creates data ("${route.steps.find((step) => step.mutates).action}"). Fork from an earlier screen instead.`);
+  const id = `b-${flow.branches.length + 1}`;
+  const steps = route.steps.map((step) => ({ ...step, inherited: true }));
+  flow.branches.push({ id, name: String(options.name), kind: "branch", parent: route.branch.id, fork_node: String(options.at), steps });
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
+  await startBrowser(context);
+  await replaySteps(context, steps);
+  delete flow.pending_inputs;
+  flow.current_branch = id;
+  flow.current_node = String(options.at);
+  await saveFlow(context, flow);
+  await listHere(context, flow, allowed, { forked_from: nodeTitle(context.map, options.at) });
+}
+
+// ---- Depth: coverage, resume and automatic depth-first exploration ----
+
+const OVERLAY = /^\s*-\s*(dialog|alertdialog|menu|listbox)\b/m;
+
+function relevantCandidates(candidates, globalKeys, { allowMutations = false } = {}) {
+  return candidates.filter((item) => !globalKeys.has(candidateKey(item))
+    && !isDestructive(item)
+    && (allowMutations || !isMutating(item))
+    && !FILLABLE.has(item.role)
+    && !/^(first page|previous page|next page|last page|page number|zoom (in|out|level)|fit to page|toggle sidebar)$/i.test(item.name));
+}
+
+// Per screen: which relevant actions were taken and which were not. Drives status, deep exploration and the viewer table.
+async function coverageFor(context) {
+  const globalKeys = await globalCandidateKeys(context);
+  const rows = [];
+  for (const node of context.map.nodes.filter((item) => item.kind !== "signin")) {
+    let candidates = [];
+    try { candidates = parseCandidates(await readFile(path.join(context.runDir, node.evidence?.snapshot || ""), "utf8")); } catch { /* no snapshot */ }
+    const taken = new Set(context.map.edges.filter((edge) => edge.from === node.id).map((edge) => edge.action));
+    const relevant = relevantCandidates(candidates, globalKeys, { allowMutations: true });
+    const skipped = (node.skipped || []);
+    rows.push({
+      id: node.id,
+      screen: node.title,
+      explored: relevant.filter((item) => taken.has(item.name)).map((item) => item.name),
+      unexplored: relevant.filter((item) => !taken.has(item.name) && !skipped.some((skip) => skip.action === item.name)).map((item) => item.name),
+      skipped,
+    });
+  }
+  return rows;
+}
+
+function autoName(snapshot, action, parentTitle) {
+  const dialog = /^\s*-\s*(?:dialog|alertdialog)\s+"([^"]+)"/m.exec(snapshot);
+  if (dialog) return `${dialog[1]} · Dialog open`;
+  if (/^\s*-\s*(menu|listbox)\b/m.test(snapshot)) return `${parentTitle.split(" · ")[0]} · ${action} menu open`;
+  const heading = /^\s*-\s*heading\s+"([^"]{2,60})"\s+\[level=1/m.exec(snapshot) || /^\s*-\s*heading\s+"([^"]{2,60})"/m.exec(snapshot);
+  return `${heading ? heading[1] : parentTitle.split(" · ")[0]} · After "${action}"`;
+}
+
+async function sameScreen(context, nodeIdWanted) {
+  return nodeId(agentBrowser(["get", "url"], { session: context.session }), jsonSnapshot(context.session)) === nodeIdWanted;
+}
+
+// Return to a parent screen as cheaply as possible: Escape for overlays, Back for navigation, full replay as a last resort.
+async function restore(context, parentId, prefixSteps, wasOverlay) {
+  if (wasOverlay) {
+    agentBrowser(["press", "Escape"], { session: context.session });
+    settle(context.session, { maxMs: 15_000 });
+    if (await sameScreen(context, parentId)) return "escape";
+  }
+  try {
+    agentBrowser(["back"], { session: context.session });
+    settle(context.session, { maxMs: 30_000 });
+    if (await sameScreen(context, parentId)) return "back";
+  } catch { /* fall through */ }
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
+  await startBrowser(context);
+  await replaySteps(context, prefixSteps);
+  return "replay";
+}
+
+async function exploreDeep(options) {
+  const context = await currentRun(options);
+  if (!context.brief.confirmed) throw new Error("Capture Brief is not confirmed.");
+  const allowed = await checkHost(context.brief.start_url, { allowSafe: true });
+  const flow = await loadFlow(context);
+  if (!flow.start_node) throw new Error("Capture the main path first (explore step).");
+  const at = String(options.at || flow.current_node);
+  const route = pathTo(flow, at);
+  if (!route) throw new Error(`Screen ${at} is not on any recorded path. Run explore status for screen IDs.`);
+  if (route.steps.some((step) => step.mutates)) throw new Error("Reaching that screen repeats a step that creates data. Pick an earlier screen.");
+  const maxDepth = Math.max(1, Math.min(5, Number(options.depth) || 3));
+  const budget = context.brief.scope.node_budget;
+  let newScreens = 0;
+  const report = { screens: [], branches: [], skipped: [], returns: { escape: 0, back: 0, replay: 0 } };
+  const globalKeys = await globalCandidateKeys(context);
+
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
+  await startBrowser(context);
+  await replaySteps(context, route.steps);
+  if (!(await sameScreen(context, at))) throw new Error(`Replay did not land on ${nodeTitle(context.map, at)}; the app may have changed. Run explore status and pick another screen.`);
+
+  const visit = async (parentId, prefix, depth) => {
+    const parent = context.map.nodes.find((item) => item.id === parentId);
+    const snapshot = jsonSnapshot(context.session);
+    const all = parseCandidates(snapshot, allowed).filter((item) => item.safe);
+    const taken = new Set(context.map.edges.filter((edge) => edge.from === parentId).map((edge) => edge.action));
+    for (const item of all) {
+      if (isMutating(item) && !taken.has(item.name)) report.skipped.push({ screen: parent.title, action: item.name, reason: "creates data: explore it by hand with --fill and a UXA tag" });
+      if (isDestructive(item)) report.skipped.push({ screen: parent.title, action: item.name, reason: "destructive" });
+    }
+    const todo = relevantCandidates(all, globalKeys).filter((item) => !taken.has(item.name)).slice(0, Number(options["per-screen"]) || 12);
+    let leaves = 0;
+    for (const item of todo) {
+      if (context.map.nodes.length >= budget) { report.skipped.push({ screen: parent.title, action: item.name, reason: "node budget reached" }); continue; }
+      const wasOverlay = OVERLAY.test(jsonSnapshot(context.session));
+      try { clickWithFallback(context, item, parentId); } catch (error) {
+        report.skipped.push({ screen: parent.title, action: item.name, reason: `not clickable: ${error.message.split("\n")[0].slice(0, 80)}` });
+        continue;
+      }
+      const landed = agentBrowser(["get", "url"], { session: context.session });
+      const inScope = context.brief.scope.url_prefixes.some((prefix) => isWithinPrefix(landed, prefix));
+      if (!inScope) {
+        report.skipped.push({ screen: parent.title, action: item.name, reason: `leaves scope (${new URL(landed).host})` });
+        (parent.skipped ||= []).push({ action: item.name, reason: "leaves scope" });
+        try { agentBrowser(["tab", "close"], { session: context.session }); } catch { /* single tab */ }
+        report.returns[await restore(context, parentId, prefix, false)] += 1;
+        continue;
+      }
+      const childSnapshot = jsonSnapshot(context.session);
+      const childId = nodeId(landed, childSnapshot);
+      if (childId === parentId) {
+        (parent.skipped ||= []).push({ action: item.name, reason: "no visible change" });
+        report.skipped.push({ screen: parent.title, action: item.name, reason: "no visible change (pointer and keyboard)" });
+        continue;
+      }
+      const existed = context.map.nodes.some((node) => node.id === childId);
+      const name = autoName(childSnapshot, item.name, parent.title);
+      const captured = await captureIntoMap(context, { state: name, area: areaFromName(name) });
+      if (!existed) { nameNode(captured.node, name, areaFromName(name)); captured.node.auto_named = true; newScreens += 1; report.screens.push({ id: captured.node.id, name }); }
+      const edge = addEdge(context.map, { from: parentId, to: captured.node.id, action: item.name, locator: { role: item.role, name: item.name } });
+      const step = { edge: edge.id, from: parentId, to: captured.node.id, action: item.name, locator: { role: item.role, name: item.name }, caption: `Click "${item.name}"`, inputs: [], mutates: false, explored_in: allowed ? "full" : "safe" };
+      let grandLeaves = 0;
+      const childIsOverlay = OVERLAY.test(childSnapshot);
+      if (!existed && depth < maxDepth) grandLeaves = await visit(captured.node.id, [...prefix, step], depth + 1);
+      if (!existed && grandLeaves === 0) {
+        const id = `b-${flow.branches.length + 1}`;
+        const steps = [...prefix, step].map((item2, index, list) => ({ ...item2, inherited: index < route.steps.length && index < list.length - 1 }));
+        flow.branches.push({ id, name: `Explore: ${[...prefix.slice(route.steps.length), step].map((s) => s.action).join(" → ")}`, kind: "auto", parent: route.branch.id, fork_node: at, steps });
+        report.branches.push(id);
+      }
+      leaves += Math.max(1, grandLeaves);
+      await writeMap(context.runDir, context.map);
+      await saveFlow(context, flow);
+      report.returns[await restore(context, parentId, prefix, childIsOverlay || wasOverlay)] += 1;
+      if (!(await sameScreen(context, parentId))) {
+        report.skipped.push({ screen: parent.title, action: "(remaining actions)", reason: "could not return to this screen" });
+        break;
+      }
+    }
+    return leaves;
+  };
+
+  await visit(at, route.steps, 1);
+  await writeMap(context.runDir, context.map);
+  await saveFlow(context, flow);
+  jsonResult({
+    progress: "deep-explored",
+    node: { from: nodeTitle(context.map, at), depth: maxDepth, new_screens: newScreens, new_branches: report.branches.length, returns: report.returns, screens: report.screens.slice(0, 20) },
+    candidates: report.skipped.slice(0, 25),
+    next: "Rename every auto-named screen (label --node ID --title \"<Screen> · <state>\") and each worthwhile auto branch (label --branch ID --name \"<Verb> <object>\" --promote). Explore skipped data-creating actions by hand with --fill and a UXA tag. Then explore status.",
+  });
+}
+
+async function exploreResume(options) {
+  const context = await currentRun(options);
+  const flow = await loadFlow(context);
+  const branch = branchById(flow, String(options.branch || ""));
+  if (!branch) throw new Error("explore resume needs --branch ID (see explore status).");
+  if (branch.steps.some((step) => step.mutates)) throw new Error("This branch contains a step that creates data; resuming would repeat it. Fork from an earlier screen instead.");
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
+  await startBrowser(context);
+  await replaySteps(context, branch.steps);
+  if (flow.current_branch === branch.id && flow.pending_inputs?.length) applyInputs(context.session, flow.pending_inputs);
+  else delete flow.pending_inputs;
+  flow.current_branch = branch.id;
+  flow.current_node = branch.steps.at(-1)?.to || flow.start_node;
+  await saveFlow(context, flow);
+  await listHere(context, flow, await isAllowlisted(context.brief.start_url), { resumed: branch.name });
+}
+
+async function exploreStatus(options) {
+  const context = await currentRun(options);
+  const flow = await loadFlow(context);
+  const coverage = await coverageFor(context);
+  const mainOrder = [flow.start_node, ...(branchById(flow, "b-1")?.steps || []).map((step) => step.to)];
+  const rank = (id) => { const index = mainOrder.indexOf(id); return index < 0 ? mainOrder.length : index; };
+  const open = coverage.filter((row) => row.unexplored.length).sort((a, b) => rank(b.id) - rank(a.id));
+  const branches = flow.branches.map((branch) => {
+    const end = branch.steps.at(-1)?.to || flow.start_node;
+    const endRow = coverage.find((row) => row.id === end);
+    return { id: branch.id, name: branch.name, kind: branch.kind, from: branch.fork_node ? nodeTitle(context.map, branch.fork_node) : "start", new_steps: branch.steps.filter((step) => !step.inherited).length, ends_at: nodeTitle(context.map, end), open_end: Boolean(endRow?.unexplored.length) && !branch.steps.some((step) => step.mutates) };
+  });
+  const total = coverage.reduce((sum, row) => sum + row.explored.length + row.unexplored.length, 0);
+  const done = coverage.reduce((sum, row) => sum + row.explored.length, 0);
+  const openBranch = branches.find((item) => item.open_end);
+  const autoNamed = context.map.nodes.filter((node) => node.auto_named).length;
+  jsonResult({
+    progress: "status",
+    node: { budget: context.brief.scope.node_budget, screens: context.map.nodes.length, coverage: `${done}/${total} relevant actions explored`, auto_named_screens: autoNamed, branches },
+    candidates: open.map((row) => ({ id: row.id, screen: row.screen, unexplored: row.unexplored.length, examples: row.unexplored.slice(0, 6) })),
+    next: context.map.nodes.length >= context.brief.scope.node_budget
+      ? "Node budget reached. Report the remaining unexplored actions; do not exceed the budget."
+      : autoNamed ? `Rename ${autoNamed} auto-named screens first (label --node ID --title ...).`
+      : openBranch ? `Branch "${openBranch.name}" ends on a screen with unexplored actions: explore resume --branch ${openBranch.id}, or explore deep --at <its end screen>.`
+      : open.length ? `Go deeper: explore deep --at ${open[0].id} --depth 3 (or explore branch --at ${open[0].id} --name "<Verb> <object>" for a path you want to drive).`
+      : "Every relevant action is explored. Run replay, render and verify.",
+  });
+}
+
+// Viewport set from uxagent ADR 0006: 1440 exploration; 1024/768/360 replay with video; 320 reflow stills only.
+const DEFAULT_VIEWPORTS = [
+  { width: 1440, height: 900, video: true },
+  { width: 1024, height: 768, video: true },
+  { width: 768, height: 1024, video: true },
+  { width: 360, height: 800, video: true },
+  { width: 320, height: 640, video: false },
+];
+
+function viewportsFor(context, options) {
+  const list = options.viewports ? String(options.viewports).split(",").map((item) => Number(item.trim())).filter(Boolean)
+    : (context.brief.viewports || DEFAULT_VIEWPORTS).map((item) => item.width);
+  return list.map((width) => DEFAULT_VIEWPORTS.find((item) => item.width === width) || { width, height: Math.round(width * 0.75), video: true });
+}
+
+function captionIn(context, text) {
+  agentBrowser(["eval", `(()=>{let e=document.getElementById('__ui_capture_caption');if(!e){e=document.createElement('div');e.id='__ui_capture_caption';Object.assign(e.style,{position:'fixed',left:'12px',right:'12px',bottom:'12px',zIndex:'2147483646',background:'#111',color:'#fff',padding:'8px 12px',font:'600 14px/1.35 sans-serif',borderRadius:'8px',pointerEvents:'none',width:'fit-content',maxWidth:'calc(100vw - 24px)'});document.documentElement.append(e)}e.textContent=${JSON.stringify(text)}})()`], { session: context.session });
+}
+
+// Clean stills at a secondary viewport: walk the branch and screenshot each screen not yet captured at this width.
+async function stillsPass(context, flow, branch, viewport, seen) {
+  const dir = `assets/w${viewport.width}`;
+  await mkdir(path.join(context.runDir, dir), { recursive: true });
+  const shoot = (nodeId) => {
+    const key = `${viewport.width}:${nodeId}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    const node = context.map.nodes.find((item) => item.id === nodeId);
+    const ordinal = String(context.map.nodes.indexOf(node) + 1).padStart(2, "0");
+    const file = `${dir}/${ordinal}-${safeName(node.title).slice(0, 60)}.png`;
+    agentBrowser(["screenshot", path.join(context.runDir, file)], { session: context.session });
+    upsertAsset(context.map, { file, title: node.title, description: `Screenshot of ${node.title} at ${viewport.width}px`, viewport: { width: viewport.width, height: viewport.height }, area: node.area, state: node.state, node: nodeId, edge: null, annotations: [], variant: { viewport: { width: viewport.width, height: viewport.height } }, reachability: node.reachability || "live" });
+  };
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
+  await startBrowser(context, viewport);
+  shoot(flow.start_node);
+  for (const [index, step] of branch.steps.entries()) {
+    if (step.mutates && !context.repeatMutations) return null;
+    try {
+      applyInputs(context.session, step.inputs);
+      performStep(context.session, step);
+    } catch (caught) {
+      return `Step ${index + 1} (${step.action}) not reachable at ${viewport.width}px: ${caught.message.split("\n")[0].slice(0, 160)}`;
+    }
+    settle(context.session);
+    shoot(step.to);
+  }
+  return null;
+}
+
+async function videoPass(context, flow, branch, viewport, order) {
+  const file = `video/w${viewport.width}/${String(order + 1).padStart(2, "0")}-${safeName(branch.name)}.webm`;
+  await mkdir(path.join(context.runDir, path.dirname(file)), { recursive: true });
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
+  await startBrowser(context, viewport, { smooth: true });
+  const chapters = [];
+  const began = Date.now();
+  const at = () => Number(((Date.now() - began) / 1000).toFixed(2));
+  let error = null;
+  let stoppedBefore = null;
+  agentBrowser(["record", "start", path.join(context.runDir, file), "--cursor"], { session: context.session });
+  try {
+    captionIn(context, `${branch.name} · start: ${nodeTitle(context.map, flow.start_node)}`);
+    chapters.push({ time: 0, label: `Start: ${nodeTitle(context.map, flow.start_node)}`, node: flow.start_node });
+    agentBrowser(["wait", "1500"], { session: context.session });
+    for (const [index, step] of branch.steps.entries()) {
+      captionIn(context, `${branch.name} · ${index + 1}/${branch.steps.length}: ${step.caption || step.action}`);
+      chapters.push({ time: at(), label: `${index + 1}. ${step.caption || step.action}`, node: step.to });
+      if (step.mutates && !context.repeatMutations) {
+        captionIn(context, `${branch.name} · not repeated: "${step.action}" creates data. The result screen was captured during exploration.`);
+        chapters.push({ time: at(), label: `${step.action} (not repeated, changes data)`, node: step.from });
+        agentBrowser(["wait", "3000"], { session: context.session });
+        stoppedBefore = step;
+        break;
+      }
+      for (const input of step.inputs || []) {
+        captionIn(context, `${branch.name} · type "${input.value}" in ${input.name}`);
+        agentBrowser(["wait", "500"], { session: context.session });
+        applyInputs(context.session, [input]);
+      }
+      agentBrowser(["wait", "600"], { session: context.session });
+      performStep(context.session, step);
+      settle(context.session);
+      agentBrowser(["wait", "900"], { session: context.session });
+    }
+    if (stoppedBefore) throw Object.assign(new Error("stopped-before-mutation"), { benign: true });
+    const endNode = context.map.nodes.find((item) => item.id === branch.steps.at(-1).to);
+    const active = agentBrowser(["get", "url"], { session: context.session });
+    const newTab = endNode && new URL(endNode.url).host !== new URL(active).host;
+    captionIn(context, newTab ? `${branch.name} · result opened in a new tab: ${endNode.title}` : `${branch.name} · result: ${endNode?.title}`);
+    chapters.push({ time: at(), label: `Result: ${endNode?.title}`, node: endNode?.id });
+    agentBrowser(["wait", "2500"], { session: context.session });
+  } catch (caught) {
+    if (!caught.benign) error = `Replay broke at ${viewport.width}px: ${caught.message.split("\n")[0].slice(0, 200)}`;
+  }
+  try { agentBrowser(["record", "stop"], { session: context.session }); } catch (caught) { error ||= caught.message; }
+  upsertAsset(context.map, { file, title: `${branch.name} · ${viewport.width}px`, description: `Cursor-visible replay of "${branch.name}" at ${viewport.width}px`, viewport: { width: viewport.width, height: viewport.height }, area: "Flow", state: "Replay", node: branch.steps.at(-1).to, edge: branch.steps.at(-1).edge, branch: branch.id, annotations: [], variant: { viewport: { width: viewport.width, height: viewport.height } } });
+  return { file, chapters, error };
+}
+
+async function replayCommand(options) {
+  const context = await currentRun(options);
+  if (!context.brief.confirmed) throw new Error("Capture Brief is not confirmed.");
+  const flow = await loadFlow(context);
+  const allowed = await checkHost(context.brief.start_url, { allowSafe: true });
+  const selected = flow.branches.filter((branch) => branch.steps.length && (options.branch ? branch.id === options.branch : branch.kind !== "auto" || options["include-auto"]));
+  if (!selected.length) throw new Error("No branch with steps to replay.");
+  const viewports = viewportsFor(context, options);
+  const primary = viewportFromBrief(context.brief).width;
+  // Steps that create data are not repeated unless asked; "primary" repeats them once, at the exploration width only.
+  const seen = new Set();
+  const results = [];
+  for (const viewport of viewports) {
+    for (const [order, branch] of flow.branches.entries()) {
+      if (!selected.includes(branch)) continue;
+      if (!allowed && branch.steps.some((step) => step.explored_in !== "safe")) {
+        results.push({ branch: branch.name, viewport: viewport.width, error: "Full-mode steps need an allowlisted host." });
+        continue;
+      }
+      branch.videos ||= {};
+      branch.breaks ||= {};
+      const breakAt = viewport.width === primary ? null : await stillsPass(context, flow, branch, viewport, seen);
+      if (breakAt) branch.breaks[viewport.width] = breakAt; else delete branch.breaks[viewport.width];
+      if (!viewport.video || breakAt) { results.push({ branch: branch.name, viewport: viewport.width, ...(breakAt ? { error: breakAt } : { stills: true }) }); continue; }
+      context.repeatMutations = options["repeat-mutations"] === "all" || (options["repeat-mutations"] && viewport.width === primary);
+      const { file, chapters, error } = await videoPass(context, flow, branch, viewport, order);
+      branch.videos[viewport.width] = { file, chapters };
+      if (error) branch.breaks[viewport.width] = error;
+      results.push({ branch: branch.name, viewport: viewport.width, video: file, ...(error ? { error } : {}) });
+      await saveFlow(context, flow);
+      await writeMap(context.runDir, context.map);
+    }
+  }
+  try { agentBrowser(["close"], { session: context.session }); } catch { /* closed */ }
+  context.brief.viewports = viewports;
+  context.map.brief = { ...(context.map.brief || {}), viewports };
+  await writeFile(path.join(context.runDir, "capture-brief.json"), `${JSON.stringify(context.brief, null, 2)}\n`);
+  await saveFlow(context, flow);
+  await writeMap(context.runDir, context.map);
+  const failed = results.filter((item) => item.error);
+  jsonResult({ ok: !failed.length, node: { viewports: viewports.map((item) => item.width), results }, next: failed.length ? "Breaks at some viewports are evidence: report them, do not work around them. Then render and verify." : "Run render, then verify." });
 }
 
 async function exploreCrawl(options) {
@@ -437,117 +1072,6 @@ async function cropCommand(options) {
   jsonResult({ node: { id: full.node.id, crops }, next: "The raw screenshot and each crop are linked to the state." });
 }
 
-async function replayCommand(options) {
-  const context = await currentRun(options);
-  if (!context.brief.confirmed) throw new Error("Capture Brief is not confirmed.");
-  const flowPath = path.join(context.runDir, "flow.yaml");
-  let flow;
-  try { flow = JSON.parse(await readFile(flowPath, "utf8")); } catch { throw new Error("flow.yaml must be JSON-compatible YAML generated by explore. No replay steps found."); }
-  const allowed = await checkHost(context.brief.start_url, { allowSafe: true });
-  // Off the allowlist, replay only paths whose every step was explored in safe mode.
-  if (!allowed && flow.steps.some((step) => step.explored_in !== "safe")) {
-    throw new Error("Replay of full-mode steps requires an allowlisted host.");
-  }
-  for (const step of flow.steps) {
-    const edge = context.map.edges.find((item) => item.id === step.edge);
-    const target = edge && context.map.nodes.find((item) => item.id === edge.to);
-    if (!target || !context.brief.scope.url_prefixes.some((prefix) => isWithinPrefix(target.url, prefix)) || (allowed && !(await isAllowlisted(target.url)))) {
-      throw new Error(`Replay edge ${step.edge} has a missing or out-of-scope target; refusing to run it.`);
-    }
-  }
-  const videoDir = path.join(context.runDir, "video");
-  await mkdir(videoDir, { recursive: true });
-  await startBrowser(context);
-  const video = path.join(videoDir, "replay.webm");
-  const trace = path.join(videoDir, "replay-trace.zip");
-  const replayWarnings = [];
-  const timestamps = [];
-  const replayStart = Date.now();
-  let recording = false;
-  let tracing = false;
-  let replayError = null;
-  try {
-    agentBrowser(["record", "start", video, "--cursor", ...(options["contact-sheet"] ? ["--contact-sheet"] : [])], { session: context.session });
-    recording = true;
-    agentBrowser(["trace", "start"], { session: context.session });
-    tracing = true;
-    for (const [index, step] of flow.steps.entries()) {
-      const time = { edge: step.edge, action: step.action };
-      timestamps.push(time);
-      if (!step.locator?.role || !step.locator?.name) {
-        throw new Error(`Replay stopped at step ${index + 1}; semantic role+name locator is missing.`);
-      }
-      if (step.caption) {
-        const escaped = JSON.stringify(step.caption);
-        agentBrowser(["eval", `(()=>{let e=document.getElementById('__ui_capture_caption');if(!e){e=document.createElement('div');e.id='__ui_capture_caption';Object.assign(e.style,{position:'fixed',left:'16px',bottom:'16px',zIndex:'2147483646',background:'#111',color:'#fff',padding:'8px 12px',font:'600 14px/1.35 sans-serif',borderRadius:'8px',pointerEvents:'none'});document.documentElement.append(e)}e.textContent=${escaped}})()`], { session: context.session });
-      }
-      agentBrowser(["wait", "500"], { session: context.session });
-      time.start_seconds = Number(((Date.now() - replayStart) / 1000).toFixed(2));
-      try {
-        agentBrowser(["find", "role", step.locator.role, "click", "--name", step.locator.name], { session: context.session });
-        settle(context.session);
-        await agentBrowser(["wait", "700"], { session: context.session });
-        time.end_seconds = Number(((Date.now() - replayStart) / 1000).toFixed(2));
-      } catch (error) {
-        time.error = error.message;
-        throw new Error(`Replay stopped at step ${index + 1} (${step.locator.role}: ${step.locator.name}); locator was ambiguous or unavailable. ${error.message}`);
-      }
-    }
-  } catch (error) {
-    replayError = error;
-  }
-  for (const [active, stop] of [
-    [recording, ["record", "stop"]],
-    [tracing, ["trace", "stop", trace]],
-  ]) {
-    if (!active) continue;
-    try { agentBrowser(stop, { session: context.session }); } catch (error) {
-      if (stop[0] === "trace") { replayWarnings.push(`Trace not saved: ${error.message.slice(0, 160)}`); continue; }
-      replayError ||= error;
-      if (replayError !== error) replayError.message = `${replayError.message}; cleanup failed: ${error.message}`;
-    }
-  }
-  if (options["contact-sheet"]) {
-    const contactSheet = path.join(videoDir, "replay.contact-sheet.png");
-    try {
-      await readFile(contactSheet);
-      upsertAsset(context.map, { file: path.relative(context.runDir, contactSheet), title: "Replay contact sheet", description: "Agent-browser contact sheet from the cursor-visible replay", viewport: context.brief.viewport, area: "Flow", state: "Replay overview", node: flow.start_node || null, edge: flow.steps.at(-1)?.edge || null, annotations: [] });
-    } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-    }
-  }
-  for (const [index, time] of timestamps.filter((item) => Number.isFinite(item.start_seconds) && Number.isFinite(item.end_seconds)).entries()) {
-    const duration = Math.max(0.1, time.end_seconds - time.start_seconds);
-    const clip = path.join(videoDir, `edge-${String(index + 1).padStart(2, "0")}.mp4`);
-    const output = spawnSync("ffmpeg", ["-y", "-ss", String(time.start_seconds), "-i", video, "-t", String(duration), "-c:v", "libx264", "-an", clip], { encoding: "utf8", timeout: 60_000 });
-    if (output.status !== 0) throw new Error(`Could not extract replay clip for edge ${time.edge}: ${(output.stderr || "ffmpeg failed").slice(-500)}`);
-    time.clip = path.relative(context.runDir, clip);
-    upsertAsset(context.map, { file: path.relative(context.runDir, clip), title: `Interaction ${index + 1}`, description: time.action, viewport: context.brief.viewport, area: "Flow", state: "Replay clip", node: flow.start_node || null, edge: time.edge, annotations: [] });
-  }
-  const timestampsFile = path.join(videoDir, "edge-timestamps.json");
-  await writeFile(timestampsFile, `${JSON.stringify(timestamps, null, 2)}\n`);
-  upsertAsset(context.map, { file: path.relative(context.runDir, timestampsFile), title: "Edge timestamps", description: "Start/end times and extracted clips for each replay edge", viewport: context.brief.viewport, area: "Flow", state: "Replay timing", node: flow.start_node || null, edge: flow.steps.at(-1)?.edge || null, annotations: [] });
-  if (tracing) {
-    try {
-      await readFile(trace);
-      upsertAsset(context.map, { file: path.relative(context.runDir, trace), title: "Replay trace", description: "Browser trace recorded during semantic replay", viewport: context.brief.viewport, area: "Flow", state: "Replay trace", node: flow.start_node || null, edge: flow.steps.at(-1)?.edge || null, annotations: [] });
-    } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-    }
-  }
-  if (recording) {
-    try {
-      await readFile(video);
-      upsertAsset(context.map, { file: path.relative(context.runDir, video), title: "Cursor-visible replay", description: `Replay of ${flow.steps.length} semantic interactions`, viewport: context.brief.viewport, area: "Flow", state: "Replay", node: flow.start_node || null, edge: flow.steps.at(-1)?.edge || null, annotations: [] });
-    } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-    }
-  }
-  await writeMap(context.runDir, context.map);
-  if (replayError) throw replayError;
-  jsonResult({ node: { video: path.relative(context.runDir, video), steps: flow.steps.length, trace: replayWarnings.length ? null : path.relative(context.runDir, trace), warnings: replayWarnings }, next: "Review the recording and verify asset references before sharing." });
-}
-
 async function annotateCommand(options) {
   const runDir = await resolveRun(options);
   const map = await readMap(runDir);
@@ -583,6 +1107,7 @@ async function labelCommand(options) {
     for (const field of ["title", "area", "state", "description"]) {
       if (options[field] !== undefined) target[field] = String(options[field]);
     }
+    if (options.title !== undefined) { target.named = true; delete target.auto_named; if (options.state === undefined) target.state = String(options.title); }
     node = { id: target.id, title: target.title, area: target.area, state: target.state };
     next = "Labels describe observed evidence; run render to update Mermaid.";
   } else if (options.edge) {
@@ -592,8 +1117,18 @@ async function labelCommand(options) {
     if (options.description !== undefined) target.description = String(options.description);
     node = { id: target.id, from: target.from, to: target.to, action: target.action };
     next = "Keep the edge action factual; run render to update Mermaid.";
+  } else if (options.branch) {
+    const flowPath = path.join(runDir, "flow.yaml");
+    const flow = JSON.parse(await readFile(flowPath, "utf8"));
+    const target = (flow.branches || []).find((item) => item.id === options.branch);
+    if (!target) throw new Error(`Unknown branch: ${options.branch}`);
+    if (options.name !== undefined) target.name = String(options.name);
+    if (options.promote) target.kind = "branch";
+    await writeReplayFlow(runDir, flow);
+    node = { id: target.id, name: target.name, kind: target.kind };
+    next = "Promoted branches get videos on replay; auto branches stay as stills.";
   } else {
-    throw new Error("label requires --node ID or --edge ID.");
+    throw new Error("label requires --node ID, --edge ID or --branch ID.");
   }
   await writeMap(runDir, map);
   jsonResult({ node, next });
@@ -660,34 +1195,15 @@ async function publishPrep(options) {
   const context = await currentRun(options);
   const report = await verifyRun(context.runDir);
   if (!report.ok) throw new Error(`Resolve verify failures before publish-prep: ${report.failures.join(" ")}`);
-  const thumbnails = [];
-  for (const asset of context.map.assets.filter((item) => item.file.endsWith(".png"))) {
-    const bytes = await readFile(path.join(context.runDir, asset.file));
-    thumbnails.push({
-      file: asset.file,
-      title: asset.title,
-      node: asset.node,
-      edge: asset.edge,
-      sha256: createHash("sha256").update(bytes).digest("hex"),
-    });
-  }
-  const publishManifest = {
-    schema_version: 1,
-    flow: context.map.flow,
-    nodes: context.map.nodes.map((node) => ({ id: node.id, figma_node_id: null })),
-    assets: thumbnails.map((asset) => ({ ...asset, uploaded: false, placed: false })),
-  };
-  const output = {
-    flow: context.map.flow,
-    diagram_skeleton: { format: "Mermaid", source: context.map.mermaid || await readFile(path.join(context.runDir, "map.mmd"), "utf8") },
-    nodes: context.map.nodes.map(({ id, title, area, state }) => ({ id, title, area, state })),
-    edges: context.map.edges,
-    thumbnails,
-    figjam_procedure: path.join(SKILL_DIR, "references", "figjam-publish.md"),
-  };
-  await writeFile(path.join(context.runDir, "publish-manifest.json"), `${JSON.stringify(publishManifest, null, 2)}\n`);
-  await writeFile(path.join(context.runDir, "publish-prep.json"), `${JSON.stringify(output, null, 2)}\n`);
-  jsonResult({ node: { output: "publish-prep.json", manifest: "publish-manifest.json", thumbnails: thumbnails.length }, next: "Open the FigJam publish procedure; publishing remains optional and user-directed." });
+  const result = await preparePublish(context.runDir);
+  jsonResult({ node: result, next: "Read references/figjam-publish.md. 1) generate_diagram with publish/diagram.mmd. 2) use_figma with each publish/board-*.js in order; save each return value to publish/targets-<n>.json. 3) upload_assets with those target ids. 4) publish-upload --targets publish/targets-<n>.json --urls <upload_assets result saved as JSON>." });
+}
+
+async function publishUploadCommand(options) {
+  const runDir = await resolveRun(options);
+  if (!options.targets || !options.urls) throw new Error("publish-upload needs --targets FILE (use_figma return) and --urls FILE (upload_assets result).");
+  const result = await publishUpload(runDir, { targetsFile: path.resolve(String(options.targets)), urlsFile: path.resolve(String(options.urls)) });
+  jsonResult({ ok: !result.failed.length, node: result, next: result.failed.length ? "Retry the failed uploads with a new upload_assets call for those node ids." : "Verify with get_screenshot on the board, then share the board link." });
 }
 
 async function presetCommand(positionals, options) {
@@ -746,10 +1262,19 @@ export async function main(args) {
   if (command === "quick") return shotCommand(options, true);
   if (command === "explore" && subcommand === "crawl") return exploreCrawl(options);
   if (command === "explore" && subcommand === "step") return exploreStep(options);
+  if (command === "explore" && subcommand === "branch") return exploreBranch(options);
+  if (command === "explore" && subcommand === "status") return exploreStatus(options);
+  if (command === "explore" && subcommand === "deep") return exploreDeep(options);
+  if (command === "explore" && subcommand === "resume") return exploreResume(options);
   if (command === "crop") return cropCommand(options);
   if (command === "replay") return replayCommand(options);
   if (command === "render") {
     const runDir = await resolveRun(options);
+    try {
+      const context = await currentRun(options);
+      context.map.coverage = await coverageFor(context);
+      await writeMap(runDir, context.map);
+    } catch { /* coverage is optional for quick captures */ }
     const result = await renderRun(runDir);
     jsonResult({ node: { run: runDir, ...result }, next: "Run verify." });
     return;
@@ -757,6 +1282,7 @@ export async function main(args) {
   if (command === "annotate") return annotateCommand(options);
   if (command === "label") return labelCommand(options);
   if (command === "publish-prep") return publishPrep(options);
+  if (command === "publish-upload") return publishUploadCommand(options);
   if (command === "preset") return presetCommand(parsed.positionals, options);
   if (command === "simulate") return simulateCommand(options);
   if (command === "evidence") return evidenceCommand(parsed.positionals, options);
