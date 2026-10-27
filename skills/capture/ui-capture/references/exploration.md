@@ -10,7 +10,7 @@ Node identity combines a normalized URL pattern and an accessibility-structure h
 
 ## Flow strategy
 
-The script returns numbered visible controls from the accessibility tree. Select a number; the CLI invokes the role+accessible-name locator. Do not generate CSS selectors, refs or coordinates. A candidate list is current only for the snapshot that produced it; refresh after each interaction. Safe mode filters candidates to reversible open/cancel controls.
+The script returns numbered visible controls from the accessibility tree. Select a number; the CLI invokes the role+accessible-name locator. Do not generate CSS selectors, refs or coordinates. A candidate list is current only for the snapshot that produced it; refresh after each interaction. Safe mode filters candidates to navigation (in-scope links and tabs; the target URL is re-checked against the confirmed scope) and reversible open/cancel controls. Each recorded step carries `explored_in: safe|full`; replay off the allowlist runs only when every step is `safe`.
 
 ## Auth and expected states
 
