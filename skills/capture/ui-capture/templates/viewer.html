@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI Capture</title>
+  <style>
+    :root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #17202a; background: #f5f6f7; }
+    body { max-width: 1200px; margin: auto; padding: 2rem 1rem; }
+    h1 { line-height: 1.15; }
+    .node-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1rem; }
+    article { background: white; border: 1px solid #c7cdd2; border-radius: .5rem; padding: 1rem; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #d5d9dc; }
+    a { color: #0758a5; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .meta { color: #3d4b56; }
+  </style>
+</head>
+<body>
+  <header><h1>UI Capture</h1><p id="summary"></p></header>
+  <main>
+    <section aria-labelledby="map-heading"><h2 id="map-heading">Flow map</h2><pre id="mermaid-source"></pre><div id="mermaid" class="mermaid" role="img" aria-label="Flow map diagram"></div></section>
+    <section aria-labelledby="states-heading"><h2 id="states-heading">Captured states</h2><div class="node-grid" id="nodes"></div></section>
+  </main>
+  <script>window.__UI_CAPTURE_MAP__ = __UI_CAPTURE_DATA__;</script>
+  <script type="module">
+    const map = window.__UI_CAPTURE_MAP__;
+      document.querySelector("#summary").textContent = `${map.nodes.length} states · ${map.edges.length} interactions`;
+      document.querySelector("#mermaid-source").textContent = map.mermaid || "No flow map yet.";
+      document.querySelector("#mermaid").textContent = map.mermaid || "";
+      const container = document.querySelector("#nodes");
+      for (const node of map.nodes) {
+        const card = document.createElement("article");
+        const title = document.createElement("h3");
+        title.textContent = node.title || node.state || node.id;
+        const details = document.createElement("p");
+        details.className = "meta";
+        details.textContent = `${node.area || "Unassigned"} · ${node.state || "As found"} · ${node.url}`;
+        card.append(title, details);
+        const assets = (map.assets || []).filter((item) => item.node === node.id && /\.(png|svg)$/i.test(item.file));
+        for (const asset of assets) {
+          const image = document.createElement("img");
+          image.src = asset.file;
+          image.alt = asset.description || title.textContent;
+          image.loading = "lazy";
+          card.append(image);
+        }
+        for (const asset of (map.assets || []).filter((item) => item.node === node.id && /\.(webm|mp4)$/i.test(item.file))) {
+          const link = document.createElement("a");
+          link.href = asset.file;
+          link.textContent = `Watch: ${asset.title}`;
+          card.append(link);
+        }
+        container.append(card);
+      }
+  </script>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: "neutral" });
+    await mermaid.run({ nodes: [document.querySelector("#mermaid")] });
+  </script>
+</body>
+</html>

@@ -277,6 +277,17 @@ The patterns are re-authored from Peter Yang's [`no-ai-slop`](https://github.com
 - Skill: [`skills/utilities/slop-check/SKILL.md`](skills/utilities/slop-check/SKILL.md)
 - Explainer: [`docs/slop-check/README.md`](docs/slop-check/README.md)
 
+### Capture — record what is there
+
+#### UI Capture
+
+Captures live web interfaces as a replayable state map, screenshots and interaction video. The Flow Map is the source of truth; the local viewer renders it as Mermaid and links states to evidence. Optional FigJam publishing uses the same map rather than reinterpreting the interface.
+
+The CLI uses Node.js and the pinned `agent-browser` 0.39.4; `ffmpeg` is needed for video and crops. Full exploration is restricted to hosts explicitly allowlisted in the consuming project. Captures can contain personal or confidential data; review before sharing.
+
+- Skill: [`skills/capture/ui-capture/SKILL.md`](skills/capture/ui-capture/SKILL.md)
+- Explainer: [`docs/ui-capture/README.md`](docs/ui-capture/README.md)
+
 ## Repository layout
 
 ```
@@ -294,7 +305,7 @@ scripts/check-skills.mjs    the structural check
 
 Skills sit in `skills/` at the root because that is where `copilot plugin install` reads them. That is deliberately **not** `.github/skills/`, which is where an installed skill lands in a *consuming* project. Authoring location and consumption location are different things.
 
-The four roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`.
+The five roots are declared in `plugin.json`'s `skills` array. Without that array the installer and the check both assume `skills/` contains skill folders directly, and `process/` would be read as a skill with no `SKILL.md`. `skills/capture/` contains tools that record live interface evidence.
 
 `docs/` stays **flat**: one folder per skill, named after the skill folder, whichever root the skill lives in. The check resolves `docs/<skill>` by name; mirroring the grouping there would break it for no benefit. A folder there without a matching skill is a library-level explainer — currently only [`docs/the-chain/`](docs/the-chain/README.md). The check tolerates it: it asserts every skill has a folder, not that every folder is a skill.
 
