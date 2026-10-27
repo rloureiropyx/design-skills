@@ -4,8 +4,8 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { nodeId, edgeId, normalizeUrlPattern, structureHash } from "../lib/identity.mjs";
-import { addAsset, addEdge, addNode, addVariant, emitMermaid, writeMap } from "../lib/flow-map.mjs";
-import { verifyRun } from "../lib/verify.mjs";
+import { addAsset, addEdge, addNode, addVariant, emitMermaid, redactUrl, writeMap } from "../lib/flow-map.mjs";
+import { labelsMatch, verifyRun } from "../lib/verify.mjs";
 import { parseAllowedHosts } from "../lib/project.mjs";
 
 test("node identity normalizes numeric routes and ignores accessible text values", () => {
@@ -67,4 +67,17 @@ test("verify reports missing files and preserves valid asset references", async 
   } finally {
     await rm(runDir, { recursive: true, force: true });
   }
+});
+
+test("must-see labels match when the shorter label's words all appear in the longer one", () => {
+  assert.equal(labelsMatch("Payroll Journal report output", "Payroll Journal output"), true);
+  assert.equal(labelsMatch("Payroll Journal output", "Payroll category"), false);
+  assert.equal(labelsMatch("Output", "Payroll Journal output"), false);
+});
+
+test("stored URLs redact token-like query parameters and keep the rest", () => {
+  const url = redactUrl("https://reporting.example.test/download/report.pdf?token=abc123&lang=en");
+  assert.match(url, /token=REDACTED/);
+  assert.match(url, /lang=en/);
+  assert.doesNotMatch(url, /abc123/);
 });

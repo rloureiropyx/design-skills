@@ -27,7 +27,19 @@ async function atomicWrite(file, contents) {
   await rename(temporary, file);
 }
 
-export function addNode(map, { url, snapshot, title, area, state, viewport, role, orphan = false, reachability = "live" }) {
+// Download links and SSO redirects carry one-time tokens; never persist them in map.json.
+export function redactUrl(raw) {
+  try {
+    const url = new URL(raw);
+    for (const key of [...url.searchParams.keys()]) {
+      if (/token|key|sig|signature|session|auth|code|secret|password/i.test(key)) url.searchParams.set(key, "REDACTED");
+    }
+    return url.href;
+  } catch { return raw; }
+}
+
+export function addNode(map, { url: rawUrl, snapshot, title, area, state, viewport, role, orphan = false, reachability = "live" }) {
+  const url = redactUrl(rawUrl);
   const id = nodeId(url, snapshot);
   let node = map.nodes.find((item) => item.id === id);
   if (!node) {

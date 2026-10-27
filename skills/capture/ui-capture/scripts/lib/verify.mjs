@@ -51,8 +51,8 @@ export async function verifyRun(runDir, { strict = false } = {}) {
     try { await access(path.join(runDir, asset.file)); } catch { failures.push(`Asset file does not exist: ${asset.file}.`); }
   }
   for (const expected of map.brief?.must_see || []) {
-    if (!(map.nodes || []).some((node) => node.state === expected || node.title === expected)
-      && !(map.assets || []).some((asset) => asset.state === expected || asset.title === expected)) {
+    if (!(map.nodes || []).some((node) => labelsMatch(expected, node.state) || labelsMatch(expected, node.title))
+      && !(map.assets || []).some((asset) => labelsMatch(expected, asset.state) || labelsMatch(expected, asset.title))) {
       warnings.push(`Expected state not reached: ${expected}.`);
     }
   }
@@ -79,4 +79,13 @@ export async function verifyRun(runDir, { strict = false } = {}) {
 
 async function accessible(file) {
   try { await access(file); return true; } catch { return false; }
+}
+
+// Labels are written by a model at different moments; match when every word of the shorter label appears in the longer one.
+export function labelsMatch(a, b) {
+  const words = (value) => String(value || "").toLowerCase().match(/[a-z0-9]+/g) || [];
+  const [x, y] = [words(a), words(b)];
+  if (!x.length || !y.length) return false;
+  const [short, long] = x.length <= y.length ? [x, new Set(y)] : [y, new Set(x)];
+  return short.length >= 2 && short.every((word) => long.has(word));
 }

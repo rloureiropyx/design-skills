@@ -9,3 +9,8 @@
 - PII masking is out of scope for v1. Review all image, trace and video files before sharing.
 - When a requested state cannot be reached, record the status and reason. Do not recreate it from a story or design file and call it live.
 - FigJam thumbnail placement is not yet verified; say so and use the storyboard or local viewer fallback.
+- Enterprise SPAs (e.g. Paychex Flex) render long after `load`. The CLI waits for network idle and a stable accessibility tree after opening and after every click; if candidates are still empty, run `explore step` again instead of concluding the page has no controls.
+- Single-page apps often keep one URL across states (hash routes that never change). Node identity relies on the accessibility structure hash, so label each node with `label` or `--state`; the URL alone does not distinguish states.
+- Buttons can open another host in a new tab (report viewers, PDF downloads). The step stops and captures nothing until the brief is re-confirmed with that host in scope and on the allowlist.
+- Replay video records the original tab only. A step that opens a new tab shows the click but not the result; the clean still from exploration is the evidence for that state.
+- Query parameters that look like tokens, keys, signatures or sessions are stored as `REDACTED` in `map.json`, but screenshots and traces can still show them.

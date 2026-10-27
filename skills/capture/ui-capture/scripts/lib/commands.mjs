@@ -62,7 +62,7 @@ function jsonSnapshot(session) {
 
 function parseCandidates(snapshot, allowed = true) {
   const candidates = [];
-  const pattern = /-\s*(button|link|checkbox|radio|tab|menuitem|textbox|combobox|switch|option)\s+"([^"]+)"(?:\s+\[ref=(e\d+)\])?/gi;
+  const pattern = /-\s*(button|link|checkbox|radio|tab|menuitem|textbox|searchbox|combobox|switch|option)\s+"([^"]+)"(?:\s+\[ref=(e\d+)\])?/gi;
   let match;
   while ((match = pattern.exec(snapshot)) && candidates.length < 50) {
     const role = match[1].toLowerCase();
@@ -195,7 +195,7 @@ async function briefCommand(positionals, options) {
     confirmed: false,
     created_at: new Date().toISOString(),
   };
-  const runDir = await createRun(options.flow || positionals[1] || safeName(start.pathname.split("/").filter(Boolean).at(-1) || start.hostname), captureBrief);
+  const runDir = await createRun(options.flow || positionals[1] || safeName(String(options.goal || "").slice(0, 48) || start.hostname), captureBrief);
   await writeFile(path.join(runDir, "capture-brief.json"), `${JSON.stringify(captureBrief, null, 2)}\n`);
   const allowed = await isAllowlisted(start.href);
   jsonResult({
@@ -236,6 +236,21 @@ async function requireAuthIgnored() {
   }
 }
 
+// SPAs (e.g. enterprise shells) render long after load; never inspect before the tree settles.
+function settle(session, { maxMs = 60_000 } = {}) {
+  try { agentBrowser(["wait", "--load", "networkidle"], { session, timeout: maxMs }); } catch { /* fall through to tree polling */ }
+  const start = Date.now();
+  let previous = -1, stable = 0;
+  while (Date.now() - start < maxMs) {
+    const size = agentBrowser(["snapshot"], { session }).split("\n").length;
+    stable = size === previous && size > 10 ? stable + 1 : 0;
+    if (stable >= 2) return size;
+    previous = size;
+    agentBrowser(["wait", "1500"], { session });
+  }
+  return previous;
+}
+
 async function startBrowser({ brief, session }) {
   const allowed = await isAllowlisted(brief.start_url);
   const authState = brief.auth_app ? path.join(process.cwd(), ".ui-capture", `${safeName(brief.auth_app)}.json`) : null;
@@ -245,6 +260,7 @@ async function startBrowser({ brief, session }) {
   agentBrowser([...(allowed ? [] : ["--headed"]), ...(authState ? ["--state", authState] : []), "open", brief.start_url], { session });
   const viewport = viewportFromBrief(brief);
   agentBrowser(["set", "viewport", String(viewport.width), String(viewport.height)], { session });
+  settle(session);
   return allowed;
 }
 
@@ -304,6 +320,12 @@ async function exploreStep(options) {
   }
   const from = (await captureIntoMap(context, { state: "Before interaction", area: options.area || "Unassigned" })).node;
   agentBrowser(["find", "role", selected.role, "click", "--name", selected.name], { session: context.session });
+  settle(context.session);
+  // Buttons can navigate or open tabs on other hosts; check scope before capturing anything.
+  try { await assertCurrentScope(context); } catch (error) {
+    const landed = agentBrowser(["get", "url"], { session: context.session });
+    throw new Error(`"${selected.name}" left the confirmed scope (${new URL(landed).hostname}). Nothing was captured. Re-confirm the brief with that host in scope, or pick another candidate.`);
+  }
   const captured = await captureIntoMap(context, { state: options.state || selected.name, area: options.area || "Unassigned" });
   const edge = addEdge(context.map, { from: from.id, to: captured.node.id, action: selected.name, locator: { role: selected.role, name: selected.name } });
   const flowPath = path.join(context.runDir, "flow.yaml");
@@ -438,6 +460,7 @@ async function replayCommand(options) {
   await startBrowser(context);
   const video = path.join(videoDir, "replay.webm");
   const trace = path.join(videoDir, "replay-trace.zip");
+  const replayWarnings = [];
   const timestamps = [];
   const replayStart = Date.now();
   let recording = false;
@@ -462,6 +485,7 @@ async function replayCommand(options) {
       time.start_seconds = Number(((Date.now() - replayStart) / 1000).toFixed(2));
       try {
         agentBrowser(["find", "role", step.locator.role, "click", "--name", step.locator.name], { session: context.session });
+        settle(context.session);
         await agentBrowser(["wait", "700"], { session: context.session });
         time.end_seconds = Number(((Date.now() - replayStart) / 1000).toFixed(2));
       } catch (error) {
@@ -478,6 +502,7 @@ async function replayCommand(options) {
   ]) {
     if (!active) continue;
     try { agentBrowser(stop, { session: context.session }); } catch (error) {
+      if (stop[0] === "trace") { replayWarnings.push(`Trace not saved: ${error.message.slice(0, 160)}`); continue; }
       replayError ||= error;
       if (replayError !== error) replayError.message = `${replayError.message}; cleanup failed: ${error.message}`;
     }
@@ -520,7 +545,7 @@ async function replayCommand(options) {
   }
   await writeMap(context.runDir, context.map);
   if (replayError) throw replayError;
-  jsonResult({ node: { video: path.relative(context.runDir, video), steps: flow.steps.length, trace: path.relative(context.runDir, trace) }, next: "Review the recording and verify asset references before sharing." });
+  jsonResult({ node: { video: path.relative(context.runDir, video), steps: flow.steps.length, trace: replayWarnings.length ? null : path.relative(context.runDir, trace), warnings: replayWarnings }, next: "Review the recording and verify asset references before sharing." });
 }
 
 async function annotateCommand(options) {
