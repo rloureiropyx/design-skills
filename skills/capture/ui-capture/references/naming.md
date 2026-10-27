@@ -17,4 +17,4 @@ Rules:
 - Branch names describe the user's intent, not the control. "Create a new Payroll Journal", not "Click Create report".
 - Never put URLs, IDs, client numbers or people's names in a name.
 - Edges are named by the CLI from the clicked control (`Click "Create report"`); do not rename them unless the control label is an internal string (e.g. `paychex.app.notifications.icon...`), in which case use `label --edge ID --action "Open notifications"`.
-- Files follow screen names automatically: `assets/03-payroll-journal-report-history.png`, `video/w1440/02-create-a-new-payroll-journal.webm`.
+- Files follow screen names automatically: `assets/03-payroll-journal-report-history.png`, `video/w1440/02-create-a-new-payroll-journal.mp4`.

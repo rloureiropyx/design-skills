@@ -880,7 +880,7 @@ async function stillsPass(context, flow, branch, viewport, seen) {
 }
 
 async function videoPass(context, flow, branch, viewport, order) {
-  const file = `video/w${viewport.width}/${String(order + 1).padStart(2, "0")}-${safeName(branch.name)}.webm`;
+  const file = `video/w${viewport.width}/${String(order + 1).padStart(2, "0")}-${safeName(branch.name)}.mp4`; // H.264: plays in Safari/WebKit, unlike VP8 webm
   await mkdir(path.join(context.runDir, path.dirname(file)), { recursive: true });
   try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
   await startBrowser(context, viewport, { smooth: true });

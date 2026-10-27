@@ -65,7 +65,7 @@ export async function publishPrep(runDir) {
         }
         cards.push({ key, caption: title(screen.node), action: screen.action, fallback: shot && (shot.viewport?.width || primary) !== viewport.width ? `${primary}px shown` : null, missing: !shot });
       }
-      const video = branch.videos?.[viewport.width]?.file;
+      const video = branch.videos?.[viewport.width]?.file; // .mp4 since 2026-10-27; older runs may have .webm
       let gif = null;
       if (video && branch.kind !== "auto") {
         const file = `publish/gifs/w${viewport.width}-${slug(branch.name)}.gif`;

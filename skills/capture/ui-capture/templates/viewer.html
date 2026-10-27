@@ -100,6 +100,7 @@
   (() => {
     const data = window.__UI_CAPTURE__;
     const $ = (tag, attrs = {}, ...kids) => { const el = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (v == null) continue; if (k === "text") el.textContent = v; else if (k === "class") el.className = v; else el.setAttribute(k, v); } el.append(...kids.filter(Boolean)); return el; };
+    const clean = (text) => String(text ?? "").replace(/^[^\p{L}\p{N}"“(]+/u, "").replace(/"[^\p{L}\p{N}]+/gu, '"').trim();
     const node = (id) => data.nodes.find((n) => n.id === id) || { id, title: id };
     const widths = data.viewports.map((v) => v.width);
     let width = data.primary;
@@ -140,7 +141,7 @@
       if (!exact && fallback) caption.append($("span", { class: "fallback", text: `Not captured at ${width}px; showing ${fallback.width || data.primary}px.` }));
       const figure = $("figure", { id: `screen-${nodeId}-${Math.random().toString(36).slice(2, 7)}` }, shot ? $("img", { src: shot.file, alt: `${n.title} at ${shot.width || data.primary}px`, loading: "lazy" }) : $("p", { class: "note", text: "No screenshot." }), caption);
       const li = $("li", {});
-      if (actionText) li.append($("p", { class: "action" }, document.createTextNode("Click "), $("strong", { text: `“${actionText}”` })));
+      if (actionText) li.append($("p", { class: "action" }, document.createTextNode("Click "), $("strong", { text: `“${clean(actionText)}”` })));
       else li.append($("p", { class: "action", text: startLabel }));
       li.append(figure);
       return li;
@@ -152,13 +153,15 @@
       const rec = branch.videos?.[width];
       if (!vp?.video) { block.append($("p", { class: "meta", text: `No video at ${width}px: this width is captured as stills for WCAG 1.4.10 reflow only.` })); return block; }
       if (!rec) { block.append($("p", { class: "meta", text: branch.breaks?.[width] ? "No video: the replay broke at this width (see note above)." : "Not recorded yet. Run replay." })); return block; }
-      const video = $("video", { controls: "", preload: "metadata", src: rec.file, "aria-label": `${branch.name}, screen recording at ${width}px` });
+      const lastScreen = branch.steps.at(-1)?.to;
+      const poster = lastScreen && (shotFor(lastScreen).exact || shotFor(lastScreen).fallback);
+      const video = $("video", { controls: "", preload: "metadata", playsinline: "", src: rec.file, poster: poster?.file, "aria-label": `${branch.name}, screen recording at ${width}px` });
       video.style.setProperty("--vw", `${Math.min(width, 960)}px`);
       block.append(video);
       if (rec.chapters?.length) {
         const list = $("ul", { class: "chapters", "aria-label": "Chapters" });
         for (const ch of rec.chapters) {
-          const btn = $("button", { type: "button", class: "secondary", text: `${ch.label} · ${Math.floor(ch.time / 60)}:${String(Math.floor(ch.time % 60)).padStart(2, "0")}` });
+          const btn = $("button", { type: "button", class: "secondary", text: `${clean(ch.label)} · ${Math.floor(ch.time / 60)}:${String(Math.floor(ch.time % 60)).padStart(2, "0")}` });
           btn.addEventListener("click", () => { video.currentTime = ch.time; video.play().catch(() => {}); });
           list.append($("li", {}, btn));
         }
