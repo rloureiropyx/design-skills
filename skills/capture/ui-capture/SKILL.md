@@ -27,7 +27,7 @@ Produce a Capture Brief, Expected States when supplied, a Flow Map, a manifest, 
 4. **Capture states** — `area` uses a deterministic breadth-first crawl within URL scope and node budget; `flow` selects from numbered, pre-filtered semantic candidates; `quick` saves an Orphan Node. The model labels evidence only, never writes selectors. Read `references/exploration.md` and `references/flow-map-format.md`.
 5. **Add requested evidence** — default to one desktop viewport and as-found state. Take clean stills outside recording; crop changed regions, transient UI and user targets. Read `references/presets.md` only when variants or simulated conditions are requested.
 6. **Replay and render** — replay `flow.yaml` with semantic locators; stop and flag an ambiguous locator, do not re-explore. Read `references/video.md` before recording. Generate the local viewer and run `verify`.
-7. **Publish only if asked** — FigJam publishing is optional. Read `references/figjam-publish.md`; disclose that image placement has not been verified if it remains untested. Warn that v1 does not mask PII before any sharing.
+7. **Publish only if asked** — FigJam publishing is optional. Read `references/figjam-publish.md` and follow its steps; publish human labels, never URLs. Warn that v1 does not mask PII before any sharing.
 8. **Hand off** — report reached and unreached Expected States, the node budget and any remaining queue, simulated states, and blocked replay steps.
 
 The CLI returns one compact JSON object per command: `{ok, progress, node, candidates?, next}`. Never infer success from a command starting; confirm it with `verify`.
