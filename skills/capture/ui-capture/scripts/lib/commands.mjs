@@ -280,7 +280,8 @@ async function startBrowser({ brief, session }, viewportOverride = null, launch 
   // Capture browsers never save or check passwords: Chrome's leak warning blocks all page input after a demo login.
   const chromeArgs = ["--args", "--password-store=basic,--disable-features=PasswordLeakDetection,PasswordManagerOnboarding,AutofillServerCommunication,Translate"];
   const inputMode = launch.smooth ? ["--input-mode", "smooth"] : [];
-  const openArgs = [...(allowed ? [] : ["--headed"]), ...chromeArgs, ...inputMode, ...(authState ? ["--state", authState] : []), "open", brief.start_url];
+  const overlay = launch.overlay ? ["--init-script", path.join(SKILL_DIR, "templates", "cursor-overlay.js")] : [];
+  const openArgs = [...(allowed ? [] : ["--headed"]), ...chromeArgs, ...inputMode, ...overlay, ...(authState ? ["--state", authState] : []), "open", brief.start_url];
   // Launch options such as --state only apply to a fresh browser, and reopening right after close can race the daemon.
   for (let attempt = 1; ; attempt += 1) {
     try { agentBrowser(openArgs, { session }); break; } catch (error) {
@@ -879,17 +880,47 @@ async function stillsPass(context, flow, branch, viewport, seen) {
   return null;
 }
 
+// Scroll the target into view and return its centre in viewport coordinates.
+function targetCenter(session, locator) {
+  if (locator.role === "text") {
+    const script = `(()=>{const name=${JSON.stringify(locator.name)};const hit=[...document.querySelectorAll('body *')].filter(e=>e.childElementCount<=3&&e.textContent.trim()===name&&e.getClientRects().length);if(!hit.length)return null;const el=hit.find(e=>e.closest('a,button'))||hit[hit.length-1];el.scrollIntoView({block:'center',behavior:'smooth'});return null})()`;
+    agentBrowser(["eval", script], { session });
+    agentBrowser(["wait", "450"], { session });
+    const rect = agentBrowser(["eval", `JSON.stringify((()=>{const name=${JSON.stringify(locator.name)};const hit=[...document.querySelectorAll('body *')].filter(e=>e.childElementCount<=3&&e.textContent.trim()===name&&e.getClientRects().length);const el=hit.find(e=>e.closest('a,button'))||hit[hit.length-1];const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})())`], { session });
+    try { return JSON.parse(JSON.parse(rect)); } catch { return null; }
+  }
+  const line = agentBrowser(["snapshot"], { session }).split("\n").find((text) => text.includes(`${locator.role} "${locator.name}"`) && /ref=e\d+/.test(text));
+  if (!line) return null;
+  const ref = `@${/ref=(e\d+)/.exec(line)[1]}`;
+  try { agentBrowser(["scrollintoview", ref], { session }); agentBrowser(["wait", "350"], { session }); } catch { /* already visible */ }
+  const box = Object.fromEntries(agentBrowser(["get", "box", ref], { session }).split("\n").map((row) => row.split(":").map((part) => part.trim())).filter((pair) => pair.length === 2).map(([key, value]) => [key, Number(value)]));
+  if (!Number.isFinite(box.x)) return null;
+  return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+}
+
+// Visible travel to the target, a short dwell, then the press feedback. The real click follows.
+function cursorTo(session, locator) {
+  const point = targetCenter(session, locator);
+  if (!point) return false;
+  const ms = Number(agentBrowser(["eval", `window.__uic ? window.__uic.moveTo(${point.x.toFixed(1)}, ${point.y.toFixed(1)}) : 0`], { session }).replace(/[^0-9.]/g, "")) || 0;
+  agentBrowser(["wait", String(Math.round(Math.max(ms, 350) + 220))], { session }); // glide + ~200 ms dwell before the click
+  agentBrowser(["eval", "window.__uic && window.__uic.press()"], { session });
+  agentBrowser(["wait", "160"], { session });
+  return true;
+}
+
 async function videoPass(context, flow, branch, viewport, order) {
   const file = `video/w${viewport.width}/${String(order + 1).padStart(2, "0")}-${safeName(branch.name)}.mp4`; // H.264: plays in Safari/WebKit, unlike VP8 webm
   await mkdir(path.join(context.runDir, path.dirname(file)), { recursive: true });
   try { agentBrowser(["close"], { session: context.session }); } catch { /* not open */ }
-  await startBrowser(context, viewport, { smooth: true });
+  await startBrowser(context, viewport, { smooth: true, overlay: true });
+  try { agentBrowser(["eval", "window.__uic && window.__uic.show()"], { session: context.session }); } catch { /* overlay optional */ }
   const chapters = [];
   const began = Date.now();
   const at = () => Number(((Date.now() - began) / 1000).toFixed(2));
   let error = null;
   let stoppedBefore = null;
-  agentBrowser(["record", "start", path.join(context.runDir, file), "--cursor"], { session: context.session });
+  agentBrowser(["record", "start", path.join(context.runDir, file)], { session: context.session });
   try {
     captionIn(context, `${branch.name} · start: ${nodeTitle(context.map, flow.start_node)}`);
     chapters.push({ time: 0, label: `Start: ${nodeTitle(context.map, flow.start_node)}`, node: flow.start_node });
@@ -905,11 +936,15 @@ async function videoPass(context, flow, branch, viewport, order) {
         break;
       }
       for (const input of step.inputs || []) {
-        captionIn(context, `${branch.name} · type "${input.value}" in ${input.name}`);
-        agentBrowser(["wait", "500"], { session: context.session });
-        applyInputs(context.session, [input]);
+        captionIn(context, `${branch.name} · type in ${input.name}`);
+        if (cursorTo(context.session, input)) {
+          findWithRetry(context.session, ["find", "role", input.role, "click", "--name", input.name, "--exact"]);
+          agentBrowser(["keyboard", "type", input.value], { session: context.session });
+        } else applyInputs(context.session, [input]);
+        agentBrowser(["wait", "350"], { session: context.session });
       }
-      agentBrowser(["wait", "600"], { session: context.session });
+      captionIn(context, `${branch.name} · ${index + 1}/${branch.steps.length}: ${step.caption || step.action}`);
+      cursorTo(context.session, step.locator);
       performStep(context.session, step);
       settle(context.session);
       agentBrowser(["wait", "900"], { session: context.session });
