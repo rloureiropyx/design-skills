@@ -36,22 +36,14 @@ export function edgeId(from, to, action) {
   return `e-${hash(`${from}\n${to}\n${action}`)}`;
 }
 
-// Structural similarity (0–1) between two accessibility snapshots, ignoring text and refs.
-// Lists that gained or lost a few rows stay above ~0.85; a different screen falls well below.
+// Structural similarity (0–1) between two accessibility snapshots, ignoring text, refs and repetition.
+// Distinct line shapes are compared as sets, so a list that gains or loses rows keeps its shape;
+// a different screen shares few shapes and falls well below 0.85.
 export function structureSimilarity(a, b) {
-  const lines = (snapshot) => {
-    const counts = new Map();
-    for (const line of String(snapshot).split("\n")) {
-      const key = normalizeStructure(line);
-      if (key) counts.set(key, (counts.get(key) || 0) + 1);
-    }
-    return counts;
-  };
-  const x = lines(a), y = lines(b);
-  let shared = 0, total = 0;
-  for (const key of new Set([...x.keys(), ...y.keys()])) {
-    shared += Math.min(x.get(key) || 0, y.get(key) || 0);
-    total += Math.max(x.get(key) || 0, y.get(key) || 0);
-  }
-  return total ? shared / total : 1;
+  const shapes = (snapshot) => new Set(String(snapshot).split("\n").map((line) => normalizeStructure(line)).filter(Boolean));
+  const x = shapes(a), y = shapes(b);
+  let shared = 0;
+  for (const key of x) if (y.has(key)) shared += 1;
+  const union = new Set([...x, ...y]).size;
+  return union ? shared / union : 1;
 }

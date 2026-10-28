@@ -65,7 +65,7 @@ export async function verifyRun(runDir, { strict = false } = {}) {
       for (const edge of map.edges.filter((item) => item.locator?.role && item.locator?.name)) {
         const steps = flow.branches ? flow.branches.flatMap((branch) => branch.steps) : (flow.steps || []);
         if (!steps.some((step) => step.edge === edge.id && step.locator?.role && step.locator?.name)) {
-          failures.push(`Replay path is missing semantic step for edge ${edge.id}.`);
+          warnings.push(`Edge "${edge.action}" (${edge.id}) is on the map but in no branch, so it has a screenshot but no video. Create a branch for it if it matters.`);
         }
       }
     } catch (error) {

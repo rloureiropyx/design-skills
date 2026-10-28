@@ -25,3 +25,4 @@
 - Control names with live counts ("…with 2 other logged in users") are compared without digits, so they are still recognised as global.
 - Lists change between visits (a new report run adds a row). Revisits accept a ≥ 85% structural match on the same URL pattern.
 - Login hooks read the page while it navigates; wrap reads (`get`, `snapshot`) so "Cannot find context" means "not yet", not failure.
+- Shared accounts change data between visits (other people add report runs). Screen identity on revisits compares the set of distinct structures, so lists can grow or shrink; "earlier screens" are true ancestors on the path, never sibling branches.

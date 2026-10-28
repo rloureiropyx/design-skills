@@ -833,8 +833,14 @@ async function exploreDeep(options) {
       // on a recorded path is an edge, not a place to explore again.
       // Similar to the current screen = an in-place change (menu, filter, selection): explore it.
       // Similar to an earlier screen = going back up: record nothing new.
-      const ancestors = new Set([flow.signin_node, flow.start_node, ...flow.branches.flatMap((branch) => branch.steps.map((step2) => step2.to)), ...prefix.map((step2) => step2.from)]);
+      // True ancestors only (screens before this one on its path), never sibling branches' screens,
+      // and never screens that share the current screen's shape (the same list with another row).
+      const ancestors = new Set([flow.signin_node, flow.start_node, ...route.steps.map((step2) => step2.from), ...prefix.map((step2) => step2.from)].filter(Boolean));
       ancestors.delete(parentId);
+      for (const id of [...ancestors]) {
+        const known = context.map.nodes.find((node) => node.id === id);
+        try { if (known?.evidence?.snapshot && structureSimilarity(snapshot, await readFile(path.join(context.runDir, known.evidence.snapshot), "utf8")) >= 0.85) ancestors.delete(id); } catch { /* keep */ }
+      }
       let backUp = ancestors.has(childId);
       if (!backUp) for (const id of ancestors) { const known = context.map.nodes.find((node) => node.id === id); if (known?.evidence?.snapshot && normalizeUrlPattern(landed) === known.url_pattern) { try { if (structureSimilarity(childSnapshot, await readFile(path.join(context.runDir, known.evidence.snapshot), "utf8")) >= 0.85) { backUp = true; break; } } catch { /* ignore */ } } }
       if (backUp) {
@@ -858,7 +864,8 @@ async function exploreDeep(options) {
         flow.branches.push({ id, name: `Explore: ${[...prefix.slice(route.steps.length), step].map((s) => s.action).join(" → ")}`, kind: "auto", parent: route.branch.id, fork_node: at, steps });
         report.branches.push(id);
       }
-      leaves += Math.max(1, grandLeaves);
+      // Count only branches actually created: an edge to an already-known screen is not a leaf.
+      if (!existed) leaves += Math.max(1, grandLeaves);
       await writeMap(context.runDir, context.map);
       await saveFlow(context, flow);
       report.returns[await restore(context, parentId, prefix, childIsOverlay || wasOverlay)] += 1;
