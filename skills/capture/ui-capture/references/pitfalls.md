@@ -20,3 +20,7 @@
 - Test environments fail intermittently ("this info didn't load"). Save the screen with `quick --state "<Screen> · Load error (intermittent)"`, wait a few minutes, and retry the fork. Do not report it as a finding.
 - Each replay pass is a fresh login session; shared test accounts may show "N other users are also logged in" toasts in screenshots and video.
 - VP8 `.webm` recordings render black in Safari/WebKit (including some app canvases). Replay records H.264 `.mp4`; convert older `.webm` runs with `ffmpeg -i in.webm -c:v libx264 -pix_fmt yuv420p out.mp4`.
+- `explore deep` wandered off goal on N2A (breadcrumb back to the library, every category, dashboard tiles) and took 27 minutes. It now never re-explores a screen already on a recorded path (exact or ≥ 85% structural match) and defaults to depth 2 and 8 actions per screen.
+- Session-timeout warnings ("Are you still there?" with Continue) break replays. The CLI clicks Continue when such a dialog blocks a step.
+- Control names with live counts ("…with 2 other logged in users") are compared without digits, so they are still recognised as global.
+- Lists change between visits (a new report run adds a row). Revisits accept a ≥ 85% structural match on the same URL pattern.

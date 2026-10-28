@@ -9,7 +9,7 @@ import { renderRun } from "./render.mjs";
 import { ensureRunDir, isAllowlisted, loadBrief, parseArgs, readProjectConfig, resolveRun, safeName, createRun, SKILL_DIR } from "./project.mjs";
 import { verifyRun } from "./verify.mjs";
 import { publishPrep as preparePublish, publishUpload } from "./publish.mjs";
-import { nodeId } from "./identity.mjs";
+import { nodeId, normalizeUrlPattern, structureSimilarity } from "./identity.mjs";
 
 const HELP = `ui-capture — record live web interfaces as a Flow Map, screenshots and replayable video
 
@@ -343,6 +343,7 @@ function findWithRetry(session, args, attempts = 6) {
   for (let attempt = 1; ; attempt += 1) {
     try { return agentBrowser(args, { session }); } catch (error) {
       if (attempt >= attempts || !/No element found|Names seen/i.test(error.message)) throw error;
+      if (keepAlive(session)) continue;
       // Lazy-loaded dashboards only render tiles near the viewport: scroll down, then back to the top once.
       agentBrowser(attempt === attempts - 1 ? ["scroll", "up", "10000"] : ["scroll", "down", "800"], { session });
       agentBrowser(["wait", "2000"], { session });
@@ -470,7 +471,8 @@ async function beginRun(context, flow, options) {
   return start;
 }
 
-function candidateKey(candidate) { return `${candidate.role}:${candidate.name}`; }
+// Names like "…with 2 other logged in users" change between screens; compare them without digits.
+function candidateKey(candidate) { return `${candidate.role}:${String(candidate.name).replace(/\d+/g, "#")}`; }
 
 // Controls present on every captured screen (app header, profile menu) are global chrome, not branches.
 async function globalCandidateKeys(context) {
@@ -599,6 +601,7 @@ function pathTo(flow, nodeId) {
 
 async function replaySteps(context, steps) {
   for (const step of steps) {
+    keepAlive(context.session);
     applyInputs(context.session, step.inputs);
     performStep(context.session, step);
     settle(context.session);
@@ -661,16 +664,24 @@ async function coverageFor(context) {
   return rows;
 }
 
-function autoName(snapshot, action, parentTitle) {
+function autoName(snapshot, action, parentTitle, parentSnapshot = "") {
   const dialog = /^\s*-\s*(?:dialog|alertdialog)\s+"([^"]+)"/m.exec(snapshot);
-  if (dialog) return `${dialog[1]} · Dialog open`;
-  if (/^\s*-\s*(menu|listbox)\b/m.test(snapshot)) return `${parentTitle.split(" · ")[0]} · ${action} menu open`;
+  if (dialog && !parentSnapshot.includes(dialog[0].trim())) return `${dialog[1]} · Dialog open`;
+  const count = (text, pattern) => (String(text).match(pattern) || []).length;
+  const menus = /^\s*-\s*(menu|listbox)\b/gm;
+  if (count(snapshot, menus) > count(parentSnapshot, menus)) return `${parentTitle.split(" · ")[0]} · ${action} menu open`;
   const heading = /^\s*-\s*heading\s+"([^"]{2,60})"\s+\[level=1/m.exec(snapshot) || /^\s*-\s*heading\s+"([^"]{2,60})"/m.exec(snapshot);
   return `${heading ? heading[1] : parentTitle.split(" · ")[0]} · After "${action}"`;
 }
 
 async function sameScreen(context, nodeIdWanted) {
-  return nodeId(agentBrowser(["get", "url"], { session: context.session }), jsonSnapshot(context.session)) === nodeIdWanted;
+  const url = agentBrowser(["get", "url"], { session: context.session });
+  const snapshot = jsonSnapshot(context.session);
+  if (nodeId(url, snapshot) === nodeIdWanted) return true;
+  // Data-driven lists change row counts between visits (e.g. a new report run); accept a close structural match.
+  const node = context.map.nodes.find((item) => item.id === nodeIdWanted);
+  if (!node?.evidence?.snapshot || normalizeUrlPattern(url) !== node.url_pattern) return false;
+  try { return structureSimilarity(snapshot, await readFile(path.join(context.runDir, node.evidence.snapshot), "utf8")) >= 0.85; } catch { return false; }
 }
 
 // Return to a parent screen as cheaply as possible: Escape for overlays, Back for navigation, full replay as a last resort.
@@ -701,7 +712,7 @@ async function exploreDeep(options) {
   const route = pathTo(flow, at);
   if (!route) throw new Error(`Screen ${at} is not on any recorded path. Run explore status for screen IDs.`);
   if (route.steps.some((step) => step.mutates)) throw new Error("Reaching that screen repeats a step that creates data. Pick an earlier screen.");
-  const maxDepth = Math.max(1, Math.min(5, Number(options.depth) || 3));
+  const maxDepth = Math.max(1, Math.min(5, Number(options.depth) || 2));
   const budget = context.brief.scope.node_budget;
   let newScreens = 0;
   const report = { screens: [], branches: [], skipped: [], returns: { escape: 0, back: 0, replay: 0 } };
@@ -721,7 +732,7 @@ async function exploreDeep(options) {
       if (isMutating(item) && !taken.has(item.name)) report.skipped.push({ screen: parent.title, action: item.name, reason: "creates data: explore it by hand with --fill and a UXA tag" });
       if (isDestructive(item)) report.skipped.push({ screen: parent.title, action: item.name, reason: "destructive" });
     }
-    const todo = relevantCandidates(all, globalKeys).filter((item) => !taken.has(item.name)).slice(0, Number(options["per-screen"]) || 12);
+    const todo = relevantCandidates(all, globalKeys).filter((item) => !taken.has(item.name)).slice(0, Number(options["per-screen"]) || 8);
     let leaves = 0;
     for (const item of todo) {
       if (context.map.nodes.length >= budget) { report.skipped.push({ screen: parent.title, action: item.name, reason: "node budget reached" }); continue; }
@@ -746,8 +757,19 @@ async function exploreDeep(options) {
         report.skipped.push({ screen: parent.title, action: item.name, reason: "no visible change (pointer and keyboard)" });
         continue;
       }
+      // Stay on goal: a click that leads back up the path (breadcrumb, back link) or to a screen already
+      // on a recorded path is an edge, not a place to explore again.
+      const ancestors = new Set([flow.signin_node, flow.start_node, ...flow.branches.flatMap((branch) => branch.steps.map((step2) => step2.to)), ...prefix.map((step2) => step2.from)]);
+      let backUp = ancestors.has(childId);
+      if (!backUp) for (const id of ancestors) { const known = context.map.nodes.find((node) => node.id === id); if (known?.evidence?.snapshot && normalizeUrlPattern(landed) === known.url_pattern) { try { if (structureSimilarity(childSnapshot, await readFile(path.join(context.runDir, known.evidence.snapshot), "utf8")) >= 0.85) { backUp = true; break; } } catch { /* ignore */ } } }
+      if (backUp) {
+        (parent.skipped ||= []).push({ action: item.name, reason: "goes back to a screen already on the path" });
+        report.skipped.push({ screen: parent.title, action: item.name, reason: "goes back up the path (not explored again)" });
+        report.returns[await restore(context, parentId, prefix, false)] += 1;
+        continue;
+      }
       const existed = context.map.nodes.some((node) => node.id === childId);
-      const name = autoName(childSnapshot, item.name, parent.title);
+      const name = autoName(childSnapshot, item.name, parent.title, snapshot);
       const captured = await captureIntoMap(context, { state: name, area: areaFromName(name) });
       if (!existed) { nameNode(captured.node, name, areaFromName(name)); captured.node.auto_named = true; newScreens += 1; report.screens.push({ id: captured.node.id, name }); }
       const edge = addEdge(context.map, { from: parentId, to: captured.node.id, action: item.name, locator: { role: item.role, name: item.name } });
@@ -880,6 +902,18 @@ async function stillsPass(context, flow, branch, viewport, seen) {
   return null;
 }
 
+// Enterprise apps warn before session timeout ("Are you still there?" + Continue). Keep the session alive.
+function keepAlive(session) {
+  try {
+    const snap = agentBrowser(["snapshot"], { session });
+    if (!/(alertdialog|dialog)/.test(snap) || !/button "(Continue|Stay signed in|Keep me signed in|Yes, continue)"/i.test(snap)) return false;
+    const name = /button "(Continue|Stay signed in|Keep me signed in|Yes, continue)"/i.exec(snap)[1];
+    agentBrowser(["find", "role", "button", "click", "--name", name, "--exact"], { session });
+    agentBrowser(["wait", "1500"], { session });
+    return true;
+  } catch { return false; }
+}
+
 // Scroll the target into view and return its centre in viewport coordinates.
 function targetCenter(session, locator) {
   if (locator.role === "text") {
@@ -998,8 +1032,12 @@ async function replayCommand(options) {
     }
   }
   try { agentBrowser(["close"], { session: context.session }); } catch { /* closed */ }
-  context.brief.viewports = viewports;
-  context.map.brief = { ...(context.map.brief || {}), viewports };
+  // A partial replay (e.g. --viewports 360) adds to the run's viewport set; it never drops earlier widths.
+  const merged = [...(context.brief.viewports || [])];
+  for (const item of viewports) if (!merged.some((existing) => existing.width === item.width)) merged.push(item);
+  merged.sort((a, b) => b.width - a.width);
+  context.brief.viewports = merged;
+  context.map.brief = { ...(context.map.brief || {}), viewports: merged };
   await writeFile(path.join(context.runDir, "capture-brief.json"), `${JSON.stringify(context.brief, null, 2)}\n`);
   await saveFlow(context, flow);
   await writeMap(context.runDir, context.map);
