@@ -10,6 +10,16 @@ import path from "node:path";
 
 const GIF_LIMIT = 9.5 * 1024 * 1024;
 const label = (value) => String(value ?? "").replace(/^[^\p{L}\p{N}"“(]+/u, "").trim();
+// Boards are read by people: turn tool errors and data-bearing labels into plain language.
+const humanNote = (note) => {
+  if (!note) return note;
+  const covered = /Step \d+ \(([^)]+)\) not reachable at \d+px: .*covered by <([^>]*)>/.exec(note);
+  if (covered) return `Blocked: a ${/dialog/.test(covered[2]) ? "dialog" : "panel"} covered “${covered[1]}” (see the screenshot of the first screen).`;
+  if (/ETIMEDOUT|timed out/i.test(note)) return "Not recorded: the app stopped responding at this width.";
+  if (/encoder fell/i.test(note)) return "Not recorded: the recording failed at this width.";
+  return note.replace(/agent-browser [a-z]+ failed: ✗ /i, "").slice(0, 160);
+};
+const humanAction = (action) => /Run on [\d/]+/.test(action) ? "Open a run by name" : action;
 const slug = (value) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
 
 function ffmpeg(args) {
@@ -49,7 +59,7 @@ export async function publishPrep(runDir) {
     for (const branch of branches) {
       const ownSteps = branch.steps.filter((step) => !step.inherited);
       const firstScreen = branch.kind === "main" ? flow.start_node : branch.fork_node;
-      const screens = [{ node: firstScreen, action: null }, ...ownSteps.map((step) => ({ node: step.to, action: label(step.action) }))];
+      const screens = [{ node: firstScreen, action: null }, ...ownSteps.map((step) => ({ node: step.to, action: humanAction(label(step.action)) }))];
       if (branch.kind === "main" && flow.signin_node) screens.unshift({ node: flow.signin_node, action: null }), screens[1].action = "Sign in (human, not recorded)";
       const cards = [];
       for (const screen of screens) {
@@ -78,7 +88,7 @@ export async function publishPrep(runDir) {
         name: branch.name,
         kind: branch.kind,
         fork: branch.kind === "main" ? null : title(branch.fork_node),
-        note: branch.breaks?.[viewport.width] || (viewport.video === false ? "Stills only at this width (WCAG 1.4.10 reflow)." : (!video && branch.kind !== "auto" ? "No recording at this width." : null)),
+        note: humanNote(branch.breaks?.[viewport.width]) || (viewport.video === false ? "Stills only at this width (WCAG 1.4.10 reflow)." : (!video && branch.kind !== "auto" ? "No recording at this width." : null)),
         cards,
         gif,
       });
@@ -114,7 +124,7 @@ function humanMermaid(map) {
   const ids = new Map(map.nodes.map((node, index) => [node.id, `S${index + 1}`]));
   const lines = ["flowchart LR"];
   for (const node of map.nodes) lines.push(node.kind === "signin" ? `  ${ids.get(node.id)}(["${clean(node.title)}"])` : `  ${ids.get(node.id)}["${clean(node.title)}"]`);
-  for (const edge of map.edges) if (ids.has(edge.from) && ids.has(edge.to)) lines.push(`  ${ids.get(edge.from)} ${edge.reachability === "manual" ? "-.->" : "-->"}|"${clean(edge.action)}"| ${ids.get(edge.to)}`);
+  for (const edge of map.edges) if (ids.has(edge.from) && ids.has(edge.to)) lines.push(`  ${ids.get(edge.from)} ${edge.reachability === "manual" ? "-.->" : "-->"}|"${clean(humanAction(edge.action))}"| ${ids.get(edge.to)}`);
   return `${lines.join("\n")}\n`;
 }
 
