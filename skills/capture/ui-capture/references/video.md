@@ -22,3 +22,7 @@ agent-browser's built-in cursor follows only real pointer events and jumps to ea
 - **Touch widths (≤ 480 px)**: a 40 px tap circle instead of the arrow.
 
 Based on Cap's cursor renderer, agent-browser's recording cursor, Screen Studio and Camtasia cursor effects. Avoided on purpose: long comet trails, auto-zoom (fights fixed viewports) and sound.
+
+## Dead time
+
+Enterprise apps can take 20–30 s to settle after a click. After each recording the CLI finds frozen stretches (ffmpeg `freezedetect`), keeps the first 1.2 s of each pause so the screen can be read, plays the rest at 4×, and never touches the final hold on the result. The page caption says "loading… (long waits are sped up)" during those waits, so the speed-up is disclosed. Chapters are remapped. `ui-capture tighten` applies the same to an existing run.

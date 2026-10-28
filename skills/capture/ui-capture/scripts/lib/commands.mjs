@@ -30,7 +30,8 @@ Usage:
   node <skill>/scripts/ui-capture.mjs simulate --url URL --body JSON [--state STATE]
   node <skill>/scripts/ui-capture.mjs evidence axe|har|har-stop
   node <skill>/scripts/ui-capture.mjs quick [--label AREA] [--state STATE] [--run PATH]
-  node <skill>/scripts/ui-capture.mjs replay [--branch ID] [--viewports 1440,1024,768,360,320] [--run PATH]
+  node <skill>/scripts/ui-capture.mjs replay [--branch ID] [--viewports 1440,1024,768,360,320] [--force] [--repeat-mutations primary|all] [--run PATH]
+  node <skill>/scripts/ui-capture.mjs tighten [--force] [--run PATH]   (speed up frozen waits in recorded videos)
   node <skill>/scripts/ui-capture.mjs render [--run PATH]
   node <skill>/scripts/ui-capture.mjs annotate --asset FILE --x 0.5 --y 0.5 --label TEXT [--confidence 0.8]
   node <skill>/scripts/ui-capture.mjs label --node ID [--title TEXT] [--area TEXT] [--state TEXT] [--description TEXT]
@@ -332,7 +333,7 @@ async function startBrowser({ brief, session }, viewportOverride = null, launch 
     const here = new URL(agentBrowser(["get", "url"], { session }));
     const signin = new URL(brief.signin_url);
     if (here.host === signin.host && here.pathname === signin.pathname) {
-      await runLoginHook(brief.auth_app, session);
+      try { await runLoginHook(brief.auth_app, session); } catch { spawnSync("sleep", ["5"]); await runLoginHook(brief.auth_app, session); }
       agentBrowser(["open", brief.start_url], { session });
       agentBrowser(["set", "viewport", String(viewport.width), String(viewport.height)], { session });
       settle(session);
@@ -996,6 +997,53 @@ function keepAlive(session) {
   } catch { return false; }
 }
 
+// Long waits for the app (loading, settling) play at 4× with a small label; content is never cut.
+// Chapter times are remapped to the new timeline.
+function compressWaits(file, waits, chapters, factor = 4) {
+  const probe = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file], { encoding: "utf8" });
+  const duration = Number(probe.stdout.trim());
+  if (!duration) return;
+  const segments = [];
+  let cursor = 0;
+  for (const [start, end] of waits.filter(([a, b]) => b - a > 1).sort((x, y) => x[0] - y[0])) {
+    if (start > cursor) segments.push({ from: cursor, to: start, speed: 1 });
+    segments.push({ from: Math.max(start, cursor), to: Math.min(end, duration), speed: factor });
+    cursor = Math.min(end, duration);
+  }
+  if (cursor < duration) segments.push({ from: cursor, to: duration, speed: 1 });
+  const parts = segments.map((seg, i) => `[0:v]trim=start=${seg.from.toFixed(2)}:end=${seg.to.toFixed(2)},setpts=(PTS-STARTPTS)/${seg.speed}${seg.speed > 1 ? `,drawtext=text='${factor}x':x=w-tw-16:y=16:fontsize=22:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=8` : ""}[v${i}]`);
+  const filter = `${parts.join(";")};${segments.map((_, i) => `[v${i}]`).join("")}concat=n=${segments.length}:v=1:a=0[out]`;
+  const tmp = file.replace(/\.mp4$/, ".tmp.mp4");
+  let result = spawnSync("ffmpeg", ["-y", "-loglevel", "error", "-i", file, "-filter_complex", filter, "-map", "[out]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-movflags", "+faststart", tmp], { encoding: "utf8", timeout: 600_000 });
+  if (result.status !== 0) {
+    // drawtext needs an ffmpeg built with freetype; retry without the label.
+    const plain = filter.replace(/,drawtext=[^\[]*/g, "");
+    result = spawnSync("ffmpeg", ["-y", "-loglevel", "error", "-i", file, "-filter_complex", plain, "-map", "[out]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-movflags", "+faststart", tmp], { encoding: "utf8", timeout: 600_000 });
+  }
+  if (result.status !== 0) return;
+  spawnSync("mv", [tmp, file]);
+  const remap = (t) => segments.reduce((sum, seg) => sum + Math.max(0, Math.min(t, seg.to) - seg.from) / seg.speed, 0);
+  for (const chapter of chapters) chapter.time = Number(remap(chapter.time).toFixed(2));
+}
+
+// Dead time = frozen stretches in the video (app loading, settling). Keep the first 1.2 s of each pause so the
+// screen can be read, speed the rest up, and never touch the final hold on the result.
+function detectFreezes(file) {
+  const out = spawnSync("ffmpeg", ["-hide_banner", "-v", "info", "-i", file, "-vf", "freezedetect=n=0.002:d=2.5", "-map", "0:v", "-f", "null", "-"], { encoding: "utf8", timeout: 300_000 });
+  const text = `${out.stderr || ""}`;
+  const starts = [...text.matchAll(/freeze_start: ([\d.]+)/g)].map((m) => Number(m[1]));
+  const ends = [...text.matchAll(/freeze_end: ([\d.]+)/g)].map((m) => Number(m[1]));
+  return starts.map((start, i) => [start, ends[i] ?? null]).filter(([, end]) => end !== null);
+}
+
+function tightenVideo(file, chapters) {
+  const probe = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file], { encoding: "utf8" });
+  const duration = Number(probe.stdout.trim()) || 0;
+  const waits = detectFreezes(file).map(([start, end]) => [start + 1.2, end - 0.5]).filter(([start, end]) => end - start > 1.5 && end < duration - 3);
+  if (waits.length) compressWaits(file, waits, chapters);
+  return waits.length;
+}
+
 // Scroll the target into view and return its centre in viewport coordinates.
 function targetCenter(session, locator) {
   if (locator.role === "text") {
@@ -1062,6 +1110,7 @@ async function videoPass(context, flow, branch, viewport, order) {
       captionIn(context, `${branch.name} · ${index + 1}/${branch.steps.length}: ${step.caption || step.action}`);
       cursorTo(context.session, step.locator);
       performStep(context.session, step);
+      try { captionIn(context, `${branch.name} · ${index + 1}/${branch.steps.length}: loading… (long waits are sped up)`); } catch { /* page navigating */ }
       settle(context.session);
       agentBrowser(["wait", "900"], { session: context.session });
     }
@@ -1076,6 +1125,7 @@ async function videoPass(context, flow, branch, viewport, order) {
     if (!caught.benign) error = `Replay broke at ${viewport.width}px: ${caught.message.split("\n")[0].slice(0, 200)}`;
   }
   try { agentBrowser(["record", "stop"], { session: context.session }); } catch (caught) { error ||= caught.message; }
+  try { tightenVideo(path.join(context.runDir, file), chapters); } catch { /* keep the untightened recording */ }
   upsertAsset(context.map, { file, title: `${branch.name} · ${viewport.width}px`, description: `Cursor-visible replay of "${branch.name}" at ${viewport.width}px`, viewport: { width: viewport.width, height: viewport.height }, area: "Flow", state: "Replay", node: branch.steps.at(-1).to, edge: branch.steps.at(-1).edge, branch: branch.id, annotations: [], variant: { viewport: { width: viewport.width, height: viewport.height } } });
   return { file, chapters, error };
 }
@@ -1101,12 +1151,17 @@ async function replayCommand(options) {
       }
       branch.videos ||= {};
       branch.breaks ||= {};
+      // Resume: keep recordings that already exist unless --force.
+      const existing = branch.videos[viewport.width]?.file;
+      if (existing && !options.force) {
+        try { await readFile(path.join(context.runDir, existing)); results.push({ branch: branch.name, viewport: viewport.width, video: existing, kept: true }); continue; } catch { /* re-record */ }
+      }
       const breakAt = viewport.width === primary ? null : await stillsPass(context, flow, branch, viewport, seen);
       if (breakAt) branch.breaks[viewport.width] = breakAt; else delete branch.breaks[viewport.width];
       if (!viewport.video || breakAt) { results.push({ branch: branch.name, viewport: viewport.width, ...(breakAt ? { error: breakAt } : { stills: true }) }); continue; }
       context.repeatMutations = options["repeat-mutations"] === "all" || (options["repeat-mutations"] && viewport.width === primary);
       const { file, chapters, error } = await videoPass(context, flow, branch, viewport, order);
-      branch.videos[viewport.width] = { file, chapters };
+      branch.videos[viewport.width] = { file, chapters, tightened: true };
       if (error) branch.breaks[viewport.width] = error;
       results.push({ branch: branch.name, viewport: viewport.width, video: file, ...(error ? { error } : {}) });
       await saveFlow(context, flow);
@@ -1225,6 +1280,22 @@ async function cropCommand(options) {
   full.node.evidence.crops = crops;
   await writeMap(context.runDir, context.map);
   jsonResult({ node: { id: full.node.id, crops }, next: "The raw screenshot and each crop are linked to the state." });
+}
+
+async function tightenCommand(options) {
+  const context = await currentRun(options);
+  const flow = await loadFlow(context);
+  const done = [];
+  for (const branch of flow.branches) {
+    for (const [width, video] of Object.entries(branch.videos || {})) {
+      if (video.tightened && !options.force) continue;
+      const sped = tightenVideo(path.join(context.runDir, video.file), video.chapters || []);
+      video.tightened = true;
+      done.push({ branch: branch.name, width: Number(width), sped_up_pauses: sped });
+    }
+  }
+  await saveFlow(context, flow);
+  jsonResult({ node: { videos: done }, next: "Run render to refresh chapters in the viewer." });
 }
 
 async function annotateCommand(options) {
@@ -1435,6 +1506,7 @@ export async function main(args) {
     return;
   }
   if (command === "annotate") return annotateCommand(options);
+  if (command === "tighten") return tightenCommand(options);
   if (command === "label") return labelCommand(options);
   if (command === "publish-prep") return publishPrep(options);
   if (command === "publish-upload") return publishUploadCommand(options);
