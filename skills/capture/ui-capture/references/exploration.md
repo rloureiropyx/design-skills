@@ -10,8 +10,9 @@ Pass `--signin-url` (the public sign-in page) and set `--url` to the first authe
 
 1. **Main path.** `explore step` lists numbered candidates on the current screen; `explore step --pick N --name "<Screen> · <state>"` clicks it and captures the result. Follow the most common way to reach the goal.
 2. **Find forks.** `explore status` lists every screen with its unexplored actions, ranked by closeness to the goal, and suggests the next fork. Controls present on most screens (app header, profile menu) are marked `global` and excluded.
-3. **Branch.** `explore branch --at NODE --name "<Verb> <object>"` replays the recorded path to NODE in a fresh browser, then continues there. Explore each alternative that serves the goal: create, manage, filter, describe, other tabs. Skip `global` controls and browser chrome (PDF viewer controls).
-4. **Stop** when `explore status` shows nothing relevant unexplored or the node budget is reached. Report what was left, by screen.
+3. **Go deep automatically.** `explore deep --at NODE` explores a screen's *own* actions depth-first: controls that do not also appear on the screens before it, minus breadcrumbs (links named like an earlier screen) and repeated rows (one representative per pattern). A result that looks like the current screen is an in-place change (menu, filter, selection) and is explored; a result that looks like an earlier screen is "going back up" and is not. Rename every auto-named screen afterwards.
+4. **Branch.** `explore branch --at NODE --name "<Verb> <object>"` replays the recorded path to NODE in a fresh browser, then continues there. Explore each alternative that serves the goal: create, manage, filter, describe, other tabs. Skip `global` controls and browser chrome (PDF viewer controls).
+5. **Stop** when `explore status` shows nothing relevant unexplored or the node budget is reached. Report what was left, by screen.
 
 Candidates already taken from this screen are marked `explored` with their destination. Candidate lists are current only for the snapshot that produced them.
 

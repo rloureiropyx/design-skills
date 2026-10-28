@@ -777,7 +777,34 @@ async function exploreDeep(options) {
       if (isMutating(item) && !taken.has(item.name)) report.skipped.push({ screen: parent.title, action: item.name, reason: "creates data: explore it by hand with --fill and a UXA tag" });
       if (isDestructive(item)) report.skipped.push({ screen: parent.title, action: item.name, reason: "destructive" });
     }
-    const todo = relevantCandidates(all, globalKeys).filter((item) => !taken.has(item.name)).slice(0, Number(options["per-screen"]) || 8);
+    // A screen's own actions are the controls that do not also appear on the screens before it on the path.
+    // Breadcrumbs, tabs and section navigation repeat on ancestors; "Create report" or "Manage" do not.
+    const ancestorIds = [flow.start_node, ...route.steps.map((step2) => step2.from), ...prefix.map((step2) => step2.from)].filter((id) => id && id !== parentId);
+    const ancestorKeys = new Set();
+    for (const id of new Set(ancestorIds)) {
+      const known = context.map.nodes.find((node) => node.id === id);
+      try { for (const item of parseCandidates(await readFile(path.join(context.runDir, known?.evidence?.snapshot || ""), "utf8"))) ancestorKeys.add(candidateKey(item)); } catch { /* no snapshot */ }
+    }
+    // Breadcrumbs: links named like a screen already on the path ("Report library" → "Report library · All reports").
+    for (const id of new Set([...ancestorIds, ...flow.branches.flatMap((b) => b.steps.map((st) => st.to))])) {
+      const title = context.map.nodes.find((node) => node.id === id)?.title || "";
+      const screen = title.split(" · ")[0].trim().toLowerCase();
+      for (const item of all) if (["link", "tab", "text"].includes(item.role) && item.name.trim().toLowerCase() === screen && id !== parentId) ancestorKeys.add(candidateKey(item));
+    }
+    // Repeated rows ("… Run on 10/28/2026, 10:44 AM"): explore one representative per pattern.
+    const seenPatterns = new Set();
+    const repeats = new Set();
+    for (const item of all) {
+      const pattern = `${item.role}:${item.name.replace(/^.*\/\s*/, "").replace(/\d+/g, "#")}`;
+      if (/#/.test(pattern) && seenPatterns.has(pattern)) repeats.add(item.name);
+      seenPatterns.add(pattern);
+    }
+    if (repeats.size) report.skipped.push({ screen: parent.title, action: `${repeats.size} repeated rows`, reason: "one representative explored" });
+    const inherited = all.filter((item) => ancestorKeys.has(candidateKey(item)));
+    if (inherited.length) report.skipped.push({ screen: parent.title, action: `${inherited.length} controls also on earlier screens`, reason: "navigation, not this screen's own actions" });
+    const todo = relevantCandidates(all.filter((item) => !ancestorKeys.has(candidateKey(item)) && !repeats.has(item.name)), globalKeys).filter((item) => !taken.has(item.name)).slice(0, Number(options["per-screen"]) || 8);
+    // Debug: UIC_DEBUG=1 prints the actions chosen per screen.
+    if (process.env.UIC_DEBUG) console.error("own actions on", parent.title, todo.map((item) => item.name).join(" | "));
     let leaves = 0;
     for (const item of todo) {
       if (context.map.nodes.length >= budget) { report.skipped.push({ screen: parent.title, action: item.name, reason: "node budget reached" }); continue; }
@@ -804,7 +831,10 @@ async function exploreDeep(options) {
       }
       // Stay on goal: a click that leads back up the path (breadcrumb, back link) or to a screen already
       // on a recorded path is an edge, not a place to explore again.
+      // Similar to the current screen = an in-place change (menu, filter, selection): explore it.
+      // Similar to an earlier screen = going back up: record nothing new.
       const ancestors = new Set([flow.signin_node, flow.start_node, ...flow.branches.flatMap((branch) => branch.steps.map((step2) => step2.to)), ...prefix.map((step2) => step2.from)]);
+      ancestors.delete(parentId);
       let backUp = ancestors.has(childId);
       if (!backUp) for (const id of ancestors) { const known = context.map.nodes.find((node) => node.id === id); if (known?.evidence?.snapshot && normalizeUrlPattern(landed) === known.url_pattern) { try { if (structureSimilarity(childSnapshot, await readFile(path.join(context.runDir, known.evidence.snapshot), "utf8")) >= 0.85) { backUp = true; break; } } catch { /* ignore */ } } }
       if (backUp) {
