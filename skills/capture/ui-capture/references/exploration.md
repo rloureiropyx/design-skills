@@ -34,4 +34,6 @@ Node identity is a normalized URL pattern plus an accessibility-structure hash t
 
 ## Auth and expected states
 
-`auth <app> --url URL` opens a headed login; a human completes it; `auth-save <app>` writes state under `.ui-capture/` (must be gitignored). One role per run. Expected States from stories or acceptance criteria are matched against screen names; unmatched ones are reported `not reached`.
+**Automatic login (preferred for test environments).** Put the credentials in the consuming project's `.env` (gitignored) and a login hook at `.ui-capture/hooks/<app>-login.mjs` (start from `templates/login-hook.example.mjs`). `auth <app> --url URL` then signs in with the hook and saves the state; every run and replay re-runs the hook when it lands on the sign-in page, so expired sessions no longer need a human. Never put credentials in the hook, the plugin, a capture, a report or a board. Hooks must stop on a rejected password instead of retrying (lockout).
+
+**Manual login.** Without a hook, or with `--manual`, `auth` opens a headed browser; a human signs in; `auth-save <app>` writes the state under `.ui-capture/` (must be gitignored). One role per run. Expected States from stories or acceptance criteria are matched against screen names; unmatched ones are reported `not reached`.

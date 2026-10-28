@@ -17,7 +17,7 @@ Usage:
   node <skill>/scripts/ui-capture.mjs doctor
   node <skill>/scripts/ui-capture.mjs brief --url URL --strategy area|flow --goal TEXT --scope URL_PREFIX[,URL_PREFIX] --role ROLE [--signin-url URL] [--start-name NAME] [--main-branch NAME] [--budget 40] [--must-see STATE] [--expected JSON] [--app APP]
   node <skill>/scripts/ui-capture.mjs brief --confirm
-  node <skill>/scripts/ui-capture.mjs auth APP --url URL
+  node <skill>/scripts/ui-capture.mjs auth APP --url URL [--manual]   (uses .ui-capture/hooks/APP-login.mjs when present)
   node <skill>/scripts/ui-capture.mjs auth-save APP
   node <skill>/scripts/ui-capture.mjs explore crawl [--run PATH]
   node <skill>/scripts/ui-capture.mjs explore step [--pick N --name "<Screen> · <state>"] [--allow-destructive] [--run PATH]
@@ -225,6 +225,35 @@ async function briefCommand(positionals, options) {
   });
 }
 
+// The consuming project's .env (gitignored) feeds login hooks. Values never reach the plugin, maps or reports.
+async function projectEnv() {
+  const env = { ...process.env };
+  try {
+    for (const line of (await readFile(path.join(process.cwd(), ".env"), "utf8")).split(/\r?\n/)) {
+      const match = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/.exec(line);
+      if (match) env[match[1]] = match[2].replace(/^(["'])(.*)\1$/, "$2");
+    }
+  } catch { /* no .env */ }
+  return env;
+}
+
+function hookPath(app) { return path.join(process.cwd(), ".ui-capture", "hooks", `${safeName(app)}-login.mjs`); }
+
+async function hasLoginHook(app) {
+  try { await readFile(hookPath(app)); return true; } catch { return false; }
+}
+
+// Runs the project's login hook in `session`, then saves the signed-in state for the app.
+async function runLoginHook(app, session) {
+  const { pathToFileURL } = await import("node:url");
+  const hook = (await import(`${pathToFileURL(hookPath(app)).href}?t=${Date.now()}`)).default;
+  const env = await projectEnv();
+  await hook({ ab: (args) => agentBrowser(args, { session, timeout: 120_000 }), env });
+  await requireAuthIgnored();
+  await mkdir(path.join(process.cwd(), ".ui-capture"), { recursive: true });
+  agentBrowser(["state", "save", path.join(process.cwd(), ".ui-capture", `${safeName(app)}.json`)], { session });
+}
+
 async function authCommand(positionals, options) {
   const app = positionals[1];
   if (!app || !options.url) throw new Error("auth requires APP and --url.");
@@ -235,6 +264,11 @@ async function authCommand(positionals, options) {
   const stateDir = path.join(process.cwd(), ".ui-capture");
   await mkdir(stateDir, { recursive: true });
   const session = `uic-auth-${safeName(app)}`;
+  if (!options.manual && await hasLoginHook(app)) {
+    try { await runLoginHook(app, session); } finally { try { agentBrowser(["close"], { session }); } catch { /* closed */ } }
+    jsonResult({ node: { app, state: `.ui-capture/${safeName(app)}.json`, method: "hook" }, next: "Signed in with the project's login hook. Runs re-login automatically when the session expires." });
+    return;
+  }
   agentBrowser(["--headed", "open", url.href], { session, timeout: 120_000 });
   jsonResult({ progress: "human-login", node: { app, url: url.href }, next: `Complete login in the headed browser, then run ui-capture auth-save ${safeName(app)}.` });
 }
@@ -293,6 +327,17 @@ async function startBrowser({ brief, session }, viewportOverride = null, launch 
   const viewport = viewportOverride || viewportFromBrief(brief);
   agentBrowser(["set", "viewport", String(viewport.width), String(viewport.height)], { session });
   settle(session);
+  // Expired login: if the project has a login hook, sign in again in this session and continue.
+  if (brief.signin_url && brief.auth_app && await hasLoginHook(brief.auth_app)) {
+    const here = new URL(agentBrowser(["get", "url"], { session }));
+    const signin = new URL(brief.signin_url);
+    if (here.host === signin.host && here.pathname === signin.pathname) {
+      await runLoginHook(brief.auth_app, session);
+      agentBrowser(["open", brief.start_url], { session });
+      agentBrowser(["set", "viewport", String(viewport.width), String(viewport.height)], { session });
+      settle(session);
+    }
+  }
   return allowed;
 }
 

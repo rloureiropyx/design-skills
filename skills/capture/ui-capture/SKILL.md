@@ -22,7 +22,7 @@ Produce a Capture Brief, Expected States when supplied, a Flow Map, a manifest, 
 ## Run the loop
 
 1. **Check the toolchain** — `node <skill-path>/scripts/ui-capture.mjs doctor`. Stop unless Node, the exact `agent-browser` version and `ffmpeg` pass.
-2. **Confirm the brief before opening the app** — read `references/capture-brief.md` and `references/naming.md`. Start every flow at sign-in: `--signin-url` plus `--url` for the first signed-in page and `--start-name`. Name the goal and the main path. Have the user confirm, then `brief --confirm`.
+2. **Confirm the brief before opening the app** — read `references/capture-brief.md` and `references/naming.md`. Start every flow at sign-in: `--signin-url` plus `--url` for the first signed-in page and `--start-name`. For test environments, set up a login hook with credentials in the project's `.env` (see `references/exploration.md`) so expired sessions re-login without a human; credentials never go in the plugin or any output. Name the goal and the main path. Have the user confirm, then `brief --confirm`.
 3. **Choose safe access** — full exploration needs an exact host in `.ui-capture/config`; otherwise only navigation and open/cancel. Read `references/pitfalls.md`.
 4. **Capture the main path** — `explore step`, then `explore step --pick N --name "<Screen> · <state>"`. Every screen gets a human name. Read `references/exploration.md`.
 5. **Explore the branches** — `explore status` lists unexplored actions ranked by closeness to the goal. For each alternative that serves the goal (create, manage, filter, details…), `explore branch --at NODE --name "<Verb> <object>"` and continue with `explore step`. Fill fields with `--fill`; tag created data (`UXA-<date> <purpose>`); never confirm destructive actions. Stop at the node budget and report what is left.
@@ -40,6 +40,7 @@ Each run lives in the consuming project at `captures/<flow>/<YYYY-MM-DD-HHmm>/` 
 ## Anti-patterns
 
 - Exploring before the user confirms the Capture Brief.
+- Writing credentials into the plugin, a hook, a capture, a report or a board instead of the project's gitignored `.env`.
 - Starting a flow mid-app instead of at sign-in, or recording the human login.
 - Leaving screens with generic names ("Before interaction", page titles, client numbers) or naming branches after the control instead of the intent.
 - Mapping only the main path when the screen offers other ways to reach or extend the goal.

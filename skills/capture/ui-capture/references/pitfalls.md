@@ -24,3 +24,4 @@
 - Session-timeout warnings ("Are you still there?" with Continue) break replays. The CLI clicks Continue when such a dialog blocks a step.
 - Control names with live counts ("…with 2 other logged in users") are compared without digits, so they are still recognised as global.
 - Lists change between visits (a new report run adds a row). Revisits accept a ≥ 85% structural match on the same URL pattern.
+- Login hooks read the page while it navigates; wrap reads (`get`, `snapshot`) so "Cannot find context" means "not yet", not failure.
