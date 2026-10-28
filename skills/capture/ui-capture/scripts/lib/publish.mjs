@@ -71,7 +71,7 @@ export async function publishPrep(runDir) {
         const file = `publish/gifs/w${viewport.width}-${slug(branch.name)}.gif`;
         await mkdir(path.join(runDir, path.dirname(file)), { recursive: true });
         let ok = true;
-        try { await stat(path.join(runDir, file)); } catch { ok = await makeGif(path.join(runDir, video), path.join(runDir, file), card); }
+        try { await stat(path.join(runDir, file)); } catch { try { ok = await makeGif(path.join(runDir, video), path.join(runDir, file), card); } catch { ok = false; } }
         if (ok) { gif = { key: `w${viewport.width}-${branch.id}-gif`, video }; uploads.push({ key: gif.key, file, type: "image/gif" }); }
       }
       rows.push({

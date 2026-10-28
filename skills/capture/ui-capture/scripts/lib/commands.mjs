@@ -1154,13 +1154,25 @@ async function replayCommand(options) {
       // Resume: keep recordings that already exist unless --force.
       const existing = branch.videos[viewport.width]?.file;
       if (existing && !options.force) {
-        try { await readFile(path.join(context.runDir, existing)); results.push({ branch: branch.name, viewport: viewport.width, video: existing, kept: true }); continue; } catch { /* re-record */ }
+        // Keep only playable recordings; a corrupt file (e.g. "encoder fell behind") is re-recorded.
+        const probe = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path.join(context.runDir, existing)], { encoding: "utf8" });
+        if (Number(probe.stdout.trim()) > 0) { results.push({ branch: branch.name, viewport: viewport.width, video: existing, kept: true }); continue; }
+        delete branch.videos[viewport.width];
       }
-      const breakAt = viewport.width === primary ? null : await stillsPass(context, flow, branch, viewport, seen);
+      // One hung or failed pass is a break for that branch at that width, never the end of the whole replay.
+      let breakAt = null;
+      try { breakAt = viewport.width === primary ? null : await stillsPass(context, flow, branch, viewport, seen); }
+      catch (caught) { breakAt = `Stills pass failed at ${viewport.width}px: ${caught.message.split("\n")[0].slice(0, 160)}`; }
       if (breakAt) branch.breaks[viewport.width] = breakAt; else delete branch.breaks[viewport.width];
       if (!viewport.video || breakAt) { results.push({ branch: branch.name, viewport: viewport.width, ...(breakAt ? { error: breakAt } : { stills: true }) }); continue; }
       context.repeatMutations = options["repeat-mutations"] === "all" || (options["repeat-mutations"] && viewport.width === primary);
-      const { file, chapters, error } = await videoPass(context, flow, branch, viewport, order);
+      let pass;
+      try { pass = await videoPass(context, flow, branch, viewport, order); }
+      catch (caught) { pass = { file: null, chapters: [], error: `Video pass failed at ${viewport.width}px: ${caught.message.split("\n")[0].slice(0, 160)}` }; }
+      const { file, chapters, error } = pass;
+      if (!file) { branch.breaks[viewport.width] = error; results.push({ branch: branch.name, viewport: viewport.width, error }); await saveFlow(context, flow); continue; }
+      const playable = Number(spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path.join(context.runDir, file)], { encoding: "utf8" }).stdout.trim()) > 0;
+      if (!playable) { branch.breaks[viewport.width] = error || "Recording is not playable"; results.push({ branch: branch.name, viewport: viewport.width, error: branch.breaks[viewport.width] }); await saveFlow(context, flow); continue; }
       branch.videos[viewport.width] = { file, chapters, tightened: true };
       if (error) branch.breaks[viewport.width] = error;
       results.push({ branch: branch.name, viewport: viewport.width, video: file, ...(error ? { error } : {}) });

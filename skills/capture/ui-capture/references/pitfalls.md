@@ -26,3 +26,5 @@
 - Lists change between visits (a new report run adds a row). Revisits accept a ≥ 85% structural match on the same URL pattern.
 - Login hooks read the page while it navigates; wrap reads (`get`, `snapshot`) so "Cannot find context" means "not yet", not failure.
 - Shared accounts change data between visits (other people add report runs). Screen identity on revisits compares the set of distinct structures, so lists can grow or shrink; "earlier screens" are true ancestors on the path, never sibling branches.
+- Long N2A replays (20 videos ≈ 2 h) hit hung commands and "Recording encoder fell more than 500 ms behind capture". Each branch × width pass is isolated (a failure is a break, not the end), every recording is checked with ffprobe, and resumable replay re-records only missing or corrupt ones.
+- Some states exist only at small widths (N2A shows an "Unexpected error" dialog on the dashboard at 320 px that blocks the menu). They are recorded as breaks with a screenshot.
