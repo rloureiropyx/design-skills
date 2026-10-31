@@ -1,0 +1,11 @@
+# Copy to the consuming project's .ui-capture/config. Add .ui-capture/ or
+# .ui-capture/*.json to its .gitignore before saving authentication state.
+allowed_hosts:
+  - app.example.test
+
+# Optional settings, not enabled by default:
+viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+presets: []

@@ -9,12 +9,13 @@ skills/process/<skill>/            skills that decide something
 skills/artifacts/<skill>/          skills that produce the thing someone decides on
 skills/renderers/<skill>/          skills that materialise a decision made elsewhere
 skills/utilities/<skill>/          skills the others call while drafting
+skills/capture/<skill>/            tools that record live interface evidence
 docs/<skill>/                      the explainer, for someone who will never read the skill file
 ```
 
 Skills live in `skills/` at the root because that is the path `copilot plugin install` reads. They are deliberately **not** in `.github/skills/`, which is where an installed skill lands in a consuming project. Authoring location and consumption location are different things; do not move them back.
 
-The four groups are declared explicitly in `plugin.json`'s `skills` array. Without that array, both the installer and the check assume `skills/` holds skill folders directly and read `process/` as a skill with no `SKILL.md`. If you add a group, add it to the array in the same change.
+The five groups are declared explicitly in `plugin.json`'s `skills` array. Without that array, both the installer and the check assume `skills/` holds skill folders directly and read `process/` as a skill with no `SKILL.md`. If you add a group, add it to the array in the same change.
 
 The grouping is for humans. Copilot routes on `name` and `description` alone and knows nothing about the folder a skill sits in, so never rely on the group to keep two skills apart — that is the non-trigger clause's job.
 
@@ -89,7 +90,7 @@ The explainers and the README are not marketing. Apply these when writing or rev
 
 Start from `templates/SKILL.template.md`. A new skill is not finished until it has an `## Anti-patterns` section, a `description` with a non-trigger clause, a `docs/<skill>/` explainer, an entry in the README, and a passing `node scripts/check-skills.mjs`.
 
-Pick the group by what the skill owns: `process/` if it decides something, `artifacts/` if it produces the thing someone decides on, `renderers/` if it materialises a decision made elsewhere, `utilities/` if other skills call it while they draft.
+Pick the group by what the skill owns: `process/` if it decides something, `artifacts/` if it produces the thing someone decides on, `renderers/` if it materialises a decision made elsewhere, `utilities/` if other skills call it while they draft, or `capture/` if it records evidence from a live interface.
 
 To keep a skill in the repo without shipping it, park it under `skills/drafts/`, `skills/in-progress/`, `skills/wip/` or `skills/deprecated/`. The check reports those as parked rather than failing, and they are not installed. A `SKILL.md` anywhere else that `plugin.json` does not cover is treated as a mistake, because silently not shipping is the failure this replaced the old routing check to catch.
 
